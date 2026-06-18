@@ -1,1 +1,154 @@
-/* You can add global styles to this file, and also import other style files */
+@use './tailwind.css';
+@use "primeicons/primeicons.css";
+
+@font-face {
+  font-family: "Ghawar";
+  src: url("/assets/fonts/GHAWAR_1.311-REGULAR.OTF") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ghawar";
+  src: url("/assets/fonts/GHAWAR_1.311-HEFTY.OTF") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-family: "Ghawar", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --app-bg: #F6F6F8;
+  --app-surface: #ffffff;
+  --app-text: #111827;
+  --app-muted: #6b7280;
+  --app-border: #e5e7eb;
+}
+
+.p-inputtext,
+.p-select,
+.p-multiselect,
+.p-datepicker,
+.p-dropdown {
+  box-shadow: none !important;
+}
+
+html,
+body,
+.p-component {
+  font-family: var(--font-family);
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.app-shell-bg {
+  background: var(--app-bg);
+}
+
+.dark-mode {
+  --app-bg: linear-gradient(160deg, #0f172a 0%, #111827 55%, #020617 100%);
+  --app-surface: #111827;
+  --app-text: #e5e7eb;
+  --app-muted: #94a3b8;
+  --app-border: #334155;
+  color-scheme: dark;
+}
+
+.dark-mode body {
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.dark-mode .p-card,
+.dark-mode .p-toolbar,
+.dark-mode .p-dialog,
+.dark-mode .p-drawer,
+.dark-mode .p-tabs,
+.dark-mode .p-datatable,
+.dark-mode .p-inputtext,
+.dark-mode .p-select,
+.dark-mode .p-datepicker,
+.dark-mode .p-panel,
+.dark-mode .p-overlaypanel {
+  color: var(--app-text);
+}
+
+.dark-mode .p-card,
+.dark-mode .p-toolbar,
+.dark-mode .p-drawer,
+.dark-mode .p-dialog-content,
+.dark-mode .p-datatable-table-container,
+.dark-mode .p-overlaypanel-content {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+.dark-mode .p-inputtext,
+.dark-mode .p-select,
+.dark-mode .p-datepicker-input {
+  background: #1f2937 !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+.dark-mode .bg-white {
+  background-color: #111827 !important;
+}
+
+.dark-mode .bg-gray-50,
+.dark-mode .bg-slate-50 {
+  background-color: #1f2937 !important;
+}
+
+.dark-mode .text-gray-900,
+.dark-mode .text-slate-900,
+.dark-mode .text-slate-800,
+.dark-mode .text-gray-700,
+.dark-mode .text-slate-700 {
+  color: var(--app-text) !important;
+}
+
+.dark-mode .text-gray-600,
+.dark-mode .text-gray-500,
+.dark-mode .text-slate-500,
+.dark-mode .text-slate-400 {
+  color: var(--app-muted) !important;
+}
+
+.dark-mode .border-gray-100,
+.dark-mode .border-gray-200,
+.dark-mode .border-slate-100,
+.dark-mode .border-slate-200 {
+  border-color: var(--app-border) !important;
+}
+
+.p-button:not(.p-button-secondary):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-danger),
+p-button[severity="primary"] .p-button,
+.p-button.p-button-primary {
+  background-color: #0033A0 !important;
+  border-color: #0033A0 !important;
+  color: #ffffff !important;
+}
+
+.p-button:not(.p-button-secondary):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-danger):enabled:hover,
+p-button[severity="primary"] .p-button:enabled:hover,
+.p-button.p-button-primary:enabled:hover {
+  background-color: #002277 !important;
+  border-color: #002277 !important;
+}
+
+.p-card,
+.p-card .p-card,
+.p-card-body,
+.p-card-content,
+.p-panel,
+.p-dialog,
+.p-drawer,
+.p-popover,
+.p-tag {
+  border-radius: 0 !important;
+}

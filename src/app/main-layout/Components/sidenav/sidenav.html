@@ -1,0 +1,37 @@
+<p-card class="bg-white h-full overflow-hidden sidenav-card">
+  <div class="h-full flex flex-col">
+    <div class="flex flex-row justify-start items-center gap-2 pt-6 px-4">
+      <div class="flex flex-col justify-start">
+        <h2 class="text-xl leading-tight text-[#0033A0]">
+          <span class="font-normal">Offer</span>
+          <span class="text-[#0033A0] mx-1">|</span>
+          <span class="font-semibold">Vendor Portal</span>
+        </h2>
+      </div>
+    </div>
+    <div class="mt-6 md:mt-8 flex-1 min-h-0 overflow-y-auto">
+      <ul class="list-none p-0 m-0 overflow-visible flex flex-col gap-1 w-full">
+        @for (item of navItems(); track item.navLink) {
+        <li
+          [routerLink]="item.navLink || null"
+          routerLinkActive="active-link"
+          class="relative flex items-center hover:bg-gray-50 cursor-pointer transition-colors w-full"
+          (click)="navigate(item)"
+        >
+          <div class="left-bar absolute left-[-30px] top-0 h-full w-1 rounded-r opacity-0"></div>
+          <a pRipple class="flex items-center gap-3 px-4 py-3 w-full">
+            <span
+              class="w-5 h-5 sidenav-icon"
+              [style.webkitMaskImage]="'url(' + item.icon + ')'"
+              [style.maskImage]="'url(' + item.icon + ')'"
+              role="img"
+              [attr.aria-label]="item.navItem"
+            ></span>
+            <span class="font-medium text-sm md:text-base">{{ item.navItem }}</span>
+          </a>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</p-card>

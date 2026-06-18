@@ -1,0 +1,118 @@
+<div class="dashboard-page space-y-6">
+  <div class="bg-white border border-slate-100 p-6 flex flex-col md:flex-row gap-6 items-start">
+    <div
+      class="w-24 h-24 shrink-0 bg-[#1B5E20] text-white flex items-center justify-center text-2xl font-bold tracking-wide"
+    >
+      LUMEE
+    </div>
+    <div class="min-w-0">
+      <h1 class="text-2xl md:text-3xl font-bold text-[#0033A0]">{{ vendorName() }}</h1>
+      <p class="text-sm md:text-base text-gray-600 mt-2 max-w-3xl">
+        {{ vendorDescription() }}
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <app-offer-tile
+      title="Total Redemptions"
+      value="2,427"
+      subtitle="All-time redemptions"
+      icon="pi pi-chart-line"
+      iconColor="#0033A0"
+      iconContainerBg="rgba(102, 141, 225, 0.1)"
+      trendLabel="12.5%"
+      [trendUp]="true"
+    />
+    <app-offer-tile
+      title="Active Offers"
+      value="19"
+      subtitle="Currently live"
+      icon="assets/svg/Dashboard/ic-active-offers.svg"
+      iconColor="#0033A0"
+      iconContainerBg="rgba(102, 141, 225, 0.1)"
+      trendLabel="3%"
+      [trendUp]="true"
+      (tileClick)="goToOffers()"
+    />
+    <app-offer-tile
+      title="Pending Offers"
+      value="0"
+      subtitle="Awaiting approval"
+      icon="assets/svg/Dashboard/ic-pending-requests.svg"
+      iconColor="#0033A0"
+      iconContainerBg="rgba(102, 141, 225, 0.1)"
+      badgeLabel="AWAITING APPROVAL"
+      (tileClick)="goToRequestCenter()"
+    />
+    <app-offer-tile
+      title="Expiring Soon Offers"
+      value="23"
+      subtitle="Offers expiring in 30 days"
+      icon="assets/svg/Dashboard/ic-expiring-soon-offer.svg"
+      iconColor="rgba(180, 19, 64, 1)"
+      iconContainerBg="rgba(253, 219, 226, 1)"
+      trendLabel="2%"
+      [trendUp]="false"
+      (tileClick)="goToOffers()"
+    />
+  </div>
+
+  <app-vendor-quick-actions
+    (createOffer)="goToCreateOffer()"
+    (editProfile)="goToEditProfile()"
+    (contactSupport)="goToContactSupport()"
+  />
+
+  <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] gap-6">
+    <div class="bg-white border border-slate-100 px-6 py-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-slate-900">Recent Activity</h2>
+        <button
+          type="button"
+          class="text-sm font-semibold cursor-pointer hover:underline bg-transparent border-0 p-0"
+          style="color: #0033a0"
+          (click)="goToRecentActivities()"
+        >
+          View History
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        @for (activity of recentActivities(); track activity.title + activity.time) {
+        <div class="flex items-start gap-4 py-3 border-b border-slate-100 last:border-0">
+          <div
+            class="w-10 h-10 shrink-0 flex items-center justify-center rounded-none"
+            [ngClass]="activity.iconClass"
+          >
+            <i [class]="activity.icon"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="font-semibold text-slate-900">{{ activity.title }}</p>
+            <p class="text-sm text-slate-500 mt-0.5">{{ activity.description }}</p>
+          </div>
+          <span class="text-xs text-slate-400 shrink-0">{{ activity.time }}</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="bg-white border border-slate-100 px-6 py-6">
+      <h2 class="text-xl font-semibold text-slate-900 mb-6">Top Performing Branch</h2>
+      <div class="space-y-4">
+        <div>
+          <p class="text-lg font-semibold text-[#0033A0]">Dammam Branch</p>
+          <p class="text-sm text-slate-500 mt-1">
+            King Fahd Road, Al Faisaliyah, Dammam 32272
+          </p>
+        </div>
+        <div class="bg-[#EEF4FF] p-5">
+          <p class="text-xs font-semibold tracking-wide text-[#0033A0] uppercase">
+            Cumulative Redemptions
+          </p>
+          <p class="text-4xl font-bold text-slate-900 mt-2">1,245</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

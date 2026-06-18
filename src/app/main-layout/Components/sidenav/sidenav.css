@@ -1,0 +1,76 @@
+.active-link {
+  background: linear-gradient(
+    93.08deg,
+    rgba(64, 110, 209, 1) 10%,
+    rgba(0, 51, 160, 1) 90%
+  );
+  color: white;
+  box-shadow: 0 4px 15px 0 rgba(102, 141, 225, 0.5);
+  border-radius: 0;
+}
+
+.active-link .left-bar {
+  opacity: 1;
+  background: linear-gradient(to bottom, #6668e1, #0033a0);
+}
+
+.active-link .sidenav-icon {
+  animation: sidenav-icon-active 1.8s ease-in-out infinite;
+}
+
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.sidenav-icon {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transform-origin: center;
+  transition:
+    transform 220ms ease,
+    filter 220ms ease,
+    opacity 220ms ease;
+}
+
+li:hover .sidenav-icon,
+li:focus-within .sidenav-icon {
+  filter: drop-shadow(0 6px 8px rgba(0, 51, 160, 0.22));
+  transform: translateY(-2px) scale(1.12) rotate(-5deg);
+}
+
+@keyframes sidenav-icon-active {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+    transform: scale(1);
+  }
+
+  50% {
+    filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.35));
+    transform: scale(1.08);
+  }
+}
+
+:host ::ng-deep .sidenav-card .p-card-body,
+:host ::ng-deep .sidenav-card .p-card-content {
+  padding: 0;
+}
+
+:host ::ng-deep .sidenav-card.p-card,
+:host ::ng-deep .sidenav-card .p-card {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+}

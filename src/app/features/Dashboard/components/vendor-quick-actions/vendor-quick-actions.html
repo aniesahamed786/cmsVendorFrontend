@@ -1,0 +1,49 @@
+<div class="w-full bg-[#0033A0] p-6 pb-8">
+  <div class="mb-6">
+    <h2 class="text-white text-xl font-semibold tracking-wide">Quick Actions</h2>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div
+      class="bg-white flex flex-col items-center justify-center gap-4 py-12 px-6 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
+      (click)="onCreateOffer()"
+    >
+      <div class="w-[50px] h-[50px] bg-[#dde3f5] flex items-center justify-center">
+        <span
+          class="inline-block w-5 h-5 bg-[#0033A0]"
+          style="
+            -webkit-mask-image: url('assets/svg/Dashboard/ic-add-new-offer.svg');
+            mask-image: url('assets/svg/Dashboard/ic-add-new-offer.svg');
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-position: center;
+            mask-position: center;
+          "
+        ></span>
+      </div>
+      <span class="text-gray-800 font-semibold text-sm">Create New Offer</span>
+    </div>
+
+    <div
+      class="bg-white flex flex-col items-center justify-center gap-4 py-12 px-6 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
+      (click)="onEditProfile()"
+    >
+      <div class="w-[50px] h-[50px] bg-[#dde3f5] flex items-center justify-center">
+        <i class="pi pi-user text-[#0033A0] text-xl"></i>
+      </div>
+      <span class="text-gray-800 font-semibold text-sm">Edit Profile</span>
+    </div>
+
+    <div
+      class="bg-white flex flex-col items-center justify-center gap-4 py-12 px-6 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
+      (click)="onContactSupport()"
+    >
+      <div class="w-[50px] h-[50px] bg-[#dde3f5] flex items-center justify-center">
+        <i class="pi pi-headphones text-[#0033A0] text-xl"></i>
+      </div>
+      <span class="text-gray-800 font-semibold text-sm">Contact Support</span>
+    </div>
+  </div>
+</div>

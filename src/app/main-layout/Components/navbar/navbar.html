@@ -1,0 +1,69 @@
+<div class="navbar-shell">
+  <span class="sr-only">{{ resolvedHeader() }}</span>
+
+  <div class="navbar-spacer"></div>
+
+  <div class="navbar-actions" aria-label="Toolbar actions">
+    <button
+      type="button"
+      class="profile-trigger"
+      aria-label="Profile menu"
+      (click)="profileMenu.toggle($event)"
+    >
+      <p-avatar
+        [label]="avatarLabel()"
+        shape="circle"
+        styleClass="navbar-avatar"
+        aria-label="Profile"
+      />
+    </button>
+
+    <p-popover
+      #profileMenu
+      styleClass="navbar-profile-popover"
+    >
+      <div class="profile-menu">
+        <div class="profile-menu-header">
+          <p-avatar
+            [label]="avatarLabel()"
+            shape="circle"
+            size="large"
+            styleClass="profile-menu-avatar"
+          />
+          <div class="profile-menu-user">
+            <p class="profile-menu-name">{{ userName() }}</p>
+            <p class="profile-menu-role">{{ userRole() }}</p>
+          </div>
+        </div>
+
+        <div class="profile-menu-section">
+          <button type="button" class="profile-menu-item" (click)="onProfile()">
+            <i class="pi pi-id-card"></i>
+            <span>Profile</span>
+          </button>
+          <button type="button" class="profile-menu-item" (click)="onSettings()">
+            <i class="pi pi-cog"></i>
+            <span>Settings</span>
+          </button>
+          <div class="profile-menu-theme">
+            <div class="profile-menu-theme-label">
+              <i class="pi pi-moon"></i>
+              <span>Dark theme</span>
+            </div>
+            <p-toggleswitch
+              [ngModel]="isDarkMode()"
+              (ngModelChange)="onThemeToggle($event)"
+            ></p-toggleswitch>
+          </div>
+        </div>
+
+        <div class="profile-menu-section profile-menu-section--footer">
+          <button type="button" class="profile-menu-item profile-menu-logout" (click)="onLogout()">
+            <i class="pi pi-sign-out"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </p-popover>
+  </div>
+</div>
