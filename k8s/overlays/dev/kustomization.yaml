@@ -1,0 +1,6 @@
+namespace: app-offers-dev
+resources:
+- ../../base
+patches:
+- path: deployment.yaml
+- path: httproute.yaml

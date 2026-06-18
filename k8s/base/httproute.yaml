@@ -1,0 +1,18 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: offers-cms-vendor-frontend-httproute
+spec:
+  parentRefs:
+  - kind: Gateway
+    name: https-ilb-cmn-0
+    namespace: gateways
+    sectionName: https
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: app-offers-cms-vendor-frontend
+      port: 8081

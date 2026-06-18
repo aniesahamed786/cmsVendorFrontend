@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "http://offers.dev.gcp.aramco.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
+

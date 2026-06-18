@@ -1,0 +1,17 @@
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: offers-cms-vendor-frontend-healthcheck
+spec:
+  default:
+    logConfig:
+      enabled: true
+    config:
+      type: HTTP
+      httpHealthCheck:
+        requestPath: /
+        port: 8081
+  targetRef:
+    group: ""
+    kind: Service
+    name: app-offers-cms-vendor-frontend

@@ -1,0 +1,179 @@
+steps:
+#### STEP 1: Generate Certificate ####
+  - id: 'Generate Certificate'
+    name: '${_AR_ADDRESS}/gcloud:latest'
+    args:
+      - privateca
+      - pools
+      - get-ca-certs
+      - shr-30049727-ssm-0
+      - '--project'
+      - sao-prj-shr-30049727-ssm-0
+      - '--location'
+      - europe-west4
+      - '--output-file=cacert.pem'
+
+#### STEP 2: Configure git ####
+  - id: 'Configure git'
+    name: '${_AR_ADDRESS}/git:latest'
+    args:
+      - config
+      - '--global'
+      - 'credential.${_REPO_PREFIX}.helper'
+      - gcloud.sh
+
+#### STEP 3: Apply Certificate ####
+  - id: 'Apply Certificate'
+    name: '${_AR_ADDRESS}/git:latest'
+    args:
+      - config
+      - '--global'
+      - http.sslCAInfo
+      - cacert.pem
+
+#### STEP 4: Clone Repository ####
+  - id: 'Clone Repository'
+    name: '${_AR_ADDRESS}/git:latest'
+    args:
+      - clone
+      - -b
+      - $REF_NAME
+      - --single-branch
+      - ${_REPO_PREFIX}/sao-prj-shr-30049727-ssm-0/${_REPO}
+
+  # Step 5: Authenticate NPM for the Docker build
+  - id: 'Authenticate NPM'
+    name: '${_AR_ADDRESS}/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        # Use printf to ensure a newline (\n) is added before the token.
+        # This works even if the original .npmrc is missing a final newline.
+        printf "\n//me-central2-npm.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30049727-npm-rmt-0/:_authToken=%s" "$(gcloud auth print-access-token)" >> ./offers-app-0/cms-vendor-frontend/.npmrc
+
+  # Step 7: Build image
+  - id: 'Docker Build'
+    name: '${_AR_ADDRESS}/cloud-builders/docker'
+    dir: '/workspace/offers-app-0/cms-vendor-frontend'
+    args:
+      [
+        'build',
+        '--build-arg','COMMIT_SHA=${SHORT_SHA}',
+        '--build-arg','BUILD_ID=$BUILD_ID',
+        '-f', '/workspace/offers-app-0/cms-vendor-frontend/Dockerfile.chainguard',
+        '-t', 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend:${SHORT_SHA}',
+        '-t', 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend:latest',
+        '.'
+      ]
+
+  # Step 8: Push SHA Image
+  - id: 'Push Image SHA'
+    name: '${_AR_ADDRESS}/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend:${SHORT_SHA}'
+
+  # Step 9: Push latest Image
+  - name: '${_AR_ADDRESS}/cloud-builders/docker'
+    id: 'Push Image latest'
+    args:
+      - 'push'
+      - 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend:latest'
+
+#### STEP 10: Get Image Digest ####
+  - id: 'Get Image Digest'
+    name: '${_AR_ADDRESS}/gcloud:latest'
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        IMAGE_DIGEST=$(gcloud artifacts docker images describe "${_IMAGE_URI}" --format='value(image_summary.digest)')
+        echo "Image digest: $$IMAGE_DIGEST"
+        echo "$$IMAGE_DIGEST" > /workspace/image_digest.txt
+
+#### STEP 11: Deploy to GKE ####
+  - id: 'Deploy to GKE'
+    name: ${_AR_ADDRESS}/cloudsdktool/cloud-sdk
+    entrypoint: /bin/bash
+    dir: '/workspace/offers-app-0/cms-vendor-frontend'
+    args:
+    - -c
+    - |
+      IMAGE_DIGEST=$(cat /workspace/image_digest.txt)
+      # shortening the digest to the first 7 characters for a cleaner release name
+      DIGEST_SHORT=$(echo "$$IMAGE_DIGEST" | cut -c 8-14)
+
+      # construct unique release name
+      RELEASE_NAME="g-${SHORT_SHA}-sha-$${DIGEST_SHORT}"
+      DELIVERY_PIPELINE="cms-vendor-frontend-pipeline"
+      PROJECT_ID="${PROJECT_ID}"
+      REGION="me-central2"
+
+      echo "Attempting to create or skip release: $$RELEASE_NAME"
+
+      # 3. Check if the release already exists
+      gcloud deploy releases describe "$$RELEASE_NAME" \
+        --delivery-pipeline "$$DELIVERY_PIPELINE" \
+        --project "$$PROJECT_ID" \
+        --region "$$REGION" \
+        --format="none" 2>/dev/null
+
+      if [ $? -eq 0 ]; then
+        echo "Release $$RELEASE_NAME already exists. Skipping creation."
+      else
+        echo "Release $$RELEASE_NAME does not exist. Creating new release..."
+
+        # 4. Create the new release only if the previous command failed (exit code 1)
+        gcloud deploy releases create "$$RELEASE_NAME" \
+          --delivery-pipeline "$$DELIVERY_PIPELINE" \
+          --region "$$REGION" \
+          --annotations "commitId=${SHORT_SHA}" \
+          --images ${_APPLICATION_COMPONENT}=me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend@$$IMAGE_DIGEST \
+          --skaffold-file=skaffold.yaml \
+          --project "$$PROJECT_ID"
+
+        echo "Successfully created release $$RELEASE_NAME."
+      fi
+
+#### STEP 12: Trigger Security Pipeline ####
+  - id: 'Trigger Security Pipeline'
+    name: "${_AR_ADDRESS}/gcloud:latest"
+    entrypoint: /bin/bash
+    args:
+    - -c
+    - |
+      IMAGE_DIGEST=$(cat /workspace/image_digest.txt)
+      if [[ "${_FORTIFY_SCAN}" == "true" ]]; then
+        TRIGGER_NAME="security-attestations-test"
+        EXTRA_SUBS="_FORTIFY_APPLICATION=AP0000000002924,_FORTIFY_VERSION=gcp-offers-vendor-frontend,_FORTIFY_PARENT_ID=11380"
+      else
+        TRIGGER_NAME="security-attestations-no-fortify"
+        EXTRA_SUBS=""
+      fi
+
+      echo "Triggering pipeline: $$TRIGGER_NAME"
+      # Run the selected trigger with the combined substitutions
+      gcloud builds triggers run "$$TRIGGER_NAME" \
+      --region $LOCATION \
+      --project sao-prj-shr-cicd-pipelines-0 \
+      --substitutions _IMAGE=me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/${_APPLICATION_COMPONENT}@$$IMAGE_DIGEST,_APPLICATION_COMPONENT=${_APPLICATION_COMPONENT},_BUILD_ID=${BUILD_ID},_APP_PROJECT=${PROJECT_ID},_APP_REGION=${LOCATION},$$EXTRA_SUBS
+
+substitutions:
+  _AR_ADDRESS: 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30049727-dkr-vrt-0'
+  _REPO: 'offers-app-0'
+  _REPO_PREFIX: 'https://shr-30049727-ssm-0-937610298983-git.europe-west4.p.sourcemanager.dev'
+  _IMAGE_URI: 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend:latest'
+  _APPLICATION_COMPONENT: 'offers-cms-vendor-frontend'
+  _LOCATION: 'me-central2'
+  _FORTIFY_SCAN: "true"
+options:
+  logging: CLOUD_LOGGING_ONLY
+  pool:
+    name: 'projects/sao-prj-shr-30049727-cb-0/locations/europe-west4/workerPools/shr-30049727-cb-0'
+  requestedVerifyOption: VERIFIED
+
+images:
+  - 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend:${SHORT_SHA}'
+  - 'me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/offers-cms-vendor-frontend:latest'
+

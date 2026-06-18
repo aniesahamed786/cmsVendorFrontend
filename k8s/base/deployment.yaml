@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-offers-cms-vendor-frontend
+  labels:
+    app: cms-vendor-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cms-vendor-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: cms-vendor-frontend
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: cms-vendor-frontend
+          image: offers-cms-vendor-frontend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"

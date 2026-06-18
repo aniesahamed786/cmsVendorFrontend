@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-offers-cms-vendor-frontend
+  labels:
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      environment: dev
+  template:
+    metadata:
+      labels:
+        environment: dev
+    spec:
+      serviceAccountName: dev-offers-gke-vendor-frontend-0

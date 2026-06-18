@@ -1,0 +1,28 @@
+apiVersion: skaffold/v4beta4
+kind: Config
+metadata:
+  name: offers-cms-vendor-frontend
+build:
+  artifacts:
+    - image: offers-cms-vendor-frontend
+manifests:
+  kustomize:
+    paths:
+      - k8s/overlays
+profiles:
+  - name: dev-offers-cd-0
+    manifests:
+      kustomize:
+        paths:
+          - k8s/overlays/dev
+  - name: qa-offers-cd-0
+    manifests:
+      kustomize:
+        paths:
+          - k8s/overlays/qa
+  - name: prd-offers-cd-0
+    manifests:
+      kustomize:
+        paths:
+          - k8s/overlays/prd
+

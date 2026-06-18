@@ -1,0 +1,8 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: offers-cms-vendor-frontend-httproute
+spec:
+  hostnames:
+  - vendor-cms.dev.gcp.aramco.com
+  - vendor-cms-dev.aramco.com.sa

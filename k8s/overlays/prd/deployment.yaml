@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-offers-cms-vendor-frontend
+  labels:
+    environment: prd
+spec:
+  selector:
+    matchLabels:
+      environment: prd
+  template:
+    metadata:
+      labels:
+        environment: prd
+    spec:
+      serviceAccountName: prd-sa-offers-vendor-frontend

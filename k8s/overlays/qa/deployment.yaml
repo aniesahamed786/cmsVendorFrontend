@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-offers-cms-vendor-frontend
+  labels:
+    environment: qa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      environment: qa
+  template:
+    metadata:
+      labels:
+        environment: qa
+    spec:
+      serviceAccountName: qa-offers-gke-vendor-frontend-0

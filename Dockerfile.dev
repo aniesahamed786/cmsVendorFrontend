@@ -1,0 +1,16 @@
+FROM me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30011854-dkr-std-0/node:lts-alpine AS builder
+WORKDIR /app
+
+COPY package*.json tsconfig.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build:dev
+
+FROM me-central2-docker.pkg.dev/sao-prj-shr-30049727-ar-0/shr-30049727-dkr-vrt-0/chainguard/nginx:latest AS production
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist/cms-vendor-frontend/browser /usr/share/nginx/html
+EXPOSE 8081
+CMD ["nginx", "-g", "daemon off;"]
+
