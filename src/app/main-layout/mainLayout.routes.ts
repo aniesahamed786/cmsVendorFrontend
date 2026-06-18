@@ -48,8 +48,8 @@ export const routes: Route[] = [
       },
       {
         path: 'profile',
-        component: Inprogress,
-        data: { title: 'Profile' },
+        loadChildren: () => import('../features/Profile/profile.routes').then((m) => m.routes),
+        data: { title: 'Vendor Profile' },
       },
       {
         path: 'settings',

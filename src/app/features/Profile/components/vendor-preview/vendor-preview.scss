@@ -1,0 +1,55 @@
+@use '../../../../shared/styles/mobile-preview-mockup' as *;
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: white;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.vendor-preview__phone {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.vendor-preview__social-icon {
+  display: inline-block;
+  width: 0.95rem;
+  height: 0.95rem;
+  color: #4b5563;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.vendor-preview__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 1.5rem;
+  text-decoration: none;
+  color: #4b5563;
+}
+
+.vendor-preview__social-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 12rem;
+  margin: 0 auto;
+}

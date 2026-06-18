@@ -81,7 +81,7 @@ export class DashboardPage {
   }
 
   goToEditProfile(): void {
-    this.router.navigate(['/stores']);
+    this.router.navigate(['/profile/edit']);
   }
 
   goToContactSupport(): void {

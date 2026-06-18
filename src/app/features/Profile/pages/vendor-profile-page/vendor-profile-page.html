@@ -1,0 +1,203 @@
+<div class="vendor-profile-page space-y-6">
+  @if (profile(); as vendor) {
+  <div class="profile-page-header">
+    <h1 class="profile-page-title">Vendor Profile</h1>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-pencil"
+      label="Edit Profile"
+      class="profile-edit-btn"
+      (click)="onEditProfile()"
+    ></button>
+  </div>
+
+  <div class="profile-card profile-hero">
+    <div class="profile-hero-logo">LUMEE</div>
+    <div class="profile-hero-content">
+      <div class="profile-hero-top">
+        <h2 class="profile-hero-name">{{ vendor.name }}</h2>
+        <span class="status-badge status-badge--success profile-contract-badge">
+          {{ vendor.contractStatus }}
+        </span>
+      </div>
+      <div class="profile-hero-meta">
+        <span class="profile-meta-item">
+          <i class="pi pi-file"></i>
+          CR {{ vendor.crNumber }}
+        </span>
+        <span class="profile-meta-item">
+          <i class="pi pi-map-marker"></i>
+          {{ vendor.location }}
+        </span>
+        <span class="profile-meta-item">
+          <i class="pi pi-clock"></i>
+          Last Activity: {{ vendor.lastActivity }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    @for (item of vendor.dateSummaries; track item.label) {
+    <div class="profile-card profile-date-card">
+      <div class="profile-date-icon">
+        <i [class]="item.icon"></i>
+      </div>
+      <p class="profile-date-label">{{ item.label }}</p>
+      <p class="profile-date-value">{{ item.value }}</p>
+    </div>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] gap-6">
+    <div class="profile-card profile-section-card">
+      <div class="profile-section-title">
+        <i class="pi pi-briefcase"></i>
+        <span>Portfolio Overview</span>
+      </div>
+      <p class="profile-section-text">{{ vendor.description }}</p>
+      <div class="profile-tags">
+        @for (tag of vendor.tags; track tag) {
+        <span class="profile-tag">{{ tag }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="profile-card profile-section-card">
+      <div class="profile-section-title">
+        <i class="pi pi-building"></i>
+        <span>Vendor Locations</span>
+      </div>
+      <div class="profile-locations">
+        @for (location of vendor.locations; track location.id) {
+        <div class="profile-location-item">
+          <span class="profile-location-index">{{ location.id }}</span>
+          <div>
+            <p class="profile-location-name">{{ location.name }}</p>
+            <p class="profile-location-address">{{ location.address }}</p>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] gap-6">
+    <div class="profile-card profile-section-card">
+      <div class="profile-section-header">
+        <div class="profile-section-title">
+          <i class="pi pi-tag"></i>
+          <span>Active &amp; Recent Offers</span>
+        </div>
+        <button type="button" class="profile-link-btn" (click)="onViewAllOffers()">
+          View All Offers
+        </button>
+      </div>
+      <div class="profile-offers-list">
+        @for (offer of vendor.offers; track offer.id) {
+        <div class="profile-offer-row">
+          <div class="profile-offer-main">
+            <span class="profile-offer-icon">
+              <i [class]="offer.icon"></i>
+            </span>
+            <div>
+              <p class="profile-offer-title">{{ offer.title }}</p>
+              <p class="profile-offer-expiry">{{ offer.expiresOn }}</p>
+            </div>
+          </div>
+          <span [class]="offerStatusClass(offer.status)">{{ offer.status }}</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="profile-card profile-section-card">
+      <div class="profile-section-header">
+        <div class="profile-section-title">
+          <i class="pi pi-clipboard"></i>
+          <span>Active Requests</span>
+        </div>
+        <button type="button" class="profile-link-btn" (click)="onViewAllRequests()">
+          View All Request
+        </button>
+      </div>
+      <div class="profile-requests-list">
+        @for (request of vendor.requests; track request.id) {
+        <div class="profile-request-card">
+          <p class="profile-request-title">{{ request.title }}</p>
+          <span [class]="requestStatusClass(request.status)">{{ request.status }}</span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="profile-card profile-section-card">
+      <div class="profile-section-title">
+        <i class="pi pi-user"></i>
+        <span>Contact Information</span>
+      </div>
+      <div class="profile-contact-list">
+        <div class="profile-contact-row">
+          <i class="pi pi-user"></i>
+          <span>{{ vendor.primaryContact.name }} ({{ vendor.primaryContact.role }})</span>
+        </div>
+        <div class="profile-contact-row">
+          <i class="pi pi-phone"></i>
+          <span>{{ vendor.primaryContact.phone }}</span>
+        </div>
+        <div class="profile-contact-row">
+          <i class="pi pi-envelope"></i>
+          <span>{{ vendor.primaryContact.email }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card profile-section-card profile-secondary-contact">
+      <div class="profile-section-title">
+        <i class="pi pi-users"></i>
+        <span>Secondary Contact</span>
+      </div>
+      <div class="profile-contact-list">
+        <div class="profile-contact-row">
+          <i class="pi pi-user"></i>
+          <span>{{ vendor.secondaryContact.name }} ({{ vendor.secondaryContact.role }})</span>
+        </div>
+        <div class="profile-contact-row">
+          <i class="pi pi-phone"></i>
+          <span>{{ vendor.secondaryContact.phone }}</span>
+        </div>
+        <div class="profile-contact-row">
+          <i class="pi pi-envelope"></i>
+          <span>{{ vendor.secondaryContact.email }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card profile-approved-card">
+      <p class="profile-approved-label">Approved By</p>
+      <div class="profile-approved-user">
+        <p-avatar
+          [label]="vendor.approvedBy.avatarLabel"
+          shape="circle"
+          styleClass="profile-approved-avatar"
+        />
+        <div>
+          <p class="profile-approved-name">{{ vendor.approvedBy.name }}</p>
+          <p class="profile-approved-title">{{ vendor.approvedBy.title }}</p>
+        </div>
+      </div>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-comments"
+        label="Message Representative"
+        class="profile-message-btn"
+        (click)="onMessageRepresentative()"
+      ></button>
+    </div>
+  </div>
+  }
+</div>

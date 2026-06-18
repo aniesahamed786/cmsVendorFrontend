@@ -1,0 +1,235 @@
+<!-- mobile-style preview -->
+<aside [class.hidden]="!isDialog" [class.lg:block]="!isDialog" class="w-full lg:flex-none shrink-0"
+    aria-label="Mobile preview">
+
+    <div class="preview-wrapper" [class.relative]="isDialog">
+
+        <!-- Mobile Device Mockup Container -->
+        <div class="phone-mockup">
+
+            <!-- App Header / Status Bar -->
+            <div
+                class="w-full h-12 flex items-center justify-between px-8 pt-6 text-[0.65rem] font-bold text-gray-800 z-30 shrink-0">
+                <span>9:41</span>
+                <div class="flex gap-1.5 items-center">
+                    <i class="pi pi-wifi"></i>
+                    <i class="pi pi-battery-full rotate-90"></i>
+                </div>
+            </div>
+
+            <!-- Top Actions Bar -->
+            <div class="w-full flex items-center justify-between px-5 py-2 shrink-0 z-30">
+                <i class="pi pi-chevron-left text-lg text-gray-600"></i>
+                <div class="flex gap-4">
+                    <i class="pi pi-bell text-gray-600"></i>
+                    <i class="pi pi-map-marker text-gray-600"></i>
+                </div>
+            </div>
+
+            <!-- Main Scrollable Content -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar pb-20" [attr.dir]="language() === 'ar' ? 'rtl' : 'ltr'">
+
+                <!-- Hero Section -->
+                <div class="relative w-full h-44 shrink-0 bg-gray-50 flex items-center justify-center">
+                    @if (getVendorBanner(); as banner) {
+                    <img [src]="banner" class="w-full h-full object-cover" alt="Banner"
+                        (error)="markBannerImageFailed()" />
+                    } @else {
+                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <i class="pi pi-image text-5xl text-gray-400 opacity-50"></i>
+                    </div>
+                    }
+                    <!-- Overlapping Logo -->
+                    <div
+                        class="absolute -bottom-8 left-1/2 -translate-x-1/2 w-20 h-20 bg-white p-2 flex items-center justify-center border border-gray-50">
+                        @if (getVendorLogo(); as logo) {
+                        <img [src]="logo" class="max-w-full max-h-full object-contain" alt="Logo"
+                            (error)="markLogoImageFailed()" />
+                        } @else {
+                        <div class="w-full h-full bg-gray-50 flex items-center justify-center">
+                            <i class="pi pi-image text-3xl text-gray-300"></i>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Vendor Identity -->
+                <div class="mt-12 px-6 flex flex-col items-center">
+                    <h1 class="text-[1.3rem] font-bold text-gray-800 text-center leading-tight mb-6">
+                        {{ getVendorName() }}
+                    </h1>
+
+                    <!-- Contact Details -->
+                    <div class="w-full flex flex-col gap-3.5 text-[0.75rem] text-gray-500 font-medium">
+                        <div class="flex items-center gap-4">
+                            <i class="pi pi-phone text-xs"></i>
+                            <span class="vendor-preview__phone" dir="ltr">{{ formatPhone() }}</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <i class="pi pi-envelope text-xs"></i>
+                            <span>{{ formatEmail() }}</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <i class="pi pi-globe text-xs"></i>
+                            <span>{{ formatWebsite() }}</span>
+                        </div>
+                        <div class="flex items-start gap-4 mt-1 leading-relaxed">
+                            <i class="pi pi-info-circle text-xs mt-0.5"></i>
+                            <span>{{ getVendorDescription() }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Social Icons -->
+                    @if (getSocialLinks().length > 0) {
+                    <div class="w-full mt-8 mb-6">
+                        <div class="vendor-preview__social-row text-gray-600">
+                            @for (link of getSocialLinks(); track getSocialLinkHref(link)) {
+                            <a [href]="getSocialLinkHref(link)" target="_blank" rel="noopener noreferrer"
+                                class="vendor-preview__social-link">
+                                @if (getSocialLinkIconPath(link); as socialIconPath) {
+                                <span [class]="getSocialLinkIconClass(link)"
+                                    [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                                    [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                                } @else {
+                                <i class="pi pi-link text-sm"></i>
+                                }
+                            </a>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Action Buttons -->
+                    <div
+                        class="flex items-center justify-center gap-12 text-gray-400 mb-8 border-t border-gray-100 w-full pt-4">
+                        <div class="flex flex-col items-center gap-1 cursor-pointer hover:text-[#0033A0]">
+                            <i class="pi pi-heart text-lg font-light"></i>
+                            <span class="text-[0.6rem] font-medium">{{ language() === 'en' ? 'Favorite' : 'المفضلة'
+                                }}</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 cursor-pointer hover:text-[#0033A0]">
+                            <i class="pi pi-share-alt text-lg font-light"></i>
+                            <span class="text-[0.6rem] font-medium">{{ language() === 'en' ? 'Share' : 'مشاركة'
+                                }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Offers Section -->
+                <div class="px-5 py-4 bg-gray-50/50">
+                    <h3 class="text-base font-bold text-gray-800 mb-4">{{ language() === 'en' ? 'Offers' : 'العروض' }}
+                    </h3>
+                    <div class="flex flex-col gap-3">
+                        @for (offer of getOffers(); track $index) {
+                        <div class="bg-white p-3 border border-gray-100 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-gray-50 p-1 flex items-center justify-center">
+                                    @if (getVendorLogo(); as logo) {
+                                    <img [src]="logo" class="max-w-full max-h-full object-contain opacity-80"
+                                        alt="Icon" (error)="markLogoImageFailed()" />
+                                    } @else {
+                                    <i class="pi pi-image text-gray-300"></i>
+                                    }
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-gray-800">{{ language() === 'en' ? 'Special
+                                        Offer' : 'عرض خاص' }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end gap-2">
+                                <i class="pi pi-heart text-gray-300 text-sm"></i>
+                                <span class="text-[0.55rem] text-gray-400">{{ language() === 'en' ? 'In-Store' : 'في
+                                    المتجر' }}</span>
+                            </div>
+                        </div>
+                        } @empty {
+                        <div class="bg-white p-3 border border-gray-100 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-gray-50 p-1 flex items-center justify-center">
+                                    @if (getVendorLogo(); as logo) {
+                                    <img [src]="logo" class="max-w-full max-h-full object-contain opacity-80"
+                                        alt="Icon" (error)="markLogoImageFailed()" />
+                                    } @else {
+                                    <i class="pi pi-image text-gray-300"></i>
+                                    }
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-gray-800">{{ language() === 'en' ? 'Special
+                                        Offer' : 'عرض خاص' }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end gap-2">
+                                <i class="pi pi-heart text-gray-300 text-sm"></i>
+                                <span class="text-[0.55rem] text-gray-400">{{ language() === 'en' ? 'In-Store' : 'في
+                                    المتجر' }}</span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Branches Section -->
+                <div class="px-5 py-6">
+                    <h3 class="text-base font-bold text-gray-800 mb-5">{{ language() === 'en' ? 'Branches' : 'الفروع' }}
+                    </h3>
+                    <div class="flex flex-col gap-6">
+                        @for (loc of getLocations(); track $index) {
+                        <div
+                            class="flex items-start justify-between border-b border-gray-50 pb-5 last:border-0 last:pb-0">
+                            <div class="flex items-start gap-4">
+                                <i class="pi pi-home text-gray-300 text-lg mt-0.5"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-gray-700 leading-tight">{{ getLocationName(loc)
+                                        }}</span>
+                                    <span class="text-[0.65rem] text-gray-400 font-medium">{{ getLocationCity(loc)
+                                        }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        } @empty {
+                        }
+                    </div>
+
+                    <button
+                        class="w-full mt-10 flex justify-center items-center gap-2 text-[#4285F4] text-xs font-bold hover:opacity-80 transition-opacity">
+                        <i class="pi pi-map text-lg"></i> {{ language() === 'en' ? 'View all branches' : 'عرض جميع
+                        الفروع' }}
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Persistent Bottom Nav -->
+            <div
+                class="absolute bottom-0 w-full h-16 bg-white/95 backdrop-blur-md border-t border-gray-100 flex justify-around items-center text-[0.55rem] text-gray-400 pb-2 z-30 shrink-0">
+                <div class="flex flex-col items-center gap-1.5">
+                    <i class="pi pi-map-marker text-[1.1rem]"></i>
+                    <span class="scale-90 opacity-80">{{ language() === 'en' ? 'Near You' : 'بالقرب منك' }}</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <i class="pi pi-home text-[1.1rem]"></i>
+                    <span class="scale-90 opacity-80">{{ language() === 'en' ? 'Home' : 'الرئيسية' }}</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <i class="pi pi-search text-[1.1rem]"></i>
+                    <span class="scale-90 opacity-80">{{ language() === 'en' ? 'Search' : 'بحث' }}</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <i class="pi pi-user text-[1.1rem]"></i>
+                    <span class="scale-90 opacity-80 font-bold">{{ language() === 'en' ? 'Profile' : 'الملف الشخصي'
+                        }}</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Toggle Controls -->
+        <div class="language-toggle-container">
+            <button (click)="toggleLanguage()" class="toggle-button">
+                <i class="pi pi-language"></i>
+                {{ language() === 'en' ? 'Arabic' : 'English' }}
+            </button>
+        </div>
+
+    </div>
+</aside>

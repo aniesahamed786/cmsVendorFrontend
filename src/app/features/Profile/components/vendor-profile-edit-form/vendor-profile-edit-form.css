@@ -1,0 +1,143 @@
+.vendor-profile-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.profile-form-section {
+  background: #ffffff;
+  border: 1px solid #eef2f6;
+  padding: 1.5rem;
+}
+
+.profile-form-section__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-form-section__header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.profile-form-section__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 51, 160, 0.08);
+  color: #0033a0;
+}
+
+.profile-form-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.profile-form-grid--two {
+  grid-template-columns: 1fr;
+}
+
+.profile-form-grid--three {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .profile-form-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-form-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.profile-form-grid__full {
+  grid-column: 1 / -1;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.required {
+  color: #dc2626;
+}
+
+.field-hint {
+  margin: 0.375rem 0 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-textarea {
+  border-radius: 0;
+  background: #f9fafb;
+  box-shadow: none;
+}
+
+.profile-form-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.profile-link-action {
+  border: 0;
+  background: transparent;
+  color: #0033a0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.profile-link-action--danger {
+  color: #dc2626;
+}
+
+.profile-location-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.profile-location-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.profile-location-item__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.profile-location-item__address {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.profile-location-item__actions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
