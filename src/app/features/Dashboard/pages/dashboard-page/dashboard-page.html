@@ -1,26 +1,20 @@
-<div class="dashboard-page space-y-6">
-  <div class="bg-white border border-slate-100 p-6 flex flex-col md:flex-row gap-6 items-start">
-    <div
-      class="w-24 h-24 shrink-0 bg-[#1B5E20] text-white flex items-center justify-center text-2xl font-bold tracking-wide"
-    >
-      LUMEE
+<div class="dashboard-page">
+  <section class="dashboard-page__header">
+    <div class="dashboard-page__logo">LUMEE</div>
+    <div class="dashboard-page__intro">
+      <h1 class="dashboard-page__title">{{ vendorName() }}</h1>
+      <p class="dashboard-page__description">{{ vendorDescription() }}</p>
     </div>
-    <div class="min-w-0">
-      <h1 class="text-2xl md:text-3xl font-bold text-[#0033A0]">{{ vendorName() }}</h1>
-      <p class="text-sm md:text-base text-gray-600 mt-2 max-w-3xl">
-        {{ vendorDescription() }}
-      </p>
-    </div>
-  </div>
+  </section>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="dashboard-page__stats">
     <app-offer-tile
       title="Total Redemptions"
       value="2,427"
       subtitle="All-time redemptions"
       icon="pi pi-chart-line"
-      iconColor="#0033A0"
-      iconContainerBg="rgba(102, 141, 225, 0.1)"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)"
       trendLabel="12.5%"
       [trendUp]="true"
     />
@@ -29,8 +23,8 @@
       value="19"
       subtitle="Currently live"
       icon="assets/svg/Dashboard/ic-active-offers.svg"
-      iconColor="#0033A0"
-      iconContainerBg="rgba(102, 141, 225, 0.1)"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)"
       trendLabel="3%"
       [trendUp]="true"
       (tileClick)="goToOffers()"
@@ -40,8 +34,8 @@
       value="0"
       subtitle="Awaiting approval"
       icon="assets/svg/Dashboard/ic-pending-requests.svg"
-      iconColor="#0033A0"
-      iconContainerBg="rgba(102, 141, 225, 0.1)"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)"
       badgeLabel="AWAITING APPROVAL"
       (tileClick)="goToRequestCenter()"
     />
@@ -64,55 +58,51 @@
     (contactSupport)="goToContactSupport()"
   />
 
-  <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] gap-6">
-    <div class="bg-white border border-slate-100 px-6 py-6">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-slate-900">Recent Activity</h2>
+  <div class="dashboard-page__columns">
+    <section class="dashboard-page__panel">
+      <div class="dashboard-page__panel-head">
+        <h2 class="dashboard-page__panel-title">Recent Activity</h2>
         <button
           type="button"
-          class="text-sm font-semibold cursor-pointer hover:underline bg-transparent border-0 p-0"
-          style="color: #0033a0"
+          class="dashboard-page__link"
           (click)="goToRecentActivities()"
         >
           View History
         </button>
       </div>
 
-      <div class="space-y-4">
+      <div class="dashboard-page__activity-list">
         @for (activity of recentActivities(); track activity.title + activity.time) {
-        <div class="flex items-start gap-4 py-3 border-b border-slate-100 last:border-0">
-          <div
-            class="w-10 h-10 shrink-0 flex items-center justify-center rounded-none"
-            [ngClass]="activity.iconClass"
-          >
+        <div class="dashboard-page__activity">
+          <div class="dashboard-page__activity-icon" [ngClass]="activity.iconClass">
             <i [class]="activity.icon"></i>
           </div>
-          <div class="min-w-0 flex-1">
-            <p class="font-semibold text-slate-900">{{ activity.title }}</p>
-            <p class="text-sm text-slate-500 mt-0.5">{{ activity.description }}</p>
+          <div class="dashboard-page__activity-body">
+            <p class="dashboard-page__activity-title">{{ activity.title }}</p>
+            <p class="dashboard-page__activity-desc">{{ activity.description }}</p>
           </div>
-          <span class="text-xs text-slate-400 shrink-0">{{ activity.time }}</span>
+          <span class="dashboard-page__activity-time">{{ activity.time }}</span>
         </div>
         }
       </div>
-    </div>
+    </section>
 
-    <div class="bg-white border border-slate-100 px-6 py-6">
-      <h2 class="text-xl font-semibold text-slate-900 mb-6">Top Performing Branch</h2>
-      <div class="space-y-4">
+    <section class="dashboard-page__panel">
+      <h2 class="dashboard-page__panel-title dashboard-page__panel-title--spaced">
+        Top Performing Branch
+      </h2>
+      <div class="dashboard-page__branch">
         <div>
-          <p class="text-lg font-semibold text-[#0033A0]">Dammam Branch</p>
-          <p class="text-sm text-slate-500 mt-1">
+          <p class="dashboard-page__branch-name">Dammam Branch</p>
+          <p class="dashboard-page__branch-address">
             King Fahd Road, Al Faisaliyah, Dammam 32272
           </p>
         </div>
-        <div class="bg-[#EEF4FF] p-5">
-          <p class="text-xs font-semibold tracking-wide text-[#0033A0] uppercase">
-            Cumulative Redemptions
-          </p>
-          <p class="text-4xl font-bold text-slate-900 mt-2">1,245</p>
+        <div class="dashboard-page__branch-stat">
+          <p class="dashboard-page__branch-stat-label">Cumulative Redemptions</p>
+          <p class="dashboard-page__branch-stat-value">1,245</p>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </div>

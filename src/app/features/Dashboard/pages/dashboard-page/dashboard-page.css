@@ -1,0 +1,238 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Header / vendor identity */
+.dashboard-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+}
+
+.dashboard-page__logo {
+  width: 6rem;
+  height: 6rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-primary);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-page__intro {
+  min-width: 0;
+}
+
+.dashboard-page__title {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--app-primary);
+}
+
+.dashboard-page__description {
+  margin: 0.5rem 0 0;
+  max-width: 48rem;
+  font-size: 0.95rem;
+  color: var(--app-muted);
+}
+
+@media (min-width: 768px) {
+  .dashboard-page__header {
+    flex-direction: row;
+  }
+}
+
+/* Stat tiles */
+.dashboard-page__stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .dashboard-page__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-page__stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Two-column layout */
+.dashboard-page__columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+  .dashboard-page__columns {
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  }
+}
+
+.dashboard-page__panel {
+  padding: 1.5rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+}
+
+.dashboard-page__panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-page__panel-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.dashboard-page__panel-title--spaced {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-page__link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--app-primary);
+  cursor: pointer;
+}
+
+.dashboard-page__link:hover {
+  color: var(--app-primary-700);
+  text-decoration: underline;
+}
+
+/* Recent activity */
+.dashboard-page__activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-page__activity {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.dashboard-page__activity:last-child {
+  border-bottom: 0;
+}
+
+.dashboard-page__activity-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Activity status variants. Brand/neutral track the theme tokens;
+   warning/success keep their semantic status hues. */
+.dashboard-page__activity-icon--brand {
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+}
+
+.dashboard-page__activity-icon--neutral {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  color: var(--app-muted);
+}
+
+.dashboard-page__activity-icon--warning {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.dashboard-page__activity-icon--success {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.dashboard-page__activity-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.dashboard-page__activity-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.dashboard-page__activity-desc {
+  margin: 0.125rem 0 0;
+  font-size: 0.875rem;
+  color: var(--app-muted);
+}
+
+.dashboard-page__activity-time {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--app-muted);
+}
+
+/* Top branch */
+.dashboard-page__branch {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dashboard-page__branch-name {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--app-primary);
+}
+
+.dashboard-page__branch-address {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--app-muted);
+}
+
+.dashboard-page__branch-stat {
+  padding: 1.25rem;
+  background: var(--app-primary-soft);
+}
+
+.dashboard-page__branch-stat-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--app-primary);
+}
+
+.dashboard-page__branch-stat-value {
+  margin: 0.5rem 0 0;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--app-text);
+}

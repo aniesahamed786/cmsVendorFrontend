@@ -19,11 +19,23 @@
 
 :root {
   --font-family: "Ghawar", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  /* Surface / chrome tokens (flip per appearance mode) */
   --app-bg: #F6F6F8;
   --app-surface: #ffffff;
   --app-text: #111827;
   --app-muted: #6b7280;
   --app-border: #e5e7eb;
+
+  /* Brand / primary tokens (derived from the #0033A0 brand color) */
+  --app-primary-rgb: 0, 51, 160;
+  --app-primary: #0033A0;
+  --app-primary-700: #002277;
+  --app-primary-soft: rgba(var(--app-primary-rgb), 0.08);
+  --app-primary-subtle: rgba(var(--app-primary-rgb), 0.13);
+  --app-primary-hover-soft: rgba(var(--app-primary-rgb), 0.06);
+  --app-primary-ring: rgba(var(--app-primary-rgb), 0.16);
+  --app-primary-gradient: linear-gradient(91.48deg, #0033A0 10%, #002277 90%);
 }
 
 .p-inputtext,
@@ -32,6 +44,19 @@
 .p-datepicker,
 .p-dropdown {
   box-shadow: none !important;
+}
+
+/* Square corners are the house rule — keep form controls and their overlays sharp */
+.p-inputtext,
+.p-select,
+.p-multiselect,
+.p-datepicker,
+.p-dropdown,
+.p-select-option,
+.p-multiselect-option,
+.p-datepicker-panel,
+.p-paginator .p-select {
+  border-radius: 0 !important;
 }
 
 html,
@@ -129,16 +154,16 @@ body {
 .p-button:not(.p-button-secondary):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-danger),
 p-button[severity="primary"] .p-button,
 .p-button.p-button-primary {
-  background-color: #0033A0 !important;
-  border-color: #0033A0 !important;
+  background-color: var(--app-primary) !important;
+  border-color: var(--app-primary) !important;
   color: #ffffff !important;
 }
 
 .p-button:not(.p-button-secondary):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-danger):enabled:hover,
 p-button[severity="primary"] .p-button:enabled:hover,
 .p-button.p-button-primary:enabled:hover {
-  background-color: #002277 !important;
-  border-color: #002277 !important;
+  background-color: var(--app-primary-700) !important;
+  border-color: var(--app-primary-700) !important;
 }
 
 .p-card,

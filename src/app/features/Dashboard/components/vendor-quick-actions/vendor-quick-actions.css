@@ -1,0 +1,78 @@
+.vendor-quick-actions {
+  width: 100%;
+  padding: 1.5rem 1.5rem 2rem;
+  background: var(--app-primary);
+}
+
+.vendor-quick-actions__title {
+  margin: 0 0 1.5rem;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.vendor-quick-actions__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .vendor-quick-actions__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.vendor-quick-actions__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+  width: 100%;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.vendor-quick-actions__card:hover {
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+}
+
+.vendor-quick-actions__icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+}
+
+.vendor-quick-actions__icon .pi {
+  font-size: 1.25rem;
+}
+
+.vendor-quick-actions__icon-mask {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: var(--app-primary);
+  -webkit-mask-image: url('/assets/svg/Dashboard/ic-add-new-offer.svg');
+  mask-image: url('/assets/svg/Dashboard/ic-add-new-offer.svg');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.vendor-quick-actions__label {
+  color: var(--app-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
