@@ -21,7 +21,7 @@
 .edit-profile-breadcrumb {
   margin: 0 0 0.75rem;
   font-size: 0.8125rem;
-  color: #94a3b8;
+  color: var(--app-muted);
 }
 
 .edit-profile-back-btn {
@@ -30,16 +30,16 @@
   gap: 0.5rem;
   height: 2.5rem;
   padding: 0 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--app-border);
   background: transparent;
-  color: #6b7280;
+  color: var(--app-muted);
   cursor: pointer;
 }
 
 .edit-profile-back-btn:hover {
-  border-color: #0033a0;
-  color: #0033a0;
-  background: rgba(102, 141, 225, 0.1);
+  border-color: var(--app-primary);
+  color: var(--app-primary);
+  background: var(--app-primary-soft);
 }
 
 .edit-profile-toolbar__actions {
@@ -62,15 +62,20 @@
 }
 
 .edit-profile-draft-btn {
-  border: 1px solid #0033a0;
-  background: #ffffff;
-  color: #0033a0;
+  border: 1px solid var(--app-primary);
+  background: var(--app-surface);
+  color: var(--app-primary);
 }
 
 .edit-profile-update-btn {
-  border: 1px solid #0033a0;
-  background: #0033a0;
+  border: 1px solid var(--app-primary);
+  background: var(--app-primary);
   color: #ffffff;
+}
+
+.edit-profile-update-btn:hover {
+  background: var(--app-primary-700);
+  border-color: var(--app-primary-700);
 }
 
 .edit-profile-layout {

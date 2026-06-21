@@ -75,7 +75,8 @@ body {
 }
 
 .dark-mode {
-  --app-bg: linear-gradient(160deg, #0f172a 0%, #111827 55%, #020617 100%);
+  --app-dark-bg: #232323;
+  --app-bg: var(--app-dark-bg);
   --app-surface: #111827;
   --app-text: #e5e7eb;
   --app-muted: #94a3b8;

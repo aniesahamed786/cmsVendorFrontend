@@ -13,19 +13,19 @@
   margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0033a0;
+  color: var(--app-primary);
 }
 
 :host ::ng-deep .profile-edit-btn.p-button {
-  background: #0033a0 !important;
-  border-color: #0033a0 !important;
+  background: var(--app-primary) !important;
+  border-color: var(--app-primary) !important;
   border-radius: 0 !important;
   font-weight: 600;
 }
 
 .profile-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   border-radius: 0;
 }
 
@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1b5e20;
+  background: var(--app-primary);
   color: #ffffff;
   font-size: 1.25rem;
   font-weight: 700;
@@ -73,7 +73,7 @@
   margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0033a0;
+  color: var(--app-primary);
 }
 
 .profile-contract-badge {
@@ -92,11 +92,11 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--app-muted);
 }
 
 .profile-meta-item .pi {
-  color: #0033a0;
+  color: var(--app-primary);
   font-size: 0.875rem;
 }
 
@@ -110,8 +110,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(102, 141, 225, 0.12);
-  color: #0033a0;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
   margin-bottom: 0.875rem;
 }
 
@@ -121,14 +121,14 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--app-muted);
 }
 
 .profile-date-value {
   margin: 0.375rem 0 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--app-text);
 }
 
 .profile-section-card {
@@ -149,18 +149,18 @@
   gap: 0.625rem;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--app-text);
 }
 
 .profile-section-title .pi {
-  color: #0033a0;
+  color: var(--app-primary);
 }
 
 .profile-section-text {
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: #475569;
+  color: var(--app-muted);
 }
 
 .profile-tags {
@@ -172,8 +172,8 @@
 
 .profile-tag {
   padding: 0.375rem 0.75rem;
-  background: #eef4ff;
-  color: #0033a0;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
   font-size: 0.8125rem;
   font-weight: 600;
   border-radius: 0;
@@ -198,7 +198,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0033a0;
+  background: var(--app-primary);
   color: #ffffff;
   font-size: 0.8125rem;
   font-weight: 700;
@@ -208,13 +208,13 @@
   margin: 0;
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--app-text);
 }
 
 .profile-location-address {
   margin: 0.25rem 0 0;
   font-size: 0.8125rem;
-  color: #64748b;
+  color: var(--app-muted);
   line-height: 1.5;
 }
 
@@ -222,7 +222,7 @@
   border: 0;
   background: transparent;
   padding: 0;
-  color: #0033a0;
+  color: var(--app-primary);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -245,7 +245,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding-bottom: 0.875rem;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--app-border);
 }
 
 .profile-offer-row:last-child {
@@ -267,21 +267,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eef4ff;
-  color: #0033a0;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
 }
 
 .profile-offer-title {
   margin: 0;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--app-text);
 }
 
 .profile-offer-expiry {
   margin: 0.25rem 0 0;
   font-size: 0.8125rem;
-  color: #64748b;
+  color: var(--app-muted);
 }
 
 .profile-request-card {
@@ -290,17 +290,18 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.875rem 1rem;
-  border: 1px solid #e2e8f0;
-  background: #fafbfc;
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
 }
 
 .profile-request-title {
   margin: 0;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--app-text);
 }
 
+/* Status badges keep their semantic status hues (no themeable tokens for these) */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -339,21 +340,21 @@
   align-items: center;
   gap: 0.75rem;
   font-size: 0.9375rem;
-  color: #334155;
+  color: var(--app-text);
 }
 
 .profile-contact-row .pi {
-  color: #0033a0;
+  color: var(--app-primary);
   font-size: 0.9375rem;
 }
 
 .profile-secondary-contact {
-  background: #eef4ff;
+  background: var(--app-primary-soft);
 }
 
 .profile-approved-card {
   padding: 1.5rem;
-  background: #0033a0;
+  background: var(--app-primary);
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -400,11 +401,11 @@
   justify-content: center;
   background: #ffffff !important;
   border-color: #ffffff !important;
-  color: #0033a0 !important;
+  color: var(--app-primary) !important;
   border-radius: 0 !important;
   font-weight: 600;
 }
 
 :host ::ng-deep .profile-message-btn.p-button .pi {
-  color: #0033a0 !important;
+  color: var(--app-primary) !important;
 }

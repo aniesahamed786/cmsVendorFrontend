@@ -5,11 +5,11 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: white;
+  background: var(--app-surface);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
+  background: var(--app-border);
   border-radius: 10px;
 }
 
@@ -22,7 +22,7 @@
   display: inline-block;
   width: 0.95rem;
   height: 0.95rem;
-  color: #4b5563;
+  color: var(--app-muted);
   background-color: currentColor;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -40,7 +40,48 @@
   height: 1.5rem;
   flex: 0 0 1.5rem;
   text-decoration: none;
-  color: #4b5563;
+  color: var(--app-muted);
+}
+
+/* Token bridge: the phone mockup mirrors the consumer app's utility-class markup.
+   Re-map those utilities to tokens, scoped under .phone-mockup, so the preview
+   follows the admin's active mode/accent (the pattern from the styling skill). */
+.phone-mockup {
+  .bg-white,
+  [class*='bg-white/'] {
+    background-color: var(--app-surface) !important;
+  }
+
+  .bg-gray-50,
+  [class*='bg-gray-50/'],
+  .bg-gray-100 {
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  }
+
+  .text-gray-800,
+  .text-gray-700 {
+    color: var(--app-text) !important;
+  }
+
+  .text-gray-600,
+  .text-gray-500,
+  .text-gray-400,
+  .text-gray-300 {
+    color: var(--app-muted) !important;
+  }
+
+  .border-gray-50,
+  .border-gray-100 {
+    border-color: var(--app-border) !important;
+  }
+
+  [class~='hover:text-[#0033A0]']:hover {
+    color: var(--app-primary) !important;
+  }
+
+  [class~='text-[#4285F4]'] {
+    color: var(--app-primary) !important;
+  }
 }
 
 .vendor-preview__social-row {

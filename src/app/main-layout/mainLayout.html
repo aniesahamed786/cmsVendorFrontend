@@ -3,14 +3,12 @@
     class="grid h-full w-full gap-0 grid-cols-1 md:grid-cols-[240px_minmax(0,1fr)] lg:grid-cols-[280px_minmax(0,1fr)]"
   >
     <app-sidenav
-      class="hidden md:block h-full"
+      class="sidenav-desktop h-full"
       (sendNavBarHeader)="handledata($event)"
     ></app-sidenav>
 
     <div class="w-full min-w-0 min-h-0 h-full flex flex-col app-shell-bg">
-      <div
-        class="md:hidden flex items-center justify-between bg-white px-4 py-3 shadow-sm border border-slate-200 mb-3"
-      >
+      <div class="mobile-topbar">
         <button
           pButton
           type="button"
@@ -18,10 +16,10 @@
           class="p-button-text"
           (click)="openMobileSidebar()"
         ></button>
-        <span class="font-medium text-gray-700">
+        <span class="mobile-topbar__title">
           {{ receivedHeaderData() || 'Dashboard' }}
         </span>
-        <span class="w-8"></span>
+        <span class="mobile-topbar__spacer"></span>
       </div>
 
       <app-navbar

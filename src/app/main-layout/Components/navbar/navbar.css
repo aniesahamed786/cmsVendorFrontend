@@ -5,8 +5,9 @@
   gap: 1rem;
   min-height: 3rem;
   padding: 0.75rem 1.25rem;
-  background: #ffffff;
-  border: 1px solid #eef2f7;
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
   border-radius: 0;
   box-shadow: none;
 }
@@ -38,7 +39,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: #ffffff;
-  background: linear-gradient(135deg, #406ED1 0%, #071E50 100%);
+  background: var(--app-primary-gradient);
 }
 
 :host ::ng-deep .profile-menu-avatar {
@@ -47,13 +48,14 @@
   font-size: 1rem;
   font-weight: 600;
   color: #ffffff;
-  background: linear-gradient(135deg, #406ED1 0%, #071E50 100%);
+  background: var(--app-primary-gradient);
   flex-shrink: 0;
 }
 
 .profile-menu {
   width: 15.5rem;
   overflow: hidden;
+  background: var(--app-surface);
 }
 
 .profile-menu-header {
@@ -61,8 +63,8 @@
   align-items: center;
   gap: 0.875rem;
   padding: 1rem 1.125rem;
-  background: #eef4ff;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--app-primary-soft);
+  border-bottom: 1px solid var(--app-border);
 }
 
 .profile-menu-user {
@@ -74,21 +76,21 @@
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.25;
-  color: #0f172a;
+  color: var(--app-text);
 }
 
 .profile-menu-role {
   margin: 0.25rem 0 0;
   font-size: 0.875rem;
   line-height: 1.25;
-  color: #64748b;
+  color: var(--app-muted);
 }
 
 .profile-menu-section {
   display: flex;
   flex-direction: column;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
 }
 
 .profile-menu-section--footer {
@@ -103,7 +105,7 @@
   padding: 0.875rem 1.125rem;
   border: 0;
   background: transparent;
-  color: #1e293b;
+  color: var(--app-text);
   font-size: 0.9375rem;
   font-weight: 500;
   text-align: left;
@@ -112,12 +114,12 @@
 }
 
 .profile-menu-item:hover {
-  background: #f8fafc;
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
 }
 
 .profile-menu-item .pi {
   font-size: 1rem;
-  color: #334155;
+  color: var(--app-muted);
 }
 
 .profile-menu-theme {
@@ -126,43 +128,49 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.875rem 1.125rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--app-border);
 }
 
 .profile-menu-theme-label {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #1e293b;
+  color: var(--app-text);
   font-size: 0.9375rem;
   font-weight: 500;
 }
 
 .profile-menu-theme-label .pi {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--app-muted);
 }
 
+/* Logout keeps its semantic danger hue (no themeable token for it) */
 .profile-menu-logout,
 .profile-menu-logout .pi {
   color: #b41340;
 }
 
 .profile-menu-logout:hover {
-  background: #fdf2f4;
+  background: color-mix(in srgb, var(--app-surface) 90%, #b41340 10%);
+}
+
+::ng-deep .navbar-profile-popover.p-popover,
+::ng-deep .navbar-profile-popover .p-popover-content {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-radius: 0 !important;
 }
 
 ::ng-deep .navbar-profile-popover.p-popover {
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 0 !important;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12) !important;
+  border: 1px solid var(--app-border) !important;
+  box-shadow: 0 12px 30px rgba(var(--app-primary-rgb), 0.12) !important;
   padding: 0 !important;
   margin-top: 0.5rem;
 }
 
 ::ng-deep .navbar-profile-popover .p-popover-content {
   padding: 0 !important;
-  border-radius: 0 !important;
 }
 
 ::ng-deep .navbar-profile-popover .p-popover-arrow,
