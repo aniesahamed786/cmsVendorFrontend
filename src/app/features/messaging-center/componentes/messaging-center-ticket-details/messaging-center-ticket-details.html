@@ -4,12 +4,6 @@
   <header class="mc-details__header">
     <div class="mc-details__header-top">
       <span class="mc-details__header-ref">{{ t.reference }} • {{ t.category }}</span>
-      <div class="mc-details__assign">
-        <span class="mc-details__assign-label">Assigned to:</span>
-        <p-select class="mc-details__assign-select" [options]="assigneeOptions" [ngModel]="t.assignedTo"
-          (onChange)="onAssignChange($event.value)" optionLabel="label" optionValue="value" placeholder="Unassigned"
-          panelStyleClass="mc-details__assign-panel" appendTo="body"></p-select>
-      </div>
     </div>
 
     <h2 class="mc-details__title">{{ t.title }}</h2>
@@ -78,7 +72,7 @@
           @if (msg.attachments?.length) {
           <div class="mc-details__attachments">
             @for (file of msg.attachments; track file.name) {
-            <a class="mc-details__file-chip" [href]="file.url || null" target="_blank" rel="noopener">
+            <a class="mc-details__file-chip" (click)="openPreview(file.url)">
               <i class="pi pi-paperclip"></i>
               <span>{{ file.name }}</span>
             </a>
@@ -143,3 +137,14 @@
   <p class="mc-details__empty-text">Select a ticket to view the conversation</p>
 </div>
 }
+
+<!-- File Preview Dialog -->
+<p-dialog [(visible)]="displayFilePopup" [modal]="true" [style]="{ width: '90vw', maxWidth: '1000px' }"
+  [draggable]="false" [resizable]="false" header="File Preview"
+  (onHide)="selectedFileUrl.set(null)" styleClass="file-preview-dialog">
+  <div class="preview-content-wrapper">
+    @if (selectedFileUrl()) {
+    <img [src]="selectedFileUrl()" class="preview-image" alt="File Preview">
+    }
+  </div>
+</p-dialog>

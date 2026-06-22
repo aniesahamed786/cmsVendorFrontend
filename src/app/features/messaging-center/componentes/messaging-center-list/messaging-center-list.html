@@ -1,24 +1,26 @@
 <div class="mc-list">
+  <!-- Search -->
+  <div class="mc-list__search">
+    <p-iconField iconPosition="left">
+      <p-inputIcon styleClass="pi pi-search" />
+      <input type="text" pInputText class="mc-list__search-input" placeholder="Search tickets..."
+        [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
+    </p-iconField>
+  </div>
+
   <!-- Filters -->
   <div class="mc-list__filters">
     <div class="mc-list__field">
       <label class="mc-list__label">Type</label>
       <p-select [options]="typeOptions" [ngModel]="selectedType()" (ngModelChange)="onTypeChange($event)"
-        optionLabel="label" optionValue="value" placeholder="All" styleClass="mc-list__select"
+        optionLabel="label" optionValue="value" placeholder="All Types" styleClass="mc-list__select"
         panelStyleClass="mc-list__panel" appendTo="body"></p-select>
     </div>
 
     <div class="mc-list__field">
       <label class="mc-list__label">Status</label>
       <p-select [options]="statusOptions" [ngModel]="selectedStatus()" (ngModelChange)="onStatusChange($event)"
-        optionLabel="label" optionValue="value" placeholder="All" styleClass="mc-list__select"
-        panelStyleClass="mc-list__panel" appendTo="body"></p-select>
-    </div>
-
-    <div class="mc-list__field">
-      <label class="mc-list__label">Sort</label>
-      <p-select [options]="sortOptions" [ngModel]="selectedSort()" (ngModelChange)="onSortChange($event)"
-        optionLabel="label" optionValue="value" placeholder="Sort by" styleClass="mc-list__select"
+        optionLabel="label" optionValue="value" placeholder="All Statuses" styleClass="mc-list__select"
         panelStyleClass="mc-list__panel" appendTo="body"></p-select>
     </div>
   </div>
@@ -29,38 +31,36 @@
       (click)="setTab('all')">
       All
     </button>
-    <button type="button" class="mc-list__tab" [class.mc-list__tab--active]="activeTab() === 'assigned'"
-      (click)="setTab('assigned')">
-      Assign to me
+    <button type="button" class="mc-list__tab" [class.mc-list__tab--active]="activeTab() === 'unread'"
+      (click)="setTab('unread')">
+      Unread
     </button>
-    <button type="button" class="mc-list__tab" [class.mc-list__tab--active]="activeTab() === 'closed'"
-      (click)="setTab('closed')">
-      Closed
+    <button type="button" class="mc-list__tab" [class.mc-list__tab--active]="activeTab() === 'read'"
+      (click)="setTab('read')">
+      Read
     </button>
-  </div>
-
-  <!-- Search -->
-  <div class="mc-list__search">
-    <p-iconField iconPosition="left">
-      <p-inputIcon styleClass="pi pi-search" />
-      <input type="text" pInputText class="mc-list__search-input" placeholder="Search" [ngModel]="searchText()"
-        (ngModelChange)="onSearchChange($event)" />
-    </p-iconField>
   </div>
 
   <!-- Ticket list -->
   <div class="mc-list__cards">
     @for (ticket of tickets(); track ticket.id) {
     <button type="button" class="mc-list__card" [class.mc-list__card--selected]="ticket.id === selectedTicketId()"
-      (click)="onSelectTicket(ticket)">
+      [class.mc-list__card--unread]="ticket.unread" [class.mc-list__card--status-new]="ticket.status === 'New'"
+      [class.mc-list__card--status-progress]="ticket.status === 'In Progress'"
+      [class.mc-list__card--status-closed]="ticket.status === 'Closed'" (click)="onSelectTicket(ticket)">
       <div class="mc-list__card-top">
-        <span class="mc-list__category">{{ ticket.category }}</span>
-        <span class="mc-list__badge" [class]="statusBadgeClass(ticket.status)">{{ ticket.status }}</span>
+        <div class="mc-list__card-meta">
+          @if (ticket.unread) {
+          <span class="mc-list__unread-dot" title="Unread ticket"></span>
+          }
+          <span class="mc-list__badge" [class]="statusBadgeClass(ticket.status)">{{ ticket.status }}</span>
+          <span class="mc-list__reference">{{ ticket.reference }}</span>
+        </div>
+        <div class="mc-list__card-right">
+          <span class="mc-list__category">{{ ticket.category }}</span>
+        </div>
       </div>
-      <div class="mc-list__reference">{{ ticket.reference }}</div>
-      <div class="mc-list__creator">
-        {{ ticket.createdByName }} · {{ ticket.createdByRole }}
-      </div>
+
       <div class="mc-list__title">{{ ticket.title }}</div>
       <div class="mc-list__preview">{{ ticket.preview }}</div>
       <div class="mc-list__time">{{ ticket.timeAgo }}</div>
@@ -74,7 +74,7 @@
   </div>
 
   <!-- New ticket button -->
-  <div class="">
+  <div class="mc-list__footer">
     <button type="button" class="mc-list__new-btn" (click)="onCreateTicket()">
       <i class="pi pi-plus"></i>
       <span>New Ticket</span>

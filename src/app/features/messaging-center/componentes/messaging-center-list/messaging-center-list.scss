@@ -11,12 +11,26 @@
   color: var(--app-text);
   overflow: hidden;
 
+  // ---- Search ----
+  &__search {
+    padding: 1rem 1rem 0;
+
+    p-iconfield,
+    :ng-deep .p-iconfield {
+      width: 100%;
+    }
+  }
+
+  &__search-input {
+    width: 100%;
+  }
+
   // ---- Filters ----
   &__filters {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
   &__field {
@@ -45,13 +59,18 @@
     appearance: none;
     background: transparent;
     border: none;
-    padding: 0.5rem 0.125rem;
-    margin-bottom: -1px;
+    padding: 0.5rem 2.5rem;
+    // margin-bottom: -1px;
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--app-muted);
     cursor: pointer;
     border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: var(--app-text);
+    }
 
     &--active {
       color: var(--app-primary);
@@ -60,25 +79,11 @@
     }
   }
 
-  // ---- Search ----
-  &__search {
-    padding: 0.75rem;
-
-    p-iconfield,
-    :ng-deep .p-iconfield {
-      width: 100%;
-    }
-  }
-
-  &__search-input {
-    width: 100%;
-  }
-
   // ---- Card list ----
   &__cards {
     flex: 1 1 auto;
     overflow-y: auto;
-    padding: 0 0.75rem 0.75rem;
+    padding: 1rem 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -101,16 +106,30 @@
     &--selected {
       background: var(--app-primary-soft);
       border-color: var(--app-primary-soft);
+    }
 
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: var(--app-primary);
+    &--unread {
+      .mc-list__title {
+        font-weight: 700;
+        color: var(--app-text);
       }
+
+      .mc-list__preview {
+        color: var(--app-text);
+      }
+    }
+
+    &--status-new {
+      border-left: 3px solid var(--app-primary);
+    }
+
+    &--status-progress {
+      border-left: 3px solid #eab308;
+    }
+
+    &--status-closed {
+      border-left: 3px solid var(--app-muted);
+      opacity: 0.7;
     }
   }
 
@@ -118,6 +137,19 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  &__card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__card-right {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
   }
 
@@ -148,11 +180,6 @@
       color: #b45309;
     }
 
-    &--resolved {
-      background: rgba(34, 197, 94, 0.16);
-      color: #15803d;
-    }
-
     &--closed {
       background: rgba(220, 38, 38, 0.14);
       color: #b91c1c;
@@ -179,6 +206,15 @@
     color: var(--app-muted);
   }
 
+  &__unread-dot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--app-primary);
+    border-radius: 50%; // Circular dot for notification indicator (sanctioned exception in SKILL.md)
+    flex-shrink: 0;
+  }
+
   &__creator {
     font-size: 0.75rem;
     color: var(--app-muted);
@@ -186,7 +222,7 @@
 
   &__title {
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--app-text);
   }
 
@@ -204,6 +240,12 @@
   }
 
   // ---- New ticket button ----
+  &__footer {
+    padding: 1rem;
+    background: var(--app-surface);
+    border-top: 1px solid var(--app-border);
+  }
+
   &__new-btn {
     flex: 0 0 auto;
     display: flex;

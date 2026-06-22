@@ -49,8 +49,8 @@ export class MessagingCenterStore {
     const sort = this.selectedSort();
 
     let list = this.ticketsSignal().filter((ticket) => {
-      if (tab === 'closed' && ticket.status !== 'Closed') return false;
-      if (tab === 'assigned' && ticket.assignedTo !== CURRENT_AGENT) return false;
+      if (tab === 'unread' && !ticket.unread) return false;
+      if (tab === 'read' && ticket.unread) return false;
       if (type && ticket.category !== type) return false;
       if (status && ticket.status !== status) return false;
       if (term) {
@@ -109,6 +109,7 @@ export class MessagingCenterStore {
 
   selectTicket(id: string): void {
     this.selectedTicketId.set(id);
+    this.patchTicket(id, { unread: false });
   }
 
   sendMessage(
@@ -190,6 +191,7 @@ export class MessagingCenterStore {
       lastUpdated: this.formatDate(),
       preview: form.description || '',
       timeAgo: 'Just now',
+      unread: false,
       order: seq,
     };
 

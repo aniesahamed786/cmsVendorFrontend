@@ -1,12 +1,12 @@
 export type TicketCategory = 'Technical' | 'Billing' | 'General' | 'Account';
 
-export type TicketStatus = 'New' | 'In Progress' | 'Open' | 'Resolved' | 'Closed';
+export type TicketStatus = 'New' | 'In Progress' | 'Open' | 'Closed';
 
 export type ParticipantType = 'Vendor' | 'Admin' | 'User';
 
 export type SenderRole = 'User' | 'Admin' | 'Vendor' | 'System';
 
-export type TicketTabKey = 'all' | 'assigned' | 'closed';
+export type TicketTabKey = 'all' | 'unread' | 'read';
 
 export type SortOrder = 'newest' | 'oldest';
 
@@ -54,6 +54,8 @@ export interface Ticket {
   lastUpdated: string;
   preview: string;
   timeAgo: string;
+  /** Whether the ticket has unread messages */
+  unread: boolean;
   /** Monotonic sequence used for newest/oldest sorting. */
   order: number;
 }

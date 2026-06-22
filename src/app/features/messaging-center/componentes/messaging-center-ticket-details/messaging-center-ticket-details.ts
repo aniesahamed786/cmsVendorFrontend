@@ -12,26 +12,28 @@ import { FormsModule } from '@angular/forms';
 
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { MessageAttachment } from '../../models/messaging-center.model';
-import { ASSIGNEE_OPTIONS } from '../../data/mock-messaging-center';
 import { MessagingCenterStore } from '../../services/messaging-center-store';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-messaging-center-ticket-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules],
+  imports: [CommonModule, FormsModule, PrimeUIModules, DialogModule],
   templateUrl: './messaging-center-ticket-details.html',
   styleUrl: './messaging-center-ticket-details.scss',
 })
 export class MessagingCenterTicketDetails {
   private readonly store = inject(MessagingCenterStore);
 
-  readonly assigneeOptions = ASSIGNEE_OPTIONS;
   readonly ticket = this.store.selectedTicket;
   readonly messages = this.store.selectedMessages;
 
   readonly draft = signal<string>('');
 
   readonly attachments = signal<{ name: string; url: string }[]>([]);
+
+  displayFilePopup = false;
+  readonly selectedFileUrl = signal<string | null>(null);
 
   private readonly thread = viewChild<ElementRef<HTMLElement>>('thread');
 
@@ -44,13 +46,6 @@ export class MessagingCenterTicketDetails {
     });
 
 
-  }
-
-  onAssignChange(value: string): void {
-    const t = this.ticket();
-    if (t) {
-      this.store.assignTicket(t.id, value);
-    }
   }
 
   onSend(): void {
@@ -111,6 +106,12 @@ export class MessagingCenterTicketDetails {
   private clearAttachments(): void {
     this.attachments().forEach((a) => URL.revokeObjectURL(a.url));
     this.attachments.set([]);
+  }
+
+  openPreview(url: string | undefined): void {
+    if (!url) return;
+    this.selectedFileUrl.set(url);
+    this.displayFilePopup = true;
   }
 
   private scrollToBottom(): void {

@@ -51,17 +51,6 @@
     color: rgba(255, 255, 255, 0.7);
   }
 
-  &__assign {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  &__assign-label {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7);
-  }
-
   &__title {
     margin: 0;
     font-size: 1.5rem;
@@ -127,13 +116,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-    color: var(--app-muted);
-
-    &--outgoing {
-      background: var(--app-primary);
-      color: #ffffff;
-    }
+    background: var(--app-primary);
+    color: #ffffff;
   }
 
   &__message-body {
@@ -168,11 +152,7 @@
     padding: 0.75rem 0.9rem;
     border: 1px solid var(--app-border);
 
-    &--incoming {
-      background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-      color: var(--app-text);
-    }
-
+    &--incoming,
     &--outgoing {
       background: var(--app-primary-soft);
       color: var(--app-text);
@@ -415,22 +395,6 @@
 
 // ----- PrimeNG theming (scoped) -----
 :host ::ng-deep {
-  .mc-details__assign-select.p-select {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 0;
-    min-width: 9rem;
-
-    .p-select-label {
-      color: #ffffff;
-      font-size: 0.8rem;
-    }
-
-    .p-select-dropdown {
-      color: #ffffff;
-    }
-  }
-
   .mc-details__composer .p-checkbox {
     .p-checkbox-box {
       border-radius: 0;
@@ -447,4 +411,36 @@
 // Square overlay panel for the assignee select
 ::ng-deep .p-select-overlay {
   border-radius: 0;
+}
+
+:host ::ng-deep .file-preview-dialog.p-dialog,
+:host ::ng-deep .file-preview-dialog .p-dialog-header,
+:host ::ng-deep .file-preview-dialog .p-dialog-content {
+  border-radius: 0 !important;
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+:host ::ng-deep .file-preview-dialog .p-dialog-header-icons .p-dialog-header-icon {
+  color: var(--app-muted) !important;
+}
+
+.preview-content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  padding: 1rem;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+.mc-details__file-chip {
+  cursor: pointer;
 }

@@ -70,8 +70,6 @@ export class MessagingCenterList {
     switch (status) {
       case 'In Progress':
         return 'mc-list__badge--progress';
-      case 'Resolved':
-        return 'mc-list__badge--resolved';
       case 'Closed':
         return 'mc-list__badge--closed';
       case 'New':

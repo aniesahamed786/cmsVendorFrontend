@@ -20,7 +20,6 @@ export const TICKET_STATUS_OPTIONS: MessagingFilterOption[] = [
   { label: 'All', value: null },
   { label: 'New', value: 'New' },
   { label: 'In Progress', value: 'In Progress' },
-  { label: 'Resolved', value: 'Resolved' },
   { label: 'Closed', value: 'Closed' },
 ];
 
@@ -78,6 +77,7 @@ export const MOCK_TICKETS: Ticket[] = [
     lastUpdated: '06/21/2026',
     preview: 'pls describe the issue',
     timeAgo: '44m ago',
+    unread: true,
     order: 10,
   },
   {
@@ -96,6 +96,7 @@ export const MOCK_TICKETS: Ticket[] = [
     lastUpdated: '06/21/2026',
     preview: 'test ticket 2',
     timeAgo: '1h ago',
+    unread: false,
     order: 9,
   },
   {
@@ -114,6 +115,7 @@ export const MOCK_TICKETS: Ticket[] = [
     lastUpdated: '06/21/2026',
     preview: 'test desc',
     timeAgo: '1h ago',
+    unread: true,
     order: 8,
   },
   {
@@ -132,6 +134,7 @@ export const MOCK_TICKETS: Ticket[] = [
     lastUpdated: '06/21/2026',
     preview: 'jj',
     timeAgo: '2h ago',
+    unread: false,
     order: 5,
   },
   {
@@ -150,6 +153,7 @@ export const MOCK_TICKETS: Ticket[] = [
     lastUpdated: '06/21/2026',
     preview: 'testing',
     timeAgo: '2h ago',
+    unread: false,
     order: 7,
   },
 ];
