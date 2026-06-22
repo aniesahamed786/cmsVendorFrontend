@@ -1,0 +1,38 @@
+.messaging-center-page {
+  display: grid;
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+  gap: 0;
+  height: calc(100vh - 8rem);
+  min-height: 32rem;
+}
+
+.messaging-center-page__list {
+  background: transparent;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--app-border);
+}
+
+.messaging-center-page__details {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.messaging-center-page__list>*,
+.messaging-center-page__details>* {
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .messaging-center-page {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}

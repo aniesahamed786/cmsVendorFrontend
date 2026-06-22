@@ -1,0 +1,145 @@
+@if (ticket(); as t) {
+<div class="mc-details">
+  <!-- Header -->
+  <header class="mc-details__header">
+    <div class="mc-details__header-top">
+      <span class="mc-details__header-ref">{{ t.reference }} • {{ t.category }}</span>
+      <div class="mc-details__assign">
+        <span class="mc-details__assign-label">Assigned to:</span>
+        <p-select class="mc-details__assign-select" [options]="assigneeOptions" [ngModel]="t.assignedTo"
+          (onChange)="onAssignChange($event.value)" optionLabel="label" optionValue="value" placeholder="Unassigned"
+          panelStyleClass="mc-details__assign-panel" appendTo="body"></p-select>
+      </div>
+    </div>
+
+    <h2 class="mc-details__title">{{ t.title }}</h2>
+
+    <div class="mc-details__meta">
+      <div class="mc-details__meta-item">
+        <span class="mc-details__meta-label">Created By</span>
+        <span class="mc-details__meta-value">{{ t.createdBy.name }} · {{ t.createdBy.role }}</span>
+      </div>
+      <div class="mc-details__meta-item">
+        <span class="mc-details__meta-label">Target</span>
+        <span class="mc-details__meta-value">{{ t.target }}</span>
+      </div>
+      <div class="mc-details__meta-item">
+        <span class="mc-details__meta-label">Updated By</span>
+        <span class="mc-details__meta-value">{{ t.updatedBy.name }} · {{ t.updatedBy.role }}</span>
+      </div>
+      <div class="mc-details__meta-item">
+        <span class="mc-details__meta-label">Status</span>
+        <span class="mc-details__meta-value">{{ t.status }}</span>
+      </div>
+      <div class="mc-details__meta-item">
+        <span class="mc-details__meta-label">Created Date</span>
+        <span class="mc-details__meta-value">{{ t.createdDate }}</span>
+      </div>
+      <div class="mc-details__meta-item">
+        <span class="mc-details__meta-label">Last Updated</span>
+        <span class="mc-details__meta-value">{{ t.lastUpdated }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Thread -->
+  <div class="mc-details__thread" #thread>
+    @for (msg of messages(); track msg.id) {
+    <div class="mc-details__message" [class.mc-details__message--outgoing]="msg.outgoing"
+      [class.mc-details__message--incoming]="!msg.outgoing" [class.mc-details__message--note]="msg.isInternalNote">
+      @if (!msg.outgoing) {
+      <div class="mc-details__avatar">
+        <i class="pi pi-user"></i>
+      </div>
+      }
+
+      <div class="mc-details__message-body">
+        <div class="mc-details__message-head">
+          <span class="mc-details__author">{{ msg.authorName }}</span>
+          @if (msg.isInternalNote) {
+          <span class="mc-details__note-tag">Internal Note</span>
+          }
+          <span class="mc-details__time">{{ msg.timestamp }}</span>
+        </div>
+
+        <div class="mc-details__bubble" [class.mc-details__bubble--outgoing]="msg.outgoing"
+          [class.mc-details__bubble--incoming]="!msg.outgoing" [class.mc-details__bubble--note]="msg.isInternalNote">
+          @if (msg.body) {
+          <p class="mc-details__bubble-text">{{ msg.body }}</p>
+          }
+
+          @if (msg.linkedItem; as li) {
+          <div class="mc-details__chip">
+            <span class="mc-details__chip-badge">{{ li.badge }}</span>
+            <span class="mc-details__chip-ref">{{ li.reference }}</span>
+          </div>
+          }
+
+          @if (msg.attachments?.length) {
+          <div class="mc-details__attachments">
+            @for (file of msg.attachments; track file.name) {
+            <a class="mc-details__file-chip" [href]="file.url || null" target="_blank" rel="noopener">
+              <i class="pi pi-paperclip"></i>
+              <span>{{ file.name }}</span>
+            </a>
+            }
+          </div>
+          }
+        </div>
+      </div>
+
+      @if (msg.outgoing) {
+      <div class="mc-details__avatar mc-details__avatar--outgoing">
+        <i class="pi pi-user"></i>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Composer -->
+  <footer class="mc-details__composer">
+    <textarea class="mc-details__input" rows="3" placeholder="Type your response here..." [(ngModel)]="draft"
+      (keydown)="onComposerKeydown($event)"></textarea>
+
+    @if (attachments().length) {
+    <div class="mc-details__pending-files">
+      @for (file of attachments(); track file.name; let i = $index) {
+      <span class="mc-details__pending-chip">
+        <i class="pi pi-paperclip"></i>
+        <span class="mc-details__pending-name">{{ file.name }}</span>
+        <button type="button" class="mc-details__pending-remove" (click)="removeAttachment(i)">
+          <i class="pi pi-times"></i>
+        </button>
+      </span>
+      }
+    </div>
+    }
+
+    <input type="file" class="mc-details__file-input" #fileInput multiple (change)="onFilesSelected($event)" />
+
+    <div class="mc-details__composer-actions">
+      <div class="mc-details__composer-left">
+
+
+        <button type="button" class="mc-details__attach" (click)="onAttachClick(fileInput)">
+          <i class="pi pi-paperclip"></i>
+          <span>Attach File</span>
+        </button>
+      </div>
+
+      <div class="mc-details__composer-right">
+        <button type="button" class="mc-details__btn mc-details__btn--send" (click)="onSend()">
+          <i class="pi pi-send"></i>
+          <span>Send</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+</div>
+} @else {
+<div class="mc-details mc-details--empty">
+  <i class="pi pi-comments mc-details__empty-icon"></i>
+  <p class="mc-details__empty-text">Select a ticket to view the conversation</p>
+</div>
+}

@@ -1,0 +1,153 @@
+<div class="create-ticket">
+  <a class="create-ticket__back" (click)="onBack()">
+    <i class="pi pi-arrow-left"></i>
+    <span>Back to Message Center</span>
+  </a>
+
+  <div class="create-ticket__card">
+    <h2 class="create-ticket__heading">Create Ticket</h2>
+
+    <div class="create-ticket__grid">
+      <!-- Row 1 -->
+      <div class="create-ticket__field">
+        <label class="create-ticket__label">
+          Participant Type<span class="create-ticket__required">*</span>
+        </label>
+        <p-select
+          class="create-ticket__control"
+          [options]="participantTypeOptions()"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="participantType"
+          placeholder="Vendor"
+          panelStyleClass="create-ticket__panel"
+        ></p-select>
+      </div>
+
+      <div class="create-ticket__field">
+        <label class="create-ticket__label">
+          Send To<span class="create-ticket__required">*</span>
+        </label>
+        <p-select
+          class="create-ticket__control"
+          [options]="vendorOptions()"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="sendTo"
+          placeholder="Select a vendor..."
+          panelStyleClass="create-ticket__panel"
+        ></p-select>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="create-ticket__field create-ticket__field--full">
+        <label class="create-ticket__label">
+          Ticket Title<span class="create-ticket__required">*</span>
+        </label>
+        <input
+          pInputText
+          class="create-ticket__control"
+          [(ngModel)]="title"
+          placeholder="Enter a short subject line for the ticket"
+        />
+      </div>
+
+      <!-- Row 3 -->
+      <div class="create-ticket__field">
+        <label class="create-ticket__label">Ticket Type</label>
+        <p-select
+          class="create-ticket__control"
+          [options]="categoryOptions()"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="ticketType"
+          placeholder="Select a category"
+          panelStyleClass="create-ticket__panel"
+        ></p-select>
+      </div>
+
+      <div class="create-ticket__field">
+        <label class="create-ticket__label">
+          Linked Item <span class="create-ticket__optional">(Optional)</span>
+        </label>
+        <p-select
+          class="create-ticket__control"
+          [options]="linkedItemOptions()"
+          optionLabel="label"
+          optionValue="value"
+          [(ngModel)]="linkedItem"
+          placeholder="Search for offer, vendor, or app section..."
+          panelStyleClass="create-ticket__panel"
+        ></p-select>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="create-ticket__field create-ticket__field--full">
+        <label class="create-ticket__label">Ticket Description</label>
+        <div class="create-ticket__editor">
+          <div class="create-ticket__toolbar">
+            <button type="button" class="create-ticket__toolbar-btn">
+              <i class="pi pi-list"></i>
+            </button>
+            <button type="button" class="create-ticket__toolbar-btn">
+              <i class="pi pi-link"></i>
+            </button>
+          </div>
+          <textarea
+            class="create-ticket__textarea"
+            [(ngModel)]="description"
+            rows="6"
+            placeholder="Enter the main message or issue description..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Attachments -->
+      <div class="create-ticket__field create-ticket__field--full">
+        <label class="create-ticket__label">
+          File Attachments <span class="create-ticket__optional">(Optional)</span>
+        </label>
+        <label class="create-ticket__dropzone">
+          <i class="pi pi-cloud-upload create-ticket__dropzone-icon"></i>
+          <p class="create-ticket__dropzone-text">
+            Drag and drop files here, or
+            <span class="create-ticket__dropzone-link">click to browse</span>
+          </p>
+          <p class="create-ticket__dropzone-help">
+            Supported formats: JPG, PNG, PDF, DOC, DOCX (Max 10MB each)
+          </p>
+          <input
+            type="file"
+            class="create-ticket__file-input"
+            multiple
+            (change)="onFilesSelected($event)"
+          />
+        </label>
+        @if (attachmentNames().length) {
+          <ul class="create-ticket__file-list">
+            @for (name of attachmentNames(); track name) {
+              <li>{{ name }}</li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+
+    <div class="create-ticket__actions">
+      <button
+        type="button"
+        class="create-ticket__btn create-ticket__btn--cancel"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="create-ticket__btn create-ticket__btn--submit"
+        (click)="onSubmit()"
+      >
+        Submit Ticket
+      </button>
+    </div>
+  </div>
+</div>

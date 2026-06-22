@@ -1,0 +1,11 @@
+<div class="create-ticket-page">
+  <app-messaging-center-create-ticket
+    [participantTypeOptions]="participantTypeOptions"
+    [vendorOptions]="vendorOptions"
+    [categoryOptions]="categoryOptions"
+    [linkedItemOptions]="linkedItemOptions"
+    (submitTicket)="onSubmit($event)"
+    (cancel)="onCancel()"
+    (back)="onBack()"
+  />
+</div>

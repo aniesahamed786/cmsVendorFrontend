@@ -1,0 +1,450 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.mc-details {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--app-bg);
+  color: var(--app-text);
+
+  // ----- Empty state -----
+  &--empty {
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  &__empty-icon {
+    font-size: 2.5rem;
+    color: var(--app-muted);
+  }
+
+  &__empty-text {
+    margin: 0;
+    color: var(--app-muted);
+    font-size: 0.95rem;
+  }
+
+  // ----- Header -----
+  &__header {
+    flex: 0 0 auto;
+    background: var(--app-primary);
+    color: #ffffff;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  &__header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  &__header-ref {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__assign {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__assign-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+  }
+
+  &__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__meta-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__meta-value {
+    font-size: 0.85rem;
+    color: #ffffff;
+  }
+
+  // ----- Thread -----
+  &__thread {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  &__message {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    max-width: 80%;
+
+    &--incoming {
+      align-self: flex-start;
+    }
+
+    &--outgoing {
+      align-self: flex-end;
+      flex-direction: row;
+    }
+  }
+
+  &__avatar {
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%; // allowed exception: avatar
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    color: var(--app-muted);
+
+    &--outgoing {
+      background: var(--app-primary);
+      color: #ffffff;
+    }
+  }
+
+  &__message-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  &__message-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+
+    .mc-details__message--outgoing & {
+      justify-content: flex-end;
+    }
+  }
+
+  &__author {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__time {
+    font-size: 0.72rem;
+    color: var(--app-muted);
+  }
+
+  &__bubble {
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--app-border);
+
+    &--incoming {
+      background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+      color: var(--app-text);
+    }
+
+    &--outgoing {
+      background: var(--app-primary-soft);
+      color: var(--app-text);
+    }
+  }
+
+  &__bubble-text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__chip {
+    margin-top: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.55rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__chip-badge {
+    padding: 0.25rem 0.5rem;
+    background: var(--app-primary);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__chip-ref {
+    font-size: 0.78rem;
+    color: var(--app-muted);
+  }
+
+  // ----- Internal note -----
+  &__note-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.1rem 0.35rem;
+    background: rgba(234, 179, 8, 0.16);
+    color: #b45309;
+  }
+
+  &__bubble--note {
+    background: rgba(234, 179, 8, 0.1);
+    border-color: rgba(234, 179, 8, 0.4);
+  }
+
+  // ----- Message attachments -----
+  &__attachments {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__file-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.55rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    font-size: 0.78rem;
+    text-decoration: none;
+    max-width: 100%;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      border-color: var(--app-primary);
+      color: var(--app-primary);
+    }
+  }
+
+  &__file-input {
+    display: none;
+  }
+
+  // ----- Pending (composer) attachments -----
+  &__pending-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__pending-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.5rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    font-size: 0.78rem;
+    color: var(--app-text);
+    max-width: 14rem;
+  }
+
+  &__pending-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__pending-remove {
+    display: inline-flex;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--app-muted);
+    cursor: pointer;
+
+    &:hover {
+      color: #dc2626;
+    }
+  }
+
+  // ----- Composer -----
+  &__composer {
+    flex: 0 0 auto;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--app-border);
+    background: var(--app-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__input {
+    width: 100%;
+    resize: vertical;
+    padding: 0.65rem 0.8rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--app-text);
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    box-shadow: none;
+    outline: none;
+
+    &::placeholder {
+      color: var(--app-muted);
+    }
+
+    &:focus {
+      border-color: var(--app-primary);
+      box-shadow: none;
+    }
+  }
+
+  &__composer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__composer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__note-label {
+    font-size: 0.85rem;
+    color: var(--app-text);
+    cursor: pointer;
+  }
+
+  &__attach {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: 0.75rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--app-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--app-primary-700);
+    }
+
+    &:disabled {
+      color: var(--app-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  &__composer-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+
+    &--close {
+      background: var(--app-surface);
+      border-color: #dc2626;
+      color: #dc2626;
+
+      &:hover {
+        background: color-mix(in srgb, var(--app-surface) 92%, #ef4444 8%);
+      }
+    }
+
+    &--send {
+      background: var(--app-primary);
+      color: #ffffff;
+
+      &:hover {
+        background: var(--app-primary-700);
+      }
+    }
+  }
+}
+
+// ----- PrimeNG theming (scoped) -----
+:host ::ng-deep {
+  .mc-details__assign-select.p-select {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 0;
+    min-width: 9rem;
+
+    .p-select-label {
+      color: #ffffff;
+      font-size: 0.8rem;
+    }
+
+    .p-select-dropdown {
+      color: #ffffff;
+    }
+  }
+
+  .mc-details__composer .p-checkbox {
+    .p-checkbox-box {
+      border-radius: 0;
+      border-color: var(--app-border);
+    }
+
+    &.p-checkbox-checked .p-checkbox-box {
+      background: var(--app-primary);
+      border-color: var(--app-primary);
+    }
+  }
+}
+
+// Square overlay panel for the assignee select
+::ng-deep .p-select-overlay {
+  border-radius: 0;
+}
