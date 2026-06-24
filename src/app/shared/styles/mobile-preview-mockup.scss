@@ -15,7 +15,7 @@
   height: min(658px, 72vh);
   width: min(320px, calc(72vh * 9 / 18.5));
   max-width: 100%;
-  background-color: #fdfdfd;
+  background-color: var(--app-surface);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -36,12 +36,12 @@
 .toggle-button {
   flex: 1;
   width: 100%;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   padding: 0.625rem;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #0033a0;
+  color: var(--app-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,8 +50,8 @@
   cursor: pointer;
 
   &:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
+    background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+    border-color: var(--app-border);
   }
 }
 
@@ -65,12 +65,12 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
+    background: var(--app-border);
     border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #cbd5e1;
+    background: color-mix(in srgb, var(--app-border) 70%, var(--app-muted) 30%);
   }
 }
 
