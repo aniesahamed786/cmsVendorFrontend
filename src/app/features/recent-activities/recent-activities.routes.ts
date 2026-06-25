@@ -1,10 +1,10 @@
 import { Route } from '@angular/router';
-import { Inprogress } from '../../shared/Components/inprogress/inprogress';
+import { RecentActivities } from './recent-activities';
 
 export const routes: Route[] = [
   {
     path: '',
-    component: Inprogress,
+    component: RecentActivities,
     data: { title: 'Recent Activities' },
   },
 ];

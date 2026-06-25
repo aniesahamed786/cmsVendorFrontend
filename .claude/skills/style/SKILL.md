@@ -134,8 +134,11 @@ every field rule is scoped under it, so the styling never leaks to other compone
 ### Global baseline (already in `styles.scss`)
 
 - All `.p-inputtext`, `.p-select`, `.p-multiselect`, `.p-datepicker`, `.p-dropdown` have
-  `box-shadow: none` and **square corners** (`border-radius: 0` on selects, dropdowns,
-  datepickers, options, paginator selects). Keep new fields square.
+  `box-shadow: none` and **square corners** (`border-radius: 0`). The square rule covers the
+  inner parts too — `.p-select-label` / `.p-select-dropdown`, `.p-multiselect-label` /
+  `.p-multiselect-dropdown`, `.p-datepicker-input` / `.p-datepicker-dropdown`, options,
+  datepicker panel, and paginator selects — so filters/selects are square everywhere with **no
+  per-component override needed**. Keep new fields square.
 - In dark mode they inherit `--app-surface` / `--app-text` / `--app-border`.
 
 ### The house field recipe (the values to reuse verbatim)
@@ -494,6 +497,56 @@ For a pop-up that hosts a form, follow `location-creation-offer/`:
 4. Drive visibility/labels via `input()`/`output()` (or `[(visible)]`); keep the dialog
    stateless where possible like `confirmation-pop-up`.
 5. Put a confirm spinner through a `loading` input bound to the confirm `p-button`.
+
+## Data tables (PrimeNG `p-table`)
+
+List/grid tables (vendor list, recent activities) use PrimeNG `p-table` with the built-in
+paginator. Reference: `src/app/features/recent-activities/`. Pair with the
+[`pagentation`](../pagentation/pagentation.md) skill for the paging mechanics.
+
+House recipe (theme via `::ng-deep` on a `styleClass` set on `<p-table>`):
+
+- **Header cells** — `var(--app-muted)`, `font-weight: 600`, no fill, only a
+  `border-bottom: 1px solid var(--app-border)`. Add a `<p-sortIcon field="…">` next to **every**
+  sortable column label so the up/down arrows show.
+- **Body cells** — `var(--app-text)`, generous padding (`~1.1rem 1rem`), rows separated by a
+  single `border-bottom: 1px solid var(--app-border)` (no per-cell borders). Hover row →
+  `var(--app-primary-hover-soft)`.
+- **Sort icons** — `var(--app-muted)` at rest, `var(--app-primary)` on the active
+  (`.p-highlight`) column.
+- **Paginator** — transparent bg, no border, centered. Page buttons square + `var(--app-muted)`;
+  the active page (`.p-paginator-page.p-highlight`) is a **filled `var(--app-primary)` circle**
+  with white text (`border-radius: 999px`) — one of the sanctioned rounded exceptions, like the
+  status pill below. The page-size `.p-select` is already forced square globally.
+- **Status pill** — small rounded lozenge (`border-radius: 999px`), `font-weight: 700`. Color by
+  state: success → `rgba(34,197,94,0.16)`/`#16a34a`, danger → `rgba(239,68,68,0.16)`/`#dc2626`,
+  brand/info → `var(--app-primary-soft)`/`var(--app-primary)`. The pill is the justified
+  rounded-corner exception (a product status indicator).
+
+Everything else stays square and token-driven; dark/national-day + accent switching come for
+free because the `p-table` body/cells read `--app-surface`/`--app-text`/`--app-border`.
+
+### Header borders & filter toolbar
+
+- **Header cells** in a card get a `border-top` **and** `border-bottom`
+  (`1px solid var(--app-border)`) so the header band reads as a framed strip. To make those
+  lines (and the row separators) reach the card edges despite the card's horizontal padding,
+  full-bleed the table — `::ng-deep .…__table { margin: 0 -1.5rem; }` — and re-add the inset on
+  the first/last cells (`th:first-child/td:first-child { padding-left: 1.5rem }`, last-child →
+  `padding-right`). The `-1.5rem` must match the card's horizontal padding.
+- **Filter toolbar** — a flex row above the table holding the card title on the left and the
+  filter controls on the right (`justify-content: space-between; flex-wrap: wrap`). Filters are
+  plain PrimeNG `p-select` controls (already square + tokenized globally); a **Clear** button is
+  a token-styled `<button>` (transparent fill, `1px solid var(--app-border)`, `--app-muted`
+  text, hover `--app-primary-hover-soft`).
+- **Filter the data, not the table** — drive filtering with signals + a `computed()` that
+  returns the filtered rows, and bind `[value]="rows()"`. Don't reach into PrimeNG's filter API
+  for simple in-memory lists.
+- **Period filter pattern** — the period control is a `p-select` of presets (All time,
+  Last 7/30/90 days, This year, **Custom date**). A `window()` computed maps the preset to a
+  `[from, to]` range; only when `period() === 'custom'` is selected does a range
+  `p-datepicker` (`selectionMode="range"`) render to capture explicit dates. Keep the relative
+  presets as the default so users rarely need the picker.
 
 ## Previews (phone mockups)
 

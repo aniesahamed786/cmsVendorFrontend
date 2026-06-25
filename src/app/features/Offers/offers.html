@@ -1,0 +1,115 @@
+<div class="offers">
+  <header class="offers__header">
+    <div>
+      <h1 class="offers__title">Offers</h1>
+      <p class="offers__subtitle">Manage and track all promotional offers across your catalog.</p>
+    </div>
+    <a class="offers__create" routerLink="create">
+      <i class="pi pi-plus"></i> Create New Offer
+    </a>
+  </header>
+
+  <section class="offers__stats">
+    <article class="offers__stat">
+      <span class="offers__stat-icon"><i class="pi pi-bolt"></i></span>
+      <span class="offers__stat-value">{{ stats().active }}</span>
+      <span class="offers__stat-label">Active Offers</span>
+      <span class="offers__stat-hint">Currently active</span>
+    </article>
+    <article class="offers__stat">
+      <span class="offers__stat-icon"><i class="pi pi-calendar"></i></span>
+      <span class="offers__stat-value">{{ stats().scheduled }}</span>
+      <span class="offers__stat-label">Scheduled Offers</span>
+      <span class="offers__stat-hint">Upcoming</span>
+    </article>
+    <article class="offers__stat">
+      <span class="offers__stat-icon offers__stat-icon--danger"><i class="pi pi-stopwatch"></i></span>
+      <span class="offers__stat-value">{{ stats().expiringSoon }}</span>
+      <span class="offers__stat-label">Expiring Soon Offers</span>
+      <span class="offers__stat-hint">Offers expiring in 30 days</span>
+    </article>
+    <article class="offers__stat">
+      <span class="offers__stat-icon"><i class="pi pi-tag"></i></span>
+      <span class="offers__stat-value">{{ stats().total }}</span>
+      <span class="offers__stat-label">Total Offers</span>
+      <span class="offers__stat-hint">Since All time</span>
+    </article>
+  </section>
+
+  <section class="offers__card">
+    <div class="offers__toolbar">
+      <h2 class="offers__card-title">Offers Table</h2>
+      <div class="offers__toolbar-controls">
+        <div class="offers__controls">
+          <span class="offers__search">
+            <i class="pi pi-search"></i>
+            <input type="text" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" />
+          </span>
+          <button type="button" class="offers__export">
+            <i class="pi pi-download"></i> Export
+          </button>
+        </div>
+        <div class="offers__controls">
+          <p-select [options]="discountTypeOptions" [ngModel]="discountType()"
+            (ngModelChange)="discountType.set($event)" optionLabel="label" optionValue="value"
+            placeholder="Discount Type" styleClass="offers__filter" />
+          <p-select [options]="statusOptions" [ngModel]="status()" (ngModelChange)="status.set($event)"
+            optionLabel="label" optionValue="value" placeholder="Status" styleClass="offers__filter" />
+          <p-select [options]="availabilityOptions" [ngModel]="availability()"
+            (ngModelChange)="availability.set($event)" optionLabel="label" optionValue="value"
+            placeholder="Availability" styleClass="offers__filter" />
+          <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="period.set($event)"
+            optionLabel="label" optionValue="value" placeholder="Period" styleClass="offers__filter" />
+          @if (period() === 'custom') {
+          <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
+            [readonlyInput]="true" placeholder="Select dates" dateFormat="yy-mm-dd" appendTo="body"
+            styleClass="offers__filter" />
+          }
+        </div>
+      </div>
+    </div>
+
+    <p-table [value]="rows()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+      paginatorDropdownAppendTo="body" styleClass="offers__table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title">Offer Title <p-sortIcon field="title" /></th>
+          <th pSortableColumn="discount">Discount <p-sortIcon field="discount" /></th>
+          <th>Discount Type</th>
+          <th>Availability</th>
+          <th pSortableColumn="startDate">Start Date <p-sortIcon field="startDate" /></th>
+          <th pSortableColumn="expirationDate">Expiration Date <p-sortIcon field="expirationDate" /></th>
+          <th>Status </th>
+          <th>Action</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.title }}</td>
+          <td>{{ row.discount }}</td>
+          <td>{{ row.discountType }}</td>
+          <td>
+            <span class="offers__availability">
+              <i [class]="availabilityIcon(row.availability)"></i> {{ availabilityLabel(row.availability) }}
+            </span>
+          </td>
+          <td>{{ row.startDate | date: 'MMM d, y' }}</td>
+          <td>{{ row.expirationDate | date: 'MMM d, y' }}</td>
+          <td><span [class]="statusClass(row.status)">{{ row.status }}</span></td>
+          <td>
+            <button type="button" class="offers__row-action" aria-label="Row actions">
+              <i class="pi pi-ellipsis-h"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="offers__empty">No offers found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+</div>
