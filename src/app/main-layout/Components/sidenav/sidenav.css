@@ -42,6 +42,10 @@
     opacity 220ms ease;
 }
 
+.sidenav-item:not(.active-link):hover {
+  background-color: var(--app-primary-hover-soft);
+}
+
 li:hover .sidenav-icon,
 li:focus-within .sidenav-icon {
   filter: drop-shadow(0 6px 8px rgba(0, 51, 160, 0.22));
