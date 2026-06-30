@@ -1,0 +1,275 @@
+.custom-upload .p-fileupload {
+  border: 2px dashed #d1d5db; /* Tailwind gray-300 */
+  border-radius: 12px;
+  padding: 2rem;
+  background: #f9fafb; /* Tailwind gray-50 */
+  text-align: center;
+}
+ 
+.custom-upload .p-fileupload-buttonbar {
+  display: none; /* hide default buttons */
+}
+ 
+.custom-upload .p-fileupload-content {
+  border: none !important;
+  padding: 0;
+}
+ 
+.custom-upload .p-fileupload-content::before {
+  content: "Upload a file or drag and drop";
+  display: block;
+  font-size: 1rem;
+  color: #6b7280; /* gray-500 */
+  margin-bottom: 0.5rem;
+}
+ 
+.custom-upload .p-fileupload-content::after {
+  content: "PNG, JPG, GIF up to 10MB";
+  display: block;
+  font-size: 0.875rem;
+  color: #9ca3af; /* gray-400 */
+}
+ 
+
+/* Remove default PrimeNG button look */
+.custom-upload .p-button {
+  background: transparent !important;
+  border: 1px solid #d1d5db !important; /* gray-300 */
+  color: #374151 !important; /* gray-700 */
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 8px !important;
+}
+
+/* Remove default fileupload borders */
+.p-fileupload-content,
+.p-fileupload-buttonbar {
+  display: none !important;
+}
+
+:host ::ng-deep input,
+:host ::ng-deep textarea,
+:host ::ng-deep .p-inputtext {
+  border-color: rgb(243 244 246) !important;
+}
+
+:host ::ng-deep input:focus,
+:host ::ng-deep input:focus-visible,
+:host ::ng-deep textarea:focus,
+:host ::ng-deep textarea:focus-visible,
+:host ::ng-deep .p-inputtext:focus,
+:host ::ng-deep .p-inputtext:focus-visible {
+  border: 1px solid #0537A4 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.vendor-form-svg-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.vendor-upload__title {
+  color: var(--app-text) !important;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.vendor-upload__meta {
+  color: color-mix(in srgb, var(--app-text) 78%, var(--app-muted) 22%) !important;
+  font-size: 0.875rem;
+}
+
+.vendor-upload__help {
+  color: var(--app-muted) !important;
+  font-size: 0.875rem;
+}
+
+.vendor-upload__help--small {
+  font-size: 0.75rem;
+}
+
+.vendor-form-social-icon {
+  -webkit-mask-size: 1.1rem 1.1rem;
+  mask-size: 1.1rem 1.1rem;
+}
+
+.vendor-form-social-icon--linkedin {
+  -webkit-mask-size: 1.2rem 1.2rem;
+  mask-size: 1.2rem 1.2rem;
+}
+
+.vendor-form-social-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.75rem;
+}
+
+.vendor-form-social-type-button {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #4b5563;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.vendor-form-social-type-button:hover {
+  border-color: #0033a0;
+  color: #0033a0;
+  background: rgba(102, 141, 225, 0.1);
+}
+
+.vendor-form-social-type-button--active {
+  border-color: #0033a0;
+  background: rgba(102, 141, 225, 0.14);
+  color: #0033a0;
+}
+
+.vendor-form-social-edit-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 150px;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.vendor-form-social-edit-icon-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #e5e7eb;
+  padding-right: 1.5rem;
+}
+
+.vendor-form-social-edit-icon-shell {
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vendor-form-social-edit-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.vendor-form-social-edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-left: 1px solid #e5e7eb;
+  padding-left: 1.25rem;
+  justify-content: center;
+}
+
+:host ::ng-deep .vendor-form-social-action.p-button {
+  width: 100%;
+  justify-content: center;
+  min-height: 2.375rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .vendor-form-social-action--save.p-button {
+  background: #0033a0;
+  border-color: #0033a0;
+}
+
+:host ::ng-deep .vendor-form-social-action--save.p-button:hover {
+  background: #03297d;
+  border-color: #03297d;
+}
+
+.vendor-form-social-action--cancel {
+  width: 100%;
+  min-height: 2.375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.vendor-form-social-action--cancel:hover {
+  background: #f8fafc;
+  color: #45556c;
+}
+
+@media (max-width: 1024px) {
+  .vendor-form-social-edit-row {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .vendor-form-social-edit-actions {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid #e5e7eb;
+    padding-left: 0;
+    padding-top: 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  :host ::ng-deep .vendor-form-social-action.p-button {
+    width: auto;
+    min-width: 6.5rem;
+  }
+
+  .vendor-form-social-action--cancel {
+    width: auto;
+    min-width: 6.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .vendor-form-social-edit-row {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-form-social-edit-icon-column {
+    border-right: 0;
+    padding-right: 0;
+    justify-content: flex-start;
+  }
+
+  .vendor-form-social-edit-actions {
+    flex-direction: column;
+  }
+
+  :host ::ng-deep .vendor-form-social-action.p-button {
+    width: 100%;
+  }
+
+  .vendor-form-social-action--cancel {
+    width: 100%;
+  }
+}

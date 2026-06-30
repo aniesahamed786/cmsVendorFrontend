@@ -1,0 +1,41 @@
+<p-dialog
+  [visible]="visible()"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="dismissableMask()"
+  [style]="{ width: '30rem', maxWidth: '90vw' }"
+  styleClass="confirmation-pop-up"
+  (onHide)="cancel.emit()"
+>
+  <ng-template pTemplate="header">
+    <div class="confirmation-pop-up__header">
+      <h2 class="confirmation-pop-up__title">{{ title() }}</h2>
+    </div>
+  </ng-template>
+
+  <div class="confirmation-pop-up__body">
+    <p class="confirmation-pop-up__message" *ngIf="!allowHtml()">{{ message() }}</p>
+    <p class="confirmation-pop-up__message" *ngIf="allowHtml()" [innerHTML]="message()"></p>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="confirmation-pop-up__actions">
+      @if (showCancel()) {
+        <p-button
+          [label]="cancelLabel()"
+          severity="secondary"
+          styleClass="confirmation-pop-up__cancel"
+          (onClick)="cancel.emit()"
+        />
+      }
+      <p-button
+        [label]="confirmLabel()"
+        [loading]="loading()"
+        styleClass="confirmation-pop-up__confirm"
+        (onClick)="confirm.emit()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

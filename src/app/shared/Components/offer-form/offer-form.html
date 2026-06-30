@@ -1,0 +1,1357 @@
+@if (!isLoading() && !initialLoading()) {
+<div class="mb-6 flex flex-col gap-2">
+  <a class="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors w-fit no-underline cursor-pointer" [routerLink]="backNavRouteLink()">
+    <i class="pi pi-arrow-left"></i> Back to Offers
+  </a>
+  <h1 class="text-2xl font-bold text-gray-800 mt-2">
+    {{ actionType() === 'edit' ? 'Edit Offer' : 'Create New Offer' }}
+  </h1>
+  <p class="text-sm text-gray-500">
+    {{ actionType() === 'edit' ? 'Update the details for your existing offer.' : 'Set up a new promotional offer for your catalog.' }}
+  </p>
+</div>
+<div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-4">
+  <form
+    class="offer-form [&_input]:border [&_input]:border-gray-100 [&_textarea]:border [&_textarea]:border-gray-100 [&_select]:border [&_select]:border-gray-100 [&_.p-inputtext]:border [&_.p-inputtext]:border-gray-100 [&_.p-select]:border [&_.p-select]:border-gray-100 [&_.p-datepicker]:border [&_.p-datepicker]:border-gray-100 [&_.p-multiselect]:border [&_.p-multiselect]:border-gray-100 flex-1 min-w-0"
+    [formGroup]="offerForm" (ngSubmit)="submit()">
+    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-info.svg')"
+            [style.maskImage]="getOfferIconMask('ic-info.svg')"></span>
+        </div>
+        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+          Basic Information
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium">
+            Vendor
+            <span class="text-red-500">*</span>
+          </label>
+
+          <div class="card flex justify-center">
+            <p-select [options]="vendorOptions()" formControlName="selectedVendor" optionLabel="label"
+              optionValue="value" optionDisabled="disabled" [filter]="true" filterBy="label"
+              filterPlaceholder="Search vendors by name" [loading]="vendorsLoading()"
+              (onFilter)="onVendorSearch($event)" (onShow)="onVendorDropdownShow()"
+              (onHide)="onVendorDropdownHide()" panelStyleClass="offer-form-vendor-select-panel"
+              placeholder="Choose a Vendor"
+              class="pl-2 w-full bg-gray-50 !rounded-none">
+            </p-select>
+          </div>
+          @if (hasRequiredError('selectedVendor')) {
+          <p class="text-xs text-red-500 mt-1">Vendor is required.</p>
+          } @else {
+          <p class="text-xs text-slate-500 mt-1">Type to search vendors, then scroll to load more matches.</p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium">
+            Offer Title (English)
+            <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input pInputText formControlName="titleEn"
+              (focus)="setPreviewLanguage('en')" class="w-full pl-5 bg-gray-50 rounded-none"
+              placeholder="e.g. Summer Collection Launch" />
+          </div>
+          @if (hasRequiredError('titleEn')) {
+          <p class="text-xs text-red-500 mt-1">Offer title (English) is required.</p>
+          }
+          @if (hasFieldError('titleEn', 'whitespace')) {
+          <p class="text-xs text-red-500 mt-1">Offer title (English) cannot be empty or only whitespace.</p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium">
+            Offer Title (Arabic)
+            <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input pInputText formControlName="titleAr" (input)="sanitizeArabicInput('titleAr')"
+              (focus)="setPreviewLanguage('ar')" class="w-full text-right pr-4 bg-gray-50 rounded-none"
+              placeholder="مثلاً: إطلاق مجموعة الصيف" />
+          </div>
+          @if (hasRequiredError('titleAr')) {
+          <p class="text-xs text-red-500 mt-1">Offer title (Arabic) is required.</p>
+          }
+          @if (hasFieldError('titleAr', 'arabicOnly')) {
+          <p class="text-xs text-red-500 mt-1">اسم العرض يجب أن يكون باللغة العربية فقط.</p>
+          }
+          @if (hasFieldError('titleAr', 'whitespace')) {
+          <p class="text-xs text-red-500 mt-1">اسم العرض لا يمكن أن يكون فارغاً.</p>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="text-sm font-medium block">
+            Offer Description (English)
+            <span class="text-red-500">*</span>
+          </label>
+          <textarea pInputTextarea formControlName="descriptionEn"
+            (focus)="setPreviewLanguage('en')" rows="4"
+            class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none shadow-none focus:shadow-none"
+            placeholder="e.g. Summer Collection Launch Description"></textarea>
+          @if (hasRequiredError('descriptionEn')) {
+          <p class="text-xs text-red-500 mt-1">Offer description (English) is required.</p>
+          }
+          @if (hasFieldError('descriptionEn', 'whitespace')) {
+          <p class="text-xs text-red-500 mt-1">Offer description (English) cannot be empty or only whitespace.</p>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="text-sm font-medium block">
+            Offer Description (Arabic)
+            <span class="text-red-500">*</span>
+          </label>
+          <textarea pInputTextarea formControlName="descriptionAr" (focus)="setPreviewLanguage('ar')" rows="4"
+            class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none text-right shadow-none focus:shadow-none"
+            dir="rtl" placeholder="مثلاً: إطلاق مجموعة الصيف"></textarea>
+          @if (hasRequiredError('descriptionAr')) {
+          <p class="text-xs text-red-500 mt-1">Offer description (Arabic) is required.</p>
+          }
+          @if (hasFieldError('descriptionAr', 'arabicOnly')) {
+          <p class="text-xs text-red-500 mt-1">وصف العرض يجب أن يكون باللغة العربية فقط.</p>
+          }
+          @if (hasFieldError('descriptionAr', 'whitespace')) {
+          <p class="text-xs text-red-500 mt-1">وصف العرض لا يمكن أن يكون فارغاً.</p>
+          }
+        </div>
+
+        <div class="flex-auto">
+          <label for="discountStartDate" class="text-sm font-medium">
+            Start Date
+            <span class="text-red-500">*</span>
+          </label>
+          <p-datepicker formControlName="startdate" iconDisplay="input" [minDate]="minDate" showIcon="true"
+            inputId="discountStartDate" styleClass="offer-form__datepicker w-full bg-gray-50 !rounded-none"
+            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" placeholder="mm/dd/yyyy"
+            variant="filled" />
+          @if (hasRequiredError('startdate')) {
+          <p class="text-xs text-red-500 mt-1">Start date is required.</p>
+          }
+        </div>
+
+        <div class="flex-auto">
+          <label for="discountExpireDate" class="text-sm font-medium">
+            Expiry Date
+            <span class="text-red-500">*</span>
+          </label>
+          <p-datepicker formControlName="expiry" iconDisplay="input" showIcon="true" inputId="discountExpireDate"
+            [minDate]="minExpiryDate()" styleClass="offer-form__datepicker w-full bg-gray-50 !rounded-none"
+            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" placeholder="mm/dd/yyyy"
+            variant="filled" />
+          @if (hasRequiredError('expiry')) {
+          <p class="text-xs text-red-500 mt-1">Expiry date is required.</p>
+          } @else if (hasFieldError('expiry', 'invalidDateRange')) {
+          <p class="text-xs text-red-500 mt-1">Expiry date must be at least one day after the start date.</p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <app-category-dropdown [label]="'Category'" [placeholder]="'Select categories'" [multiple]="true"
+            [required]="true" [control]="category">
+          </app-category-dropdown>
+        </div>
+
+        <div class="md:col-span-2">
+          <app-target-audience-dropdown [label]="'Target Audience'" [placeholder]="'Select target audience'"
+            [required]="false" [control]="targetAudience" />
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium">Tags</label>
+          <div class="flex items-center gap-0">
+            <div class="relative flex-1">
+              <p-autoComplete formControlName="tagInput" [suggestions]="suggestedTags()"
+                (completeMethod)="searchTags($event)" placeholder="Examples of tags: lifestyle, fast food, man, woman"
+                styleClass="w-full offer-form__field offer-form__autocomplete"
+                panelStyleClass="offer-form__overlay-panel offer-form__autocomplete-panel"
+                inputStyleClass="pl-5 w-full bg-gray-50 rounded-none border-gray-100" (onBlur)="onTagInputBlur()"
+                (onSelect)="addTag()">
+              </p-autoComplete>
+            </div>
+            <p-button type="button" icon="pi pi-plus"
+              styleClass="offer-form__tag-add-button -ml-px rounded-l-none rounded-r-md" [disabled]="isTagAddDisabled()"
+              (onClick)="addTag()"></p-button>
+          </div>
+          @if (shouldShowTagDuplicateError()) {
+          <p class="text-xs text-red-500 mt-1">Tag already exists</p>
+          }
+
+          @if (topTags().length > 0) {
+          <div class="mt-2 flex items-center gap-2">
+            <span class="offer-form__frequent-label">Frequent:</span>
+            <div class="flex flex-wrap gap-1.5">
+              @for (tag of topTags(); track tag) {
+              <button type="button" (click)="addExistingTag(tag)" class="offer-form__frequent-tag">
+                + {{ tag }}
+              </button>
+              }
+            </div>
+          </div>
+          }
+
+          <div formArrayName="selectedTags" class="pt-3 flex flex-wrap gap-2">
+            @for(item of selectedTags.controls; track item; let i = $index) {
+            <p-chip [label]="item.value" [removable]="true" styleClass="offer-form__tag-chip"
+              (onRemove)="removeTag(i)" />
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    @if (showHotelDetails()) {
+    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-offer-settings.svg')"
+            [style.maskImage]="getOfferIconMask('ic-offer-settings.svg')"></span>
+        </div>
+        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+          Hotel Details
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div>
+          <label class="text-sm font-medium text-gray-700">
+            Tax Value (English)
+            <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input pInputText formControlName="taxValue" class="w-full pl-4 bg-gray-50 rounded-none"
+              placeholder="e.g. 50 SAR" />
+          </div>
+          @if (offerForm.get('taxValue')?.touched && offerForm.get('taxValue')?.hasError('required')) {
+          <p class="text-xs text-red-500 mt-1">Tax value (English) is required.</p>
+          }
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-700">
+            Tax Value (Arabic)
+            <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input pInputText formControlName="taxValueAr" class="w-full pr-4 text-right bg-gray-50 rounded-none"
+              placeholder="مثلاً: ٥٠ ريال" />
+          </div>
+          @if (offerForm.get('taxValueAr')?.touched && offerForm.get('taxValueAr')?.hasError('required')) {
+          <p class="text-xs text-red-500 mt-1">Tax value (Arabic) is required.</p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium text-gray-700">
+            Currency
+            <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input pInputText formControlName="currency" class="w-full pl-4 bg-gray-50 rounded-none"
+              placeholder="SAR" />
+          </div>
+          @if (offerForm.get('currency')?.touched && offerForm.get('currency')?.hasError('required')) {
+          <p class="text-xs text-red-500 mt-1">Currency is required.</p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium text-gray-700">
+            Hotel Amenities (English)
+            <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input pInputText formControlName="hotelAmenities" class="w-full pl-4 bg-gray-50 rounded-none"
+              placeholder="Swimming pool, Spa, ..." />
+          </div>
+          @if (offerForm.get('hotelAmenities')?.touched && offerForm.get('hotelAmenities')?.hasError('required')) {
+          <p class="text-xs text-red-500 mt-1">Hotel amenities are required.</p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium text-gray-700">
+            Hotel Amenities (Arabic)
+            <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input pInputText formControlName="hotelAmenitiesAr" class="w-full pl-4 bg-gray-50 rounded-none text-right"
+              placeholder="... ،مسبح، سبا" />
+          </div>
+          @if (offerForm.get('hotelAmenitiesAr')?.touched && offerForm.get('hotelAmenitiesAr')?.hasError('required')) {
+          <p class="text-xs text-red-500 mt-1">Hotel amenities (Arabic) are required.</p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <div>
+            <h3 class="text-lg font-bold text-slate-700">Hotel Room Details</h3>
+          </div>
+
+          @if (roomItems().length) {
+          <div class="mt-4 border border-[rgba(202,202,202,1)] bg-[rgba(245,245,245,1)]">
+            @for (room of roomItems(); track room.id; let i = $index) {
+            <div class="flex items-center justify-between gap-4 px-3 py-3 text-sm" [class.border-t]="i > 0"
+              [class.border-[rgba(202,202,202,1)]]="i > 0">
+              <div class="min-w-0">
+                <p class="font-semibold text-[#374151]">{{ room.roomName || ('Room #' + (i + 1)) }}</p>
+              </div>
+
+              <div class="flex items-center gap-4 whitespace-nowrap text-sm">
+                @if (!room.isPlaceholder) {
+                <button type="button" class="border-0 bg-transparent p-0 text-[#003CC7] cursor-pointer"
+                  (click)="openRoomDialog(i)">
+                  Edit
+                </button>
+                } @else {
+                <span class="text-[#94A3B8]">Edit</span>
+                }
+                <button type="button" class="border-0 bg-transparent p-0 text-[#DC2626] cursor-pointer"
+                  (click)="removeRoom(i)">
+                  Delete
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+          } @else {
+          <div
+            class="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-5 py-6 text-sm text-slate-500">
+            <p>No rooms added yet.</p>
+          </div>
+          }
+          <div class="flex justify-end">
+            <button type="button"
+              class="mt-4 border-0 bg-transparent text-base font-medium text-[#003CC7] transition-colors hover:text-[#0537A4] cursor-pointer"
+              (click)="openRoomDialog()">
+              + Add new room
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+          <span class="vendor-form-svg-icon h-5 w-5"
+            [style.webkitMaskImage]="getOfferIconMask('ic-discount-details.svg')"
+            [style.maskImage]="getOfferIconMask('ic-discount-details.svg')"></span>
+        </div>
+        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+          Discount Details
+        </h2>
+      </div>
+      <div class="flex flex-col gap-6 mt-6">
+        <div class="offer-form-loading flex flex-col gap-4">
+          <label class="text-sm text-gray-700">
+            Discount Type
+            <span class="text-red-500">*</span>
+          </label>
+
+          <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+              <p-radiobutton name="hotelRating" value="Fixed" formControlName="discountType">
+              </p-radiobutton>
+              <span class="text-gray-700 font-medium">Fixed Amount</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+              <p-radiobutton name="hotelRating" value="Percentage" formControlName="discountType">
+              </p-radiobutton>
+              <span class="text-gray-700 font-medium">Percentage</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+              <p-radiobutton name="hotelRating" value="Others" formControlName="discountType">
+              </p-radiobutton>
+              <span class="text-gray-700 font-medium">Others</span>
+            </label>
+          </div>
+          @if (hasRequiredError('discountType')) {
+          <p class="text-xs text-red-500 mt-1">Discount type is required.</p>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="flex flex-col gap-3"
+            [ngClass]="{ 'md:col-span-2': offerForm.get('discountType')?.value !== 'Others' }">
+            <label class="text-sm font-medium text-gray-700">
+              {{ offerForm.get('discountType')?.value === 'Others' ? 'Amount (English)' : 'Discount Amount (English)' }}
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input pInputText formControlName="discountEn" class="w-full pl-4 pr-8 bg-gray-50 rounded-none"
+                (focus)="setPreviewLanguage('en')"
+                [attr.inputmode]="offerForm.get('discountType')?.value === 'Others' ? null : 'decimal'"
+                [placeholder]="offerForm.get('discountType')?.value === 'Others' ? 'e.g. 50' : 'e.g. 50 OMR Off'"
+                (input)="offerForm.get('discountType')?.value === 'Others' ? null : sanitizeDiscountInput('discountEn')" />
+              @if (offerForm.get('discountType')?.value === 'Percentage') {
+              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+                %
+              </span>
+              } @else if (offerForm.get('discountType')?.value === 'Fixed') {
+              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">
+                SAR
+              </span>
+              }
+            </div>
+            @if (hasRequiredError('discountEn')) {
+            <p class="text-xs text-red-500 mt-1">Discount amount is required.</p>
+            }
+            @if (hasDiscountNumericError('discountEn')) {
+            <p class="text-xs text-red-500 mt-1">Discount amount must be a numeric value.</p>
+            }
+            @if (hasDiscountPercentageRangeError('discountEn')) {
+            <p class="text-xs text-red-500 mt-1">Percentage must be between 0 and 100.</p>
+            }
+          </div>
+
+          @if (offerForm.get('discountType')?.value === 'Others') {
+          <div class="flex flex-col gap-3">
+            <label class="text-sm font-medium text-gray-700">
+              {{ offerForm.get('discountType')?.value === 'Others' ? 'Amount (Arabic)' : 'Discount Amount (Arabic)' }}
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input pInputText formControlName="discountAr" class="w-full pr-4 text-right bg-gray-50 rounded-none h-11"
+                (focus)="setPreviewLanguage('ar')"
+                [attr.inputmode]="offerForm.get('discountType')?.value === 'Others' ? null : 'decimal'"
+                [placeholder]="offerForm.get('discountType')?.value === 'Others' ? 'مثلاً: ٥٠' : 'مثلاً: خصم ٥٠ ريال'"
+                (input)="offerForm.get('discountType')?.value === 'Others' ? sanitizeArabicInput('discountAr') : sanitizeDiscountInput('discountAr')" />
+              @if (offerForm.get('discountType')?.value === 'Percentage') {
+              <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+                %
+              </span>
+              } @else if (offerForm.get('discountType')?.value === 'Fixed') {
+              <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">
+                SAR
+              </span>
+              }
+            </div>
+            @if (hasRequiredError('discountAr')) {
+            <p class="text-xs text-red-500 mt-1">Discount amount (Arabic) is required.</p>
+            }
+            @if (hasFieldError('discountAr', 'arabicOnly')) {
+            <p class="text-xs text-red-500 mt-1">Amount (Arabic) must contain Arabic characters only.</p>
+            }
+          </div>
+          }
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-medium block">
+              Redemption Instruction (English)
+              <span class="text-red-500">*</span>
+            </label>
+            <textarea pInputTextarea formControlName="instructionsEn"
+              (focus)="setPreviewLanguage('en')" rows="4"
+              class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none shadow-none focus:shadow-none"
+              placeholder="How can customers redeem this offer?"></textarea>
+            @if (hasRequiredError('instructionsEn')) {
+            <p class="text-xs text-red-500 mt-1">Redemption instruction (English) is required.</p>
+            }
+            @if (hasFieldError('instructionsEn', 'whitespace')) {
+            <p class="text-xs text-red-500 mt-1">Redemption instruction (English) cannot be empty or only whitespace.
+            </p>
+            }
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-medium block">
+              Redemption Instruction (Arabic)
+              <span class="text-red-500">*</span>
+            </label>
+            <textarea pInputTextarea formControlName="instructionsAr" (focus)="setPreviewLanguage('ar')" rows="4"
+              class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none text-right shadow-none focus:shadow-none"
+              dir="rtl" placeholder="كيف يمكن للعملاء استرداد هذا العرض؟"></textarea>
+            @if (hasRequiredError('instructionsAr')) {
+            <p class="text-xs text-red-500 mt-1">Redemption instruction (Arabic) is required.</p>
+            }
+            @if (hasFieldError('instructionsAr', 'arabicOnly')) {
+            <p class="text-xs text-red-500 mt-1">تعليمات الاسترداد يجب أن تكون باللغة العربية فقط.</p>
+            }
+            @if (hasFieldError('instructionsAr', 'whitespace')) {
+            <p class="text-xs text-red-500 mt-1">تعليمات الاسترداد لا يمكن أن تكون فارغة.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-offer-settings.svg')"
+            [style.maskImage]="getOfferIconMask('ic-offer-settings.svg')"></span>
+        </div>
+        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+          Offer Settings
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-6">
+        <div class="flex flex-col gap-4 md:col-span-2">
+          <label class="text-sm font-medium">
+            Offer Type
+            <span class="text-red-500">*</span>
+          </label>
+
+          <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+              <p-radiobutton name="offerLocation" value="In-Store" formControlName="mode">
+              </p-radiobutton>
+              <span class="text-gray-700">In Store</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+              <p-radiobutton name="offerLocation" value="Digital" formControlName="mode">
+              </p-radiobutton>
+              <span class="text-gray-700">Digital</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+              <p-radiobutton name="offerLocation" value="In-Store & Digital" formControlName="mode">
+              </p-radiobutton>
+              <span class="text-gray-700">In-Store & Digital</span>
+            </label>
+          </div>
+          @if (hasRequiredError('mode')) {
+          <p class="text-xs text-red-500 mt-1">Offer type is required.</p>
+          }
+        </div>
+      </div>
+
+      <!-- Website + Discount Code -->
+      <div class="mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+          <div class="flex flex-col gap-2" [ngClass]="{ 'md:col-span-2': offerForm.get('mode')?.value === 'In-Store' }">
+            <label class="text-sm font-medium text-gray-700">
+              Website @if (offerForm.get('mode')?.value === 'Digital' ||
+              offerForm.get('mode')?.value === 'In-Store & Digital') {
+              <span class="text-red-500">*</span>
+              }
+            </label>
+            <input pInputText formControlName="urlLink" class="pl-5 w-full bg-gray-50 rounded-none" [placeholder]="offerForm.get('mode')?.value === 'In-Store'
+                ? 'e.g. www.companyname.com (optional)'
+                : 'e.g. www.companyname.com'" />
+            @if (hasRequiredError('urlLink')) {
+            <p class="text-xs text-red-500 mt-1">Website is required.</p>
+            }
+            @if (hasFieldError('urlLink', 'pattern')) {
+            <p class="text-xs text-red-500 mt-1">Please enter a valid URL.</p>
+            }
+            @if (offerForm.get('mode')?.value === 'In-Store') {
+            <p class="text-xs text-gray-500">Optional link for in-store offer details or redemption.</p>
+            }
+          </div>
+
+          @if (offerForm.get('mode')?.value !== 'In-Store') {
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-medium text-gray-700">
+              Discount Code
+            </label>
+            <input pInputText formControlName="discountCode" class="pl-5 w-full bg-gray-50 rounded-none"
+              placeholder="e.g. Offer20" />
+          </div>
+          }
+        </div>
+      </div>
+      @if (offerForm.get('mode')?.value !== 'Digital') {
+      <div class="mt-6">
+        <label class="text-sm font-medium">Selected Locations</label>
+        <div class="flex flex-col gap-4 p-5 border rounded-xl bg-white border-gray-300 mt-2">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-map-marker text-gray-600 text-xl"></i>
+            <span class="text-gray-800 text-sm font-medium">Select locations for this offer</span>
+          </div>
+
+          @if (!offerForm.get('selectedVendor')?.value) {
+          <p class="text-gray-500 text-sm">
+            Select a vendor above to view available locations.
+          </p>
+          } @else if (locationsLoading()) {
+          <p-skeleton width="100%" height="2.5rem"></p-skeleton>
+          } @else {
+          <p-multiselect [options]="vendorLocations()" formControlName="locationIds" optionLabel="label"
+            optionValue="id" placeholder="Select one or more locations"
+            styleClass="w-full offer-form__field offer-form__multiselect !rounded-none"
+            panelStyleClass="offer-form__overlay-panel offer-form__multiselect-panel"
+            [disabled]="isBranchSelectionDisabled()">
+            <ng-template pTemplate="item" let-option>
+              <div class="flex flex-col">
+                <span class="font-medium text-sm">{{ option.label }}</span>
+                @if (option.city || option.address) {
+                <span class="offer-form__option-meta">
+                  {{ option.city }} @if (option.city && option.address) {
+                  • } {{ option.address }}
+                </span>
+                }
+              </div>
+            </ng-template>
+          </p-multiselect>
+          }
+          @if (showVendorHasNoBranchesMessage()) {
+          <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
+            This vendor has no branches. In-store or both-mode offers cannot be activated until at least one branch is
+            added.
+          </p>
+          } @else if (showBranchSelectionRequiredMessage()) {
+          <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
+            Select at least one branch to activate this offer.
+          </p>
+          }
+        </div>
+      </div>
+      }
+      @if (offerForm.get('mode')?.value !== 'Digital') {
+      <div class="flex justify-end">
+        <button type="button"
+          class="mt-4 text-base font-medium text-slate-400 transition-colors hover:text-[#0537A4] cursor-pointer"
+          (click)="openLocationDialog()">
+          + Add New Location
+        </button>
+      </div>
+      }
+    </div>
+    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-branding.svg')"
+            [style.maskImage]="getOfferIconMask('ic-branding.svg')"></span>
+        </div>
+        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+          Branding <span class="text-red-500">*</span>
+        </h2>
+      </div>
+      <div class="mt-6">
+        <label class="text-sm font-medium block mb-2">
+          Background Images
+          <span class="text-red-500">*</span>
+        </label>
+        <div
+          class="offer-form__upload-dropzone offer-form__upload-dropzone--lg mt-2"
+          (dragover)="onOfferDragOver($event)" (dragleave)="onOfferDragLeave($event)" (drop)="onOfferDrop($event)"
+          (click)="offerFileInput.click()"
+          [class.offer-form__upload-dropzone--dragging]="isOfferDragging()">
+          <div class="flex flex-col gap-6 justify-center items-center text-center w-full cursor-pointer">
+            <div class="flex flex-col items-center gap-3 w-full">
+              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                <span class="vendor-form-svg-icon text-[#0033A0]"
+                  style="width: 32px; height: 32px; display: inline-block;"
+                  [style.webkitMaskImage]="getUploadIconMask()"
+                  [style.maskImage]="getUploadIconMask()"></span>
+              </div>
+              <p class="vendor-upload__title">Upload one cover image and crop it for mobile and desktop</p>
+              <p class="vendor-upload__help">
+                Mobile will save as `2.39:1` and desktop will save as `16:2`. JPG, PNG, max 10MB.
+              </p>
+              <div class="flex items-center justify-center gap-2">
+                <button type="button" pButton icon="pi pi-upload"
+                  [label]="(previewUrl() || offerLandscapePreviewUrl() || offerForm.get('offerImage')?.value || offerForm.get('offerImageLandscape')?.value) ? 'Upload New Source' : 'Choose Image'"
+                  class="p-button-outlined p-button-sm"
+                  (click)="offerFileInput.click(); $event.stopPropagation()"></button>
+              </div>
+            </div>
+          </div>
+          <input #offerFileInput type="file" accept="image/*" class="hidden" (change)="onOfferFileSelected($event)" />
+        </div>
+        @if (
+          previewUrl() ||
+          offerLandscapePreviewUrl() ||
+          (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string') ||
+          (offerForm.get('offerImageLandscape')?.value && typeof offerForm.get('offerImageLandscape')?.value === 'string')
+        ) {
+        <div class="offer-form__background-split grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-4">
+          <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <div>
+                <p class="text-sm font-semibold text-[#1F2937]">Mobile Background</p>
+                <p class="text-xs text-gray-500">Aspect ratio `2.39:1`</p>
+              </div>
+            </div>
+            <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+              @if (previewUrl(); as preview) {
+              <div class="flex flex-col items-center gap-3 w-full">
+                <div class="h-[220px] w-full flex items-center justify-center">
+                  <img [src]="preview" alt="Mobile background image preview"
+                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                </div>
+                <p class="text-gray-500 text-sm">{{ selectedOfferFileName() }}</p>
+              </div>
+              } @else if (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string') {
+              <div class="flex flex-col items-center gap-3 w-full">
+                <div class="h-[220px] w-full flex items-center justify-center">
+                  <img [src]="offerForm.get('offerImage')?.value" alt="Mobile background image"
+                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                    (error)="$any($event.target).style.display='none'" />
+                </div>
+                <p class="text-gray-500 text-sm">Current mobile background</p>
+              </div>
+              } @else {
+              <p class="text-sm text-gray-400">Upload a source image to create the mobile crop.</p>
+              }
+            </div>
+            <div class="flex items-center justify-center gap-2 mt-4">
+              <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
+                [disabled]="!(previewUrl() || offerForm.get('offerImage')?.value || offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value)"
+                (click)="recropOfferImage('mobile'); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-trash" label="Remove"
+                class="p-button-outlined p-button-danger p-button-sm"
+                [disabled]="!(previewUrl() || offerForm.get('offerImage')?.value)"
+                (click)="removeOfferImage(); $event.stopPropagation()"></button>
+            </div>
+          </div>
+
+          <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <div>
+                <p class="text-sm font-semibold text-[#1F2937]">Desktop Background</p>
+                <p class="text-xs text-gray-500">Aspect ratio `16:2`</p>
+              </div>
+            </div>
+            <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+              @if (offerLandscapePreviewUrl(); as offerLandscapePreview) {
+              <div class="flex flex-col items-center gap-3 w-full">
+                <div class="h-[220px] w-full flex items-center justify-center">
+                  <img [src]="offerLandscapePreview" alt="Desktop background image preview"
+                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                </div>
+                <p class="text-gray-500 text-sm">{{ selectedOfferLandscapeFileName() }}</p>
+              </div>
+              } @else if (offerForm.get('offerImageLandscape')?.value && typeof offerForm.get('offerImageLandscape')?.value === 'string') {
+              <div class="flex flex-col items-center gap-3 w-full">
+                <div class="h-[220px] w-full flex items-center justify-center">
+                  <img [src]="offerForm.get('offerImageLandscape')?.value" alt="Desktop background image"
+                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                    (error)="$any($event.target).style.display='none'" />
+                </div>
+                <p class="text-gray-500 text-sm">Current desktop background</p>
+              </div>
+              } @else {
+              <p class="text-sm text-gray-400">Upload a source image to create the desktop crop.</p>
+              }
+            </div>
+            <div class="flex items-center justify-center gap-2 mt-4">
+              <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
+                [disabled]="!(offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value || previewUrl() || offerForm.get('offerImage')?.value)"
+                (click)="recropOfferImage('desktop'); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-trash" label="Remove"
+                class="p-button-outlined p-button-danger p-button-sm"
+                [disabled]="!(offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value)"
+                (click)="removeOfferLandscapeImage(); $event.stopPropagation()"></button>
+            </div>
+          </div>
+        </div>
+        }
+        @if (hasRequiredError('offerImage')) {
+        <p class="text-xs text-red-500 mt-1">Background image is required.</p>
+        } @else if (hasRequiredError('offerImageLandscape')) {
+        <p class="text-xs text-red-500 mt-1">Background image is required.</p>
+        }
+      </div>
+
+      <div class="mt-6">
+        <label class="text-sm font-medium block mb-2">
+          Highlight Images
+          <span class="text-red-500">*</span>
+        </label>
+        <div class="offer-form__highlight-split grid grid-cols-1 md:grid-cols-2 w-full mt-4">
+          <div class="offer-form__crop-card offer-form__crop-card--highlight">
+            <div class="offer-form__crop-card-header offer-form__crop-card-header--highlight">
+              <div class="offer-form__crop-card-title">
+                <div class="offer-form__crop-card-icon" aria-hidden="true">
+                  <i class="pi pi-mobile"></i>
+                </div>
+                <div>
+                  <div class="offer-form__crop-card-heading-row">
+                    <p class="offer-form__crop-card-heading">Mobile Highlight</p>
+                    <span class="offer-form__crop-card-badge">9:16</span>
+                  </div>
+                  <p class="offer-form__crop-card-subtitle">Aspect ratio `9:16`</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="offer-form__upload-dropzone mb-4"
+              (dragover)="onHighlightDragOver($event)" (dragleave)="onHighlightDragLeave($event)"
+              (drop)="onHighlightDrop($event)"
+              [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
+              (click)="highlightMobileFileInput.click()">
+              <div class="flex flex-col items-center gap-3 w-full">
+                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center">
+                  <span class="vendor-form-svg-icon text-[#0033A0]"
+                    style="width: 28px; height: 28px; display: inline-block;"
+                    [style.webkitMaskImage]="getUploadIconMask()"
+                    [style.maskImage]="getUploadIconMask()"></span>
+                </div>
+                <p class="vendor-upload__title">Upload mobile highlight image</p>
+                <p class="vendor-upload__help">Saved as `9:16`. JPG, PNG, max 10MB.</p>
+                <button type="button" pButton icon="pi pi-upload"
+                  [label]="(highlightPreviewUrl() || offerForm.get('highlightImage')?.value) ? 'Replace Mobile Image' : 'Choose Mobile Image'"
+                  class="p-button-outlined p-button-sm"
+                  (click)="highlightMobileFileInput.click(); $event.stopPropagation()"></button>
+              </div>
+              <input #highlightMobileFileInput type="file" accept="image/*" class="hidden"
+                (change)="onHighlightFileSelected($event, 'mobile')" />
+            </div>
+            @if (highlightPreviewUrl() || offerForm.get('highlightImage')?.value) {
+            <div class="offer-form__crop-preview-frame offer-form__crop-preview-frame--mobile offer-form__crop-preview-frame--highlight">
+              @if (highlightPreviewUrl(); as highlightPreview) {
+              <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
+                <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
+                  <span class="offer-form__crop-ratio-pill">9:16</span>
+                  <img [src]="highlightPreview" alt="Mobile highlight image preview"
+                    class="offer-form__crop-image offer-form__crop-image--mobile" />
+                  <div class="offer-form__crop-overlay" aria-hidden="true">
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--br"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--ml"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--mr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tc"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bc"></span>
+                  </div>
+                </div>
+              </div>
+              } @else if (offerForm.get('highlightImage')?.value && typeof offerForm.get('highlightImage')?.value === 'string') {
+              <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
+                <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
+                  <span class="offer-form__crop-ratio-pill">9:16</span>
+                  <img [src]="offerForm.get('highlightImage')?.value" alt="Mobile highlight image"
+                    class="offer-form__crop-image offer-form__crop-image--mobile"
+                    (error)="$any($event.target).style.display='none'" />
+                  <div class="offer-form__crop-overlay" aria-hidden="true">
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--br"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--ml"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--mr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tc"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bc"></span>
+                  </div>
+                </div>
+              </div>
+              }
+              <p class="offer-form__crop-safe-note">
+                <i class="pi pi-info-circle" aria-hidden="true"></i>
+                <span>Keep important elements in the safe area</span>
+              </p>
+            </div>
+            <div class="offer-form__crop-actions offer-form__crop-actions--highlight">
+              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop" class="p-button-outlined p-button-sm"
+                [disabled]="!(highlightPreviewUrl() || offerForm.get('highlightImage')?.value)"
+                (click)="recropHighlightImage('mobile'); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-trash" label="Remove"
+                class="p-button-outlined p-button-danger p-button-sm"
+                [disabled]="!(highlightPreviewUrl() || offerForm.get('highlightImage')?.value)"
+                (click)="removeHighlightImage(); $event.stopPropagation()"></button>
+            </div>
+            }
+          </div>
+
+          <div class="offer-form__crop-card offer-form__crop-card--highlight offer-form__crop-card--highlight-secondary">
+            <div class="offer-form__crop-card-header offer-form__crop-card-header--highlight">
+              <div class="offer-form__crop-card-title">
+                <div class="offer-form__crop-card-icon" aria-hidden="true">
+                  <i class="pi pi-desktop"></i>
+                </div>
+                <div>
+                  <div class="offer-form__crop-card-heading-row">
+                    <p class="offer-form__crop-card-heading">Desktop Highlight</p>
+                    <span class="offer-form__crop-card-badge">16:9</span>
+                  </div>
+                  <p class="offer-form__crop-card-subtitle">Aspect ratio `16:9`</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="offer-form__upload-dropzone mb-4"
+              (dragover)="onHighlightDragOver($event)" (dragleave)="onHighlightDragLeave($event)"
+              (drop)="onHighlightDrop($event)"
+              [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
+              (click)="highlightDesktopFileInput.click()">
+              <div class="flex flex-col items-center gap-3 w-full">
+                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center">
+                  <span class="vendor-form-svg-icon text-[#0033A0]"
+                    style="width: 28px; height: 28px; display: inline-block;"
+                    [style.webkitMaskImage]="getUploadIconMask()"
+                    [style.maskImage]="getUploadIconMask()"></span>
+                </div>
+                <p class="vendor-upload__title">Upload desktop highlight image</p>
+                <p class="vendor-upload__help">Saved as `16:9`. JPG, PNG, max 10MB.</p>
+                <button type="button" pButton icon="pi pi-upload"
+                  [label]="(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value) ? 'Replace Desktop Image' : 'Choose Desktop Image'"
+                  class="p-button-outlined p-button-sm"
+                  (click)="highlightDesktopFileInput.click(); $event.stopPropagation()"></button>
+              </div>
+              <input #highlightDesktopFileInput type="file" accept="image/*" class="hidden"
+                (change)="onHighlightFileSelected($event, 'desktop')" />
+            </div>
+            @if (highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value) {
+            <div class="offer-form__crop-preview-frame offer-form__crop-preview-frame--desktop offer-form__crop-preview-frame--highlight">
+              @if (highlightLandscapePreviewUrl(); as highlightLandscapePreview) {
+              <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
+                <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
+                  <span class="offer-form__crop-ratio-pill">16:9</span>
+                  <img [src]="highlightLandscapePreview" alt="Desktop highlight image preview"
+                    class="offer-form__crop-image offer-form__crop-image--desktop" />
+                  <div class="offer-form__crop-overlay" aria-hidden="true">
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--br"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--ml"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--mr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tc"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bc"></span>
+                  </div>
+                </div>
+              </div>
+              } @else if (offerForm.get('highlightImageLandscape')?.value && typeof offerForm.get('highlightImageLandscape')?.value === 'string') {
+              <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
+                <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
+                  <span class="offer-form__crop-ratio-pill">16:9</span>
+                  <img [src]="offerForm.get('highlightImageLandscape')?.value" alt="Desktop highlight image"
+                    class="offer-form__crop-image offer-form__crop-image--desktop"
+                    (error)="$any($event.target).style.display='none'" />
+                  <div class="offer-form__crop-overlay" aria-hidden="true">
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--br"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--ml"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--mr"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--tc"></span>
+                    <span class="offer-form__crop-handle offer-form__crop-handle--bc"></span>
+                  </div>
+                </div>
+              </div>
+              }
+              <p class="offer-form__crop-safe-note">
+                <i class="pi pi-info-circle" aria-hidden="true"></i>
+                <span>Keep important elements in the safe area</span>
+              </p>
+            </div>
+            <div class="offer-form__crop-actions offer-form__crop-actions--highlight">
+              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop" class="p-button-outlined p-button-sm"
+                [disabled]="!(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value)"
+                (click)="recropHighlightImage('desktop'); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-trash" label="Remove"
+                class="p-button-outlined p-button-danger p-button-sm"
+                [disabled]="!(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value)"
+                (click)="removeHighlightLandscapeImage(); $event.stopPropagation()"></button>
+            </div>
+            }
+          </div>
+        </div>
+        @if (hasRequiredError('highlightImage')) {
+        <p class="text-xs text-red-500 mt-1">Mobile highlight image is required.</p>
+        } @else if (hasRequiredError('highlightImageLandscape')) {
+        <p class="text-xs text-red-500 mt-1">Desktop highlight image is required.</p>
+        }
+      </div>
+    </div>
+    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-contact-info.svg')"
+            [style.maskImage]="getOfferIconMask('ic-contact-info.svg')"></span>
+        </div>
+        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+          Contact Information
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium"> Phone Number 1</label>
+          <div class="relative">
+            <i class="pi pi-phone absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#94A3B8]"></i>
+            <input pInputText formControlName="phone" placeholder="+966 5 1234 5678" type="tel" inputmode="tel"
+              autocomplete="tel" (input)="sanitizePhoneInput('phone')" maxlength="15"
+              class="pl-11 w-full bg-gray-50 rounded-none" />
+          </div>
+          @if (phoneError()) {
+          <p class="text-xs text-red-500 mt-1">Use English Numbers</p>
+          } @else if (offerForm.get('phone')?.touched && offerForm.get('phone')?.hasError('required')) {
+          <p class="text-xs text-red-500 mt-1">Phone number is required.</p>
+          } @else if (offerForm.get('phone')?.touched && (offerForm.get('phone')?.hasError('invalidPhone') ||
+          offerForm.get('phone')?.hasError('pattern'))) {
+          <p class="text-xs text-red-500">Enter a valid phone number using digits and phone symbols only.</p>
+          } @else if (offerForm.get('phone')?.touched && offerForm.get('phone')?.hasError('maxlength')) {
+          <p class="text-xs text-red-500">Phone number cannot exceed 15 characters.</p>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium">Phone Number 2</label>
+          <div class="relative">
+            <i class="pi pi-home absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#94A3B8]"></i>
+            <input pInputText formControlName="landline" placeholder="+966 11 1234 5678" type="tel" inputmode="tel"
+              autocomplete="tel-national" (input)="sanitizePhoneInput('landline')" maxlength="15"
+              class="pl-11 w-full bg-gray-50 rounded-none" />
+          </div>
+          @if (landlineError()) {
+          <p class="text-xs text-red-500 mt-1">Use English Numbers</p>
+          } @else if (offerForm.get('landline')?.touched && offerForm.get('landline')?.hasError('required')) {
+          <p class="text-xs text-red-500 mt-1">Phone number is required.</p>
+          } @else if (offerForm.get('landline')?.touched && (offerForm.get('landline')?.hasError('invalidPhone') ||
+          offerForm.get('landline')?.hasError('pattern'))) {
+          <p class="text-xs text-red-500">Enter a valid phone number using digits and phone symbols only.</p>
+          } @else if (offerForm.get('landline')?.touched && offerForm.get('landline')?.hasError('maxlength')) {
+          <p class="text-xs text-red-500">Phone number cannot exceed 15 characters.</p>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium"> Email Address </label>
+          <div class="relative">
+            <i class="pi pi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#94A3B8]"></i>
+            <input pInputText formControlName="email" placeholder="contact@example.com" type="email" inputmode="email"
+              autocomplete="email" class="pl-11 w-full bg-gray-50 rounded-none" />
+          </div>
+          @if (offerForm.get('email')?.touched && offerForm.get('email')?.hasError('email')) {
+          <p class="text-xs text-red-500">Enter a valid email address.</p>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+              <span class="vendor-form-svg-icon h-5 w-5"
+                [style.webkitMaskImage]="getOfferIconMask('ic-custom-highlights.svg')"
+                [style.maskImage]="getOfferIconMask('ic-custom-highlights.svg')"></span>
+            </div>
+
+            <div>
+              <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+                Custom Highlights
+              </h2>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Add custom details for the highlight section.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-sm" [class.text-[#0537A4]]="highlightEnabled()"
+              [class.text-[#94A3B8]]="!highlightEnabled()">
+              {{ highlightEnabled() ? 'Active' : 'In-Active' }}
+            </span>
+            <p-toggleswitch formControlName="highlight"></p-toggleswitch>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 transition-all duration-500 ease-in-out overflow-hidden" [ngClass]="highlightEnabled()
+                          ? 'opacity-100 translate-y-0 max-h-[2000px]'
+                          : 'opacity-0 -translate-y-2 max-h-0 pointer-events-none'">
+          <div class="flex flex-col gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-2">
+                <label class="text-sm font-medium">
+                  Highlights Title (English)
+                  <span class="text-red-500">*</span>
+                </label>
+                <input pInputText formControlName="highlightTitleEn"
+                  class="offer-form__highlight-field pl-5 w-full bg-gray-50 rounded-none"
+                  placeholder="Enter highlight title" />
+                @if (hasRequiredError('highlightTitleEn')) {
+                <p class="text-xs text-red-500 mt-1">Highlights title (English) is required.</p>
+                }
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="text-sm font-medium">
+                  Highlights Title (Arabic)
+                  <span class="text-red-500">*</span>
+                </label>
+                <input pInputText formControlName="highlightTitleAr" (input)="sanitizeArabicInput('highlightTitleAr')"
+                  class="offer-form__highlight-field w-full bg-gray-50 pl-5 rounded-none text-right"
+                  placeholder="أدخل عنوان الميزة" />
+                @if (hasRequiredError('highlightTitleAr')) {
+                <p class="text-xs text-red-500 mt-1">Highlights title (Arabic) is required.</p>
+                }
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-medium">
+                Highlights Description (English)
+                <span class="text-red-500">*</span>
+              </label>
+              <input pInputText rows="4" formControlName="highlightDescription"
+                class="offer-form__highlight-field w-full bg-gray-50 p-5 rounded-none"
+                placeholder="Describe this highlight" />
+              @if (hasRequiredError('highlightDescription')) {
+              <p class="text-xs text-red-500 mt-1">Highlights description is required.</p>
+              }
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-medium">
+                Highlights Description (Arabic)
+                <span class="text-red-500">*</span>
+              </label>
+              <input pInputText rows="4" formControlName="highlightDescriptionAr"
+                class="offer-form__highlight-field w-full bg-gray-50 p-5 rounded-none text-right" dir="rtl"
+                placeholder="اكتب وصف الميزة" />
+              @if (hasRequiredError('highlightDescriptionAr')) {
+              <p class="text-xs text-red-500 mt-1">Highlights description (Arabic) is required.</p>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3 mt-6 px-6 py-5 md:mb-0 sm:flex-row sm:items-center bg-white"
+      [ngClass]="'sm:justify-end'">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <button pButton pRipple type="submit" [label]="buttonName()" icon="pi pi-check" iconPos="left"
+          class="offer-form__submit-button" [disabled]="isSubmitDisabled()"></button>
+      </div>
+    </div>
+  </form>
+  <div class="hidden lg:block shrink-0 sticky top-12 self-start">
+    <app-preview-offer-details [offer]="previewOffer()" [vendor]="previewOffer().vendor" [language]="previewLanguage"
+      [locations]="previewLocations" />
+  </div>
+  <app-room-creation-offer [visible]="showRoomDialog()"
+    [roomDraft]="editingRoomIndex() !== null ? roomItems()[editingRoomIndex()!] : null"
+    (saveRoom)="handleRoomSaved($event)" (visibleChange)="onRoomDialogVisibleChange($event)" />
+  <app-location-creation [visible]="showLocationDialog()" [vendorId]="offerForm.get('selectedVendor')?.value"
+    (locationAdded)="onLocationAdded()" (visibleChange)="onLocationDialogVisibleChange($event)" />
+
+  <app-confirmation-pop-up [visible]="showConfirmationDialog()" [loading]="isLoading()"
+    [title]="actionType() === 'edit' ? 'Confirm Changes' : 'Confirm Offer Creation'" [message]="actionType() === 'edit' 
+      ? 'Are you sure you want to save the changes to this offer?' 
+      : 'Are you sure you want to create this new offer?'"
+    [confirmLabel]="actionType() === 'edit' ? 'Save Changes' : 'Create Offer'" [cancelLabel]="'Cancel'"
+    (confirm)="onConfirmSubmit()" (cancel)="onCancelSubmit()">
+  </app-confirmation-pop-up>
+
+  <!-- Image Cropper Modal -->
+  @if (cropperVisible()) {
+  <div class="fixed inset-0 z-[1100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-6"
+    (click)="cancelCrop()">
+    <div
+      class="offer-form__cropper-dialog w-full max-w-3xl rounded-none shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]"
+      (click)="$event.stopPropagation()">
+
+      <!-- Header -->
+      <div
+        class="offer-form__cropper-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0">
+        <div class="min-w-0">
+          <h3 class="text-base sm:text-lg font-bold text-gray-900 truncate">Crop & Resize Image</h3>
+          <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">
+            {{ cropperTarget() === 'offer'
+              ? 'Adjust the offer background images'
+              : highlightCropTab() === 'mobile'
+                ? 'Adjust the mobile highlight image'
+                : 'Adjust the desktop highlight image' }}
+          </p>
+        </div>
+        <button type="button"
+          class="offer-form__cropper-close w-8 h-8 flex items-center justify-center rounded-full shrink-0 ml-2 cursor-pointer"
+          (click)="cancelCrop()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="offer-form__cropper-toolbar flex items-center gap-2 px-4 sm:px-6 py-3 border-b shrink-0">
+        <div class="min-w-0 mr-auto">
+          <span class="offer-form__cropper-meta-label text-[11px] font-semibold uppercase tracking-wide">Frame</span>
+          <p class="offer-form__cropper-meta-value text-xs mt-0.5">
+            {{ cropperTarget() === 'offer'
+              ? offerCropTab() === 'mobile'
+                ? '2.39:1 mobile background crop'
+                : '16:2 desktop background crop'
+              : highlightCropTab() === 'mobile'
+                ? '9:16 mobile highlight crop'
+                : '16:9 desktop highlight crop' }}
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span
+            class="offer-form__cropper-meta-label text-[11px] font-semibold uppercase tracking-wide mr-1">Zoom</span>
+          <button type="button"
+            class="offer-form__cropper-icon-button w-8 h-8 flex items-center justify-center rounded-lg border transition-colors cursor-pointer"
+            (click)="zoomOut()">
+            <i class="pi pi-minus text-xs"></i>
+          </button>
+          <div class="w-24 sm:w-32 flex items-center">
+            <input type="range" [min]="0.1" [max]="3" [step]="0.1" [value]="cropperZoom()"
+              (input)="onZoomSlider($event)"
+              class="offer-form__cropper-slider w-full h-1.5 rounded-full appearance-none cursor-pointer" />
+          </div>
+          <button type="button"
+            class="offer-form__cropper-icon-button w-8 h-8 flex items-center justify-center rounded-lg border transition-colors cursor-pointer"
+            (click)="zoomIn()">
+            <i class="pi pi-plus text-xs"></i>
+          </button>
+          <span class="offer-form__cropper-meta-value text-xs font-mono w-10 text-center">{{ (cropperZoom() *
+            100).toFixed(0) }}%</span>
+        </div>
+      </div>
+
+      @if (cropperTarget() === 'offer') {
+      <div class="flex items-center gap-2 px-4 sm:px-6 py-3 border-b border-gray-100 bg-white shrink-0">
+        <button type="button" class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer"
+          [class.bg-[#0033A0]]="offerCropTab() === 'mobile'" [class.text-white]="offerCropTab() === 'mobile'"
+          [class.border-[#0033A0]]="offerCropTab() === 'mobile'" [class.bg-white]="offerCropTab() !== 'mobile'"
+          [class.text-gray-600]="offerCropTab() !== 'mobile'" [class.border-gray-200]="offerCropTab() !== 'mobile'"
+          (click)="switchOfferCropTab('mobile')">
+          Mobile 2.39:1
+        </button>
+        <button type="button"
+          class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer disabled:cursor-not-allowed"
+          [class.bg-[#0033A0]]="offerCropTab() === 'desktop'"
+          [class.text-white]="offerCropTab() === 'desktop'"
+          [class.border-[#0033A0]]="offerCropTab() === 'desktop'"
+          [class.bg-white]="offerCropTab() !== 'desktop'"
+          [class.text-gray-600]="offerCropTab() !== 'desktop'"
+          [class.border-gray-200]="offerCropTab() !== 'desktop'"
+          [disabled]="!canOpenDesktopOfferTab"
+          (click)="switchOfferCropTab('desktop')">
+          Desktop 16:2
+        </button>
+      </div>
+      } @else {
+      <div class="flex items-center gap-2 px-4 sm:px-6 py-3 border-b border-gray-100 bg-white shrink-0">
+        <span
+          class="px-4 py-2 rounded-full text-sm font-medium border bg-[#0033A0] text-white border-[#0033A0]">
+          {{ highlightCropTab() === 'mobile' ? 'Mobile 9:16' : 'Desktop 16:9' }}
+        </span>
+      </div>
+      }
+
+      <!-- Cropper Area -->
+      <div class="offer-form__cropper-scroll flex-1 overflow-auto px-3 sm:px-6 py-4 min-h-0" style="max-height: 55vh;">
+        <div class="flex items-center justify-center min-h-[200px]">
+          @if (cropperMounted()) {
+          <image-cropper [imageURL]="cropperImageUrl()" [maintainAspectRatio]="true" [aspectRatio]="cropperAspectRatio"
+            [resizeToWidth]="cropperResizeWidth" [transform]="cropperTransform()" [canvasRotation]="0" format="png"
+            (imageCropped)="onImageCropped($event)" />
+          }
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div
+        class="offer-form__cropper-footer flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t shrink-0">
+        <button type="button" pButton label="Cancel" severity="secondary" [outlined]="true" (click)="cancelCrop()"
+          styleClass="offer-form__cropper-cancel w-full sm:w-auto"></button>
+        <button type="button" pButton [label]="cropperPrimaryActionLabel" [icon]="cropperPrimaryActionIcon"
+          (click)="applyCrop()" [disabled]="!canApplyCrop"
+          styleClass="offer-form__cropper-apply w-full sm:w-auto"></button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+} @else {
+<div class="w-full animate-pulse">
+  <!-- Top action bar skeleton -->
+  <div class="w-full flex flex-col md:flex-row justify-between items-center mb-5 gap-3">
+    <div class="flex flex-row gap-3 items-center">
+      <p-skeleton shape="circle" size="1.5rem"></p-skeleton>
+      <p-skeleton width="5rem" height="1rem"></p-skeleton>
+    </div>
+    <div class="flex gap-2">
+      <p-skeleton width="8rem" height="2.25rem" borderRadius="0"></p-skeleton>
+      <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Main form card skeleton -->
+  <div class="p-6 bg-white border border-[#EEF2F6] space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="md:col-span-2">
+        <p-skeleton width="10rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+      </div>
+
+      @for (field of [1,2,3,4]; track field) {
+      <div>
+        <p-skeleton width="8rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+      </div>
+      }
+
+      <div class="md:col-span-2">
+        <p-skeleton width="9rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="6rem" borderRadius="0"></p-skeleton>
+      </div>
+
+      <div class="md:col-span-2">
+        <p-skeleton width="9rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="6rem" borderRadius="0"></p-skeleton>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secondary sections -->
+  <div class="mt-4 p-6 bg-white border border-[#EEF2F6] space-y-5">
+    <div class="flex justify-between items-center">
+      <p-skeleton width="12rem" height="1.5rem"></p-skeleton>
+      <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
+    </div>
+    @for (row of [1,2]; track row) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-[#F8FAFC] border border-[#EEF2F6]">
+      <div>
+        <p-skeleton width="7rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+      </div>
+      <div>
+        <p-skeleton width="7rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="mt-4 p-6 bg-white border border-[#EEF2F6] space-y-4">
+    <p-skeleton width="14rem" height="1.5rem"></p-skeleton>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      @for (contact of [1,2,3]; track contact) {
+      <div>
+        <p-skeleton width="7rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+}

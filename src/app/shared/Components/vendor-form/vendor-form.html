@@ -1,0 +1,806 @@
+@if(isLoading()){
+<!-- VENDOR INFORMATION SKELETON -->
+<div class="p-6 bg-white rounded-xl shadow-sm space-y-6 animate-pulse">
+
+  <div class="h-6 w-48 bg-gray-300 rounded"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- Input skeleton -->
+    @for (i of [1,2,3,4,5]; track i) {
+    <div>
+      <div class="h-4 w-40 bg-gray-300 rounded mb-2"></div>
+      <div class="h-10 w-full bg-gray-200 rounded"></div>
+    </div>
+    }
+
+    <!-- Links -->
+    <div class="row-span-2">
+      <div class="h-4 w-40 bg-gray-300 rounded mb-2"></div>
+
+      <div class="flex gap-3">
+        <div class="h-10 flex-1 bg-gray-200 rounded"></div>
+        <div class="h-10 w-10 bg-gray-300 rounded"></div>
+      </div>
+
+      <div class="flex gap-2 mt-3">
+        <div class="h-6 w-20 bg-gray-300 rounded-full"></div>
+        <div class="h-6 w-20 bg-gray-300 rounded-full"></div>
+      </div>
+    </div>
+
+    <!-- Logo Upload -->
+    <div class="md:col-span-2">
+      <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 bg-gray-50 text-center">
+        <div class="h-10 w-10 bg-gray-300 rounded-full mx-auto mb-3"></div>
+        <div class="h-4 w-48 bg-gray-300 rounded mx-auto mb-2"></div>
+        <div class="h-3 w-32 bg-gray-300 rounded mx-auto"></div>
+      </div>
+    </div>
+
+    <!-- Cover image upload -->
+    <div class="md:col-span-2">
+      <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 bg-gray-50 text-center">
+        <div class="h-10 w-10 bg-gray-300 rounded-full mx-auto mb-3"></div>
+        <div class="h-4 w-56 bg-gray-300 rounded mx-auto mb-2"></div>
+        <div class="h-3 w-36 bg-gray-300 rounded mx-auto"></div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="md:col-span-2">
+      <div class="h-4 w-40 bg-gray-300 rounded mb-2"></div>
+      <div class="h-24 w-full bg-gray-200 rounded"></div>
+    </div>
+
+    <!-- Description Arabic -->
+    <div class="md:col-span-2">
+      <div class="h-4 w-40 bg-gray-300 rounded mb-2"></div>
+      <div class="h-24 w-full bg-gray-200 rounded"></div>
+    </div>
+
+  </div>
+</div>
+<!-- LOCATION SECTION SKELETON -->
+<div class="p-6 bg-white rounded-xl shadow-sm space-y-6 animate-pulse">
+
+  <div class="flex justify-between items-center">
+    <div class="h-6 w-48 bg-gray-300 rounded"></div>
+    <div class="h-10 w-32 bg-gray-300 rounded"></div>
+  </div>
+
+  @for (i of [1,2]; track i) {
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 rounded-lg bg-gray-50">
+
+    <div>
+      <div class="h-4 w-32 bg-gray-300 rounded mb-2"></div>
+      <div class="h-10 w-full bg-gray-200 rounded"></div>
+    </div>
+
+    <div>
+      <div class="h-4 w-32 bg-gray-300 rounded mb-2"></div>
+      <div class="h-10 w-full bg-gray-200 rounded"></div>
+    </div>
+
+    <div class="md:col-span-2">
+      <div class="h-4 w-32 bg-gray-300 rounded mb-2"></div>
+      <div class="h-24 w-full bg-gray-200 rounded"></div>
+    </div>
+
+  </div>
+  }
+</div>
+
+<!-- REPRESENTATIVE INFO SKELETON -->
+<div class="p-6 bg-white rounded-xl shadow-sm space-y-6 animate-pulse">
+
+  <div class="h-6 w-64 bg-gray-300 rounded"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    @for (i of [1,2,3]; track i) {
+    <div>
+      <div class="h-4 w-32 bg-gray-300 rounded mb-2"></div>
+      <div class="h-10 w-full bg-gray-200 rounded"></div>
+    </div>
+    }
+
+  </div>
+</div>
+
+}
+@else{
+<form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="submitForm()">
+
+  <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+        <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getVendorIconMask('ic-information.svg')"
+          [style.maskImage]="getVendorIconMask('ic-information.svg')"></span>
+      </div>
+      <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        Basic Information
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div>
+        <label class="text-sm font-medium">Vendor Name (English) <span class="text-red-600 ml-1">*</span></label>
+        <input pInputText formControlName="nameEn" class="w-full pl-5 bg-gray-50 rounded-none" img
+          placeholder="e.g. Global Tech Solutions" />
+        @if (hasRequiredError('nameEn')) {
+        <p class="text-xs text-red-500 mt-1">Vendor name (English) is required.</p>
+        }
+      </div>
+
+      <div>
+        <label class="text-sm font-medium">Vendor Name (Arabic) <span class="text-red-600 ml-1">*</span></label>
+        <input pInputText formControlName="nameAr" class="w-full text-right pr-4 bg-gray-50 rounded-none"
+          placeholder="مثال: حلول التقنية العالمية" (input)="sanitizeArabicInput('nameAr')" />
+        @if (hasRequiredError('nameAr')) {
+        <p class="text-xs text-red-500 mt-1">Vendor name (Arabic) is required.</p>
+        }
+        @if (hasFieldError('nameAr', 'arabicOnly')) {
+        <p class="text-xs text-red-500 mt-1">اسم التاجر يجب أن يكون باللغة العربية فقط.</p>
+        }
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="text-sm font-medium">Commercial Registration Number</label>
+        <input pInputText formControlName="crNumber" class="w-full pl-5 bg-gray-50 rounded-none"
+          placeholder="e.g. CR-1234567890" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="text-sm font-medium">Description (English) <span class="text-red-600 ml-1">*</span></label>
+        <textarea pInputTextarea formControlName="descriptionEn" rows="4"
+          class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none shadow-none focus:shadow-none"
+          placeholder="e.g. Briefly describe the vendor and their services"></textarea>
+        @if (hasRequiredError('descriptionEn')) {
+        <p class="text-xs text-red-500 mt-1">Description (English) is required.</p>
+        }
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="text-sm font-medium">Description (Arabic) <span class="text-red-600 ml-1">*</span></label>
+        <textarea pInputTextarea formControlName="descriptionAr" rows="4"
+          class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none text-right shadow-none focus:shadow-none"
+          placeholder="مثال: وصف مختصر للتاجر وخدماته" (input)="sanitizeArabicInput('descriptionAr')"></textarea>
+        @if (hasRequiredError('descriptionAr')) {
+        <p class="text-xs text-red-500 mt-1">Description (Arabic) is required.</p>
+        }
+        @if (hasFieldError('descriptionAr', 'arabicOnly')) {
+        <p class="text-xs text-red-500 mt-1">الوصف يجب أن يكون باللغة العربية فقط.</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+        <span class="vendor-form-svg-icon h-5 w-5"
+          [style.webkitMaskImage]="getVendorIconMask('ic-Business-Contact-Details.svg')"
+          [style.maskImage]="getVendorIconMask('ic-Business-Contact-Details.svg')"></span>
+      </div>
+      <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        Business Contact Details
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      <!-- Contact -->
+      <div>
+        <label class="text-sm font-medium">Contact Number <span class="text-red-600 ml-1">*</span></label>
+        <input pInputText formControlName="contact" class="w-full pl-5 bg-gray-50 rounded-none" type="tel"
+          placeholder="e.g. +966 50 123 4567" (input)="sanitizeNumericInput('contact')" maxlength="15" />
+        @if (contactError()) {
+        <p class="text-xs text-red-500 mt-1">Use English Numbers</p>
+        } @else if (hasRequiredError('contact')) {
+        <p class="text-xs text-red-500 mt-1">Contact number is required.</p>
+        } @else if (hasFieldError('contact', 'pattern')) {
+        <p class="text-xs text-red-500 mt-1">Contact number can only contain numbers, +, (), and spaces.</p>
+        } @else if (hasFieldError('contact', 'maxlength')) {
+        <p class="text-xs text-red-500 mt-1">Contact number cannot exceed 15 characters.</p>
+        }
+      </div>
+      <!-- Email -->
+      <div>
+        <label class="text-sm font-medium">Contact Email <span class="text-red-600 ml-1">*</span></label>
+        <input pInputText formControlName="email" class="w-full pl-5 bg-gray-50 rounded-none"
+          placeholder="e.g. contact@example.com" />
+        @if (hasRequiredError('email')) {
+        <p class="text-xs text-red-500 mt-1">Contact email is required.</p>
+        }
+        @if (hasFieldError('email', 'email')) {
+        <p class="text-xs text-red-500 mt-1">Contact email must be a valid email address.</p>
+        }
+      </div>
+      <div>
+        <label class="text-sm font-medium">Business Website</label>
+        <input pInputText formControlName="businessWebsite" class="w-full pl-5 bg-gray-50 rounded-none"
+          placeholder="e.g. https://example.com" />
+        @if (hasFieldError('businessWebsite', 'pattern')) {
+        <p class="text-xs text-red-500 mt-1">Please enter a valid URL.</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+        <span class="vendor-form-svg-icon h-5 w-5"
+          [style.webkitMaskImage]="getVendorIconMask('ic-Representative-Information.svg')"
+          [style.maskImage]="getVendorIconMask('ic-Representative-Information.svg')"></span>
+      </div>
+      <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        Representative Contact Details
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      <div>
+        <label for="repFullName" class="text-sm font-medium">Representative Full Name <span
+            class="text-red-600 ml-1">*</span></label>
+        <input pInputText id="repFullName" formControlName="repFullName" class="w-full pl-5 bg-gray-50 rounded-none"
+          placeholder="e.g. Ahmed Ali" />
+        @if (hasRequiredError('repFullName')) {
+        <p class="text-xs text-red-500 mt-1">Representative full name is required.</p>
+        }
+      </div>
+
+      <div>
+        <label for="repContactNumber" class="text-sm font-medium">Representative Phone Number <span
+            class="text-red-600 ml-1">*</span></label>
+        <input pInputText id="repContactNumber" formControlName="repContactNumber"
+          class="w-full pl-5 bg-gray-50 rounded-none" type="tel" placeholder="e.g. +966 50 123 4567"
+          (input)="sanitizeNumericInput('repContactNumber')" maxlength="15" />
+        @if (repContactError()) {
+        <p class="text-xs text-red-500 mt-1">Use English Numbers</p>
+        } @else if (hasRequiredError('repContactNumber')) {
+        <p class="text-xs text-red-500 mt-1">Representative phone number is required.</p>
+        } @else if (hasFieldError('repContactNumber', 'pattern')) {
+        <p class="text-xs text-red-500 mt-1">Representative phone number can only contain numbers, +, (), and spaces.
+        </p>
+        } @else if (hasFieldError('repContactNumber', 'maxlength')) {
+        <p class="text-xs text-red-500 mt-1">Representative phone number cannot exceed 15 characters.</p>
+        }
+      </div>
+
+      <div>
+        <label for="repEmail" class="text-sm font-medium">Representative Email <span
+            class="text-red-600 ml-1">*</span></label>
+        <input pInputText id="repEmail" formControlName="repEmail" class="w-full pl-5 bg-gray-50 rounded-none"
+          type="email" placeholder="e.g. representative@example.com" />
+        @if (hasRequiredError('repEmail')) {
+        <p class="text-xs text-red-500 mt-1">Representative email is required.</p>
+        }
+        @if (hasFieldError('repEmail', 'email')) {
+        <p class="text-xs text-red-500 mt-1">Representative email must be a valid email address.</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+        <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getVendorIconMask('ic-Social-Media.svg')"
+          [style.maskImage]="getVendorIconMask('ic-Social-Media.svg')"></span>
+      </div>
+      <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        Social Media Accounts
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 mt-6">
+      <div>
+        <div class="vendor-form-social-type-grid mb-4">
+          @for (socialType of socialLinkTypes; track socialType.key) {
+          <button type="button" class="vendor-form-social-type-button"
+            [class.vendor-form-social-type-button--active]="selectedSocialLinkType() === socialType.key"
+            (click)="selectSocialLinkType(socialType.key)">
+            @if (getSocialTypeIconPath(socialType.key); as socialTypeIconPath) {
+            <span class="vendor-form-svg-icon vendor-form-social-icon h-[18px] w-[18px]"
+              [class]="socialType.key === 'linkedin' ? 'vendor-form-svg-icon vendor-form-social-icon vendor-form-social-icon--linkedin h-[18px] w-[18px]' : 'vendor-form-svg-icon vendor-form-social-icon h-[18px] w-[18px]'"
+              [style.webkitMaskImage]="'url(' + socialTypeIconPath + ')'"
+              [style.maskImage]="'url(' + socialTypeIconPath + ')'"></span>
+            } @else {
+            <i class="pi pi-link text-sm"></i>
+            }
+            {{ socialType.label }}
+          </button>
+          }
+        </div>
+        @if (selectedSocialLinkType()) {
+        <div class="flex items-center gap-3">
+          <input formControlName="accountNameInput" pInputText class="flex-1 min-w-0 rounded-none bg-gray-50"
+            placeholder="Account name" />
+          <div class="relative flex-1 min-w-0">
+            @if (getSocialLinkInputIconPath(); as socialInputIconPath) {
+            <span
+              class="vendor-form-svg-icon vendor-form-social-icon absolute left-3 top-1/2 h-[20px] w-[20px] -translate-y-1/2 text-gray-400"
+              [class]="getSocialLinkIconClass(vendorForm.get('linkinput')?.value)"
+              [style.webkitMaskImage]="'url(' + socialInputIconPath + ')'"
+              [style.maskImage]="'url(' + socialInputIconPath + ')'"></span>
+            } @else {
+            <i class="pi pi-link absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            }
+            <input formControlName="linkinput" pInputText class="pl-10 w-full rounded-none bg-gray-50"
+              [placeholder]="getSocialLinkPlaceholder()" />
+          </div>
+          <p-button icon="pi pi-plus" (click)="addLink()"
+            [disabled]="!selectedSocialLinkType() || !vendorForm.get('accountNameInput')?.value?.trim() || !vendorForm.get('linkinput')?.value?.trim() || vendorForm.get('linkinput')?.invalid"></p-button>
+        </div>
+        @if (vendorForm.get('linkinput')?.invalid && vendorForm.get('linkinput')?.touched) {
+        <p class="text-xs text-red-500 mt-1">Please enter a valid URL.</p>
+        }
+        }
+        <div formArrayName="socialLinks" class="pt-3 flex flex-col gap-2">
+          @for(item of socialLinks.controls; track item; let i = $index) {
+          <div class="border border-[#D1D5DB] bg-[#F8FAFC] px-3 py-3">
+            @if (editingLinkIndex() === i) {
+            <div class="vendor-form-social-edit-row">
+              <div class="vendor-form-social-edit-icon-column">
+                <div class="vendor-form-social-edit-icon-shell">
+                  @if (getSocialLinkIconPath(item.value, i); as socialIconPath) {
+                  <span class="vendor-form-svg-icon h-[26px] w-[26px] text-[#1F2937]"
+                    [class]="getSocialLinkIconClass(item.value, i)"
+                    [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                    [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                  } @else {
+                  <i class="pi pi-link text-xl text-[#1F2937]"></i>
+                  }
+                </div>
+              </div>
+
+              <div class="vendor-form-social-edit-fields">
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-[#1F2937]">Username</label>
+                  <input pInputText class="w-full rounded-none bg-white" [value]="editingLinkAccountName()"
+                    (input)="updateEditingLinkAccountName($event)" placeholder="Enter username" />
+                  <p class="mt-2 text-xs text-[#64748B]">{{ getSocialLinkAccountHelper(item.value) }}</p>
+                </div>
+
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-[#1F2937]">Profile URL</label>
+                  <input pInputText class="w-full rounded-none bg-white" [value]="editingLinkValue()"
+                    (input)="updateEditingLinkValue($event)" placeholder="https://example.com/profile" />
+                  <p class="mt-2 text-xs text-[#64748B]">{{ getSocialLinkUrlHelper(item.value) }}</p>
+                </div>
+              </div>
+
+              <div class="vendor-form-social-edit-actions">
+                <button pButton type="button" label="Save"
+                  styleClass="vendor-form-social-action vendor-form-social-action--save"
+                  [disabled]="!editingLinkValue().trim()" (click)="saveEditLink(i)"></button>
+                <button type="button" class="vendor-form-social-action vendor-form-social-action--cancel"
+                  (click)="cancelEditLink()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+            } @else {
+            <div class="flex items-center justify-between gap-6">
+              <div class="min-w-0 flex flex-1 items-center gap-3">
+                @if (getSocialLinkIconPath(item.value, i); as socialIconPath) {
+                <span class="vendor-form-svg-icon h-[18px] w-[18px] text-[#4B5563]"
+                  [class]="getSocialLinkIconClass(item.value, i)"
+                  [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                  [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                } @else {
+                <i class="pi pi-link text-sm text-[#4B5563]"></i>
+                }
+                <span class="truncate text-sm font-semibold text-[#4B5563]">
+                  {{ formatSocialLinkLabel(item.value) }}
+                </span>
+              </div>
+
+              <div class="flex items-center gap-5 text-sm">
+                <button type="button" class="border-0 bg-transparent p-0 text-[#003CC7] cursor-pointer"
+                  (click)="editLink(i)">
+                  Edit
+                </button>
+                <button type="button" class="border-0 bg-transparent p-0 text-[#DC2626] cursor-pointer"
+                  (click)="removeLink(i)">
+                  Delete
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+        <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getVendorIconMask('ic-branding.svg')"
+          [style.maskImage]="getVendorIconMask('ic-branding.svg')"></span>
+      </div>
+      <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        Branding
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 mt-6">
+      <div>
+        <label class="text-sm font-medium block mb-2">Vendor Logo <span class="text-red-600 ml-1">*</span></label>
+        <div
+          class="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-8 bg-gray-50 text-center cursor-pointer mt-2 transition-colors duration-200 hover:border-[#0537A4] hover:bg-[#0537A4]/[0.06]"
+          (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
+          (click)="fileInput.click()" [class.border-blue-400]="isDragging()">
+
+          @if (effectiveLogoPreviewUrl(); as preview) {
+          <div class="flex flex-col items-center gap-3">
+            <img [src]="preview" alt="Logo preview" class="max-h-40 w-auto object-contain rounded-lg shadow-sm" />
+            <p class="vendor-upload__meta">{{ selectedFile()?.name }}</p>
+            <div class="flex gap-2">
+              <button type="button" pButton icon="pi pi-pencil" label="Crop" class="p-button-outlined p-button-sm"
+                (click)="recropLogo(); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-upload" label="Change" class="p-button-outlined p-button-sm"
+                (click)="fileInput.click(); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-trash" label="Remove"
+                class="p-button-outlined p-button-danger p-button-sm"
+                (click)="removeLogo(); $event.stopPropagation()"></button>
+            </div>
+          </div>
+          }
+          @else if (vendorForm.get('logo')?.value && typeof vendorForm.get('logo')?.value === 'string') {
+          <div class="flex flex-col items-center gap-3">
+            <img [src]="vendorForm.get('logo')?.value" alt="Vendor logo"
+              class="max-h-40 w-auto object-contain rounded-lg shadow-sm"
+              (error)="$any($event.target).style.display='none'" />
+            <p class="vendor-upload__meta">Current logo</p>
+            <div class="flex gap-2">
+              <button type="button" pButton icon="pi pi-pencil" label="Crop" class="p-button-outlined p-button-sm"
+                (click)="recropLogo(); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-upload" label="Change" class="p-button-outlined p-button-sm"
+                (click)="fileInput.click(); $event.stopPropagation()"></button>
+              <button type="button" pButton icon="pi pi-trash" label="Remove"
+                class="p-button-outlined p-button-danger p-button-sm"
+                (click)="removeLogo(); $event.stopPropagation()"></button>
+            </div>
+          </div>
+          }
+          @else {
+          <div class="flex flex-col items-center gap-3 w-full">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+              <span class="vendor-form-svg-icon text-[#0033A0]"
+                style="width: 32px; height: 32px; display: inline-block;" [style.webkitMaskImage]="getUploadIconMask()"
+                [style.maskImage]="getUploadIconMask()"></span>
+            </div>
+            <p class="vendor-upload__title">Drag and drop vendor logo here</p>
+            <p class="vendor-upload__help">
+              Or click to browse files from your computer (JPG, PNG, max 10MB)
+            </p>
+          </div>
+          }
+
+          <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+        </div>
+        @if (hasRequiredError('logo')) {
+        <p class="text-xs text-red-500 mt-1">Vendor logo is required.</p>
+        }
+        <p class="vendor-upload__help vendor-upload__help--small mt-2">
+          Recommended: upload a high-quality logo and crop it to a square. Best results are around 512 x 512 px. JPG/PNG
+          only, max 10MB.
+        </p>
+      </div>
+
+      <!-- Cover image upload -->
+      <div>
+        <label class="text-sm font-medium block mb-2">Cover images <span class="text-red-600 ml-1">*</span></label>
+        <div
+          class="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50 text-center cursor-pointer mt-2 transition-colors duration-200 hover:border-[#0537A4] hover:bg-[#0537A4]/[0.06]"
+          (dragover)="onCoverDragOver($event)" (dragleave)="onCoverDragLeave($event)" (drop)="onCoverDrop($event)"
+          (click)="coverFileInput.click()" [class.border-blue-400]="isDraggingCover()">
+          <div class="flex flex-col gap-6 justify-center items-center text-center w-full cursor-pointer">
+            <div class="flex flex-col items-center gap-3 w-full">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+              <span class="vendor-form-svg-icon text-[#0033A0]"
+                style="width: 32px; height: 32px; display: inline-block;"
+                [style.webkitMaskImage]="getUploadIconMask()"
+            [style.maskImage]="getUploadIconMask()"></span>
+            </div>
+            <p class="text-black font-bold">Upload one cover image and crop it for mobile and desktop</p>
+            <p class="text-[#4C444E] text-sm">
+              Mobile will save as `2.39:1` and desktop will save as `16:2`. JPG, PNG, max 10MB.
+            </p>
+            <div class="flex items-center justify-center gap-2">
+              <button type="button" pButton icon="pi pi-upload"
+                [label]="(effectiveCoverPreviewUrl() || effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImage')?.value || vendorForm.get('coverImageLandscape')?.value) ? 'Upload New Source' : 'Choose Image'"
+                class="p-button-outlined p-button-sm"
+                (click)="coverFileInput.click(); $event.stopPropagation()"></button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
+              <div class="flex items-center justify-between gap-3 mb-3">
+                <div>
+                  <p class="text-sm font-semibold text-[#1F2937]">Mobile Cover</p>
+                  <p class="text-xs text-gray-500">Aspect ratio `2.39:1`</p>
+                </div>
+              </div>
+              <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+                @if (effectiveCoverPreviewUrl(); as coverPreview) {
+                <div class="flex flex-col items-center gap-3 w-full">
+                  <div class="h-[220px] w-full flex items-center justify-center">
+                    <img [src]="coverPreview" alt="Vendor mobile cover preview"
+                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                  </div>
+                  <p class="text-gray-500 text-sm">{{ selectedCoverFile()?.name }}</p>
+                </div>
+                } @else if (vendorForm.get('coverImage')?.value && typeof vendorForm.get('coverImage')?.value === 'string') {
+                <div class="flex flex-col items-center gap-3 w-full">
+                  <div class="h-[220px] w-full flex items-center justify-center">
+                    <img [src]="vendorForm.get('coverImage')?.value" alt="Vendor mobile cover image"
+                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                      (error)="$any($event.target).style.display='none'" />
+                  </div>
+                  <p class="text-gray-500 text-sm">Current mobile cover</p>
+                </div>
+                } @else {
+                <p class="text-sm text-gray-400">Upload a source image to create the mobile crop.</p>
+                }
+              </div>
+              <div class="flex items-center justify-center gap-2 mt-4">
+                <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
+                  [disabled]="!(effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value || effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value)"
+                  (click)="recropCover('mobile'); $event.stopPropagation()"></button>
+                <button type="button" pButton icon="pi pi-trash" label="Remove"
+                  class="p-button-outlined p-button-danger p-button-sm"
+                  [disabled]="!(effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value)"
+                  (click)="removeCoverImage(); $event.stopPropagation()"></button>
+              </div>
+            </div>
+
+            <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
+              <div class="flex items-center justify-between gap-3 mb-3">
+                <div>
+                  <p class="text-sm font-semibold text-[#1F2937]">Desktop Cover</p>
+                  <p class="text-xs text-gray-500">Aspect ratio `16:2`</p>
+                </div>
+              </div>
+              <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+                @if (effectiveCoverLandscapePreviewUrl(); as coverLandscapePreview) {
+                <div class="flex flex-col items-center gap-3 w-full">
+                  <div class="h-[220px] w-full flex items-center justify-center">
+                    <img [src]="coverLandscapePreview" alt="Vendor desktop cover preview"
+                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                  </div>
+                  <p class="text-gray-500 text-sm">{{ selectedCoverLandscapeFile()?.name }}</p>
+                </div>
+                } @else if (vendorForm.get('coverImageLandscape')?.value && typeof vendorForm.get('coverImageLandscape')?.value === 'string') {
+                <div class="flex flex-col items-center gap-3 w-full">
+                  <div class="h-[220px] w-full flex items-center justify-center">
+                    <img [src]="vendorForm.get('coverImageLandscape')?.value" alt="Vendor desktop cover image"
+                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                      (error)="$any($event.target).style.display='none'" />
+                  </div>
+                  <p class="text-gray-500 text-sm">Current desktop cover</p>
+                </div>
+                } @else {
+                <p class="text-sm text-gray-400">Upload a source image to create the desktop crop.</p>
+                }
+              </div>
+              <div class="flex items-center justify-center gap-2 mt-4">
+                <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
+                  [disabled]="!(effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value || effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value)"
+                  (click)="recropCover('desktop'); $event.stopPropagation()"></button>
+                <button type="button" pButton icon="pi pi-trash" label="Remove"
+                  class="p-button-outlined p-button-danger p-button-sm"
+                  [disabled]="!(effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value)"
+                  (click)="removeCoverLandscapeImage(); $event.stopPropagation()"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <input #coverFileInput type="file" accept="image/*" class="hidden" (change)="onCoverFileSelected($event)" />
+        </div>
+        @if (hasRequiredError('coverImage')) {
+        <p class="text-xs text-red-500 mt-1">Mobile cover image is required.</p>
+        }
+        @if (hasRequiredError('coverImageLandscape')) {
+        <p class="text-xs text-red-500 mt-1">Desktop cover image is required.</p>
+        }
+        <p class="mt-2 text-xs text-gray-500">
+          Recommended: upload one high-quality source image and crop it into both `2.39:1` and `16:2` versions.
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- LOCATION SECTION -->
+  <div class="p-6 bg-white mb-5 border border-[#EEF2F6] space-y-6">
+
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
+        <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getVendorIconMask('ic-location.svg')"
+          [style.maskImage]="getVendorIconMask('ic-location.svg')"></span>
+      </div>
+      <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        Business Locations
+      </h2>
+    </div>
+
+    @if (locations.controls.length) {
+    <div class="mt-4 border border-[rgba(202,202,202,1)] bg-[rgba(245,245,245,1)]">
+      @for (loc of locations.controls; track loc; let i = $index) {
+      <div class="flex items-center justify-between gap-4 px-3 py-3 text-sm" [class.border-t]="i > 0"
+        [class.border-[rgba(202,202,202,1)]]="i > 0">
+        <div class="min-w-0">
+          <p class="font-semibold text-[#374151]">
+            {{ loc.get('branchName')?.value || 'Location #' + (i + 1) }}
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button type="button" class="border-0 bg-transparent p-0 text-[#003CC7] cursor-pointer"
+            (click)="editLocation(i)">
+            Edit
+          </button>
+          <button type="button"
+            class="border-0 bg-transparent p-0 text-[#DC2626] cursor-pointer disabled:cursor-not-allowed disabled:text-[#FCA5A5]"
+            [disabled]="isDeletingLocation()" (click)="removeLocation(i)">
+            {{ isDeletePendingForIndex(i) ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
+    <div class="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-5 py-6 text-sm text-slate-500">
+      <p>No locations added yet.</p>
+    </div>
+    }
+
+    <div class="flex justify-end">
+      <button type="button"
+        class="mt-4 border-0 bg-transparent text-base font-medium text-[#003CC7] transition-colors hover:text-[#0537A4] cursor-pointer"
+        (click)="openAddLocationDialog()">
+        + Add new location
+      </button>
+    </div>
+
+  </div>
+  <br>
+
+  <div [class]="
+      'flex flex-col gap-3 mt-6 px-6 py-5 md:mb-0 sm:flex-row sm:items-center bg-white ' +
+      (backNavRouteLink() ? 'sm:justify-between' : 'sm:justify-end')
+    ">
+    @if (backNavRouteLink()) {
+    <button pButton type="button" label="Back to Vendors" class="p-button-outlined !rounded-none"
+      (click)="backNavigation()"></button>
+    }
+    <button pButton type="submit" [label]="buttonName()" class="p-button-primary !rounded-none"
+      [disabled]="actionType() === 'edit' && !hasEditChanges()"></button>
+  </div>
+
+</form>
+
+<!-- <app-add-vendor-location
+  [visible]="addLocationDialogVisible()"
+  (visibleChange)="addLocationDialogVisible.set($event)"
+  (addLocation)="handleAddLocation($event)">
+</app-add-vendor-location> -->
+
+<app-location-creation [visible]="addLocationDialogVisible()" [vendorId]="null" [locationData]="editingLocationData()"
+  (visibleChange)="addLocationDialogVisible.set($event)" (locationAdded)="onLocationAdded()"
+  (locationCreatedByData)="handleAddLocation($event)">
+</app-location-creation>
+
+<app-confirmation-pop-up [visible]="showDeleteLocationDialog()" [loading]="isDeletingLocation()"
+  [title]="'Delete branch?'" [message]="getDeleteLocationDialogMessage()" [confirmLabel]="'Delete Branch'"
+  [cancelLabel]="'Cancel'" [dismissableMask]="!isDeletingLocation()" (confirm)="confirmDeleteLocation()"
+  (cancel)="cancelDeleteLocation()"></app-confirmation-pop-up>
+
+@if (cropperVisible()) {
+<div class="fixed inset-0 z-[1100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-6"
+  (click)="cancelCrop()">
+  <div
+    class="bg-white w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]"
+    (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 shrink-0">
+      <div class="min-w-0">
+        <h3 class="text-base sm:text-lg font-bold text-gray-900 truncate">
+          {{ cropperTarget() === 'logo' ? 'Crop Vendor Logo' : 'Crop Cover Image' }}
+        </h3>
+        <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">
+          {{ cropperTarget() === 'logo'
+            ? 'Adjust the logo inside a square frame before upload.'
+            : coverCropTab() === 'mobile'
+              ? 'Adjust the cover image inside a 2.39:1 frame before upload.'
+              : 'Adjust the cover image inside a 16:2 frame before upload.' }}
+        </p>
+      </div>
+      <button type="button"
+        class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 shrink-0 ml-2"
+        (click)="cancelCrop()">
+        <i class="pi pi-times text-gray-500"></i>
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2 px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-100 shrink-0">
+      @if (cropperTarget() === 'cover') {
+      <div class="min-w-0 mr-auto">
+        <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Frame</span>
+        <p class="text-xs text-gray-500 mt-0.5">
+          {{ coverCropTab() === 'mobile' ? '2.39:1 mobile cover crop' : '16:2 desktop cover crop' }}
+        </p>
+      </div>
+      }
+      <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mr-1">Zoom</span>
+      <button type="button"
+        class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 bg-white hover:bg-gray-100 transition-colors cursor-pointer"
+        (click)="zoomOut()">
+        <i class="pi pi-minus text-xs text-gray-600"></i>
+      </button>
+      <div class="w-24 sm:w-32 flex items-center">
+        <input type="range" [min]="0.1" [max]="3" [step]="0.1" [value]="cropperZoom()" (input)="onZoomSlider($event)"
+          class="w-full h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#0033A0]" />
+      </div>
+      <button type="button"
+        class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 bg-white hover:bg-gray-100 transition-colors cursor-pointer"
+        (click)="zoomIn()">
+        <i class="pi pi-plus text-xs text-gray-600"></i>
+      </button>
+      <span class="text-xs text-gray-500 font-mono w-10 text-center">{{ (cropperZoom() * 100).toFixed(0) }}%</span>
+    </div>
+
+    @if (cropperTarget() === 'cover') {
+    <div class="flex items-center gap-2 px-4 sm:px-6 py-3 border-b border-gray-100 bg-white shrink-0">
+      <button type="button" class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer"
+        [class.bg-[#0033A0]]="coverCropTab() === 'mobile'" [class.text-white]="coverCropTab() === 'mobile'"
+        [class.border-[#0033A0]]="coverCropTab() === 'mobile'" [class.bg-white]="coverCropTab() !== 'mobile'"
+        [class.text-gray-600]="coverCropTab() !== 'mobile'" [class.border-gray-200]="coverCropTab() !== 'mobile'"
+        (click)="switchCoverCropTab('mobile')">
+        Mobile 2.39:1
+      </button>
+      <button type="button"
+        class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer disabled:cursor-not-allowed"
+        [class.bg-[#0033A0]]="coverCropTab() === 'desktop'"
+        [class.text-white]="coverCropTab() === 'desktop'"
+        [class.border-[#0033A0]]="coverCropTab() === 'desktop'"
+        [class.bg-white]="coverCropTab() !== 'desktop'"
+        [class.text-gray-600]="coverCropTab() !== 'desktop'"
+        [class.border-gray-200]="coverCropTab() !== 'desktop'"
+        [disabled]="!canOpenDesktopCoverTab"
+        (click)="switchCoverCropTab('desktop')">
+        Desktop 16:2
+      </button>
+    </div>
+    }
+
+    <div class="flex-1 overflow-auto px-3 sm:px-6 py-4 min-h-0" style="max-height: 55vh;">
+      <div class="flex items-center justify-center min-h-[200px]">
+        <image-cropper [imageURL]="cropperImageUrl()" [maintainAspectRatio]="true" [aspectRatio]="cropperAspectRatio"
+          [resizeToWidth]="cropperResizeWidth" [transform]="cropperTransform()" [canvasRotation]="0" format="png"
+          (imageCropped)="onImageCropped($event)" />
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 bg-gray-50 shrink-0">
+      <button type="button" pButton label="Cancel" severity="secondary" [outlined]="true" (click)="cancelCrop()"
+        styleClass="w-full sm:w-auto"></button>
+      <button type="button" pButton [label]="cropperPrimaryActionLabel" [icon]="cropperPrimaryActionIcon"
+        (click)="applyCrop()" [disabled]="!canApplyCrop" styleClass="w-full sm:w-auto"></button>
+    </div>
+  </div>
+</div>
+}
+
+}
+
+<app-confirmation-pop-up [visible]="showConfirmationDialog()" [loading]="isLoading()"
+  [title]="actionType() === 'edit' ? 'Confirm Changes' : 'Confirm Vendor Creation'" [message]="actionType() === 'edit'
+    ? 'Are you sure you want to save the changes to this vendor?'
+    : 'Are you sure you want to create this new vendor?'"
+  [confirmLabel]="actionType() === 'edit' ? 'Save Changes' : 'Create Vendor'" [cancelLabel]="'Cancel'"
+  (confirm)="onConfirmSubmit()" (cancel)="onCancelSubmit()"></app-confirmation-pop-up>

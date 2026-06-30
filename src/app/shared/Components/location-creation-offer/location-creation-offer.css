@@ -1,0 +1,179 @@
+.location-creation-offer__title {
+  color: var(--app-text) !important;
+}
+
+.location-creation-offer__header,
+.location-creation-offer__footer {
+  background: var(--app-surface) !important;
+}
+
+.location-creation-offer__subtitle {
+  color: var(--app-muted) !important;
+}
+
+.location-creation-offer__section-title {
+  color: var(--app-text) !important;
+}
+
+.location-creation-offer__close-button {
+  color: var(--app-muted) !important;
+  border-radius: 0 !important;
+}
+
+.location-creation-offer__close-button:hover {
+  color: var(--app-text) !important;
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+}
+
+.location-creation-offer__cancel-button {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-muted) !important;
+}
+
+.location-creation-offer__cancel-button:hover {
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+.location-creation-offer label {
+  color: var(--app-text) !important;
+}
+
+.location-creation-offer [class*="bg-white"] {
+  background: var(--app-surface) !important;
+}
+
+.location-creation-offer [class*="bg-gray-50"] {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+}
+
+.location-creation-offer [class*="border-gray-100"],
+.location-creation-offer [class*="border-gray-200"],
+.location-creation-offer [class*="border-slate-200"] {
+  border-color: var(--app-border) !important;
+}
+
+.location-creation-offer [class*="text-gray-700"] {
+  color: var(--app-text) !important;
+}
+
+.location-creation-offer .text-\[\#0033A0\],
+.location-creation-offer [class*="text-[#0033A0]"] {
+  color: var(--app-primary) !important;
+}
+
+.location-creation-offer [class*="bg-[rgba(0,51,160,0.08)]"] {
+  background: var(--app-primary-soft) !important;
+}
+
+.location-creation-offer input,
+.location-creation-offer textarea {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border: 1px solid var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+.location-creation-offer input::placeholder,
+.location-creation-offer textarea::placeholder {
+  color: var(--app-muted) !important;
+  opacity: 1 !important;
+}
+
+.location-creation-offer input:focus,
+.location-creation-offer input:focus-visible,
+.location-creation-offer textarea:focus,
+.location-creation-offer textarea:focus-visible {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+::ng-deep .location-creation-offer .p-inputtext,
+::ng-deep .location-creation-offer .p-select,
+::ng-deep .location-creation-offer .p-select-label,
+::ng-deep .location-creation-offer .p-select-dropdown,
+::ng-deep .location-creation-offer .p-inputtextarea {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .location-creation-offer .p-select-label.p-placeholder,
+::ng-deep .location-creation-offer .p-inputtext::placeholder,
+::ng-deep .location-creation-offer .p-inputtextarea::placeholder {
+  color: var(--app-muted) !important;
+  opacity: 1 !important;
+}
+
+::ng-deep .location-creation-offer .p-select-dropdown,
+::ng-deep .location-creation-offer .p-select-dropdown-icon {
+  color: var(--app-muted) !important;
+}
+
+::ng-deep .location-creation-offer .p-select:focus-within,
+::ng-deep .location-creation-offer .p-inputtext:focus,
+::ng-deep .location-creation-offer .p-inputtextarea:focus {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+::ng-deep .location-creation-offer-dialog .p-dialog-content {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+}
+
+::ng-deep .location-creation-offer-dialog .p-dialog {
+  border: 1px solid var(--app-border) !important;
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .location-creation-offer-dialog .p-dialog-mask {
+  backdrop-filter: blur(6px);
+}
+
+::ng-deep .location-creation-offer .location-creation-offer__submit-button.p-button {
+  background: var(--app-primary) !important;
+  border: 1px solid var(--app-primary) !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .location-creation-offer .location-creation-offer__submit-button.p-button:not(:disabled):hover {
+  background: var(--app-primary-700) !important;
+  border-color: var(--app-primary-700) !important;
+}
+
+::ng-deep .location-creation-offer .location-creation-offer__submit-button .p-button-icon,
+::ng-deep .location-creation-offer .location-creation-offer__submit-button .p-button-label {
+  color: #fff !important;
+}
+
+.location-creation-offer__body {
+  scrollbar-color: var(--app-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+.location-creation-offer__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.location-creation-offer__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.location-creation-offer__body::-webkit-scrollbar-thumb {
+  background: var(--app-scrollbar-thumb);
+  border-radius: 0;
+}
+
+.location-creation-offer__body::-webkit-scrollbar-thumb:hover {
+  background: var(--app-scrollbar-thumb-hover);
+}

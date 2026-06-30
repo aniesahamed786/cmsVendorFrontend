@@ -1,0 +1,24 @@
+<div class="flex flex-col gap-1">
+  <label class="text-sm font-medium">
+    {{ label }}
+    @if (required) {
+      <span class="text-red-500">*</span>
+    }
+  </label>
+  <p-multiSelect
+    [options]="options"
+    [formControl]="control"
+    optionLabel="label"
+    optionValue="value"
+    [placeholder]="placeholder"
+    display="chip"
+    class="w-full bg-gray-50 rounded-none"
+    styleClass="offer-form__field offer-form__multiselect rounded-none"
+    panelStyleClass="offer-form__overlay-panel offer-form__multiselect-panel"
+    appendTo="body"
+  />
+  @if (required && control.touched && control.hasError('required')) {
+    <p class="text-xs text-red-500 mt-1">{{ label }} is required.</p>
+  }
+</div>
+

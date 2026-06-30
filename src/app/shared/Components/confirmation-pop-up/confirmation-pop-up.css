@@ -1,0 +1,48 @@
+:host ::ng-deep .confirmation-pop-up.p-dialog {
+  border-radius: 0;
+}
+
+:host ::ng-deep .confirmation-pop-up .p-dialog-header {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+:host ::ng-deep .confirmation-pop-up .p-dialog-content {
+  border-radius: 0;
+}
+
+:host ::ng-deep .confirmation-pop-up .p-dialog-footer {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.confirmation-pop-up__header {
+  display: flex;
+  align-items: center;
+}
+
+.confirmation-pop-up__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.confirmation-pop-up__body {
+  padding-top: 0.25rem;
+}
+
+.confirmation-pop-up__message {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #475569;
+  white-space: pre-line;
+}
+
+.confirmation-pop-up__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  width: 100%;
+}

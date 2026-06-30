@@ -1,57 +1,6 @@
-<div class="offer-form">
-  <header class="offer-form__header">
-    <a class="offer-form__back" routerLink="/offers"><i class="pi pi-arrow-left"></i> Back to Offers</a>
-    <h1 class="offer-form__title">Edit Offer</h1>
-    <p class="offer-form__subtitle">Update the details of this promotional offer.</p>
-  </header>
-
-  <form class="offer-form__card" (ngSubmit)="save()">
-    <label class="offer-form__field">
-      <span>Offer Title</span>
-      <input type="text" pInputText [ngModel]="title()" (ngModelChange)="title.set($event)" name="title" placeholder="e.g. Summer Sale 2026" />
-    </label>
-
-    <div class="offer-form__row">
-      <label class="offer-form__field">
-        <span>Discount</span>
-        <input type="text" pInputText [ngModel]="discount()" (ngModelChange)="discount.set($event)" name="discount" placeholder="e.g. 50% Off" />
-      </label>
-      <label class="offer-form__field">
-        <span>Discount Type</span>
-        <p-select [options]="discountTypeOptions" [ngModel]="discountType()" (ngModelChange)="discountType.set($event)" name="discountType" optionLabel="label" optionValue="value" placeholder="Select type" />
-      </label>
-    </div>
-
-    <div class="offer-form__row">
-      <label class="offer-form__field">
-        <span>Availability</span>
-        <p-select [options]="availabilityOptions" [ngModel]="availability()" (ngModelChange)="availability.set($event)" name="availability" optionLabel="label" optionValue="value" placeholder="Select availability" />
-      </label>
-      <label class="offer-form__field">
-        <span>Branch</span>
-        <p-select [options]="branchOptions" [ngModel]="branch()" (ngModelChange)="branch.set($event)" name="branch" optionLabel="label" optionValue="value" placeholder="Select branch" />
-      </label>
-    </div>
-
-    <div class="offer-form__row">
-      <label class="offer-form__field">
-        <span>Start Date</span>
-        <p-datepicker [ngModel]="startDate()" (ngModelChange)="startDate.set($event)" name="startDate" dateFormat="yy-mm-dd" appendTo="body" />
-      </label>
-      <label class="offer-form__field">
-        <span>Expiration Date</span>
-        <p-datepicker [ngModel]="expirationDate()" (ngModelChange)="expirationDate.set($event)" name="expirationDate" dateFormat="yy-mm-dd" appendTo="body" />
-      </label>
-    </div>
-
-    <label class="offer-form__field">
-      <span>Status</span>
-      <p-select [options]="statusOptions" [ngModel]="status()" (ngModelChange)="status.set($event)" name="status" optionLabel="label" optionValue="value" placeholder="Select status" />
-    </label>
-
-    <div class="offer-form__actions">
-      <a class="offer-form__cancel" routerLink="/offers">Cancel</a>
-      <button type="submit" class="offer-form__submit"><i class="pi pi-check"></i> Save Changes</button>
-    </div>
-  </form>
-</div>
+<app-offer-form
+  [actionType]="'edit'"
+  [buttonName]="'Update Offer'"
+  [backNavRouteLink]="'/offers'"
+  (submitOfferFormEvent)="save($event)"
+></app-offer-form>

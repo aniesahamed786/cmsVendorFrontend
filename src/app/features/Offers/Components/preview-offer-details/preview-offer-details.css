@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.preview-offer-details__text-wrap {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+/* Dotted line separator for room rates */
+.rate-item {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+.rate-label {
+  white-space: nowrap;
+}
+
+.rate-dots {
+  flex: 1;
+  border-bottom: 1px dotted #cbd5e1;
+  margin-bottom: 4px;
+}
+
+.rate-value {
+  white-space: nowrap;
+  font-weight: 600;
+}
