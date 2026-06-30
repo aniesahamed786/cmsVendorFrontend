@@ -91,7 +91,7 @@ export class ThemeService {
     set('--app-primary', palette[600]);
     set('--app-primary-700', palette[700]);
     set('--app-primary-rgb', rgb);
-    set('--app-gradient', gradient);
+    set('--app-primary-gradient', gradient);
 
     // derived alpha tokens track the active accent
     set('--app-primary-soft', `rgba(${rgb}, 0.08)`);

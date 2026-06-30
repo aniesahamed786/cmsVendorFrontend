@@ -85,8 +85,8 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-row>
-        <tr>
-          <td><a class="offers__title-link" [routerLink]="[row.id]">{{ row.title }}</a></td>
+        <tr [routerLink]="[row.id]" style="cursor: pointer;">
+          <td><span style="font-weight: 600;">{{ row.title }}</span></td>
           <td>{{ row.discount }}</td>
           <td>{{ row.discountType }}</td>
           <td>
@@ -98,7 +98,7 @@
           <td>{{ row.expirationDate | date: 'MMM d, y' }}</td>
           <td><span [class]="statusClass(row.status)">{{ row.status }}</span></td>
           <td>
-            <button type="button" class="offers__row-action" aria-label="Row actions">
+            <button type="button" class="offers__row-action" aria-label="Row actions" (click)="$event.stopPropagation()">
               <i class="pi pi-ellipsis-h"></i>
             </button>
           </td>

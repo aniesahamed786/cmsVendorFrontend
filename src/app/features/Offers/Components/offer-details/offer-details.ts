@@ -42,9 +42,11 @@ export class OfferDetails {
         if (Array.isArray(offer?.categories)) {
             return offer.categories.filter((category: any) => category && typeof category === 'object');
         }
+
         if (offer?.category && typeof offer.category === 'object') {
             return [offer.category];
         }
+
         return [];
     }
 
@@ -110,26 +112,39 @@ export class OfferDetails {
         if (typeof icon !== 'string') return;
         const normalized = icon.trim();
         if (!normalized) return;
-        this.failedCategoryIcons.update((current) => ({ ...current, [normalized]: true }));
+
+        this.failedCategoryIcons.update((current) => ({
+            ...current,
+            [normalized]: true,
+        }));
     }
 
     getDiscountTypeLabel(offer: any, lang: 'en' | 'ar'): string {
         const type = (offer?.discount_type || offer?.discountType || '').toLowerCase().trim();
         const isOthers = type === 'other' || type === 'others';
-        if (type === 'percentage') return lang === 'en' ? 'Percentage:' : 'النسبة:';
-        if (isOthers) return lang === 'en' ? 'Amount:' : 'المبلغ:';
+        
+        if (type === 'percentage') {
+            return lang === 'en' ? 'Percentage:' : 'النسبة:';
+        }
+        
+        if (isOthers) {
+            return lang === 'en' ? 'Amount:' : 'المبلغ:';
+        }
+        
         return lang === 'en' ? 'Discount Amount:' : 'مبلغ الخصم:';
     }
 
     getDiscountAmount(offer: any, lang: 'en' | 'ar'): string {
         const type = (offer?.discount_type || offer?.discountType || '').toLowerCase().trim();
-        const amount = lang === 'ar'
+        const amount = lang === 'ar' 
             ? (offer?.discount_amount_ar || offer?.Discount_amount_ar || offer?.discountValueAr || offer?.discount_amount || offer?.Discount_amount || offer?.discountValue || '')
             : (offer?.discount_amount || offer?.Discount_amount || offer?.discountValue || '');
         let normalized = String(amount || '').replace('%', '').trim();
+
         if (type === 'other' || type === 'others') {
             normalized = normalized.replace(/\bdiscount\b/gi, '').replace(/\s{2,}/g, ' ').trim();
         }
+
         return normalized;
     }
 
@@ -144,7 +159,9 @@ export class OfferDetails {
     }
 
     getDiscountLabel(offer: any): string {
-        if (this.isPercentageDiscount(offer)) return `${this.getDiscountAmount(offer, 'en')}%`;
+        if (this.isPercentageDiscount(offer)) {
+            return `${this.getDiscountAmount(offer, 'en')}%`;
+        }
         return this.getDiscountAmount(offer, 'en') ? `${this.getDiscountAmount(offer, 'en')} Off` : 'N/A';
     }
 
@@ -160,10 +177,21 @@ export class OfferDetails {
         return 'In-Store';
     }
 
-    getHighlightTitle(offer: any): string { return offer?.highlight_title || 'N/A'; }
-    getHighlightTitleAr(offer: any): string { return offer?.highlight_title_ar || ''; }
-    getHighlightDescription(offer: any): string { return offer?.highlight_description || 'N/A'; }
-    getHighlightDescriptionAr(offer: any): string { return offer?.highlight_description_ar || ''; }
+    getHighlightTitle(offer: any): string {
+        return offer?.highlight_title || 'N/A';
+    }
+
+    getHighlightTitleAr(offer: any): string {
+        return offer?.highlight_title_ar || '';
+    }
+
+    getHighlightDescription(offer: any): string {
+        return offer?.highlight_description || 'N/A';
+    }
+
+    getHighlightDescriptionAr(offer: any): string {
+        return offer?.highlight_description_ar || '';
+    }
 
     getOfferMobileImage(offer: any): string | null {
         if (this.offerMobileImageFailed()) return null;
@@ -207,27 +235,50 @@ export class OfferDetails {
         return null;
     }
 
-    markOfferMobileImageError(): void { this.offerMobileImageFailed.set(true); }
-    markOfferDesktopImageError(): void { this.offerDesktopImageFailed.set(true); }
-    markHighlightMobileImageError(): void { this.highlightMobileImageFailed.set(true); }
-    markHighlightDesktopImageError(): void { this.highlightDesktopImageFailed.set(true); }
+    markOfferMobileImageError(): void {
+        this.offerMobileImageFailed.set(true);
+    }
+
+    markOfferDesktopImageError(): void {
+        this.offerDesktopImageFailed.set(true);
+    }
+
+    markHighlightMobileImageError(): void {
+        this.highlightMobileImageFailed.set(true);
+    }
+
+    markHighlightDesktopImageError(): void {
+        this.highlightDesktopImageFailed.set(true);
+    }
 
     getLocationTitle(loc: any): string {
         return loc?.branch_name || loc?.name || loc?.title || 'Unknown Location';
     }
 
     getLocationSubtitle(loc: any): string {
-        return [loc?.city, loc?.region, loc?.country, loc?.address]
+        return [
+            loc?.city,
+            loc?.region,
+            loc?.country,
+            loc?.address,
+        ]
             .filter((value) => typeof value === 'string' && value.trim())
             .join(', ');
     }
 
     formatContactValue(value: string | string[] | null | undefined): string {
         if (Array.isArray(value)) {
-            const formatted = value.map((item) => String(item ?? '').trim()).filter(Boolean).join(', ');
+            const formatted = value
+                .map((item) => String(item ?? '').trim())
+                .filter(Boolean)
+                .join(', ');
             return formatted || 'N/A';
         }
-        if (typeof value === 'string') return value.trim() || 'N/A';
+
+        if (typeof value === 'string') {
+            return value.trim() || 'N/A';
+        }
+
         return value ? String(value) : 'N/A';
     }
 
@@ -238,8 +289,14 @@ export class OfferDetails {
     }
 
     private hasMeaningfulContactValue(value: string | string[] | null | undefined): boolean {
-        if (Array.isArray(value)) return value.some((item) => String(item ?? '').trim().length > 0);
-        if (typeof value === 'string') return value.trim().length > 0;
+        if (Array.isArray(value)) {
+            return value.some((item) => String(item ?? '').trim().length > 0);
+        }
+
+        if (typeof value === 'string') {
+            return value.trim().length > 0;
+        }
+
         return value != null && String(value).trim().length > 0;
     }
 
