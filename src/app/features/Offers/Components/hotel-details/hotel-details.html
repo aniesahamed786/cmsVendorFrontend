@@ -1,0 +1,62 @@
+<div class="hotel-details bg-white p-7">
+  <div class="mb-6 flex items-center gap-4">
+    <div class="hd-chip flex h-10 w-10 items-center justify-center">
+      <i class="pi pi-building hd-accent text-lg"></i>
+    </div>
+    <h3 class="hd-accent text-xl font-semibold">Hotel Details</h3>
+  </div>
+
+  <div class="space-y-6">
+    <!-- Room Details -->
+    <div>
+      <span class="text-sm font-medium block mb-3 hd-muted">Room Details</span>
+      <div class="space-y-3">
+        @for (room of getRoomDetails(); track room.roomName || $index) {
+        <div class="hd-surface border px-5 py-4">
+          <p class="text-base font-semibold hd-text">{{ room.roomName || 'Room' }}</p>
+          <div class="mt-2 space-y-1">
+            @for (rate of room.rates || []; track rate.season || $index) {
+            <div class="flex items-center justify-between gap-4 text-sm hd-muted">
+              <span>{{ rate.season }}</span>
+              <span class="flex items-center gap-1 hd-text font-medium">
+                {{ rate.value }}
+                @if (isSAR(getCurrency())) {
+                <span class="hd-riyal inline-block w-3.5 h-3.5"
+                  [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+                  [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"></span>
+                } @else { {{ getCurrency() }} }
+              </span>
+            </div>
+            }
+          </div>
+        </div>
+        } @empty {
+        <p class="text-sm hd-muted">No room details available.</p>
+        }
+      </div>
+    </div>
+
+    <!-- Amenities -->
+    @if (getAmenities().length > 0) {
+    <div>
+      <span class="text-sm font-medium block mb-3 hd-muted">Hotel Amenities</span>
+      <div class="flex flex-wrap gap-2">
+        @for (amenity of getAmenities(); track amenity) {
+        <div class="hd-surface border flex items-center gap-2 px-3 py-2">
+          <i class="pi pi-sparkles text-xs hd-muted"></i>
+          <span class="text-sm font-medium hd-text">{{ amenity }}</span>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- Tax -->
+    @if (getTaxValue()) {
+    <div>
+      <span class="text-sm font-medium block mb-2 hd-muted">Tax Value</span>
+      <p class="text-base hd-text">{{ getTaxValue() }}</p>
+    </div>
+    }
+  </div>
+</div>

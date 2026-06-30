@@ -2,12 +2,13 @@ import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { PrimeUIModules } from '../../core/prime.import';
+import { PrimeUIModules } from '../../../../core/prime.import';
 
 type Availability = 'Online' | 'In-Store' | 'Hybrid';
 type OfferStatus = 'Active' | 'Scheduled' | 'Expired';
 
 interface Offer {
+  id: string;
   title: string;
   discount: string;
   discountType: 'Percentage' | 'Fixed Amount';
@@ -153,7 +154,7 @@ export class Offers {
   }
 
   private buildRows(): Offer[] {
-    const seed: Omit<Offer, 'startDate' | 'expirationDate'>[] = [
+    const seed: Omit<Offer, 'id' | 'startDate' | 'expirationDate'>[] = [
       { title: 'Summer Sale 2026', discount: '50% Off', discountType: 'Percentage', availability: 'Online', branch: 'Main Branch', status: 'Active' },
       { title: 'Black Friday Deal', discount: '$25 Fixed', discountType: 'Fixed Amount', availability: 'In-Store', branch: 'Downtown', status: 'Scheduled' },
       { title: 'Weekend Special', discount: '30% Off', discountType: 'Percentage', availability: 'Hybrid', branch: 'Mall', status: 'Active' },
@@ -164,7 +165,7 @@ export class Offers {
       const start = new Date(2026, i, 10 + i);
       const expiration = new Date(start);
       expiration.setMonth(expiration.getMonth() + 1);
-      return { ...o, startDate: start, expirationDate: expiration };
+      return { ...o, id: String(i + 1), startDate: start, expirationDate: expiration };
     });
   }
 }

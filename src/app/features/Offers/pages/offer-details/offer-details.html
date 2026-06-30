@@ -1,0 +1,22 @@
+<div class="offer-details-page">
+  <header class="offer-details-page__header">
+    <a class="offer-details-page__back" routerLink="/offers"><i class="pi pi-arrow-left"></i> Back to Offers</a>
+    <div class="offer-details-page__heading">
+      <h1 class="offer-details-page__title">{{ offer.title }}</h1>
+      <a class="offer-details-page__edit" [routerLink]="['/offers/edit', id]"><i class="pi pi-pencil"></i> Edit Offer</a>
+    </div>
+  </header>
+
+  <div class="offer-details-page__body">
+    <div class="offer-details-page__main">
+      <app-offer-details [offer]="offer" [locations]="locations"></app-offer-details>
+    </div>
+    <app-preview-offer-details
+      class="offer-details-page__preview"
+      [offer]="offer"
+      [vendor]="vendor"
+      [locations]="locations"
+      [showVendorLogo]="true"
+      language="en"></app-preview-offer-details>
+  </div>
+</div>

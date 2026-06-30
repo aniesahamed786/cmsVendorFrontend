@@ -1,0 +1,27 @@
+:host { display: block; }
+
+.hotel-details {
+  color: var(--app-text);
+
+  .bg-white { background: var(--app-surface); }
+
+  .hd-accent { color: var(--app-primary); }
+  .hd-chip { background: var(--app-primary-soft); }
+  .hd-text { color: var(--app-text); }
+  .hd-muted { color: var(--app-muted); }
+
+  .hd-surface {
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border-color: var(--app-border);
+  }
+
+  .hd-riyal {
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+}

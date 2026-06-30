@@ -1,0 +1,72 @@
+@use '../../../../shared/styles/mobile-preview-mockup' as *;
+
+:host { display: block; word-break: break-word; overflow-wrap: break-word; }
+
+/* Token bridge: the phone mockup mirrors the consumer app's utility markup.
+   Re-map those utilities to vendor tokens, scoped under .phone-mockup, so the
+   preview follows the active mode/accent (pattern from the styling skill). */
+.phone-mockup {
+  .bg-white,
+  [class*='bg-white/'] { background-color: var(--app-surface) !important; }
+
+  .bg-slate-50,
+  .bg-gray-50,
+  [class*='bg-gray-50/'],
+  .bg-gray-100 {
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  }
+
+  .text-gray-900,
+  .text-gray-800,
+  .text-black { color: var(--app-text) !important; }
+
+  .text-gray-700,
+  .text-gray-600,
+  .text-gray-500,
+  .text-gray-400,
+  .text-slate-300 { color: var(--app-muted) !important; }
+
+  .border-gray-100,
+  .border-gray-200,
+  .border-gray-300 { border-color: var(--app-border) !important; }
+}
+
+/* Preview's own controls — semantic classes + tokens */
+.preview-offer-details__redeem-button {
+  background: var(--app-primary) !important;
+  color: #ffffff !important;
+  &:hover { background: var(--app-primary-700) !important; }
+}
+
+.preview-offer-details__branches-button {
+  color: var(--app-primary) !important;
+  &:hover { color: var(--app-primary-700) !important; }
+}
+
+.preview-offer-details__tab-button.font-bold {
+  color: var(--app-text) !important;
+  border-bottom-color: var(--app-text) !important;
+}
+
+.preview-offer-details__bottom-nav {
+  background: var(--app-surface) !important;
+  border-top: 1px solid var(--app-border) !important;
+  color: var(--app-muted) !important;
+}
+
+.preview-offer-details__text-wrap { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+
+/* RTL */
+.preview-offer-details__location-row--rtl { justify-content: flex-end; text-align: right; }
+.preview-offer-details__branches-button--rtl,
+.preview-offer-details__contact-row--rtl { flex-direction: row-reverse; }
+
+/* Dotted line separator for room rates */
+.rate-item { display: flex; align-items: flex-end; gap: 8px; width: 100%; }
+.rate-label { white-space: nowrap; }
+.rate-dots {
+  flex: 1;
+  border-bottom: 1px dotted color-mix(in srgb, var(--app-border) 85%, var(--app-muted) 15%);
+  margin-bottom: 4px;
+}
+.rate-value { white-space: nowrap; font-weight: 600; }

@@ -1,0 +1,98 @@
+:host {
+  display: block;
+}
+
+.offer-form {
+  padding: 1.5rem 2rem;
+  color: var(--app-text);
+  max-width: 60rem;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--app-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--app-text);
+    }
+  }
+
+  &__title {
+    margin: 0.75rem 0 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  &__subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.95rem;
+    color: var(--app-muted);
+  }
+
+  &__card {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    input,
+    :is(p-select, p-datepicker) {
+      font-weight: 400;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  &__cancel,
+  &__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--app-border);
+  }
+
+  &__cancel {
+    background: transparent;
+    color: var(--app-text);
+    text-decoration: none;
+  }
+
+  &__submit {
+    background: var(--app-primary);
+    color: #fff;
+    border-color: var(--app-primary);
+  }
+}

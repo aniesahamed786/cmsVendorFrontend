@@ -86,6 +86,6 @@ export class Navbar {
   }
 
   onThemeToggle(value: boolean): void {
-    this.themeService.toggleDarkMode(value);
+    this.themeService.setAppearanceMode(value ? 'dark' : 'light');
   }
 }

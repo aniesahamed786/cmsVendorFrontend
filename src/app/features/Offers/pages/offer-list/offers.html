@@ -86,7 +86,7 @@
 
       <ng-template pTemplate="body" let-row>
         <tr>
-          <td>{{ row.title }}</td>
+          <td><a class="offers__title-link" [routerLink]="[row.id]">{{ row.title }}</a></td>
           <td>{{ row.discount }}</td>
           <td>{{ row.discountType }}</td>
           <td>

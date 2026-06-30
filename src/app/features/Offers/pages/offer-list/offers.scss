@@ -261,6 +261,13 @@
   }
 }
 
+.offers__title-link {
+  color: var(--app-primary);
+  text-decoration: none;
+  font-weight: 600;
+  &:hover { color: var(--app-primary-700); text-decoration: underline; }
+}
+
 @media (max-width: 1024px) {
   .offers__stats { grid-template-columns: repeat(2, 1fr); }
 }

@@ -1,0 +1,69 @@
+:host { display: block; }
+
+/* SVG-mask icon technique (ported) */
+.offer-detail-svg-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.offer-detail-text-wrap {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.offer-detail-tile { transition: background-color 0.2s ease, border-color 0.2s ease; }
+.offer-detail-tile--square { border-radius: 0; }
+
+/* Semantic colour classes (replace admin hexes) */
+.offer-details {
+  color: var(--app-text);
+
+  .od-accent { color: var(--app-primary); }
+
+  .od-chip { background: var(--app-primary-soft); }
+
+  .od-divider { background: var(--app-border); }
+
+  .od-riyal {
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
+  /* Token bridge: mirrored admin utility markup → vendor tokens, scoped here */
+  .bg-white { background: var(--app-surface) !important; }
+
+  .bg-slate-50,
+  .bg-gray-50,
+  [class*='bg-white/'] {
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  }
+
+  .border-slate-100,
+  .border-gray-100,
+  .border-gray-200,
+  .border-gray-300 { border-color: var(--app-border) !important; }
+
+  .text-gray-800 { color: var(--app-text) !important; }
+
+  .text-gray-600,
+  .text-slate-400,
+  .text-slate-300 { color: var(--app-muted) !important; }
+
+  .offer-detail-tile:hover {
+    background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+    border-color: var(--app-primary) !important;
+  }
+}
