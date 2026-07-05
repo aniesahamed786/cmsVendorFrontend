@@ -19,6 +19,9 @@ interface Offer {
   status: OfferStatus;
 }
 
+import { Router, ActivatedRoute } from '@angular/router';
+import { inject } from '@angular/core';
+
 @Component({
   selector: 'app-offers',
   standalone: true,
@@ -27,6 +30,9 @@ interface Offer {
   styleUrl: './offers.scss',
 })
 export class Offers {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  
   // ponytail: in-memory dummy data; swap for a service feed when the API exists
   private readonly offers: Offer[] = this.buildRows();
 
@@ -80,6 +86,16 @@ export class Offers {
   readonly customRange = signal<Date[] | null>(null);
   readonly sort = signal<string>('newest');
   readonly search = signal<string>('');
+
+  activeOffer: Offer | null = null;
+
+  readonly rowActions = [
+    { label: 'View Offer', icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
+    { label: 'Request Changes', icon: 'pi pi-arrows-v', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
+    { label: 'Request to Renew', icon: 'pi pi-refresh' },
+    { label: 'Create Ticket', icon: 'pi pi-comment' },
+    { label: 'Deactivate Offer', icon: 'pi pi-file-excel', styleClass: 'p-menuitem-danger' }
+  ];
 
   // resolve the active period to a [from, to] window
   private readonly window = computed<[Date | null, Date | null]>(() => {

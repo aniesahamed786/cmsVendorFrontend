@@ -184,3 +184,106 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-tag {
   border-radius: 0 !important;
 }
+
+/* Global PrimeNG Component Overrides (Token-based Themes) */
+
+/* Menu (p-menu) */
+.p-menu {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+  padding: 0.25rem 0;
+}
+
+.p-menu .p-menuitem-link {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0.75rem 1rem;
+}
+
+.p-menu .p-menuitem-link:hover {
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+}
+
+.p-menu .p-menuitem-icon {
+  color: var(--app-muted) !important;
+  margin-right: 0.75rem;
+}
+
+.p-menu .p-menuitem-text {
+  color: var(--app-text) !important;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Utility class for danger menu items */
+.p-menuitem-danger .p-menuitem-text,
+.p-menuitem-danger .p-menuitem-icon {
+  color: #dc2626 !important;
+}
+
+/* Fields (Select, Datepicker, Multiselect) */
+.p-select,
+.p-select-label,
+.p-select-dropdown,
+.p-datepicker,
+.p-multiselect {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+.p-select,
+.p-multiselect {
+  min-height: 2.75rem;
+}
+
+.p-select:focus-within,
+.p-datepicker:focus-within,
+.p-multiselect:focus-within {
+  border-color: var(--app-primary) !important;
+  outline: none !important;
+}
+
+.p-select-dropdown,
+.p-datepicker-dropdown,
+.p-multiselect-dropdown {
+  color: var(--app-muted) !important;
+  fill: var(--app-muted) !important;
+}
+
+.p-datepicker-input {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Overlay lists (Dropdown panels) */
+.p-select-panel,
+.p-multiselect-panel,
+.p-datepicker-panel,
+.p-dropdown-panel,
+.p-select-overlay,
+.p-select-list-container {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+  border-radius: 0 !important;
+}
+
+.p-select-option,
+.p-multiselect-option {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+}
+
+.p-select-option:hover,
+.p-select-option.p-focus,
+.p-multiselect-option:hover,
+.p-multiselect-option.p-focus {
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+}
+
+.p-select-option.p-select-option-selected,
+.p-multiselect-option.p-multiselect-option-selected {
+  background: var(--app-primary-soft) !important;
+  color: var(--app-primary) !important;
+}

@@ -38,8 +38,8 @@
 
   <section class="offers__card">
     <div class="offers__toolbar">
-      <h2 class="offers__card-title">Offers Table</h2>
-      <div class="offers__toolbar-controls">
+      <div class="offers__toolbar-header">
+        <h2 class="offers__card-title">Offers</h2>
         <div class="offers__controls">
           <span class="offers__search">
             <i class="pi pi-search"></i>
@@ -49,23 +49,38 @@
             <i class="pi pi-download"></i> Export
           </button>
         </div>
-        <div class="offers__controls">
+      </div>
+      <div class="offers__filters-row">
+        <div class="offers__filter-group">
+          <label class="offers__filter-label">Discount Type</label>
           <p-select [options]="discountTypeOptions" [ngModel]="discountType()"
             (ngModelChange)="discountType.set($event)" optionLabel="label" optionValue="value"
-            placeholder="Discount Type" styleClass="offers__filter" />
+            placeholder="Discount Type" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+        </div>
+        <div class="offers__filter-group">
+          <label class="offers__filter-label">Status</label>
           <p-select [options]="statusOptions" [ngModel]="status()" (ngModelChange)="status.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Status" styleClass="offers__filter" />
+            optionLabel="label" optionValue="value" placeholder="Status" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+        </div>
+        <div class="offers__filter-group">
+          <label class="offers__filter-label">Availability</label>
           <p-select [options]="availabilityOptions" [ngModel]="availability()"
             (ngModelChange)="availability.set($event)" optionLabel="label" optionValue="value"
-            placeholder="Availability" styleClass="offers__filter" />
+            placeholder="Availability" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+        </div>
+        <div class="offers__filter-group">
+          <label class="offers__filter-label">Period</label>
           <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="period.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Period" styleClass="offers__filter" />
-          @if (period() === 'custom') {
+            optionLabel="label" optionValue="value" placeholder="Period" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+        </div>
+        @if (period() === 'custom') {
+        <div class="offers__filter-group">
+          <label class="offers__filter-label">Custom Range</label>
           <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
             [readonlyInput]="true" placeholder="Select dates" dateFormat="yy-mm-dd" appendTo="body"
-            styleClass="offers__filter" />
-          }
+            styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
         </div>
+        }
       </div>
     </div>
 
@@ -86,7 +101,14 @@
 
       <ng-template pTemplate="body" let-row>
         <tr [routerLink]="[row.id]" style="cursor: pointer;">
-          <td><span style="font-weight: 600;">{{ row.title }}</span></td>
+          <td>
+            <div class="offers__title-cell">
+              <div class="offers__image-placeholder">
+                <i class="pi pi-image"></i>
+              </div>
+              <span class="offers__title-text">{{ row.title }}</span>
+            </div>
+          </td>
           <td>{{ row.discount }}</td>
           <td>{{ row.discountType }}</td>
           <td>
@@ -98,9 +120,10 @@
           <td>{{ row.expirationDate | date: 'MMM d, y' }}</td>
           <td><span [class]="statusClass(row.status)">{{ row.status }}</span></td>
           <td>
-            <button type="button" class="offers__row-action" aria-label="Row actions" (click)="$event.stopPropagation()">
+            <button #btn type="button" class="offers__row-action" aria-label="Row actions" (click)="activeOffer = row; menu.toggle($event); $event.stopPropagation()">
               <i class="pi pi-ellipsis-h"></i>
             </button>
+            <p-menu #menu [model]="rowActions" [popup]="true" appendTo="body"></p-menu>
           </td>
         </tr>
       </ng-template>
