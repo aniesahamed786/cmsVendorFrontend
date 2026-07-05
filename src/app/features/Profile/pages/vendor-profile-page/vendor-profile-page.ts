@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
 import { MOCK_VENDOR_PROFILE } from '../../data/mock-vendor-profile';
 import {
   OfferStatus,
@@ -11,7 +12,8 @@ import {
 
 @Component({
   selector: 'app-vendor-profile-page',
-  imports: [CommonModule, PrimeUIModules],
+  standalone: true,
+  imports: [CommonModule, PrimeUIModules, VendorPreview],
   templateUrl: './vendor-profile-page.html',
   styleUrl: './vendor-profile-page.css',
 })
