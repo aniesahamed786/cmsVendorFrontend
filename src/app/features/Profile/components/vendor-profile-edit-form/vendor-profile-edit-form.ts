@@ -16,6 +16,7 @@ import {
   VendorProfileEditData,
   VendorProfileEditLocation,
 } from '../../models/vendor-profile-edit.model';
+import { VendorLocationDialog } from '../../../../shared/Components/vendor-location-dialog/vendor-location-dialog';
 
 export interface VendorProfilePreviewData {
   nameEn: string;
@@ -30,7 +31,7 @@ export interface VendorProfilePreviewData {
 
 @Component({
   selector: 'app-vendor-profile-edit-form',
-  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules],
+  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, VendorLocationDialog],
   templateUrl: './vendor-profile-edit-form.html',
   styleUrl: './vendor-profile-edit-form.css',
 })
@@ -44,7 +45,6 @@ export class VendorProfileEditForm implements OnInit {
   saveDraft = output<VendorProfileEditData>();
   updateChanges = output<VendorProfileEditData>();
 
-  readonly savedLocations = signal<VendorProfileEditLocation[]>([]);
   readonly previewData = signal<VendorProfilePreviewData>({
     nameEn: '',
     nameAr: '',
@@ -56,11 +56,17 @@ export class VendorProfileEditForm implements OnInit {
     locations: [],
   });
   readonly previewSocialLinks = signal<string[]>([]);
+  readonly showLocationDialog = signal(false);
+  readonly savedLocations = signal<VendorProfileEditLocation[]>([]);
 
-  readonly profileForm = this.fb.group({
+  readonly countryOptions = ['Saudi Arabia', 'United Arab Emirates', 'Bahrain', 'Kuwait', 'Oman', 'Qatar'];
+  readonly regionOptions = ['Eastern Region', 'Riyadh Region', 'Makkah Region', 'Madinah Region', 'Qassim Region', 'Asir Region'];
+  readonly cityOptions = ['Dammam', 'Khobar', 'Dhahran', 'Riyadh', 'Jeddah', 'Makkah', 'Medina'];
+
+  profileForm = this.fb.group({
     nameEn: ['', Validators.required],
     nameAr: ['', Validators.required],
-    crNumber: [''],
+    crNumber: ['', Validators.required],
     descriptionEn: ['', Validators.required],
     descriptionAr: ['', Validators.required],
     businessPhone: ['', Validators.required],
@@ -69,15 +75,6 @@ export class VendorProfileEditForm implements OnInit {
     repFullName: ['', Validators.required],
     repPhone: ['', Validators.required],
     repEmail: ['', [Validators.required, Validators.email]],
-    locationNameEn: [''],
-    locationNameAr: [''],
-    country: ['Saudi Arabia'],
-    region: [''],
-    city: [''],
-    address: [''],
-    mapLink: [''],
-    locationRepresentativeName: [''],
-    locationPhone: [''],
   });
 
   ngOnInit(): void {
@@ -148,46 +145,20 @@ export class VendorProfileEditForm implements OnInit {
     this.updateChanges.emit(this.buildPayload());
   }
 
-  addLocation(): void {
-    const value = this.profileForm.getRawValue();
-    if (!value.locationNameEn?.trim() || !value.address?.trim()) {
-      return;
-    }
-
-    const nextLocation: VendorProfileEditLocation = {
-      id: `loc-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-      nameEn: value.locationNameEn ?? '',
-      nameAr: value.locationNameAr ?? '',
-      country: value.country ?? '',
-      region: value.region ?? '',
-      city: value.city ?? '',
-      address: value.address ?? '',
-      mapLink: value.mapLink ?? '',
-      representativeName: value.locationRepresentativeName ?? '',
-      phone: value.locationPhone ?? '',
-    };
-
-    this.savedLocations.update((items) => [...items, nextLocation]);
-    this.clearLocationFields();
+  onLocationSaved(newLoc: VendorProfileEditLocation): void {
+    this.savedLocations.update(locs => [...locs, newLoc]);
+    this.syncLocationForm();
     this.syncPreview();
   }
 
   removeLocation(id: string): void {
-    this.savedLocations.update((items) => items.filter((item) => item.id !== id));
+    this.savedLocations.update(items => items.filter(item => item.id !== id));
+    this.syncLocationForm();
     this.syncPreview();
   }
-
-  private clearLocationFields(): void {
-    this.profileForm.patchValue({
-      locationNameEn: '',
-      locationNameAr: '',
-      country: 'Saudi Arabia',
-      region: '',
-      city: '',
-      address: '',
-      mapLink: '',
-      locationRepresentativeName: '',
-      locationPhone: '',
-    });
+  
+  private syncLocationForm(): void {
+    // If the form required standard validation we would sync with a hidden control,
+    // but the payload is built using this.savedLocations() anyway.
   }
 }

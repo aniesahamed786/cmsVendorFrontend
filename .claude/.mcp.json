@@ -1,0 +1,15 @@
+{
+    "mcpServers": {
+        "backend-api": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@ivotoby/openapi-mcp-server",
+                "--api-base-url",
+                "http://localhost:3000",
+                "--openapi-spec",
+                "http://localhost:3000/api/docs-json"
+            ]
+        }
+    }
+}

@@ -1,0 +1,180 @@
+.vendor-location-dialog__title {
+  color: var(--app-text) !important;
+}
+
+.vendor-location-dialog__header,
+.vendor-location-dialog__footer {
+  background: var(--app-surface) !important;
+}
+
+.vendor-location-dialog__subtitle {
+  color: var(--app-muted) !important;
+}
+
+.vendor-location-dialog__section-title {
+  color: var(--app-text) !important;
+}
+
+.vendor-location-dialog__close-button {
+  color: var(--app-muted) !important;
+  border-radius: 0 !important;
+}
+
+.vendor-location-dialog__close-button:hover {
+  color: var(--app-text) !important;
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+}
+
+.vendor-location-dialog__cancel-button {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-muted) !important;
+}
+
+.vendor-location-dialog__cancel-button:hover {
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+.vendor-location-dialog label {
+  color: var(--app-text) !important;
+}
+
+.vendor-location-dialog [class*="bg-white"] {
+  background: var(--app-surface) !important;
+}
+
+.vendor-location-dialog [class*="bg-gray-50"] {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+}
+
+.vendor-location-dialog [class*="border-gray-100"],
+.vendor-location-dialog [class*="border-gray-200"],
+.vendor-location-dialog [class*="border-slate-200"] {
+  border-color: var(--app-border) !important;
+}
+
+.vendor-location-dialog [class*="text-gray-700"] {
+  color: var(--app-text) !important;
+}
+
+.vendor-location-dialog .text-\[\#0033A0\],
+.vendor-location-dialog [class*="text-[#0033A0]"] {
+  color: var(--app-primary) !important;
+}
+
+.vendor-location-dialog [class*="bg-[rgba(0,51,160,0.08)]"] {
+  background: var(--app-primary-soft) !important;
+}
+
+.vendor-location-dialog input,
+.vendor-location-dialog textarea {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border: 1px solid var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+.vendor-location-dialog input::placeholder,
+.vendor-location-dialog textarea::placeholder {
+  color: var(--app-muted) !important;
+  opacity: 1 !important;
+}
+
+.vendor-location-dialog input:focus,
+.vendor-location-dialog input:focus-visible,
+.vendor-location-dialog textarea:focus,
+.vendor-location-dialog textarea:focus-visible {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+::ng-deep .vendor-location-dialog .p-inputtext,
+::ng-deep .vendor-location-dialog .p-select,
+::ng-deep .vendor-location-dialog .p-select-label,
+::ng-deep .vendor-location-dialog .p-select-dropdown,
+::ng-deep .vendor-location-dialog .p-inputtextarea {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .vendor-location-dialog .p-select-label.p-placeholder,
+::ng-deep .vendor-location-dialog .p-inputtext::placeholder,
+::ng-deep .vendor-location-dialog .p-inputtextarea::placeholder {
+  color: var(--app-muted) !important;
+  opacity: 1 !important;
+}
+
+::ng-deep .vendor-location-dialog .p-select-dropdown,
+::ng-deep .vendor-location-dialog .p-select-dropdown-icon {
+  color: var(--app-muted) !important;
+}
+
+::ng-deep .vendor-location-dialog .p-select:focus-within,
+::ng-deep .vendor-location-dialog .p-inputtext:focus,
+::ng-deep .vendor-location-dialog .p-inputtextarea:focus {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+::ng-deep .vendor-location-dialog.p-dialog .p-dialog-content {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  padding: 0 !important;
+}
+
+::ng-deep .vendor-location-dialog.p-dialog {
+  border: 1px solid var(--app-border) !important;
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .p-dialog-mask:has(.vendor-location-dialog) {
+  backdrop-filter: blur(6px);
+}
+
+::ng-deep .vendor-location-dialog .vendor-location-dialog__submit-button.p-button {
+  background: var(--app-primary) !important;
+  border: 1px solid var(--app-primary) !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .vendor-location-dialog .vendor-location-dialog__submit-button.p-button:not(:disabled):hover {
+  background: var(--app-primary-700) !important;
+  border-color: var(--app-primary-700) !important;
+}
+
+::ng-deep .vendor-location-dialog .vendor-location-dialog__submit-button .p-button-icon,
+::ng-deep .vendor-location-dialog .vendor-location-dialog__submit-button .p-button-label {
+  color: #fff !important;
+}
+
+.vendor-location-dialog__body {
+  scrollbar-color: var(--app-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+.vendor-location-dialog__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.vendor-location-dialog__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vendor-location-dialog__body::-webkit-scrollbar-thumb {
+  background: var(--app-scrollbar-thumb);
+  border-radius: 0;
+}
+
+.vendor-location-dialog__body::-webkit-scrollbar-thumb:hover {
+  background: var(--app-scrollbar-thumb-hover);
+}

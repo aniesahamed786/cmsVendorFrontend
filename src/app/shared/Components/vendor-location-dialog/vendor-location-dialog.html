@@ -1,0 +1,195 @@
+<p-dialog
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="false"
+  [showHeader]="false"
+  appendTo="body"
+  [visible]="visible"
+  (visibleChange)="close()"
+  styleClass="vendor-location-dialog w-[760px] max-w-[92vw] max-h-[90vh] overflow-hidden shadow-2xl rounded-none"
+  [contentStyle]="{ padding: '0', overflow: 'hidden' }"
+>
+  <div class="vendor-location-dialog offer-form bg-white rounded-none overflow-hidden max-h-[90vh] flex flex-col">
+    <div class="vendor-location-dialog__header px-6 md:px-8 pt-6 pb-2">
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <div>
+          <h2 class="vendor-location-dialog__title mt-1 text-[2rem] md:text-[2.25rem] leading-none font-bold">
+            Business Locations
+          </h2>
+          <p class="vendor-location-dialog__subtitle mt-2 text-base md:text-[1.05rem] leading-7">
+            Set up and manage your business branches and coordinates
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="vendor-location-dialog__close-button inline-flex items-center justify-center p-2 bg-transparent transition-colors cursor-pointer"
+          (click)="close()"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <form class="vendor-location-dialog__body px-6 md:px-8 pb-6 overflow-y-auto" [formGroup]="locationForm" (ngSubmit)="submit()">
+      <div class="space-y-8">
+        <section class="space-y-5">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-[rgba(0,51,160,0.08)] text-[#0033A0]">
+              <i class="pi pi-map-marker text-[20px]"></i>
+            </div>
+            <h3 class="vendor-location-dialog__section-title text-[1.75rem] font-semibold">Location Details</h3>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-3">
+              <label class="text-sm font-medium text-gray-700">
+                Location Name (English)
+                <span class="text-red-500">*</span>
+              </label>
+              <input
+                pInputText
+                type="text"
+                placeholder="e.g. Khobar Branch"
+                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
+                formControlName="locationNameEn"
+              />
+            </div>
+
+            <div class="space-y-3">
+              <label class="text-sm font-medium text-gray-700">
+                Location Name (Arabic)
+                <span class="text-red-500">*</span>
+              </label>
+              <input
+                pInputText
+                type="text"
+                placeholder="مثلاً فرع الخبر"
+                class="w-full pr-4 text-right bg-gray-50 rounded-none border border-gray-100"
+                dir="rtl"
+                formControlName="locationNameAr"
+              />
+            </div>
+
+            <div class="space-y-3 md:col-span-2">
+              <label class="text-sm font-medium text-gray-700">
+                Country
+                <span class="text-red-500">*</span>
+              </label>
+              <p-select
+                [options]="countryOptions"
+                placeholder="Select country"
+                appendTo="body"
+                styleClass="w-full offer-form__field offer-form__select !rounded-none"
+                panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
+                formControlName="country"
+              ></p-select>
+            </div>
+
+            <div class="space-y-3">
+              <label class="text-sm font-medium text-gray-700">
+                Region
+              </label>
+              <p-select
+                [options]="regionOptions"
+                placeholder="Select region"
+                appendTo="body"
+                styleClass="w-full offer-form__field offer-form__select !rounded-none"
+                panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
+                formControlName="region"
+              ></p-select>
+            </div>
+
+            <div class="space-y-3">
+              <label class="text-sm font-medium text-gray-700">
+                City
+              </label>
+              <p-select
+                [options]="cityOptions"
+                placeholder="Select city"
+                appendTo="body"
+                styleClass="w-full offer-form__field offer-form__select !rounded-none"
+                panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
+                formControlName="city"
+              ></p-select>
+            </div>
+
+            <div class="space-y-3 md:col-span-2">
+              <label class="text-sm font-medium text-gray-700">
+                Address
+                <span class="text-red-500">*</span>
+              </label>
+              <textarea
+                pInputTextarea
+                [autoResize]="true"
+                rows="2"
+                placeholder="e.g. 8628+CP Al Khobar"
+                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
+                formControlName="address"
+              ></textarea>
+            </div>
+
+            <div class="space-y-3 md:col-span-2">
+              <label class="text-sm font-medium text-gray-700">
+                Google Map Link
+              </label>
+              <input
+                pInputText
+                type="text"
+                placeholder="https://maps.app.goo.gl/..."
+                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
+                formControlName="mapLink"
+              />
+            </div>
+
+            <div class="space-y-3 md:col-span-2">
+              <label class="text-sm font-medium text-gray-700">
+                Location Representative Name
+              </label>
+              <input
+                pInputText
+                type="text"
+                placeholder="e.g. Abdullah Khaled"
+                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
+                formControlName="locationRepresentativeName"
+              />
+            </div>
+
+            <div class="space-y-3 md:col-span-2">
+              <label class="text-sm font-medium text-gray-700">
+                Location Phone Number
+              </label>
+              <input
+                pInputText
+                type="text"
+                placeholder="e.g. +966 (13) 123 4567"
+                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
+                formControlName="locationPhone"
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="vendor-location-dialog__footer flex flex-col-reverse md:flex-row md:justify-end gap-3 mt-8">
+        <button
+          type="button"
+          class="vendor-location-dialog__cancel-button inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm border transition-colors cursor-pointer"
+          (click)="close()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          pButton
+          label="Save Location"
+          icon="pi pi-check"
+          styleClass="vendor-location-dialog__submit-button"
+        ></button>
+      </div>
+    </form>
+  </div>
+</p-dialog>
