@@ -77,7 +77,7 @@ export class DashboardPage {
   }
 
   goToCreateOffer(): void {
-    this.router.navigate(['/offers']);
+    this.router.navigate(['/offers/create']);
   }
 
   goToEditProfile(): void {

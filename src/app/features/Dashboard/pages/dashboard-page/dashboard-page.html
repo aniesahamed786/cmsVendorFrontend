@@ -8,65 +8,27 @@
   </section>
 
   <div class="dashboard-page__stats">
-    <app-offer-tile
-      title="Total Redemptions"
-      value="2,427"
-      subtitle="All-time redemptions"
-      icon="pi pi-chart-line"
-      iconColor="var(--app-primary)"
-      iconContainerBg="var(--app-primary-soft)"
-      trendLabel="12.5%"
-      [trendUp]="true"
-    />
-    <app-offer-tile
-      title="Active Offers"
-      value="19"
-      subtitle="Currently live"
-      icon="assets/svg/Dashboard/ic-active-offers.svg"
-      iconColor="var(--app-primary)"
-      iconContainerBg="var(--app-primary-soft)"
-      trendLabel="3%"
-      [trendUp]="true"
-      (tileClick)="goToOffers()"
-    />
-    <app-offer-tile
-      title="Pending Offers"
-      value="0"
-      subtitle="Awaiting approval"
-      icon="assets/svg/Dashboard/ic-pending-requests.svg"
-      iconColor="var(--app-primary)"
-      iconContainerBg="var(--app-primary-soft)"
-      badgeLabel="AWAITING APPROVAL"
-      (tileClick)="goToRequestCenter()"
-    />
-    <app-offer-tile
-      title="Expiring Soon Offers"
-      value="23"
-      subtitle="Offers expiring in 30 days"
-      icon="assets/svg/Dashboard/ic-expiring-soon-offer.svg"
-      iconColor="rgba(180, 19, 64, 1)"
-      iconContainerBg="rgba(253, 219, 226, 1)"
-      trendLabel="2%"
-      [trendUp]="false"
-      (tileClick)="goToOffers()"
-    />
+    <app-offer-tile title="Total Redemptions" value="2,427" subtitle="All-time redemptions" icon="pi pi-chart-line"
+      iconColor="var(--app-primary)" iconContainerBg="var(--app-primary-soft)" [trendUp]="true" />
+    <app-offer-tile title="Active Offers" value="19" subtitle="Currently live"
+      icon="assets/svg/Dashboard/ic-active-offers.svg" iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" [trendUp]="true" (tileClick)="goToOffers()" />
+    <app-offer-tile title="Pending Offers" value="0" subtitle="Awaiting approval"
+      icon="assets/svg/Dashboard/ic-pending-requests.svg" iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" (tileClick)="goToRequestCenter()" />
+    <app-offer-tile title="Expiring Soon Offers" value="23" subtitle="Offers expiring in 30 days"
+      icon="assets/svg/Dashboard/ic-expiring-soon-offer.svg" iconColor="#dc2626"
+      iconContainerBg="rgba(239, 68, 68, 0.16)" [trendUp]="false" (tileClick)="goToOffers()" />
   </div>
 
-  <app-vendor-quick-actions
-    (createOffer)="goToCreateOffer()"
-    (editProfile)="goToEditProfile()"
-    (contactSupport)="goToContactSupport()"
-  />
+  <app-vendor-quick-actions (createOffer)="goToCreateOffer()" (editProfile)="goToEditProfile()"
+    (contactSupport)="goToContactSupport()" />
 
   <div class="dashboard-page__columns">
     <section class="dashboard-page__panel">
       <div class="dashboard-page__panel-head">
         <h2 class="dashboard-page__panel-title">Recent Activity</h2>
-        <button
-          type="button"
-          class="dashboard-page__link"
-          (click)="goToRecentActivities()"
-        >
+        <button type="button" class="dashboard-page__link" (click)="goToRecentActivities()">
           View History
         </button>
       </div>

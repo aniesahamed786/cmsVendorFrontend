@@ -164,13 +164,13 @@
 }
 
 .dashboard-page__activity-icon--warning {
-  background: #fef3c7;
+  background: rgba(245, 158, 11, 0.16);
   color: #d97706;
 }
 
 .dashboard-page__activity-icon--success {
-  background: #d1fae5;
-  color: #059669;
+  background: rgba(34, 197, 94, 0.16);
+  color: #16a34a;
 }
 
 .dashboard-page__activity-body {

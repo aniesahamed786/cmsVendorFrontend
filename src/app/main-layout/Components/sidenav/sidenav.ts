@@ -12,6 +12,7 @@ import { PrimeUIModules } from '../../../core/prime.import';
 export class Sidenav {
   private readonly allNavItems = signal([
     { icon: 'assets/svg/Navbar/ic-dashboard.svg', navItem: 'Dashboard', title: 'Dashboard', navLink: '/dashboard' },
+    { icon: 'assets/svg/Navbar/ic-vendor.svg', navItem: 'Profile', title: 'Vendor Profile', navLink: '/profile' },
     { icon: 'assets/svg/Navbar/ic-offer.svg', navItem: 'Offers', title: 'Offers', navLink: '/offers' },
     { icon: 'assets/svg/Navbar/ic-vendor.svg', navItem: 'Stores', title: 'Stores', navLink: '/stores' },
     { icon: 'assets/svg/Navbar/ic-msgcenter.svg', navItem: 'Messaging Center', title: 'Messaging Center', navLink: '/messaging-center' },
