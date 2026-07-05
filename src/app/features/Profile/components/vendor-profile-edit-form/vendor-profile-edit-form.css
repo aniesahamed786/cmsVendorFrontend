@@ -79,27 +79,37 @@ label {
   color: var(--app-muted);
 }
 
-/* House field recipe: off-surface fill, token border, primary focus, no glow */
-:host ::ng-deep .p-inputtext,
-:host ::ng-deep .p-textarea {
-  border-radius: 0;
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  color: var(--app-text);
-  border: 1px solid var(--app-border);
-  box-shadow: none;
+/* House field recipe based on SKILL.md */
+.vendor-profile-edit-form input,
+.vendor-profile-edit-form textarea,
+:host ::ng-deep .vendor-profile-edit-form .p-inputtext,
+:host ::ng-deep .vendor-profile-edit-form .p-inputtextarea {
+  width: 100%;
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border: 1px solid var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
 }
 
-:host ::ng-deep .p-inputtext::placeholder,
-:host ::ng-deep .p-textarea::placeholder {
-  color: var(--app-muted);
+.vendor-profile-edit-form input:focus,
+.vendor-profile-edit-form textarea:focus,
+:host ::ng-deep .vendor-profile-edit-form .p-inputtext:focus,
+:host ::ng-deep .vendor-profile-edit-form .p-inputtextarea:focus {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.vendor-profile-edit-form input::placeholder,
+.vendor-profile-edit-form textarea::placeholder,
+:host ::ng-deep .vendor-profile-edit-form .p-inputtext::placeholder,
+:host ::ng-deep .vendor-profile-edit-form .p-inputtextarea::placeholder {
+  color: var(--app-muted) !important;
   opacity: 1;
 }
 
-:host ::ng-deep .p-inputtext:focus,
-:host ::ng-deep .p-textarea:focus {
-  border-color: var(--app-primary);
-  box-shadow: none;
-  outline: none;
+.vendor-profile-edit-form__input--rtl {
+  text-align: right;
 }
 
 .profile-form-actions-row {

@@ -42,10 +42,12 @@
   background: var(--app-primary-soft);
 }
 
-.edit-profile-toolbar__actions {
+.edit-profile-form-actions {
   display: flex;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .edit-profile-draft-btn,

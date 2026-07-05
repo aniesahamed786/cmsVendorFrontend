@@ -539,6 +539,15 @@ free because the `p-table` body/cells read `--app-surface`/`--app-text`/`--app-b
   plain PrimeNG `p-select` controls (already square + tokenized globally); a **Clear** button is
   a token-styled `<button>` (transparent fill, `1px solid var(--app-border)`, `--app-muted`
   text, hover `--app-primary-hover-soft`).
+- **Search input** — a list/table search box is a plain square PrimeNG `pInputText`
+  (`class="… <feature>-search"`), **not** a rounded pill with an inner icon. It inherits
+  fill/border/text from the global `.p-inputtext` baseline; the only per-component rule is
+  forcing `border-radius: 0` (`:host ::ng-deep .<feature>-search.p-inputtext { border-radius: 0 !important; }`).
+  Reference: `vendor-list-search` in `vendor-list-page`. Match it so search boxes look identical across pages.
+- **Paginator** — when a table lives inside a shared sub-component (e.g. `app-activity-log-table`),
+  theme the paginator **once inside that shared component's CSS** (scoped to its `styleClass`), not
+  per consumer — so every page that embeds it gets the same token-driven paginator. Copy the
+  `.p-paginator` / `.p-paginator-page` / `.p-highlight` block from `vendor-list-page.css`.
 - **Filter the data, not the table** — drive filtering with signals + a `computed()` that
   returns the filtered rows, and bind `[value]="rows()"`. Don't reach into PrimeNG's filter API
   for simple in-memory lists.

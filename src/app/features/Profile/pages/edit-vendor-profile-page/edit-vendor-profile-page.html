@@ -1,46 +1,37 @@
 <div class="edit-vendor-profile-page">
   <div class="edit-profile-toolbar">
     <div class="edit-profile-toolbar__left">
-      <p class="edit-profile-breadcrumb">Profile &gt; Edit Profile</p>
       <button type="button" class="edit-profile-back-btn" (click)="goBack()">
         <i class="pi pi-arrow-left"></i>
-        <span>Back</span>
-      </button>
-    </div>
-    <div class="edit-profile-toolbar__actions">
-      <button type="button" class="edit-profile-draft-btn" (click)="triggerSaveDraft()">
-        Save As Draft
-      </button>
-      <button type="button" class="edit-profile-update-btn" (click)="triggerUpdateChanges()">
-        <i class="pi pi-refresh"></i>
-        <span>Update changes</span>
+        <span>Back to Profile</span>
       </button>
     </div>
   </div>
 
   <div class="edit-profile-layout">
     <div class="edit-profile-form-column">
-      <app-vendor-profile-edit-form
-        #editForm
-        [initialData]="initialData()"
-        [isLoading]="isLoading()"
-        (saveDraft)="onSaveDraft($event)"
-        (updateChanges)="onUpdateChanges($event)"
-      />
+      <app-vendor-profile-edit-form #editForm [initialData]="initialData()" [isLoading]="isLoading()"
+        (saveDraft)="onSaveDraft($event)" (updateChanges)="onUpdateChanges($event)" />
+
+      <div class="edit-profile-form-actions">
+        <button type="button" class="edit-profile-draft-btn" (click)="triggerSaveDraft()">
+          Save As Draft
+        </button>
+        <button type="button" class="edit-profile-update-btn" (click)="triggerUpdateChanges()">
+          <i class="pi pi-refresh"></i>
+          <span>Update changes</span>
+        </button>
+      </div>
     </div>
 
     <div class="edit-profile-preview-column hidden lg:block">
-      <app-vendor-preview
-        [name]="editForm?.previewData()?.nameEn || null"
+      <app-vendor-preview [name]="editForm?.previewData()?.nameEn || null"
         [nameAr]="editForm?.previewData()?.nameAr || null"
         [description]="editForm?.previewData()?.descriptionEn || null"
         [descriptionAr]="editForm?.previewData()?.descriptionAr || null"
-        [email]="editForm?.previewData()?.email || null"
-        [phone]="editForm?.previewData()?.contact || null"
+        [email]="editForm?.previewData()?.email || null" [phone]="editForm?.previewData()?.contact || null"
         [website]="editForm?.previewData()?.businessWebsite || null"
-        [socialLinks]="editForm?.previewSocialLinks() || []"
-        [locations]="editForm?.previewData()?.locations || []"
-      />
+        [socialLinks]="editForm?.previewSocialLinks() || []" [locations]="editForm?.previewData()?.locations || []" />
     </div>
   </div>
 
