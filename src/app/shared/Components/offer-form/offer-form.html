@@ -1,14 +1,11 @@
 @if (!isLoading() && !initialLoading()) {
-<div class="mb-6 flex flex-col gap-2">
-  <a class="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors w-fit no-underline cursor-pointer" [routerLink]="backNavRouteLink()">
-    <i class="pi pi-arrow-left"></i> Back to Offers
-  </a>
-  <h1 class="text-2xl font-bold text-gray-800 mt-2">
-    {{ actionType() === 'edit' ? 'Edit Offer' : 'Create New Offer' }}
-  </h1>
-  <p class="text-sm text-gray-500">
-    {{ actionType() === 'edit' ? 'Update the details for your existing offer.' : 'Set up a new promotional offer for your catalog.' }}
-  </p>
+<div class="mb-6">
+  <div class="flex items-center">
+    <a [routerLink]="backNavRouteLink()" class="offer-back-btn">
+      <i class="pi pi-arrow-left"></i>
+      <span>Back to Offers</span>
+    </a>
+  </div>
 </div>
 <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-4">
   <form

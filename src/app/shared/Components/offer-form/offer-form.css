@@ -17,6 +17,25 @@
   font-size: 0.875rem;
 }
 
+.offer-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border: 1px solid var(--app-border);
+  background: transparent;
+  color: var(--app-muted);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.offer-back-btn:hover {
+  border-color: var(--app-primary);
+  color: var(--app-primary);
+  background: var(--app-primary-soft);
+}
+
 .offer-form__back-button {
   align-items: center;
   background: #fff !important;
