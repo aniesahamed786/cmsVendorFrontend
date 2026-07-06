@@ -17,4 +17,9 @@ export class CreateOffer {
     // ponytail: no persistence layer yet; navigate back once it exists
     this.router.navigate(['/offers']);
   }
+
+  saveDraft(event: any): void {
+    // Navigate back for now
+    this.router.navigate(['/offers']);
+  }
 }

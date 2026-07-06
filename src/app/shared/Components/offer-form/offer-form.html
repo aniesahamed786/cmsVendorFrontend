@@ -1060,7 +1060,7 @@
           </div>
 
           <div class="flex items-center gap-3">
-            <span class="font-bold text-sm" [class.text-[#0537A4]]="highlightEnabled()"
+            <span class="font-bold text-sm" [class.text-white]="highlightEnabled()"
               [class.text-[#94A3B8]]="!highlightEnabled()">
               {{ highlightEnabled() ? 'Active' : 'In-Active' }}
             </span>
@@ -1133,6 +1133,10 @@
     <div class="flex flex-col gap-3 mt-6 px-6 py-5 md:mb-0 sm:flex-row sm:items-center bg-white"
       [ngClass]="'sm:justify-end'">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <button type="button" class="offer-form__draft-button"
+          (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
+          Save As Draft
+        </button>
         <button pButton pRipple type="submit" [label]="buttonName()" icon="pi pi-check" iconPos="left"
           class="offer-form__submit-button" [disabled]="isSubmitDisabled()"></button>
       </div>

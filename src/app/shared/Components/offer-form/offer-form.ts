@@ -114,6 +114,7 @@ export class OfferForm {
   private readonly document = inject(DOCUMENT);
   readonly addOfferIconBasePath = "assets/svg/Offers/add-offer";
   submitOfferFormEvent = output<any>();
+  saveDraftEvent = output<any>();
   actionType = input<string>("");
   buttonName = input<string>("Save");
   editableFormData = input<OfferFormModel | null>(null);
@@ -1194,6 +1195,19 @@ export class OfferForm {
           String(vendor?._id?.$oid ?? vendor?._id ?? "") === selectedVendorId,
       ) ?? this.selectedVendorDetails()
     );
+  }
+
+  onSaveDraft() {
+    if (this.isSubmitting()) return;
+    
+    this.isSubmitting.set(true);
+    const payload = this.mapFormToPayload(this.offerForm.value);
+    // You can optionally mutate the payload here to explicitly mark it as a draft
+    // if the backend expects a specific status field, e.g. payload.status = 'Draft';
+    this.saveDraftEvent.emit(payload);
+    
+    // Safety timeout in case parent doesn't navigate away
+    setTimeout(() => this.isSubmitting.set(false), 1000);
   }
 
   onConfirmSubmit() {

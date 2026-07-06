@@ -287,3 +287,26 @@ p-button[severity="primary"] .p-button:enabled:hover,
   background: var(--app-primary-soft) !important;
   color: var(--app-primary) !important;
 }
+
+/* Force toggle switch handle to be white always, including dark mode overrides */
+html body .p-toggleswitch .p-toggleswitch-slider::before,
+html body [data-pc-name="toggleswitch"] .p-toggleswitch-slider::before,
+.dark .p-toggleswitch .p-toggleswitch-slider::before,
+.p-dark .p-toggleswitch .p-toggleswitch-slider::before,
+html body .p-toggleswitch .p-toggleswitch-handle,
+html body [data-pc-name="toggleswitch"] .p-toggleswitch-handle,
+.dark .p-toggleswitch .p-toggleswitch-handle,
+.p-dark .p-toggleswitch .p-toggleswitch-handle {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+html body .p-toggleswitch,
+html body [data-pc-name="toggleswitch"],
+.dark .p-toggleswitch,
+.p-dark .p-toggleswitch {
+  --p-toggleswitch-handle-background: #ffffff !important;
+  --p-toggleswitch-checked-handle-background: #ffffff !important;
+  --p-toggleswitch-handle-color: #ffffff !important;
+  --p-toggleswitch-checked-handle-color: #ffffff !important;
+}
