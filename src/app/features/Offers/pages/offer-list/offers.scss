@@ -198,7 +198,9 @@
     border: 1px solid var(--app-border);
     color: var(--app-muted);
 
-    i { font-size: 0.95rem; }
+    i {
+      font-size: 0.95rem;
+    }
 
     input {
       flex: 1;
@@ -208,10 +210,15 @@
       color: var(--app-text);
       font-size: 0.9rem;
 
-      &::placeholder { color: var(--app-muted); opacity: 1; }
+      &::placeholder {
+        color: var(--app-muted);
+        opacity: 1;
+      }
     }
 
-    &:focus-within { border-color: var(--app-primary); }
+    &:focus-within {
+      border-color: var(--app-primary);
+    }
   }
 
   &__export {
@@ -238,7 +245,9 @@
     gap: 0.45rem;
     color: var(--app-text);
 
-    i { color: var(--app-muted); }
+    i {
+      color: var(--app-muted);
+    }
   }
 
   &__row-action {
@@ -248,7 +257,9 @@
     cursor: pointer;
     padding: 0.35rem 0.5rem;
 
-    &:hover { color: var(--app-text); }
+    &:hover {
+      color: var(--app-text);
+    }
   }
 
   &__empty {
@@ -299,7 +310,7 @@
     justify-content: center;
     color: var(--app-muted);
     flex-shrink: 0;
-    
+
     i {
       font-size: 1.1rem;
     }
@@ -313,7 +324,9 @@
 
 
 @media (max-width: 1024px) {
-  .offers__stats { grid-template-columns: repeat(2, 1fr); }
+  .offers__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 // ---- Table theming (square corners, tokens) ----
@@ -323,13 +336,17 @@
   // paginator's own padding isn't doubled by the card's bottom padding
   margin: 0 -1.5rem -1.25rem;
 
-  .p-datatable-thead > tr > th:first-child,
-  .p-datatable-tbody > tr > td:first-child { padding-left: 1.5rem; }
+  .p-datatable-thead>tr>th:first-child,
+  .p-datatable-tbody>tr>td:first-child {
+    padding-left: 1.5rem;
+  }
 
-  .p-datatable-thead > tr > th:last-child,
-  .p-datatable-tbody > tr > td:last-child { padding-right: 1.5rem; }
+  .p-datatable-thead>tr>th:last-child,
+  .p-datatable-tbody>tr>td:last-child {
+    padding-right: 1.5rem;
+  }
 
-  .p-datatable-thead > tr > th {
+  .p-datatable-thead>tr>th {
     background: transparent;
     color: var(--app-muted);
     font-weight: 600;
@@ -340,11 +357,11 @@
     border-bottom: 1px solid var(--app-border);
   }
 
-  .p-datatable-tbody > tr {
+  .p-datatable-tbody>tr {
     background: var(--app-surface);
     color: var(--app-text);
 
-    > td {
+    >td {
       padding: 1.1rem 1rem;
       border: none;
       border-bottom: 1px solid var(--app-border);

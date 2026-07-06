@@ -60,7 +60,8 @@
         <div class="offers__filter-group">
           <label class="offers__filter-label">Status</label>
           <p-select [options]="statusOptions" [ngModel]="status()" (ngModelChange)="status.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Status" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+            optionLabel="label" optionValue="value" placeholder="Status" styleClass="offers__filter"
+            panelStyleClass="offers__overlay-panel" />
         </div>
         <div class="offers__filter-group">
           <label class="offers__filter-label">Availability</label>
@@ -71,7 +72,8 @@
         <div class="offers__filter-group">
           <label class="offers__filter-label">Period</label>
           <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="period.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Period" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+            optionLabel="label" optionValue="value" placeholder="Period" styleClass="offers__filter"
+            panelStyleClass="offers__overlay-panel" />
         </div>
         @if (period() === 'custom') {
         <div class="offers__filter-group">
@@ -120,7 +122,8 @@
           <td>{{ row.expirationDate | date: 'MMM d, y' }}</td>
           <td><span [class]="statusClass(row.status)">{{ row.status }}</span></td>
           <td>
-            <button #btn type="button" class="offers__row-action" aria-label="Row actions" (click)="activeOffer = row; menu.toggle($event); $event.stopPropagation()">
+            <button #btn type="button" class="offers__row-action" aria-label="Row actions"
+              (click)="activeOffer = row; menu.toggle($event); $event.stopPropagation()">
               <i class="pi pi-ellipsis-h"></i>
             </button>
             <p-menu #menu [model]="rowActions" [popup]="true" appendTo="body"></p-menu>

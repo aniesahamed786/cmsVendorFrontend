@@ -3,11 +3,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.75rem;
   padding: 0.75rem 1rem;
   background: var(--app-surface);
   color: var(--app-text);
-  border: 1px solid var(--app-border);
+  border: none;
+  box-shadow: none;
 }
 
 /* Mobile-only bar — hide from the md breakpoint up (matches the sidenav/navbar swap) */
@@ -38,15 +38,4 @@ app-sidenav.sidenav-desktop {
   width: 2rem;
 }
 
-.navbar-offset {
-  margin-left: 1.25rem;
-  margin-right: 1.25rem;
-}
 
-@media (min-width: 1024px) {
-  .navbar-offset {
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
-    margin-top: 1.5rem;
-  }
-}

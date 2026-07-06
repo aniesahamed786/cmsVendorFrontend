@@ -45,7 +45,7 @@
   display: flex;
   align-items: center;
   padding: 0 1.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 @media (min-width: 768px) {
@@ -69,7 +69,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--app-border);
   flex-shrink: 0;
 }
@@ -118,7 +118,8 @@
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.75rem;
-  border-radius: 999px; /* Justified exception for status pill */
+  border-radius: 999px;
+  /* Justified exception for status pill */
   align-self: flex-start;
 }
 
@@ -216,7 +217,8 @@
 }
 
 .vendor-profile-page__description-text {
-  color: var(--app-text); /* Use text token for normal text */
+  color: var(--app-text);
+  /* Use text token for normal text */
   font-size: 0.875rem;
   line-height: 1.6;
   margin: 0;

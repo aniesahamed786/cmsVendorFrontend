@@ -13,9 +13,9 @@
         <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="period.set($event)"
           optionLabel="label" optionValue="value" placeholder="Period" styleClass="recent-activities__filter" />
         @if (period() === 'custom') {
-          <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
-            [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy" appendTo="body"
-            styleClass="recent-activities__filter" />
+        <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
+          [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy" appendTo="body"
+          styleClass="recent-activities__filter" />
         }
       </div>
     </div>
