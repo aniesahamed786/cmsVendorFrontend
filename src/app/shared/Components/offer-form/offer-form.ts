@@ -10,6 +10,7 @@ import {
   output,
   signal,
   ViewChild,
+  HostListener,
 } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
@@ -137,6 +138,20 @@ export class OfferForm {
   highlightMobileFileInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild("highlightDesktopFileInput")
   highlightDesktopFileInputRef?: ElementRef<HTMLInputElement>;
+  @ViewChild(PreviewOfferDetails) previewComponent?: PreviewOfferDetails;
+
+  @HostListener('focusin', ['$event'])
+  onFocusIn(event: FocusEvent) {
+    const target = event.target as HTMLElement;
+    const controlEl = target.closest('[formControlName]');
+    if (controlEl) {
+      const formControlName = controlEl.getAttribute('formControlName');
+      if (formControlName && this.previewComponent) {
+        this.previewComponent.scrollToSection(formControlName);
+      }
+    }
+  }
+
   readonly showLocationDialog = signal(false);
   readonly phoneError = signal(false);
   readonly landlineError = signal(false);

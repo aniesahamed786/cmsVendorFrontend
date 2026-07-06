@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { resolveStoredImageUrl } from '../../../../shared/utils/resolve-stored-image-url';
 
@@ -10,6 +10,7 @@ import { resolveStoredImageUrl } from '../../../../shared/utils/resolve-stored-i
   styleUrl: './preview-offer-details.scss'
 })
 export class PreviewOfferDetails implements OnChanges {
+  private readonly document = inject(DOCUMENT);
   @Input() offer: any;
   @Input() vendor: any;
   @Input() locations: any[] = [];
@@ -33,6 +34,41 @@ export class PreviewOfferDetails implements OnChanges {
   toggleLanguage() { this.language = this.language === 'en' ? 'ar' : 'en'; }
   markOfferImageFailed(): void { this.offerImageFailed = true; }
   setActiveTab(tab: 'avail' | 'contact' | 'feedback') { this.activeTab = tab; }
+
+  scrollToSection(fieldName: string): void {
+    let sectionId = '';
+    const mainFields = ['titleEn', 'titleAr', 'descriptionEn', 'descriptionAr', 'startdate', 'expiry', 'discountEn', 'discountAr', 'discountType', 'highlight', 'highlightTitleEn', 'highlightTitleAr', 'highlightDescription', 'highlightDescriptionAr'];
+    const availFields = ['instructionsEn', 'instructionsAr', 'urlLink', 'discountCode', 'mode'];
+    const contactFields = ['phone', 'landline', 'email'];
+    const hotelFields = ['taxValue', 'taxValueAr', 'hotelAmenities', 'hotelAmenitiesAr', 'currency'];
+    const locFields = ['locationIds'];
+    const imageFields = ['offerImage'];
+
+    if (mainFields.includes(fieldName)) {
+      sectionId = 'preview-section-main';
+    } else if (availFields.includes(fieldName)) {
+      this.setActiveTab('avail');
+      sectionId = 'preview-section-tabs';
+    } else if (contactFields.includes(fieldName)) {
+      this.setActiveTab('contact');
+      sectionId = 'preview-section-tabs';
+    } else if (hotelFields.includes(fieldName)) {
+      sectionId = 'preview-section-hotel';
+    } else if (locFields.includes(fieldName)) {
+      sectionId = 'preview-section-locations';
+    } else if (imageFields.includes(fieldName)) {
+      sectionId = 'preview-section-image';
+    }
+
+    if (sectionId) {
+      setTimeout(() => {
+        const el = this.document.getElementById(sectionId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 50);
+    }
+  }
 
   getOfferMode(): string {
     const mode = (this.offer?.offerMode || 'in store').toLowerCase();

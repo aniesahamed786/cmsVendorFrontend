@@ -21,7 +21,7 @@
             <!-- Scrollable Content -->
             <div class="flex-1 overflow-y-auto bg-white flex flex-col pointer-events-auto relative custom-scrollbar">
                 <!-- Image Section -->
-                <div class="w-full bg-white flex-shrink-0 px-4 pt-4">
+                <div id="preview-section-image" class="w-full bg-white flex-shrink-0 px-4 pt-4">
                     <div class="relative w-full h-[190px]">
                         @if (getOfferImage(offer); as img) {
                         @if (!offerImageFailed) {
@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <!-- Main Info -->
-                <div class="w-full px-5 pt-4 pb-6 flex flex-col relative flex-shrink-0">
+                <div id="preview-section-main" class="w-full px-5 pt-4 pb-6 flex flex-col relative flex-shrink-0">
                     @if (hasDiscount(offer)) {
                     <h1 class="text-[1.6rem] font-bold text-gray-900 mt-2 mb-1 leading-tight tracking-tight flex items-center gap-2"
                         [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
@@ -99,7 +99,7 @@
                 </div>
                 @if (isHotelOffer) {
                 <div class="w-full h-3 bg-gray-50 border-t border-b border-gray-100 flex-shrink-0"></div>
-                <div class="w-full px-5 py-6 flex flex-col gap-6 flex-shrink-0">
+                <div id="preview-section-hotel" class="w-full px-5 py-6 flex flex-col gap-6 flex-shrink-0">
                     @if (getRoomDetails().length > 0) {
                     <div>
                         <h3 class="text-[1.1rem] font-bold text-gray-900 mb-4">Room Details</h3>
@@ -149,7 +149,7 @@
                 }
                 <div class="w-full h-3 bg-gray-50 border-t border-b border-gray-100 flex-shrink-0"></div>
                 <!-- Where to Redeem -->
-                <div class="w-full px-5 py-6 flex-shrink-0" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+                <div id="preview-section-locations" class="w-full px-5 py-6 flex-shrink-0" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
                     <h3 class="text-[1.1rem] font-medium text-gray-900 mb-5">{{ language === 'en' ? 'Where to Redeem' : 'أين يمكن الاسترداد' }}</h3>
                     <div class="flex flex-col gap-5">
                         @for (loc of locations | slice:0:2; track $index) {
@@ -181,7 +181,7 @@
                     }
                 </div>
                 <!-- Tabs -->
-                <div class="w-full px-5 pt-4 pb-8 flex-shrink-0">
+                <div id="preview-section-tabs" class="w-full px-5 pt-4 pb-8 flex-shrink-0">
                     <div class="flex w-full border-b border-gray-200">
                         <button (click)="setActiveTab('avail')" class="preview-offer-details__tab-button flex-1 pb-3 px-1 text-[0.75rem] transition-all"
                             [ngClass]="[language === 'ar' ? 'order-3' : 'order-1', activeTab === 'avail' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400']">
