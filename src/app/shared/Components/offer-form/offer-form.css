@@ -529,7 +529,7 @@
 ::ng-deep .offer-form .offer-form__field .p-select-dropdown,
 ::ng-deep .offer-form .offer-form__field .p-multiselect-dropdown,
 ::ng-deep .offer-form .offer-form__field .p-autocomplete-dropdown {
-  border-left: 1px solid var(--app-border) !important;
+  border-left: none !important;
 }
 
 ::ng-deep .offer-form .offer-form__field .p-multiselect-dropdown,
