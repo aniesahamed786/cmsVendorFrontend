@@ -49,6 +49,10 @@ export class VendorPreview implements OnChanges {
     this.language.update((value) => (value === 'en' ? 'ar' : 'en'));
   }
 
+  setLanguage(lang: 'en' | 'ar'): void {
+    this.language.set(lang);
+  }
+
   getVendorLogo(): string | null {
     if (this.logoImageFailed()) {
       return null;

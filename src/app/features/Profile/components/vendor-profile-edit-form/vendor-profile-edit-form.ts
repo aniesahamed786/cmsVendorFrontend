@@ -44,6 +44,7 @@ export class VendorProfileEditForm implements OnInit {
 
   saveDraft = output<VendorProfileEditData>();
   updateChanges = output<VendorProfileEditData>();
+  languageFocus = output<'en' | 'ar'>();
 
   readonly previewData = signal<VendorProfilePreviewData>({
     nameEn: '',
@@ -179,5 +180,9 @@ export class VendorProfileEditForm implements OnInit {
   openNewLocationDialog(): void {
     this.selectedLocationForEdit.set(null);
     this.showLocationDialog.set(true);
+  }
+
+  onFocusLanguage(lang: 'en' | 'ar'): void {
+    this.languageFocus.emit(lang);
   }
 }

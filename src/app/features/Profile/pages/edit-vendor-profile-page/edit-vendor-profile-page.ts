@@ -17,6 +17,7 @@ import { VendorProfileEditData } from '../../models/vendor-profile-edit.model';
 })
 export class EditVendorProfilePage {
   @ViewChild('editForm') editForm?: VendorProfileEditForm;
+  @ViewChild('preview') preview?: VendorPreview;
 
   private readonly router = inject(Router);
   private readonly messageService = inject(MessageService);
@@ -56,5 +57,11 @@ export class EditVendorProfilePage {
 
   triggerUpdateChanges(): void {
     this.editForm?.onUpdateChanges();
+  }
+
+  onLanguageFocus(lang: 'en' | 'ar'): void {
+    if (this.preview) {
+      this.preview.setLanguage(lang);
+    }
   }
 }
