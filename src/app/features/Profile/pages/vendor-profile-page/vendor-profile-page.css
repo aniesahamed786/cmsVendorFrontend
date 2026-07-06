@@ -5,12 +5,30 @@
   padding-bottom: 2rem;
 }
 
-.vendor-profile-page__toolbar {
+.vendor-profile-page__edit-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--app-border);
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+  padding: 0;
+}
+
+.vendor-profile-page__edit-btn:hover {
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.vendor-profile-page__edit-btn i {
+  font-size: 1rem;
 }
 
 .vendor-profile-page__back-btn {

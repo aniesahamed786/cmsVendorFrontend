@@ -1,10 +1,10 @@
 <div class="vendor-profile-page">
   @if (profile(); as vendor) {
-  <div class="vendor-profile-page__toolbar">
-    <p-button severity="primary" icon="pi pi-pencil" label="Edit" (onClick)="onEditProfile()"></p-button>
-  </div>
-
   <div class="vendor-profile-page__hero">
+    <button class="vendor-profile-page__edit-btn" (click)="onEditProfile()">
+      <i class="pi pi-pencil"></i>
+      Edit
+    </button>
     <div class="vendor-profile-page__hero-content">
       <div class="vendor-profile-page__hero-logo">
         <i class="pi pi-image" style="font-size: 4rem; color: var(--app-muted);"></i>
