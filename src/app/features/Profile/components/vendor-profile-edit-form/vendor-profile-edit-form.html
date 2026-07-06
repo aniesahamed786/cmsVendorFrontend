@@ -78,20 +78,22 @@
       <div class="profile-form-section__icon"><i class="pi pi-map-marker"></i></div>
       <h2>Business Locations</h2>
     </div>
-    <div class="border border-[var(--app-border)] mt-6 rounded-none flex flex-col">
-      @for (location of savedLocations(); track location.id) {
-        <div class="flex items-center justify-between px-4 py-4 border-b border-[var(--app-border)] last:border-b-0">
-          <span class="text-[var(--app-text)] font-medium text-[0.95rem]">{{ location.nameEn }}</span>
-          <div class="flex items-center gap-4 text-sm font-medium">
-            <button type="button" class="text-[#0033A0] hover:underline cursor-pointer">Edit</button>
-            <button type="button" class="text-[#dc2626] hover:underline cursor-pointer" (click)="removeLocation(location.id)">Delete</button>
+    @if (savedLocations().length > 0) {
+      <div class="border border-[var(--app-border)] mt-6 rounded-none flex flex-col">
+        @for (location of savedLocations(); track location.id) {
+          <div class="flex items-center justify-between px-4 py-4 border-b border-[var(--app-border)] last:border-b-0">
+            <span class="text-[var(--app-text)] font-medium text-[0.95rem]">{{ location.nameEn }}</span>
+            <div class="flex items-center gap-4 text-sm font-medium">
+              <button type="button" class="text-[#0033A0] hover:underline cursor-pointer" (click)="editLocation(location)">Edit</button>
+              <button type="button" class="text-[#dc2626] hover:underline cursor-pointer" (click)="removeLocation(location.id)">Delete</button>
+            </div>
           </div>
-        </div>
-      }
-    </div>
+        }
+      </div>
+    }
 
     <div class="flex justify-end mt-4">
-      <button type="button" class="text-[#0033A0] text-[0.95rem] font-medium hover:underline cursor-pointer flex items-center gap-1" (click)="showLocationDialog.set(true)">
+      <button type="button" class="text-[#0033A0] text-[0.95rem] font-medium hover:underline cursor-pointer flex items-center gap-1" (click)="openNewLocationDialog()">
         <span>+</span> Add new location
       </button>
     </div>
@@ -100,6 +102,7 @@
 
 <app-vendor-location-dialog 
   [visible]="showLocationDialog()" 
+  [locationToEdit]="selectedLocationForEdit()"
   (visibleChange)="showLocationDialog.set($event)"
   (saveLocation)="onLocationSaved($event)">
 </app-vendor-location-dialog>

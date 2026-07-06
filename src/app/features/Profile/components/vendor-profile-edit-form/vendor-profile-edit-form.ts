@@ -57,6 +57,7 @@ export class VendorProfileEditForm implements OnInit {
   });
   readonly previewSocialLinks = signal<string[]>([]);
   readonly showLocationDialog = signal(false);
+  readonly selectedLocationForEdit = signal<VendorProfileEditLocation | null>(null);
   readonly savedLocations = signal<VendorProfileEditLocation[]>([]);
 
   readonly countryOptions = ['Saudi Arabia', 'United Arab Emirates', 'Bahrain', 'Kuwait', 'Oman', 'Qatar'];
@@ -146,7 +147,15 @@ export class VendorProfileEditForm implements OnInit {
   }
 
   onLocationSaved(newLoc: VendorProfileEditLocation): void {
-    this.savedLocations.update(locs => [...locs, newLoc]);
+    this.savedLocations.update(locs => {
+      const idx = locs.findIndex(l => l.id === newLoc.id);
+      if (idx !== -1) {
+        const copy = [...locs];
+        copy[idx] = newLoc;
+        return copy;
+      }
+      return [...locs, newLoc];
+    });
     this.syncLocationForm();
     this.syncPreview();
   }
@@ -160,5 +169,15 @@ export class VendorProfileEditForm implements OnInit {
   private syncLocationForm(): void {
     // If the form required standard validation we would sync with a hidden control,
     // but the payload is built using this.savedLocations() anyway.
+  }
+
+  editLocation(loc: VendorProfileEditLocation): void {
+    this.selectedLocationForEdit.set(loc);
+    this.showLocationDialog.set(true);
+  }
+
+  openNewLocationDialog(): void {
+    this.selectedLocationForEdit.set(null);
+    this.showLocationDialog.set(true);
   }
 }

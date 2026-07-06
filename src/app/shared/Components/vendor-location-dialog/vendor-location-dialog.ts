@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PrimeUIModules } from '../../../core/prime.import';
 import { VendorProfileEditLocation } from '../../../features/Profile/models/vendor-profile-edit.model';
@@ -11,10 +11,11 @@ import { VendorProfileEditLocation } from '../../../features/Profile/models/vend
   templateUrl: './vendor-location-dialog.html',
   styleUrl: './vendor-location-dialog.css',
 })
-export class VendorLocationDialog {
+export class VendorLocationDialog implements OnChanges {
   private readonly fb = inject(FormBuilder);
 
   @Input() visible = false;
+  @Input() locationToEdit: VendorProfileEditLocation | null = null;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() saveLocation = new EventEmitter<VendorProfileEditLocation>();
 
@@ -34,6 +35,26 @@ export class VendorLocationDialog {
     locationPhone: [''],
   });
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visible'] && this.visible) {
+      if (this.locationToEdit) {
+        this.locationForm.patchValue({
+          locationNameEn: this.locationToEdit.nameEn,
+          locationNameAr: this.locationToEdit.nameAr,
+          country: this.locationToEdit.country,
+          region: this.locationToEdit.region,
+          city: this.locationToEdit.city,
+          address: this.locationToEdit.address,
+          mapLink: this.locationToEdit.mapLink,
+          locationRepresentativeName: this.locationToEdit.representativeName,
+          locationPhone: this.locationToEdit.phone,
+        });
+      } else {
+        this.locationForm.reset({ country: 'Saudi Arabia' });
+      }
+    }
+  }
+
   close() {
     this.visibleChange.emit(false);
     this.locationForm.reset({ country: 'Saudi Arabia' });
@@ -46,7 +67,7 @@ export class VendorLocationDialog {
     }
     const val = this.locationForm.value;
     const newLocation: VendorProfileEditLocation = {
-      id: `loc-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      id: this.locationToEdit ? this.locationToEdit.id : `loc-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       nameEn: val.locationNameEn ?? '',
       nameAr: val.locationNameAr ?? '',
       country: val.country ?? '',
