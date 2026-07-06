@@ -594,12 +594,12 @@
           </p-multiselect>
           }
           @if (showVendorHasNoBranchesMessage()) {
-          <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
+          <p class="offer-form__warning-message text-sm px-3 py-2">
             This vendor has no branches. In-store or both-mode offers cannot be activated until at least one branch is
             added.
           </p>
           } @else if (showBranchSelectionRequiredMessage()) {
-          <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
+          <p class="offer-form__warning-message text-sm px-3 py-2">
             Select at least one branch to activate this offer.
           </p>
           }
