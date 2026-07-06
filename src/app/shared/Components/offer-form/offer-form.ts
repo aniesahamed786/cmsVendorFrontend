@@ -1734,23 +1734,10 @@ export class OfferForm {
       return;
     }
 
-    this.addExistingTag(tagName.trim());
-    this.tagsListService.addTag(tagName.trim()).subscribe({
-      next: () => {
-        this.offerForm.get("tagInput")?.reset();
-        this.tagDuplicateError.set(false);
-        this.tagInputTouched.set(false);
-      },
-      error: (err) => {
-        if (this.isDuplicateApiError(err)) {
-          const fallbackTag = this.findKnownTagName(tagName) ?? tagName.trim();
-          this.addExistingTag(fallbackTag);
-          this.offerForm.get("tagInput")?.reset();
-          this.tagDuplicateError.set(false);
-          this.tagInputTouched.set(false);
-        }
-      },
-    });
+    // Since the user can only select existing tags, if it's not a known tag, we just reset.
+    this.offerForm.get("tagInput")?.reset();
+    this.tagDuplicateError.set(false);
+    this.tagInputTouched.set(false);
   }
 
   addExistingTag(tagName: string) {

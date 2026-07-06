@@ -171,12 +171,9 @@
                 styleClass="w-full offer-form__field offer-form__autocomplete"
                 panelStyleClass="offer-form__overlay-panel offer-form__autocomplete-panel"
                 inputStyleClass="pl-5 w-full bg-gray-50 rounded-none border-gray-100" (onBlur)="onTagInputBlur()"
-                (onSelect)="addTag()">
+                (onSelect)="addTag()" [forceSelection]="true">
               </p-autoComplete>
             </div>
-            <p-button type="button" icon="pi pi-plus"
-              styleClass="offer-form__tag-add-button -ml-px rounded-l-none rounded-r-md" [disabled]="isTagAddDisabled()"
-              (onClick)="addTag()"></p-button>
           </div>
           @if (shouldShowTagDuplicateError()) {
           <p class="text-xs text-red-500 mt-1">Tag already exists</p>
