@@ -59,7 +59,7 @@
                         <div dir="ltr" class="flex items-center gap-1">
                             @if (isPercentageDiscount(offer)) { <span>%</span> }
                             @else if (isFixedDiscount(offer)) {
-                            <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR" class="w-6 h-6 object-contain" />
+                            <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR" class="w-6 h-6 object-contain dark:invert" />
                             }
                             <span>{{ getDiscountAmount(offer) }}</span>
                         </div>
@@ -115,7 +115,7 @@
                                         <span class="rate-value text-gray-900 flex items-center gap-1">
                                             {{ rate.value }}
                                             @if (isSAR(getCurrency())) {
-                                            <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR" class="w-3.5 h-3.5 object-contain" />
+                                            <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR" class="w-3.5 h-3.5 object-contain dark:invert" />
                                             } @else { {{ getCurrency() }} }
                                         </span>
                                     </div>
