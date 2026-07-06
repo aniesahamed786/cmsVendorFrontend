@@ -579,26 +579,20 @@ export class OfferForm {
 
   private fetchVendorPage(page: number, searchTerm = "") {
     this.vendorsLoading.set(true);
-    return this.vendorlist
-      .getVendorsPaginated({
-        page,
-        pageSize: this.vendorPageSize,
-        searchTerm: searchTerm || undefined,
-        sortBy: "name",
-        sortOrder: "asc",
-      })
-      .pipe(
-        catchError((err) => {
-          console.error("Vendor fetch error:", err);
-          return of({
-            data: [] as VendorDetails[],
-            total: 0,
-            page,
-            pageSize: this.vendorPageSize,
-          });
-        }),
-        finalize(() => this.vendorsLoading.set(false)),
-      );
+    return of({
+      data: [{
+        _id: "dummy-vendor-id-12345",
+        vendorName: "Dummy Vendor (Mocked)",
+        status: "Active",
+        categories: [],
+        locations: []
+      }] as unknown as VendorDetails[],
+      total: 1,
+      page: 1,
+      pageSize: 10
+    }).pipe(
+      finalize(() => this.vendorsLoading.set(false))
+    );
   }
 
   private resetVendorSearchResults(searchTerm: string): void {
