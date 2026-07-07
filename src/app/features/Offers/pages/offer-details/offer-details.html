@@ -13,18 +13,18 @@
   </div>
   } @else {
   <div class="offer-page-header__actions">
-    <button pRipple class="offer-detail__outline-button" (click)="raiseTicket()">
+    <app-button variant="outline" (click)="raiseTicket()">
       <span class="offer-details-page-svg-icon"
         [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-raise-ticket.svg') + ')'"
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-raise-ticket.svg') + ')'"></span>
       <span>Raise Ticket</span>
-    </button>
-    <button pRipple class="offer-detail__primary-button" (click)="navigateToEditOffer()">
+    </app-button>
+    <app-button variant="primary" (click)="navigateToEditOffer()">
       <span class="offer-details-page-svg-icon invert-white"
         [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"></span>
       <span>Edit</span>
-    </button>
+    </app-button>
   </div>
   }
 </div>

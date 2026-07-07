@@ -4,12 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { OfferDetails } from '../../Components/offer-details/offer-details';
 import { PreviewOfferDetails } from '../../Components/preview-offer-details/preview-offer-details';
+import { Button } from '../../../../shared/Components/button/button';
 
 type RedemptionTab = 'in-store' | 'online';
 
 @Component({
   selector: 'app-offer-details-page',
-  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails],
+  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button],
   templateUrl: './offer-details.html',
   styleUrl: './offer-details.scss',
 })

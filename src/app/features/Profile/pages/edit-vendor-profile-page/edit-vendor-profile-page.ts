@@ -5,12 +5,13 @@ import { MessageService } from 'primeng/api';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { VendorProfileEditForm } from '../../components/vendor-profile-edit-form/vendor-profile-edit-form';
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
+import { Button } from '../../../../shared/Components/button/button';
 import { MOCK_VENDOR_PROFILE_EDIT } from '../../data/mock-vendor-profile-edit';
 import { VendorProfileEditData } from '../../models/vendor-profile-edit.model';
 
 @Component({
   selector: 'app-edit-vendor-profile-page',
-  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview],
+  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview, Button],
   templateUrl: './edit-vendor-profile-page.html',
   styleUrl: './edit-vendor-profile-page.css',
   providers: [MessageService],

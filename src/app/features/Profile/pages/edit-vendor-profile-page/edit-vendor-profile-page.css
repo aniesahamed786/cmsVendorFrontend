@@ -53,35 +53,7 @@
   padding: 1.5rem;
 }
 
-.edit-profile-draft-btn,
-.edit-profile-update-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  height: 2.5rem;
-  padding: 0 1rem;
-  border-radius: 0;
-  font-weight: 600;
-  cursor: pointer;
-}
 
-.edit-profile-draft-btn {
-  border: 1px solid var(--app-primary);
-  background: var(--app-surface);
-  color: var(--app-primary);
-}
-
-.edit-profile-update-btn {
-  border: 1px solid var(--app-primary);
-  background: var(--app-primary);
-  color: #ffffff;
-}
-
-.edit-profile-update-btn:hover {
-  background: var(--app-primary-700);
-  border-color: var(--app-primary-700);
-}
 
 .edit-profile-layout {
   display: flex;
