@@ -25,7 +25,7 @@
 
     span {
       font-size: 1rem;
-      font-weight: 400;
+      font-weight: 600;
     }
 
     &:hover {
@@ -207,26 +207,12 @@
   }
 
   &__vendor-name {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #ffffff;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  &__title {
-    font-size: 1.875rem;
-    font-weight: 700;
-    line-height: 1.25;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-
-    @media (min-width: 768px) {
-      font-size: 2.25rem;
-    }
   }
 
   &__discount {
@@ -250,14 +236,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: color-mix(in srgb, #ffffff 95%, transparent);
+    background-color: rgba(255, 255, 255, 0.95);
     padding: 0.375rem 0.75rem;
     width: fit-content;
 
     span {
       font-size: 0.875rem;
       font-weight: 500;
-      color: var(--app-text);
+      color: #4B5563;
       text-transform: capitalize;
     }
   }
@@ -269,34 +255,84 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
-.skeleton-avatar { width: 2rem; height: 2rem; background: color-mix(in srgb, #ffffff 25%, transparent); }
-.skeleton-text { height: 1rem; width: 10rem; background: color-mix(in srgb, #ffffff 30%, transparent); }
-.skeleton-title { height: 2.5rem; width: 16rem; background: color-mix(in srgb, #ffffff 35%, transparent); }
-.skeleton-tag { height: 1.75rem; width: 5rem; border-radius: 9999px; background: color-mix(in srgb, #16A34A 70%, transparent); }
-.skeleton-badge { height: 2rem; width: 7rem; background: color-mix(in srgb, #ffffff 25%, transparent); }
-.skeleton-bar { height: 2.5rem; width: 100%; background: color-mix(in srgb, var(--app-border) 40%, transparent); margin-top: 1.5rem; }
+.skeleton-avatar {
+  width: 2rem;
+  height: 2rem;
+  background: color-mix(in srgb, #ffffff 25%, transparent);
+}
 
-/* Status Tag */
-:host ::ng-deep p-tag.offer-status-tag .p-tag {
+.skeleton-text {
+  height: 1rem;
+  width: 10rem;
+  background: color-mix(in srgb, #ffffff 30%, transparent);
+}
+
+.skeleton-title {
+  height: 2.5rem;
+  width: 16rem;
+  background: color-mix(in srgb, #ffffff 35%, transparent);
+}
+
+.skeleton-tag {
+  height: 1.75rem;
+  width: 5rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, #16A34A 70%, transparent);
+}
+
+.skeleton-badge {
+  height: 2rem;
+  width: 7rem;
+  background: color-mix(in srgb, #ffffff 25%, transparent);
+}
+
+.skeleton-bar {
+  height: 2.5rem;
+  width: 100%;
+  background: color-mix(in srgb, var(--app-border) 40%, transparent);
+  margin-top: 1.5rem;
+}
+
+/* Status Tag — PrimeNG 21 applies .p-tag to the <p-tag> host element itself */
+:host ::ng-deep p-tag.offer-status-tag {
   border: 0 !important;
   border-radius: 9999px !important;
   padding: 0.35rem 1rem !important;
+  color: #ffffff !important;
 }
 
-:host ::ng-deep p-tag.offer-status-tag .p-tag .p-tag-label {
+:host ::ng-deep p-tag.offer-status-tag .p-tag-label {
   color: #ffffff !important;
   font-weight: 600;
   text-transform: capitalize;
 }
 
-:host ::ng-deep p-tag.offer-status-tag.offer-status-tag--active .p-tag { background: #16A34A !important; }
-:host ::ng-deep p-tag.offer-status-tag.offer-status-tag--scheduled .p-tag { background: #0EA5E9 !important; }
-:host ::ng-deep p-tag.offer-status-tag.offer-status-tag--expired .p-tag { background: #DC2626 !important; }
-:host ::ng-deep p-tag.offer-status-tag.offer-status-tag--inactive .p-tag { background: #F97316 !important; }
+:host ::ng-deep p-tag.offer-status-tag--active {
+  background: #16A34A !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--scheduled {
+  background: #0EA5E9 !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--expired {
+  background: #DC2626 !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--inactive {
+  background: #F97316 !important;
+}
 
 /* Tabs Layout */
 .offer-details-layout {
@@ -324,10 +360,10 @@
 :host ::ng-deep .offer-tab .p-tab {
   background: transparent !important;
   border: 0 !important;
-  border-radius: 9999px;
+  border-radius: 0;
   padding: 0.35rem 0.85rem;
   color: var(--app-muted);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 :host ::ng-deep .offer-tab.p-tab-active .p-tab {
@@ -344,7 +380,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 :host ::ng-deep .offer-tab-panels {
@@ -373,7 +410,7 @@
 
 .offer-tab-panel__sidebar {
   display: none;
-  
+
   @media (min-width: 1280px) {
     display: flex;
     flex-direction: column;

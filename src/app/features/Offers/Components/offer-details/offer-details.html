@@ -369,34 +369,7 @@
           }
         </div>
       </div>
-      
-      <div class="offer-settings__group offer-settings__group--mt">
-        <span class="offer-settings__label">Highlight Images</span>
-        <div class="offer-branding-grid">
-          <div class="offer-branding-img-box">
-            <span class="offer-branding-img-box__label">Mobile 9:16</span>
-            @if (getHighlightMobileImage(offer()); as img) {
-            <img [src]="img" class="offer-branding-img-box__img" alt="Highlight mobile"
-              (error)="markHighlightMobileImageError()" />
-            } @else {
-            <div class="offer-branding-img-box__placeholder offer-branding-img-box__placeholder--sm">
-              <i class="pi pi-image"></i>
-            </div>
-            }
-          </div>
-          <div class="offer-branding-img-box">
-            <span class="offer-branding-img-box__label">Desktop 16:9</span>
-            @if (getHighlightDesktopImage(offer()); as img) {
-            <img [src]="img" class="offer-branding-img-box__img" alt="Highlight desktop"
-              (error)="markHighlightDesktopImageError()" />
-            } @else {
-            <div class="offer-branding-img-box__placeholder offer-branding-img-box__placeholder--sm">
-              <i class="pi pi-image"></i>
-            </div>
-            }
-          </div>
-        </div>
-      </div>
+
     </div>
   </section>
 </div>

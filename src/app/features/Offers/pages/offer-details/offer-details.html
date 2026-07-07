@@ -94,19 +94,19 @@
 
       <!-- Status tag -->
       <div>
-        <p-tag class="offer-status-tag"
-          [class.offer-status-tag--active]="getOfferStatus(offer) === 'Active'"
+        <p-tag class="offer-status-tag" [class.offer-status-tag--active]="getOfferStatus(offer) === 'Active'"
           [class.offer-status-tag--scheduled]="getOfferStatus(offer) === 'Scheduled'"
           [class.offer-status-tag--expired]="getOfferStatus(offer) === 'Expired'"
           [class.offer-status-tag--inactive]="getOfferStatus(offer) === 'Inactive'"
-          [severity]="getOfferStatusSeverity(getOfferStatus(offer))" [value]="getOfferStatus(offer)"
+          [value]="getOfferStatus(offer)"
           [rounded]="true"></p-tag>
       </div>
 
       <!-- Offer mode badge -->
       <div class="offer-hero-card__mode-badge">
         <span>
-          {{ getOfferMode(offer) === 'in store' ? 'In-Store' : getOfferMode(offer) === 'online' ? 'Digital' : 'In-Store & Digital' }}
+          {{ getOfferMode(offer) === 'in store' ? 'In-Store' : getOfferMode(offer) === 'online' ? 'Digital' : 'In-Store
+          & Digital' }}
         </span>
       </div>
     </div>
@@ -156,36 +156,18 @@
 </p-card>
 
 <div class="offer-details-layout">
-  <p-tabs lazy [value]="activeTab()" (valueChange)="onTabChange($event)">
-    <div class="offer-tabs-header">
-      <p-tablist class="offer-tabs-list">
-        <p-tab value="0" class="offer-tab">
-          <span class="offer-tab__label">
-            <span class="offer-details-page-svg-icon"
-              [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-offer-details.svg') + ')'"
-              [style.maskImage]="'url(' + getOfferDetailIconPath('ic-offer-details.svg') + ')'"></span>
-            Offer Details
-          </span>
-        </p-tab>
-      </p-tablist>
+  <div class="offer-tab-panel__content">
+    <!-- Main Content -->
+    <div class="offer-tab-panel__main">
+      <app-offer-details [offer]="offer" [locations]="offerLocations()"></app-offer-details>
     </div>
 
-    <p-tabpanels class="offer-tab-panels">
-      <p-tabpanel value="0">
-        <div class="offer-tab-panel__content">
-          <!-- Main Content -->
-          <div class="offer-tab-panel__main">
-            <app-offer-details [offer]="offer" [locations]="offerLocations()"></app-offer-details>
-          </div>
-
-          <!-- Right Preview -->
-          <div class="offer-tab-panel__sidebar">
-            <app-preview-offer-details [offer]="offer" [vendor]="vendor()" [locations]="offerLocations()"></app-preview-offer-details>
-          </div>
-        </div>
-      </p-tabpanel>
-    </p-tabpanels>
-  </p-tabs>
+    <!-- Right Preview -->
+    <div class="offer-tab-panel__sidebar">
+      <app-preview-offer-details [offer]="offer" [vendor]="vendor()"
+        [locations]="offerLocations()"></app-preview-offer-details>
+    </div>
+  </div>
 </div>
 }
 }
