@@ -69,44 +69,7 @@
   font-weight: 600;
 }
 
-::ng-deep .offer-form__submit-button.p-button {
-  background: var(--app-primary) !important;
-  border: 1px solid var(--app-primary) !important;
-  border-radius: 0;
-  color: #fff !important;
-}
 
-::ng-deep .offer-form__submit-button.p-button:not(:disabled):hover {
-  background: var(--app-primary-700) !important;
-  border-color: var(--app-primary-700) !important;
-  color: #fff !important;
-}
-
-::ng-deep .offer-form__submit-button .p-button-icon,
-::ng-deep .offer-form__submit-button .p-button-label {
-  color: #fff !important;
-  font-weight: 600;
-}
-
-.offer-form__draft-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  height: 2.75rem;
-  padding: 0 1rem;
-  border-radius: 0;
-  font-weight: 600;
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid var(--app-primary);
-  color: var(--app-primary);
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-}
-
-.offer-form__draft-button:not(:disabled):hover {
-  background: var(--app-primary-soft);
-}
 
 ::ng-deep .offer-form__tag-add-button.p-button,
 ::ng-deep .offer-form__tag-add-button .p-button {

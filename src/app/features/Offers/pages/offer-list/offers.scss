@@ -28,24 +28,7 @@
     color: var(--app-muted);
   }
 
-  &__create {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--app-primary);
-    color: #fff;
-    border: 1px solid var(--app-primary);
-    padding: 0.7rem 1.1rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
 
-    &:hover {
-      background: var(--app-primary-700);
-      border-color: var(--app-primary-700);
-    }
-  }
 
   // ---- Stat cards ----
   &__stats {
@@ -221,23 +204,7 @@
     }
   }
 
-  &__export {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--app-primary);
-    color: #fff;
-    border: 1px solid var(--app-primary);
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
 
-    &:hover {
-      background: var(--app-primary-700);
-      border-color: var(--app-primary-700);
-    }
-  }
 
   &__availability {
     display: inline-flex;

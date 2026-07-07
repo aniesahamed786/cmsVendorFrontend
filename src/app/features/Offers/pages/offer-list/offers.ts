@@ -21,11 +21,12 @@ interface Offer {
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { inject } from '@angular/core';
+import { Button } from '../../../../shared/Components/button/button';
 
 @Component({
   selector: 'app-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button],
   templateUrl: './offers.html',
   styleUrl: './offers.scss',
 })

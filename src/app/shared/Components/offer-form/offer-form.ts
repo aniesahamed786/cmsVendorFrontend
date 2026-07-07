@@ -76,6 +76,7 @@ import {
   distinctUntilChanged,
   finalize,
 } from "rxjs/operators";
+import { Button } from "../button/button";
 
 @Component({
   selector: "app-offer-form",
@@ -93,6 +94,7 @@ import {
     ConfirmationPopUp,
     ImageCropperComponent,
     RouterLink,
+    Button,
   ],
   templateUrl: "./offer-form.html",
   styleUrl: "./offer-form.css",

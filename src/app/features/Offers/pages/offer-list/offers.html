@@ -4,9 +4,7 @@
       <h1 class="offers__title">Offers</h1>
       <p class="offers__subtitle">Manage and track all promotional offers across your catalog.</p>
     </div>
-    <a class="offers__create" routerLink="create">
-      <i class="pi pi-plus"></i> Create New Offer
-    </a>
+    <app-button variant="primary" routerLink="create" icon="pi pi-plus">Create New Offer</app-button>
   </header>
 
   <section class="offers__stats">
@@ -45,9 +43,7 @@
             <i class="pi pi-search"></i>
             <input type="text" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" />
           </span>
-          <button type="button" class="offers__export">
-            <i class="pi pi-download"></i> Export
-          </button>
+          <app-button variant="primary" icon="pi pi-download">Export</app-button>
         </div>
       </div>
       <div class="offers__filters-row">

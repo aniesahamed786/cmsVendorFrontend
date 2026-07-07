@@ -1145,11 +1145,12 @@
     <div class="flex flex-col gap-3 mt-6 px-6 py-5 md:mb-0 sm:flex-row sm:items-center bg-white"
       [ngClass]="'sm:justify-end'">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-        <button type="button" class="offer-form__draft-button" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
+        <app-button variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
           Save As Draft
-        </button>
-        <button pButton pRipple type="submit" [label]="buttonName()" icon="pi pi-check" iconPos="left"
-          class="offer-form__submit-button" [disabled]="isSubmitDisabled()"></button>
+        </app-button>
+        <app-button variant="primary" type="submit" icon="pi pi-check" [disabled]="isSubmitDisabled()">
+          {{ buttonName() }}
+        </app-button>
       </div>
     </div>
   </form>
