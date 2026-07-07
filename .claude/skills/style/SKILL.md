@@ -318,6 +318,22 @@ classes + tokens and skip the bridge; only lean on it when mirroring existing ma
 - Selected/active fills: `var(--app-primary-soft)`; hover fills: `var(--app-primary-hover-soft)`
   or the `color-mix` pattern above.
 
+## Card typography
+
+Cards have two text tiers — a **title** (card header) and its **content**. Use these sizes/weights (SCSS, not Tailwind `text-xl`/`font-semibold`):
+
+| Part | `font-size` | `font-weight` |
+|------|-------------|---------------|
+| Card title (header) | `1.25rem` | `600` |
+| Card content (body text) | `1rem` | `600` |
+
+```scss
+.card__header  { font-size: 1.25rem; font-weight: 600; color: var(--app-primary); }
+.card__content { font-size: 1rem;    font-weight: 600; color: var(--app-text); }
+```
+
+Placeholder/empty-state text (e.g. "No items") stays lighter — `var(--app-muted)`, default weight.
+
 ## Buttons
 
 Primary PrimeNG buttons are globally overridden to `--app-primary` (hover `--app-primary-700`)
