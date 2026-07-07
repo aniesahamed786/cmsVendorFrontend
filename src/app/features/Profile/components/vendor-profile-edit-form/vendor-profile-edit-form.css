@@ -19,7 +19,7 @@
 
 .profile-form-section__header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
   color: var(--app-text);
 }
@@ -36,7 +36,7 @@
 
 .profile-form-grid {
   display: grid;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .profile-form-grid--two {
@@ -61,12 +61,23 @@
   grid-column: 1 / -1;
 }
 
+
 label {
   display: block;
-  margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  font-weight: 500;
+  line-height: 1.25rem;
+  font-weight: 600;
   color: var(--app-text);
+}
+
+.profile-form-grid__full textarea {
+  padding: 1.25rem !important;
+  height: 120px !important;
+  min-height: 120px !important;
+  resize: none !important;
+  box-shadow: none !important;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
 }
 
 .required {

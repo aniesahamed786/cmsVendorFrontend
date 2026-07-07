@@ -288,6 +288,13 @@ p-button[severity="primary"] .p-button:enabled:hover,
   color: var(--app-primary) !important;
 }
 
+/* Unified label -> field spacing inside profile-style form grids (label sits tight above its control) */
+.profile-form-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 /* Force toggle switch handle to be white always, including dark mode overrides */
 html body .p-toggleswitch .p-toggleswitch-slider::before,
 html body [data-pc-name="toggleswitch"] .p-toggleswitch-slider::before,

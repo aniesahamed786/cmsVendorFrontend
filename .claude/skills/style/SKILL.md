@@ -157,7 +157,10 @@ every field rule is scoped under it, so the styling never leaks to other compone
 | Selected option | bg `var(--app-primary-soft)`, text `var(--app-primary)` |
 | Option hover/focus | `color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%)` |
 | Label | `var(--app-text)`, `font-weight: 600` |
+| Label → field gap | **tight** — the label sits directly above its control (no gap), the same for text inputs and textareas. Don't give one field type a looser gap than another. |
 | Error text | `text-red-500` (validation only — the one non-token color, plus `#dc2626`) |
+
+The label→field gap is unified globally in `styles.scss` (`.profile-form-grid > div { display: flex; flex-direction: column; gap: 0 }`) so every field in a profile-style form grid — inputs and textareas alike — spaces its label identically. Put shared field-spacing rules there rather than per-component, and never special-case textareas to a wider gap.
 
 Plain HTML inputs:
 
