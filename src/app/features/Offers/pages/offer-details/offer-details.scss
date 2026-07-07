@@ -132,9 +132,7 @@
 }
 
 :host ::ng-deep .offer-hero-card .p-card-body,
-:host ::ng-deep .offer-hero-card .p-card-content {
-  padding: 1.5rem;
-}
+:host ::ng-deep .offer-hero-card .p-card-content {}
 
 .offer-hero-card {
   &__content {
