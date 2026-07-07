@@ -33,9 +33,8 @@
             <p-select [options]="vendorOptions()" formControlName="selectedVendor" optionLabel="label"
               optionValue="value" optionDisabled="disabled" [filter]="true" filterBy="label"
               filterPlaceholder="Search vendors by name" [loading]="vendorsLoading()"
-              (onFilter)="onVendorSearch($event)" (onShow)="onVendorDropdownShow()"
-              (onHide)="onVendorDropdownHide()" panelStyleClass="offer-form-vendor-select-panel"
-              placeholder="Choose a Vendor"
+              (onFilter)="onVendorSearch($event)" (onShow)="onVendorDropdownShow()" (onHide)="onVendorDropdownHide()"
+              panelStyleClass="offer-form-vendor-select-panel" placeholder="Choose a Vendor"
               class="pl-2 w-full bg-gray-50 !rounded-none">
             </p-select>
           </div>
@@ -52,9 +51,8 @@
             <span class="text-red-500">*</span>
           </label>
           <div class="relative">
-            <input pInputText formControlName="titleEn"
-              (focus)="setPreviewLanguage('en')" class="w-full pl-5 bg-gray-50 rounded-none"
-              placeholder="e.g. Summer Collection Launch" />
+            <input pInputText formControlName="titleEn" (focus)="setPreviewLanguage('en')"
+              class="w-full pl-5 bg-gray-50 rounded-none" placeholder="e.g. Summer Collection Launch" />
           </div>
           @if (hasRequiredError('titleEn')) {
           <p class="text-xs text-red-500 mt-1">Offer title (English) is required.</p>
@@ -90,8 +88,7 @@
             Offer Description (English)
             <span class="text-red-500">*</span>
           </label>
-          <textarea pInputTextarea formControlName="descriptionEn"
-            (focus)="setPreviewLanguage('en')" rows="4"
+          <textarea pInputTextarea formControlName="descriptionEn" (focus)="setPreviewLanguage('en')" rows="4"
             class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none shadow-none focus:shadow-none"
             placeholder="e.g. Summer Collection Launch Description"></textarea>
           @if (hasRequiredError('descriptionEn')) {
@@ -394,7 +391,8 @@
               </span>
               } @else if (offerForm.get('discountType')?.value === 'Fixed') {
               <span class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center">
-                <img src="assets/svg/Offers/add-offer/Saudi_Riyal_Symbol.svg" alt="SAR" class="w-4 h-4 object-contain" />
+                <img src="assets/svg/Offers/add-offer/Saudi_Riyal_Symbol.svg" alt="SAR"
+                  class="w-4 h-4 object-contain" />
               </span>
               }
             </div>
@@ -427,7 +425,8 @@
               </span>
               } @else if (offerForm.get('discountType')?.value === 'Fixed') {
               <span class="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center">
-                <img src="assets/svg/Offers/add-offer/Saudi_Riyal_Symbol.svg" alt="SAR" class="w-4 h-4 object-contain" />
+                <img src="assets/svg/Offers/add-offer/Saudi_Riyal_Symbol.svg" alt="SAR"
+                  class="w-4 h-4 object-contain" />
               </span>
               }
             </div>
@@ -446,8 +445,7 @@
               Redemption Instruction (English)
               <span class="text-red-500">*</span>
             </label>
-            <textarea pInputTextarea formControlName="instructionsEn"
-              (focus)="setPreviewLanguage('en')" rows="4"
+            <textarea pInputTextarea formControlName="instructionsEn" (focus)="setPreviewLanguage('en')" rows="4"
               class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none shadow-none focus:shadow-none"
               placeholder="How can customers redeem this offer?"></textarea>
             @if (hasRequiredError('instructionsEn')) {
@@ -632,18 +630,15 @@
           Background Images
           <span class="text-red-500">*</span>
         </label>
-        <div
-          class="offer-form__upload-dropzone offer-form__upload-dropzone--lg mt-2"
+        <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg mt-2"
           (dragover)="onOfferDragOver($event)" (dragleave)="onOfferDragLeave($event)" (drop)="onOfferDrop($event)"
-          (click)="offerFileInput.click()"
-          [class.offer-form__upload-dropzone--dragging]="isOfferDragging()">
+          (click)="offerFileInput.click()" [class.offer-form__upload-dropzone--dragging]="isOfferDragging()">
           <div class="flex flex-col gap-6 justify-center items-center text-center w-full cursor-pointer">
             <div class="flex flex-col items-center gap-3 w-full">
               <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
                 <span class="vendor-form-svg-icon text-[#0033A0]"
                   style="width: 32px; height: 32px; display: inline-block;"
-                  [style.webkitMaskImage]="getUploadIconMask()"
-                  [style.maskImage]="getUploadIconMask()"></span>
+                  [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
               </div>
               <p class="vendor-upload__title">Upload one cover image and crop it for mobile and desktop</p>
               <p class="vendor-upload__help">
@@ -660,20 +655,20 @@
           <input #offerFileInput type="file" accept="image/*" class="hidden" (change)="onOfferFileSelected($event)" />
         </div>
         @if (
-          previewUrl() ||
-          offerLandscapePreviewUrl() ||
-          (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string') ||
-          (offerForm.get('offerImageLandscape')?.value && typeof offerForm.get('offerImageLandscape')?.value === 'string')
+        previewUrl() ||
+        offerLandscapePreviewUrl() ||
+        (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string') ||
+        (offerForm.get('offerImageLandscape')?.value && typeof offerForm.get('offerImageLandscape')?.value === 'string')
         ) {
         <div class="offer-form__background-split grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-4">
           <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
             <div class="flex items-center justify-between gap-3 mb-3">
               <div>
                 <p class="text-sm font-semibold text-[#1F2937]">Mobile Background</p>
-                <p class="text-xs text-gray-500">Aspect ratio `2.39:1`</p>
               </div>
             </div>
-            <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+            <div
+              class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
               @if (previewUrl(); as preview) {
               <div class="flex flex-col items-center gap-3 w-full">
                 <div class="h-[220px] w-full flex items-center justify-center">
@@ -682,7 +677,8 @@
                 </div>
                 <p class="text-gray-500 text-sm">{{ selectedOfferFileName() }}</p>
               </div>
-              } @else if (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string') {
+              } @else if (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string')
+              {
               <div class="flex flex-col items-center gap-3 w-full">
                 <div class="h-[220px] w-full flex items-center justify-center">
                   <img [src]="offerForm.get('offerImage')?.value" alt="Mobile background image"
@@ -710,10 +706,10 @@
             <div class="flex items-center justify-between gap-3 mb-3">
               <div>
                 <p class="text-sm font-semibold text-[#1F2937]">Desktop Background</p>
-                <p class="text-xs text-gray-500">Aspect ratio `16:2`</p>
               </div>
             </div>
-            <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+            <div
+              class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
               @if (offerLandscapePreviewUrl(); as offerLandscapePreview) {
               <div class="flex flex-col items-center gap-3 w-full">
                 <div class="h-[220px] w-full flex items-center justify-center">
@@ -722,7 +718,8 @@
                 </div>
                 <p class="text-gray-500 text-sm">{{ selectedOfferLandscapeFileName() }}</p>
               </div>
-              } @else if (offerForm.get('offerImageLandscape')?.value && typeof offerForm.get('offerImageLandscape')?.value === 'string') {
+              } @else if (offerForm.get('offerImageLandscape')?.value && typeof
+              offerForm.get('offerImageLandscape')?.value === 'string') {
               <div class="flex flex-col items-center gap-3 w-full">
                 <div class="h-[220px] w-full flex items-center justify-center">
                   <img [src]="offerForm.get('offerImageLandscape')?.value" alt="Desktop background image"
@@ -771,22 +768,18 @@
                     <p class="offer-form__crop-card-heading">Mobile Highlight</p>
                     <span class="offer-form__crop-card-badge">9:16</span>
                   </div>
-                  <p class="offer-form__crop-card-subtitle">Aspect ratio `9:16`</p>
                 </div>
               </div>
             </div>
-            <div
-              class="offer-form__upload-dropzone mb-4"
-              (dragover)="onHighlightDragOver($event)" (dragleave)="onHighlightDragLeave($event)"
-              (drop)="onHighlightDrop($event)"
+            <div class="offer-form__upload-dropzone mb-4" (dragover)="onHighlightDragOver($event)"
+              (dragleave)="onHighlightDragLeave($event)" (drop)="onHighlightDrop($event)"
               [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
               (click)="highlightMobileFileInput.click()">
               <div class="flex flex-col items-center gap-3 w-full">
                 <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center">
                   <span class="vendor-form-svg-icon text-[#0033A0]"
                     style="width: 28px; height: 28px; display: inline-block;"
-                    [style.webkitMaskImage]="getUploadIconMask()"
-                    [style.maskImage]="getUploadIconMask()"></span>
+                    [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
                 <p class="vendor-upload__title">Upload mobile highlight image</p>
                 <p class="vendor-upload__help">Saved as `9:16`. JPG, PNG, max 10MB.</p>
@@ -799,7 +792,8 @@
                 (change)="onHighlightFileSelected($event, 'mobile')" />
             </div>
             @if (highlightPreviewUrl() || offerForm.get('highlightImage')?.value) {
-            <div class="offer-form__crop-preview-frame offer-form__crop-preview-frame--mobile offer-form__crop-preview-frame--highlight">
+            <div
+              class="offer-form__crop-preview-frame offer-form__crop-preview-frame--mobile offer-form__crop-preview-frame--highlight">
               @if (highlightPreviewUrl(); as highlightPreview) {
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
@@ -807,10 +801,14 @@
                   <img [src]="highlightPreview" alt="Mobile highlight image preview"
                     class="offer-form__crop-image offer-form__crop-image--mobile" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
@@ -822,7 +820,8 @@
                   </div>
                 </div>
               </div>
-              } @else if (offerForm.get('highlightImage')?.value && typeof offerForm.get('highlightImage')?.value === 'string') {
+              } @else if (offerForm.get('highlightImage')?.value && typeof offerForm.get('highlightImage')?.value ===
+              'string') {
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
                   <span class="offer-form__crop-ratio-pill">9:16</span>
@@ -830,10 +829,14 @@
                     class="offer-form__crop-image offer-form__crop-image--mobile"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
@@ -852,7 +855,8 @@
               </p>
             </div>
             <div class="offer-form__crop-actions offer-form__crop-actions--highlight">
-              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop" class="p-button-outlined p-button-sm"
+              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop"
+                class="p-button-outlined p-button-sm"
                 [disabled]="!(highlightPreviewUrl() || offerForm.get('highlightImage')?.value)"
                 (click)="recropHighlightImage('mobile'); $event.stopPropagation()"></button>
               <button type="button" pButton icon="pi pi-trash" label="Remove"
@@ -863,7 +867,8 @@
             }
           </div>
 
-          <div class="offer-form__crop-card offer-form__crop-card--highlight offer-form__crop-card--highlight-secondary">
+          <div
+            class="offer-form__crop-card offer-form__crop-card--highlight offer-form__crop-card--highlight-secondary">
             <div class="offer-form__crop-card-header offer-form__crop-card-header--highlight">
               <div class="offer-form__crop-card-title">
                 <div class="offer-form__crop-card-icon" aria-hidden="true">
@@ -874,22 +879,18 @@
                     <p class="offer-form__crop-card-heading">Desktop Highlight</p>
                     <span class="offer-form__crop-card-badge">16:9</span>
                   </div>
-                  <p class="offer-form__crop-card-subtitle">Aspect ratio `16:9`</p>
                 </div>
               </div>
             </div>
-            <div
-              class="offer-form__upload-dropzone mb-4"
-              (dragover)="onHighlightDragOver($event)" (dragleave)="onHighlightDragLeave($event)"
-              (drop)="onHighlightDrop($event)"
+            <div class="offer-form__upload-dropzone mb-4" (dragover)="onHighlightDragOver($event)"
+              (dragleave)="onHighlightDragLeave($event)" (drop)="onHighlightDrop($event)"
               [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
               (click)="highlightDesktopFileInput.click()">
               <div class="flex flex-col items-center gap-3 w-full">
                 <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center">
                   <span class="vendor-form-svg-icon text-[#0033A0]"
                     style="width: 28px; height: 28px; display: inline-block;"
-                    [style.webkitMaskImage]="getUploadIconMask()"
-                    [style.maskImage]="getUploadIconMask()"></span>
+                    [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
                 <p class="vendor-upload__title">Upload desktop highlight image</p>
                 <p class="vendor-upload__help">Saved as `16:9`. JPG, PNG, max 10MB.</p>
@@ -902,7 +903,8 @@
                 (change)="onHighlightFileSelected($event, 'desktop')" />
             </div>
             @if (highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value) {
-            <div class="offer-form__crop-preview-frame offer-form__crop-preview-frame--desktop offer-form__crop-preview-frame--highlight">
+            <div
+              class="offer-form__crop-preview-frame offer-form__crop-preview-frame--desktop offer-form__crop-preview-frame--highlight">
               @if (highlightLandscapePreviewUrl(); as highlightLandscapePreview) {
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
@@ -910,10 +912,14 @@
                   <img [src]="highlightLandscapePreview" alt="Desktop highlight image preview"
                     class="offer-form__crop-image offer-form__crop-image--desktop" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
@@ -925,7 +931,8 @@
                   </div>
                 </div>
               </div>
-              } @else if (offerForm.get('highlightImageLandscape')?.value && typeof offerForm.get('highlightImageLandscape')?.value === 'string') {
+              } @else if (offerForm.get('highlightImageLandscape')?.value && typeof
+              offerForm.get('highlightImageLandscape')?.value === 'string') {
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
                   <span class="offer-form__crop-ratio-pill">16:9</span>
@@ -933,10 +940,14 @@
                     class="offer-form__crop-image offer-form__crop-image--desktop"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
-                    <span class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--v offer-form__crop-grid-line--v2"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h1"></span>
+                    <span
+                      class="offer-form__crop-grid-line offer-form__crop-grid-line--h offer-form__crop-grid-line--h2"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tl"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--tr"></span>
                     <span class="offer-form__crop-handle offer-form__crop-handle--bl"></span>
@@ -955,7 +966,8 @@
               </p>
             </div>
             <div class="offer-form__crop-actions offer-form__crop-actions--highlight">
-              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop" class="p-button-outlined p-button-sm"
+              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop"
+                class="p-button-outlined p-button-sm"
                 [disabled]="!(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value)"
                 (click)="recropHighlightImage('desktop'); $event.stopPropagation()"></button>
               <button type="button" pButton icon="pi pi-trash" label="Remove"
@@ -1133,8 +1145,7 @@
     <div class="flex flex-col gap-3 mt-6 px-6 py-5 md:mb-0 sm:flex-row sm:items-center bg-white"
       [ngClass]="'sm:justify-end'">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-        <button type="button" class="offer-form__draft-button"
-          (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
+        <button type="button" class="offer-form__draft-button" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
           Save As Draft
         </button>
         <button pButton pRipple type="submit" [label]="buttonName()" icon="pi pi-check" iconPos="left"
@@ -1175,10 +1186,10 @@
           <h3 class="text-base sm:text-lg font-bold text-gray-900 truncate">Crop & Resize Image</h3>
           <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">
             {{ cropperTarget() === 'offer'
-              ? 'Adjust the offer background images'
-              : highlightCropTab() === 'mobile'
-                ? 'Adjust the mobile highlight image'
-                : 'Adjust the desktop highlight image' }}
+            ? 'Adjust the offer background images'
+            : highlightCropTab() === 'mobile'
+            ? 'Adjust the mobile highlight image'
+            : 'Adjust the desktop highlight image' }}
           </p>
         </div>
         <button type="button"
@@ -1193,12 +1204,12 @@
           <span class="offer-form__cropper-meta-label text-[11px] font-semibold uppercase tracking-wide">Frame</span>
           <p class="offer-form__cropper-meta-value text-xs mt-0.5">
             {{ cropperTarget() === 'offer'
-              ? offerCropTab() === 'mobile'
-                ? '2.39:1 mobile background crop'
-                : '16:2 desktop background crop'
-              : highlightCropTab() === 'mobile'
-                ? '9:16 mobile highlight crop'
-                : '16:9 desktop highlight crop' }}
+            ? offerCropTab() === 'mobile'
+            ? '2.39:1 mobile background crop'
+            : '16:2 desktop background crop'
+            : highlightCropTab() === 'mobile'
+            ? '9:16 mobile highlight crop'
+            : '16:9 desktop highlight crop' }}
           </p>
         </div>
         <div class="flex items-center gap-2">
@@ -1235,21 +1246,16 @@
         </button>
         <button type="button"
           class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer disabled:cursor-not-allowed"
-          [class.bg-[#0033A0]]="offerCropTab() === 'desktop'"
-          [class.text-white]="offerCropTab() === 'desktop'"
-          [class.border-[#0033A0]]="offerCropTab() === 'desktop'"
-          [class.bg-white]="offerCropTab() !== 'desktop'"
-          [class.text-gray-600]="offerCropTab() !== 'desktop'"
-          [class.border-gray-200]="offerCropTab() !== 'desktop'"
-          [disabled]="!canOpenDesktopOfferTab"
-          (click)="switchOfferCropTab('desktop')">
+          [class.bg-[#0033A0]]="offerCropTab() === 'desktop'" [class.text-white]="offerCropTab() === 'desktop'"
+          [class.border-[#0033A0]]="offerCropTab() === 'desktop'" [class.bg-white]="offerCropTab() !== 'desktop'"
+          [class.text-gray-600]="offerCropTab() !== 'desktop'" [class.border-gray-200]="offerCropTab() !== 'desktop'"
+          [disabled]="!canOpenDesktopOfferTab" (click)="switchOfferCropTab('desktop')">
           Desktop 16:2
         </button>
       </div>
       } @else {
       <div class="flex items-center gap-2 px-4 sm:px-6 py-3 border-b border-gray-100 bg-white shrink-0">
-        <span
-          class="px-4 py-2 rounded-full text-sm font-medium border bg-[#0033A0] text-white border-[#0033A0]">
+        <span class="px-4 py-2 rounded-full text-sm font-medium border bg-[#0033A0] text-white border-[#0033A0]">
           {{ highlightCropTab() === 'mobile' ? 'Mobile 9:16' : 'Desktop 16:9' }}
         </span>
       </div>

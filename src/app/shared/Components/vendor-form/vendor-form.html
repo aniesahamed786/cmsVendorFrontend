@@ -501,105 +501,108 @@
           (click)="coverFileInput.click()" [class.border-blue-400]="isDraggingCover()">
           <div class="flex flex-col gap-6 justify-center items-center text-center w-full cursor-pointer">
             <div class="flex flex-col items-center gap-3 w-full">
-            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-              <span class="vendor-form-svg-icon text-[#0033A0]"
-                style="width: 32px; height: 32px; display: inline-block;"
-                [style.webkitMaskImage]="getUploadIconMask()"
-            [style.maskImage]="getUploadIconMask()"></span>
-            </div>
-            <p class="text-black font-bold">Upload one cover image and crop it for mobile and desktop</p>
-            <p class="text-[#4C444E] text-sm">
-              Mobile will save as `2.39:1` and desktop will save as `16:2`. JPG, PNG, max 10MB.
-            </p>
-            <div class="flex items-center justify-center gap-2">
-              <button type="button" pButton icon="pi pi-upload"
-                [label]="(effectiveCoverPreviewUrl() || effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImage')?.value || vendorForm.get('coverImageLandscape')?.value) ? 'Upload New Source' : 'Choose Image'"
-                class="p-button-outlined p-button-sm"
-                (click)="coverFileInput.click(); $event.stopPropagation()"></button>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-            <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
-              <div class="flex items-center justify-between gap-3 mb-3">
-                <div>
-                  <p class="text-sm font-semibold text-[#1F2937]">Mobile Cover</p>
-                  <p class="text-xs text-gray-500">Aspect ratio `2.39:1`</p>
-                </div>
+              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                <span class="vendor-form-svg-icon text-[#0033A0]"
+                  style="width: 32px; height: 32px; display: inline-block;"
+                  [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
               </div>
-              <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
-                @if (effectiveCoverPreviewUrl(); as coverPreview) {
-                <div class="flex flex-col items-center gap-3 w-full">
-                  <div class="h-[220px] w-full flex items-center justify-center">
-                    <img [src]="coverPreview" alt="Vendor mobile cover preview"
-                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+              <p class="text-black font-bold">Upload one cover image and crop it for mobile and desktop</p>
+              <p class="text-[#4C444E] text-sm">
+                Mobile will save as `2.39:1` and desktop will save as `16:2`. JPG, PNG, max 10MB.
+              </p>
+              <div class="flex items-center justify-center gap-2">
+                <button type="button" pButton icon="pi pi-upload"
+                  [label]="(effectiveCoverPreviewUrl() || effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImage')?.value || vendorForm.get('coverImageLandscape')?.value) ? 'Upload New Source' : 'Choose Image'"
+                  class="p-button-outlined p-button-sm"
+                  (click)="coverFileInput.click(); $event.stopPropagation()"></button>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+              <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
+                <div class="flex items-center justify-between gap-3 mb-3">
+                  <div>
+                    <p class="text-sm font-semibold text-[#1F2937]">Mobile Cover</p>
                   </div>
-                  <p class="text-gray-500 text-sm">{{ selectedCoverFile()?.name }}</p>
                 </div>
-                } @else if (vendorForm.get('coverImage')?.value && typeof vendorForm.get('coverImage')?.value === 'string') {
-                <div class="flex flex-col items-center gap-3 w-full">
-                  <div class="h-[220px] w-full flex items-center justify-center">
-                    <img [src]="vendorForm.get('coverImage')?.value" alt="Vendor mobile cover image"
-                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
-                      (error)="$any($event.target).style.display='none'" />
+                <div
+                  class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+                  @if (effectiveCoverPreviewUrl(); as coverPreview) {
+                  <div class="flex flex-col items-center gap-3 w-full">
+                    <div class="h-[220px] w-full flex items-center justify-center">
+                      <img [src]="coverPreview" alt="Vendor mobile cover preview"
+                        class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                    </div>
+                    <p class="text-gray-500 text-sm">{{ selectedCoverFile()?.name }}</p>
                   </div>
-                  <p class="text-gray-500 text-sm">Current mobile cover</p>
+                  } @else if (vendorForm.get('coverImage')?.value && typeof vendorForm.get('coverImage')?.value ===
+                  'string') {
+                  <div class="flex flex-col items-center gap-3 w-full">
+                    <div class="h-[220px] w-full flex items-center justify-center">
+                      <img [src]="vendorForm.get('coverImage')?.value" alt="Vendor mobile cover image"
+                        class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                        (error)="$any($event.target).style.display='none'" />
+                    </div>
+                    <p class="text-gray-500 text-sm">Current mobile cover</p>
+                  </div>
+                  } @else {
+                  <p class="text-sm text-gray-400">Upload a source image to create the mobile crop.</p>
+                  }
                 </div>
-                } @else {
-                <p class="text-sm text-gray-400">Upload a source image to create the mobile crop.</p>
-                }
+                <div class="flex items-center justify-center gap-2 mt-4">
+                  <button type="button" pButton icon="pi pi-pencil" label="Edit Crop"
+                    class="p-button-outlined p-button-sm"
+                    [disabled]="!(effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value || effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value)"
+                    (click)="recropCover('mobile'); $event.stopPropagation()"></button>
+                  <button type="button" pButton icon="pi pi-trash" label="Remove"
+                    class="p-button-outlined p-button-danger p-button-sm"
+                    [disabled]="!(effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value)"
+                    (click)="removeCoverImage(); $event.stopPropagation()"></button>
+                </div>
               </div>
-              <div class="flex items-center justify-center gap-2 mt-4">
-                <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
-                  [disabled]="!(effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value || effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value)"
-                  (click)="recropCover('mobile'); $event.stopPropagation()"></button>
-                <button type="button" pButton icon="pi pi-trash" label="Remove"
-                  class="p-button-outlined p-button-danger p-button-sm"
-                  [disabled]="!(effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value)"
-                  (click)="removeCoverImage(); $event.stopPropagation()"></button>
-              </div>
-            </div>
 
-            <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
-              <div class="flex items-center justify-between gap-3 mb-3">
-                <div>
-                  <p class="text-sm font-semibold text-[#1F2937]">Desktop Cover</p>
-                  <p class="text-xs text-gray-500">Aspect ratio `16:2`</p>
-                </div>
-              </div>
-              <div class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
-                @if (effectiveCoverLandscapePreviewUrl(); as coverLandscapePreview) {
-                <div class="flex flex-col items-center gap-3 w-full">
-                  <div class="h-[220px] w-full flex items-center justify-center">
-                    <img [src]="coverLandscapePreview" alt="Vendor desktop cover preview"
-                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+              <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
+                <div class="flex items-center justify-between gap-3 mb-3">
+                  <div>
+                    <p class="text-sm font-semibold text-[#1F2937]">Desktop Cover</p>
                   </div>
-                  <p class="text-gray-500 text-sm">{{ selectedCoverLandscapeFile()?.name }}</p>
                 </div>
-                } @else if (vendorForm.get('coverImageLandscape')?.value && typeof vendorForm.get('coverImageLandscape')?.value === 'string') {
-                <div class="flex flex-col items-center gap-3 w-full">
-                  <div class="h-[220px] w-full flex items-center justify-center">
-                    <img [src]="vendorForm.get('coverImageLandscape')?.value" alt="Vendor desktop cover image"
-                      class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
-                      (error)="$any($event.target).style.display='none'" />
+                <div
+                  class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+                  @if (effectiveCoverLandscapePreviewUrl(); as coverLandscapePreview) {
+                  <div class="flex flex-col items-center gap-3 w-full">
+                    <div class="h-[220px] w-full flex items-center justify-center">
+                      <img [src]="coverLandscapePreview" alt="Vendor desktop cover preview"
+                        class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                    </div>
+                    <p class="text-gray-500 text-sm">{{ selectedCoverLandscapeFile()?.name }}</p>
                   </div>
-                  <p class="text-gray-500 text-sm">Current desktop cover</p>
+                  } @else if (vendorForm.get('coverImageLandscape')?.value && typeof
+                  vendorForm.get('coverImageLandscape')?.value === 'string') {
+                  <div class="flex flex-col items-center gap-3 w-full">
+                    <div class="h-[220px] w-full flex items-center justify-center">
+                      <img [src]="vendorForm.get('coverImageLandscape')?.value" alt="Vendor desktop cover image"
+                        class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                        (error)="$any($event.target).style.display='none'" />
+                    </div>
+                    <p class="text-gray-500 text-sm">Current desktop cover</p>
+                  </div>
+                  } @else {
+                  <p class="text-sm text-gray-400">Upload a source image to create the desktop crop.</p>
+                  }
                 </div>
-                } @else {
-                <p class="text-sm text-gray-400">Upload a source image to create the desktop crop.</p>
-                }
-              </div>
-              <div class="flex items-center justify-center gap-2 mt-4">
-                <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
-                  [disabled]="!(effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value || effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value)"
-                  (click)="recropCover('desktop'); $event.stopPropagation()"></button>
-                <button type="button" pButton icon="pi pi-trash" label="Remove"
-                  class="p-button-outlined p-button-danger p-button-sm"
-                  [disabled]="!(effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value)"
-                  (click)="removeCoverLandscapeImage(); $event.stopPropagation()"></button>
+                <div class="flex items-center justify-center gap-2 mt-4">
+                  <button type="button" pButton icon="pi pi-pencil" label="Edit Crop"
+                    class="p-button-outlined p-button-sm"
+                    [disabled]="!(effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value || effectiveCoverPreviewUrl() || vendorForm.get('coverImage')?.value)"
+                    (click)="recropCover('desktop'); $event.stopPropagation()"></button>
+                  <button type="button" pButton icon="pi pi-trash" label="Remove"
+                    class="p-button-outlined p-button-danger p-button-sm"
+                    [disabled]="!(effectiveCoverLandscapePreviewUrl() || vendorForm.get('coverImageLandscape')?.value)"
+                    (click)="removeCoverLandscapeImage(); $event.stopPropagation()"></button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
           <input #coverFileInput type="file" accept="image/*" class="hidden" (change)="onCoverFileSelected($event)" />
         </div>
@@ -713,10 +716,10 @@
         </h3>
         <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">
           {{ cropperTarget() === 'logo'
-            ? 'Adjust the logo inside a square frame before upload.'
-            : coverCropTab() === 'mobile'
-              ? 'Adjust the cover image inside a 2.39:1 frame before upload.'
-              : 'Adjust the cover image inside a 16:2 frame before upload.' }}
+          ? 'Adjust the logo inside a square frame before upload.'
+          : coverCropTab() === 'mobile'
+          ? 'Adjust the cover image inside a 2.39:1 frame before upload.'
+          : 'Adjust the cover image inside a 16:2 frame before upload.' }}
         </p>
       </div>
       <button type="button"
@@ -764,14 +767,10 @@
       </button>
       <button type="button"
         class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer disabled:cursor-not-allowed"
-        [class.bg-[#0033A0]]="coverCropTab() === 'desktop'"
-        [class.text-white]="coverCropTab() === 'desktop'"
-        [class.border-[#0033A0]]="coverCropTab() === 'desktop'"
-        [class.bg-white]="coverCropTab() !== 'desktop'"
-        [class.text-gray-600]="coverCropTab() !== 'desktop'"
-        [class.border-gray-200]="coverCropTab() !== 'desktop'"
-        [disabled]="!canOpenDesktopCoverTab"
-        (click)="switchCoverCropTab('desktop')">
+        [class.bg-[#0033A0]]="coverCropTab() === 'desktop'" [class.text-white]="coverCropTab() === 'desktop'"
+        [class.border-[#0033A0]]="coverCropTab() === 'desktop'" [class.bg-white]="coverCropTab() !== 'desktop'"
+        [class.text-gray-600]="coverCropTab() !== 'desktop'" [class.border-gray-200]="coverCropTab() !== 'desktop'"
+        [disabled]="!canOpenDesktopCoverTab" (click)="switchCoverCropTab('desktop')">
         Desktop 16:2
       </button>
     </div>
