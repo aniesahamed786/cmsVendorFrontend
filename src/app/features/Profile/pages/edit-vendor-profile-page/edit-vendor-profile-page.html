@@ -9,7 +9,7 @@
   </div>
 
   <div class="edit-profile-layout">
-    <div class="edit-profile-form-column">
+    <div class="edit-profile-form-column" (focusin)="onFieldFocus($event)">
       <app-vendor-profile-edit-form #editForm [initialData]="initialData()" [isLoading]="isLoading()"
         (saveDraft)="onSaveDraft($event)" (updateChanges)="onUpdateChanges($event)"
         (languageFocus)="onLanguageFocus($event)" />

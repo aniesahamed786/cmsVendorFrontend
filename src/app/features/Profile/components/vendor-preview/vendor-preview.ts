@@ -53,6 +53,13 @@ export class VendorPreview implements OnChanges {
     this.language.set(lang);
   }
 
+  scrollToSection(sectionId: string): void {
+    if (!sectionId) return;
+    setTimeout(() => {
+      this.document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  }
+
   getVendorLogo(): string | null {
     if (this.logoImageFailed()) {
       return null;

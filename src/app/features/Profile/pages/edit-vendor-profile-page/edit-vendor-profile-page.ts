@@ -64,4 +64,16 @@ export class EditVendorProfilePage {
       this.preview.setLanguage(lang);
     }
   }
+
+  onFieldFocus(event: FocusEvent): void {
+    const el = (event.target as HTMLElement).closest('[formControlName],[data-preview-section]');
+    if (!el) return;
+    // rep* fields have no preview counterpart; every other business field maps to identity
+    const section =
+      el.getAttribute('data-preview-section') ??
+      (el.getAttribute('formControlName')?.startsWith('rep') ? null : 'identity');
+    if (section) {
+      this.preview?.scrollToSection('preview-section-' + section);
+    }
+  }
 }
