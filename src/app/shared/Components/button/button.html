@@ -1,0 +1,9 @@
+<button
+  [type]="type()"
+  [disabled]="disabled()"
+  class="app-btn"
+  [class.app-btn--primary]="variant() === 'primary'"
+  [class.app-btn--outline]="variant() === 'outline'">
+  @if (icon()) { <i [class]="icon()"></i> }
+  <ng-content></ng-content>
+</button>
