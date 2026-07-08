@@ -1,6 +1,6 @@
 ---
 name: style
-description: How to style fields, backgrounds, surfaces, borders, text and PrimeNG overlays in this CMS admin app using SCSS with CSS variable design tokens, light/dark/national-day modes, and swappable accent themes. Corners stay square (no border-radius) unless explicitly justified. Use whenever adding or changing colors, backgrounds, inputs, buttons, tables, dialogs, or theme support.
+description: How to style fields, backgrounds, surfaces, borders, text and PrimeNG overlays in this CMS vendor app using SCSS with CSS variable design tokens, light/dark/national-day modes, and swappable accent themes. Corners stay square (no border-radius) unless explicitly justified. Use whenever adding or changing colors, backgrounds, inputs, buttons, tables, dialogs, or theme support.
 ---
 
 # Styling guide (SCSS + design tokens + theming)
@@ -17,9 +17,15 @@ tokens so that **light / dark / national-day** modes and **9 swappable accent th
 work automatically.
 
 > **Building new pages?** This file (the styling rules) is all you need.
-> **Converting an existing project to this style?** Follow the separate
-> [`REFACTOR.md`](./REFACTOR.md) playbook (inventory → hex→token map → convert → verify),
-> then come back here for the per-component rules.
+> **De-Tailwinding an existing feature folder?** Follow the
+> [`scss-refactor` skill](../scss-refactor/SKILL.md) playbook (inventory → hex→token map →
+> convert → verify), then come back here for the per-component rules.
+> **Migrating a whole project to the token system?** Follow the separate
+> [`REFACTOR.md`](./REFACTOR.md) (installs the engine files first).
+>
+> This file is kept in sync with the admin app's `style` skill
+> (`~/cmsAdminFrontend-1/.claude/skills/style/SKILL.md`) — when a house rule changes in
+> either repo, mirror it in the other.
 
 Three moving parts:
 

@@ -1,6 +1,6 @@
 ---
 name: pagentation
-description: How to add pagination to tables/lists in this CMS admin app — both PrimeNG p-table server-side lazy pagination (the offer-list/vendor-list pattern) and client-side p-paginator over in-memory rows. Use whenever adding paging, page-size options, or a paginator to any table or list.
+description: How to add pagination to tables/lists in this CMS vendor app — both PrimeNG p-table server-side lazy pagination (the offer-list/vendor-list pattern) and client-side p-paginator over in-memory rows. Use whenever adding paging, page-size options, or a paginator to any table or list.
 ---
 
 # Pagination guide
