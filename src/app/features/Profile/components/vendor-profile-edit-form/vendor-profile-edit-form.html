@@ -11,7 +11,8 @@
       </div>
       <div>
         <label>Vendor Name (Arabic) <span class="required">*</span></label>
-        <input pInputText formControlName="nameAr" class="vendor-profile-edit-form__input--rtl" placeholder="مثال: لومي ستريت" (focus)="onFocusLanguage('ar')" />
+        <input pInputText formControlName="nameAr" class="vendor-profile-edit-form__input--rtl"
+          placeholder="مثال: لومي ستريت" (focus)="onFocusLanguage('ar')" />
       </div>
       <div class="profile-form-grid__full">
         <label>Commercial Registration Number</label>
@@ -73,7 +74,7 @@
     </div>
   </div>
 
-  <div class="profile-form-section">
+  <!-- <div class="profile-form-section">
     <div class="profile-form-section__header">
       <div class="profile-form-section__icon"><i class="pi pi-map-marker"></i></div>
       <h2>Business Locations</h2>
@@ -97,12 +98,9 @@
         <span>+</span> Add new location
       </button>
     </div>
-  </div>
+  </div> -->
 </form>
 
-<app-vendor-location-dialog 
-  [visible]="showLocationDialog()" 
-  [locationToEdit]="selectedLocationForEdit()"
-  (visibleChange)="showLocationDialog.set($event)"
-  (saveLocation)="onLocationSaved($event)">
+<app-vendor-location-dialog [visible]="showLocationDialog()" [locationToEdit]="selectedLocationForEdit()"
+  (visibleChange)="showLocationDialog.set($event)" (saveLocation)="onLocationSaved($event)">
 </app-vendor-location-dialog>
