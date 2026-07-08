@@ -1,5 +1,4 @@
 .stores-page {
-  padding: 1.5rem;
   background: var(--app-bg);
   display: flex;
   flex-direction: column;
@@ -58,6 +57,7 @@
     @media (min-width: 640px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     @media (min-width: 1024px) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -177,7 +177,7 @@
     background-color: var(--surface-card);
     color: var(--text-color);
     border-radius: var(--border-radius-sm);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 10;
 
     &--loading {
@@ -196,7 +196,7 @@
     background-color: var(--red-500);
     color: white;
     border-radius: var(--border-radius-sm);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 10;
   }
 
@@ -224,6 +224,7 @@
     padding: 0.75rem;
     border: 1px solid var(--app-border);
     transition: background-color 0.2s;
+
     &:hover {
       background: color-mix(in srgb, var(--app-surface) 98%, var(--app-primary) 2%);
     }
@@ -327,11 +328,12 @@
     border: 1px solid var(--app-border);
     color: var(--app-text);
     border-radius: 0;
-    
+
     &:focus {
       outline: none;
       border-color: var(--app-primary);
     }
+
     &::placeholder {
       color: var(--app-muted);
       opacity: 1;
@@ -403,11 +405,11 @@
 
     tr {
       transition: background-color 0.2s;
-      
+
       &:hover {
         background: var(--app-primary-hover-soft);
       }
-      
+
       &:last-child td {
         border-bottom: none;
       }
@@ -416,6 +418,7 @@
 
   &__th-sortable {
     cursor: pointer;
+
     &:hover {
       color: var(--app-text) !important;
     }
@@ -425,7 +428,8 @@
     font-size: 10px;
   }
 
-  &__th-center, &__td-center {
+  &__th-center,
+  &__td-center {
     text-align: center !important;
   }
 
@@ -483,7 +487,8 @@
       color: var(--app-text) !important;
       border-radius: 0 !important;
 
-      &:hover, &.p-focus {
+      &:hover,
+      &.p-focus {
         background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
       }
 

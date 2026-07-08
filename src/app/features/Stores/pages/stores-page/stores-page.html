@@ -70,22 +70,22 @@
       <h3 class="insight-card-title stores-page__card-title">Branch Locations</h3>
       <div class="stores-page__map-wrapper">
         @if (!hasMapsKey) {
-          <div class="stores-page__map-empty">
-            <p>Google Maps is not configured. Add `googleMapsApiKey` to your environment file to enable the map.</p>
-          </div>
+        <div class="stores-page__map-empty">
+          <p>Google Maps is not configured. Add `googleMapsApiKey` to your environment file to enable the map.</p>
+        </div>
         } @else {
-          <div #mapContainer class="stores-page__map-container"></div>
-          @if (isMapLoading || !debug.scriptLoaded) {
-            <div class="stores-page__map-badge stores-page__map-badge--loading">
-              Loading map...
-            </div>
-          }
-          @if (mapError) {
-            <div class="stores-page__map-error">
-              <div><strong>Map didn't load</strong></div>
-              <div>{{ mapError }}</div>
-            </div>
-          }
+        <div #mapContainer class="stores-page__map-container"></div>
+        @if (isMapLoading || !debug.scriptLoaded) {
+        <div class="stores-page__map-badge stores-page__map-badge--loading">
+          Loading map...
+        </div>
+        }
+        @if (mapError) {
+        <div class="stores-page__map-error">
+          <div><strong>Map didn't load</strong></div>
+          <div>{{ mapError }}</div>
+        </div>
+        }
         }
       </div>
     </div>
