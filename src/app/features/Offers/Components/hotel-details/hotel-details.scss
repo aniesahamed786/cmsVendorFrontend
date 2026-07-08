@@ -2,20 +2,137 @@
 
 .hotel-details {
   color: var(--app-text);
+  background: var(--app-surface);
+  padding: 1.75rem;
 
-  .bg-white { background: var(--app-surface); }
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
 
-  .hd-accent { color: var(--app-primary); }
-  .hd-chip { background: var(--app-primary-soft); }
-  .hd-text { color: var(--app-text); }
-  .hd-muted { color: var(--app-muted); }
+  &__header-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    width: 2.5rem;
+    background: var(--app-primary-soft);
+  }
 
-  .hd-surface {
+  &__header-icon {
+    color: var(--app-primary);
+    font-size: 1.125rem;
+  }
+
+  &__title {
+    color: var(--app-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  &__sections > * + * {
+    margin-top: 1.5rem;
+  }
+
+  &__section-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--app-muted);
+    margin-bottom: 0.75rem;
+
+    &--tight {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__rooms > * + * {
+    margin-top: 0.75rem;
+  }
+
+  &__room-card {
     background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-    border-color: var(--app-border);
+    border: 1px solid var(--app-border);
+    padding: 1rem 1.25rem;
+  }
+
+  &__room-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--app-text);
+    margin: 0;
+  }
+
+  &__rates {
+    margin-top: 0.5rem;
+
+    > * + * {
+      margin-top: 0.25rem;
+    }
+  }
+
+  &__rate-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--app-muted);
+  }
+
+  &__rate-value {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--app-text);
+    font-weight: 500;
+  }
+
+  &__empty {
+    font-size: 0.875rem;
+    color: var(--app-muted);
+    margin: 0;
+  }
+
+  &__amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__amenity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+  }
+
+  &__amenity-icon {
+    font-size: 0.75rem;
+    color: var(--app-muted);
+  }
+
+  &__amenity-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--app-text);
+  }
+
+  &__tax {
+    font-size: 1rem;
+    color: var(--app-text);
+    margin: 0;
   }
 
   .hd-riyal {
+    display: inline-block;
+    width: 0.875rem;
+    height: 0.875rem;
     background-color: currentColor;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;

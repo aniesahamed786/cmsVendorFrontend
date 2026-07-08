@@ -1,1 +1,30 @@
-/* Category dropdown styles */
+.field-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field-dropdown__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.field-dropdown__required {
+  color: #dc2626; /* sanctioned validation red */
+}
+
+.field-dropdown__control {
+  width: 100%;
+}
+
+.field-dropdown__control ::ng-deep .p-multiselect,
+.field-dropdown__control ::ng-deep .p-select {
+  width: 100%;
+  border-radius: 0;
+}
+
+.field-dropdown__error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin: 0.25rem 0 0;
+}

@@ -1,0 +1,118 @@
+.offer-tile {
+  border: 1px solid var(--app-border);
+  padding: 1.25rem;
+  background: var(--app-surface);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+@media (min-width: 768px) {
+  .offer-tile {
+    gap: 1.25rem;
+  }
+}
+
+.offer-tile__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.offer-tile__icon-box {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.offer-tile__icon-box--default-bg {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+}
+
+.offer-tile__svg-icon {
+  display: inline-block;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: currentColor;
+  color: var(--app-muted);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 20px;
+  mask-size: 20px;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.offer-tile__pi-icon {
+  font-size: 1.125rem;
+  color: var(--app-muted);
+}
+
+.offer-tile__value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--app-text);
+  margin: 1rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.offer-tile__title {
+  color: var(--app-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0.25rem 0 0;
+}
+
+.offer-tile__subtitle {
+  color: var(--app-muted);
+  font-size: 0.75rem;
+  margin: 0.25rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.offer-tile__badge {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  flex-shrink: 0;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1.25;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+}
+
+.offer-tile__trend {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* sanctioned status colors: success green / danger red */
+.offer-tile__trend--up {
+  background: rgba(34, 197, 94, 0.16);
+  color: #16a34a;
+}
+
+.offer-tile__trend--down {
+  background: rgba(239, 68, 68, 0.16);
+  color: #dc2626;
+}
+
+.offer-tile__trend-icon {
+  font-size: 10px;
+}

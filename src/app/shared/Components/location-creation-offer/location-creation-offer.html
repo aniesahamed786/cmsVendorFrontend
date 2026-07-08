@@ -8,24 +8,24 @@
   appendTo="body"
   [visible]="visible"
   (visibleChange)="onVisibleChange($event)"
-  styleClass="location-creation-offer-dialog w-[760px] max-w-[92vw] max-h-[90vh] overflow-hidden shadow-2xl rounded-none"
+  styleClass="location-creation-offer-dialog"
   [contentStyle]="{ padding: '0', overflow: 'hidden' }"
 >
-  <div class="location-creation-offer offer-form bg-white rounded-none overflow-hidden max-h-[90vh] flex flex-col">
-    <div class="location-creation-offer__header px-6 md:px-8 pt-6 pb-2">
-      <div class="flex items-start justify-between gap-4 mb-4">
+  <div class="location-creation-offer offer-form location-creation-offer__container">
+    <div class="location-creation-offer__header">
+      <div class="location-creation-offer__header-row">
         <div>
-          <h2 class="location-creation-offer__title mt-1 text-[2rem] md:text-[2.25rem] leading-none font-bold">
+          <h2 class="location-creation-offer__title">
             {{ locationData ? 'Edit Location' : 'Business Locations' }}
           </h2>
-          <p class="location-creation-offer__subtitle mt-2 text-base md:text-[1.05rem] leading-7">
+          <p class="location-creation-offer__subtitle">
             Set up and manage your business branches and coordinates
           </p>
         </div>
 
         <button
           type="button"
-          class="location-creation-offer__close-button inline-flex items-center justify-center p-2 bg-transparent transition-colors cursor-pointer"
+          class="location-creation-offer__close-button"
           (click)="close()"
         >
           <i class="pi pi-times"></i>
@@ -33,206 +33,204 @@
       </div>
     </div>
 
-    <form class="location-creation-offer__body px-6 md:px-8 pb-6 overflow-y-auto" [formGroup]="locationForm" (ngSubmit)="submit()">
-      <div class="space-y-8">
-        <section class="space-y-5">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-[rgba(0,51,160,0.08)] text-[#0033A0]">
-              <i class="pi pi-map-marker text-[20px]"></i>
-            </div>
-            <h3 class="location-creation-offer__section-title text-[1.75rem] font-semibold">Location Details</h3>
+    <form class="location-creation-offer__body" [formGroup]="locationForm" (ngSubmit)="submit()">
+      <section class="location-creation-offer__section">
+        <div class="location-creation-offer__section-head">
+          <div class="location-creation-offer__section-icon">
+            <i class="pi pi-map-marker"></i>
+          </div>
+          <h3 class="location-creation-offer__section-title">Location Details</h3>
+        </div>
+
+        <div class="location-creation-offer__grid">
+          <div class="location-creation-offer__field">
+            <label class="location-creation-offer__label">
+              Location Name (English)
+              <span class="location-creation-offer__required">*</span>
+            </label>
+            <input
+              pInputText
+              type="text"
+              placeholder="e.g. Khobar Branch"
+              class="location-creation-offer__input"
+              formControlName="branchName"
+            />
+            @if (locationForm.get('branchName')?.invalid && locationForm.get('branchName')?.touched) {
+              @if (locationForm.get('branchName')?.hasError('required') || locationForm.get('branchName')?.hasError('whitespace')) {
+                <p class="location-creation-offer__error">Location name is required.</p>
+              }
+            }
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-3">
-              <label class="text-sm font-medium text-gray-700">
-                Location Name (English)
-                <span class="text-red-500">*</span>
-              </label>
-              <input
-                pInputText
-                type="text"
-                placeholder="e.g. Khobar Branch"
-                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
-                formControlName="branchName"
-              />
-              @if (locationForm.get('branchName')?.invalid && locationForm.get('branchName')?.touched) {
-                @if (locationForm.get('branchName')?.hasError('required') || locationForm.get('branchName')?.hasError('whitespace')) {
-                  <p class="text-xs text-red-500">Location name is required.</p>
-                }
+          <div class="location-creation-offer__field">
+            <label class="location-creation-offer__label">
+              Location Name (Arabic)
+              <span class="location-creation-offer__required">*</span>
+            </label>
+            <input
+              pInputText
+              type="text"
+              placeholder="مثلاً فرع الخبر"
+              class="location-creation-offer__input location-creation-offer__input--rtl"
+              dir="rtl"
+              formControlName="branchNameAr"
+              (input)="sanitizeArabicInput('branchNameAr')"
+            />
+            @if (locationForm.get('branchNameAr')?.invalid && locationForm.get('branchNameAr')?.touched) {
+              @if (locationForm.get('branchNameAr')?.hasError('required') || locationForm.get('branchNameAr')?.hasError('whitespace')) {
+                <p class="location-creation-offer__error">Arabic location name is required.</p>
               }
-            </div>
-
-            <div class="space-y-3">
-              <label class="text-sm font-medium text-gray-700">
-                Location Name (Arabic)
-                <span class="text-red-500">*</span>
-              </label>
-              <input
-                pInputText
-                type="text"
-                placeholder="مثلاً فرع الخبر"
-                class="w-full pr-4 text-right bg-gray-50 rounded-none border border-gray-100"
-                dir="rtl"
-                formControlName="branchNameAr"
-                (input)="sanitizeArabicInput('branchNameAr')"
-              />
-              @if (locationForm.get('branchNameAr')?.invalid && locationForm.get('branchNameAr')?.touched) {
-                @if (locationForm.get('branchNameAr')?.hasError('required') || locationForm.get('branchNameAr')?.hasError('whitespace')) {
-                  <p class="text-xs text-red-500">Arabic location name is required.</p>
-                }
-                @if (locationForm.get('branchNameAr')?.hasError('arabicOnly')) {
-                  <p class="text-xs text-red-500">اسم الفرع يجب أن يكون باللغة العربية فقط.</p>
-                }
+              @if (locationForm.get('branchNameAr')?.hasError('arabicOnly')) {
+                <p class="location-creation-offer__error">اسم الفرع يجب أن يكون باللغة العربية فقط.</p>
               }
-            </div>
-
-            <div class="space-y-3 md:col-span-2">
-              <label class="text-sm font-medium text-gray-700">
-                Country
-                <span class="text-red-500">*</span>
-              </label>
-              <p-select
-                [options]="countryOptions()"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select country"
-                appendTo="body"
-                styleClass="w-full offer-form__field offer-form__select !rounded-none"
-                panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
-                formControlName="country"
-              />
-              @if (locationForm.get('country')?.invalid && locationForm.get('country')?.touched) {
-                @if (locationForm.get('country')?.hasError('required') || locationForm.get('country')?.hasError('whitespace')) {
-                  <p class="text-xs text-red-500">Country is required.</p>
-                }
-              }
-            </div>
-
-            <div class="space-y-3">
-              <label class="text-sm font-medium text-gray-700">
-                Region
-              </label>
-              <p-select
-                [options]="regionOptions()"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select region"
-                appendTo="body"
-                styleClass="w-full offer-form__field offer-form__select !rounded-none"
-                panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
-                formControlName="region"
-              />
-            </div>
-
-            <div class="space-y-3">
-              <label class="text-sm font-medium text-gray-700">
-                City
-                <span class="text-red-500">*</span>
-              </label>
-              <p-select
-                [options]="cityOptions()"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select city"
-                appendTo="body"
-                styleClass="w-full offer-form__field offer-form__select !rounded-none"
-                panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
-                formControlName="city"
-              />
-              @if (locationForm.get('city')?.invalid && locationForm.get('city')?.touched) {
-                @if (locationForm.get('city')?.hasError('required') || locationForm.get('city')?.hasError('whitespace')) {
-                  <p class="text-xs text-red-500">City is required.</p>
-                }
-              }
-            </div>
-
-            <div class="space-y-3 md:col-span-2">
-              <label class="text-sm font-medium text-gray-700">
-                Address
-                <span class="text-red-500">*</span>
-              </label>
-              <textarea
-                pInputTextarea
-                [autoResize]="true"
-                rows="2"
-                placeholder="e.g. 8628+CP Al Khobar"
-                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
-                formControlName="address"
-              ></textarea>
-              @if (locationForm.get('address')?.invalid && locationForm.get('address')?.touched) {
-                @if (locationForm.get('address')?.hasError('required') || locationForm.get('address')?.hasError('whitespace')) {
-                  <p class="text-xs text-red-500">Address is required.</p>
-                }
-              }
-            </div>
-
-            <div class="space-y-3 md:col-span-2">
-              <label class="text-sm font-medium text-gray-700">
-                Google Map Link
-                <span class="text-red-500">*</span>
-              </label>
-              <input
-                pInputText
-                type="text"
-                placeholder="https://maps.app.goo.gl/..."
-                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
-                formControlName="googleMapLink"
-              />
-              @if (locationForm.get('googleMapLink')?.invalid && locationForm.get('googleMapLink')?.touched) {
-                @if (locationForm.get('googleMapLink')?.hasError('required') || locationForm.get('googleMapLink')?.hasError('whitespace')) {
-                  <p class="text-xs text-red-500">Google map link is required.</p>
-                }
-                @if (locationForm.get('googleMapLink')?.hasError('pattern')) {
-                  <p class="text-xs text-red-500">Please enter a valid URL.</p>
-                }
-              }
-            </div>
-
-            <div class="space-y-3 md:col-span-2">
-              <label class="text-sm font-medium text-gray-700">
-                Location Representative Name
-              </label>
-              <input
-                pInputText
-                type="text"
-                placeholder="e.g. Abdullah Khaled"
-                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
-                formControlName="representativeName"
-              />
-            </div>
-
-            <div class="space-y-3 md:col-span-2">
-              <label class="text-sm font-medium text-gray-700">
-                Location Phone Number
-              </label>
-              <input
-                pInputText
-                type="text"
-                placeholder="e.g. +966 (13) 123 4567"
-                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
-                formControlName="phoneNumber"
-                (input)="sanitizePhoneNumber($event)"
-                maxlength="15"
-              />
-              @if (locationPhoneError()) {
-                <p class="text-xs text-red-500 mt-1">Use English Numbers</p>
-              } @else if (locationForm.get('phoneNumber')?.touched) {
-                @if (locationForm.get('phoneNumber')?.hasError('pattern')) {
-                  <p class="text-xs text-red-500">Phone number can only contain numbers, +, (), and spaces.</p>
-                } @else if (locationForm.get('phoneNumber')?.hasError('maxlength')) {
-                  <p class="text-xs text-red-500">Phone number cannot exceed 15 characters.</p>
-                }
-              }
-            </div>
+            }
           </div>
-        </section>
-      </div>
 
-      <div class="location-creation-offer__footer flex flex-col-reverse md:flex-row md:justify-end gap-3 mt-8">
+          <div class="location-creation-offer__field location-creation-offer__field--full">
+            <label class="location-creation-offer__label">
+              Country
+              <span class="location-creation-offer__required">*</span>
+            </label>
+            <p-select
+              [options]="countryOptions()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select country"
+              appendTo="body"
+              styleClass="offer-form__field offer-form__select"
+              panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
+              formControlName="country"
+            />
+            @if (locationForm.get('country')?.invalid && locationForm.get('country')?.touched) {
+              @if (locationForm.get('country')?.hasError('required') || locationForm.get('country')?.hasError('whitespace')) {
+                <p class="location-creation-offer__error">Country is required.</p>
+              }
+            }
+          </div>
+
+          <div class="location-creation-offer__field">
+            <label class="location-creation-offer__label">
+              Region
+            </label>
+            <p-select
+              [options]="regionOptions()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select region"
+              appendTo="body"
+              styleClass="offer-form__field offer-form__select"
+              panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
+              formControlName="region"
+            />
+          </div>
+
+          <div class="location-creation-offer__field">
+            <label class="location-creation-offer__label">
+              City
+              <span class="location-creation-offer__required">*</span>
+            </label>
+            <p-select
+              [options]="cityOptions()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select city"
+              appendTo="body"
+              styleClass="offer-form__field offer-form__select"
+              panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
+              formControlName="city"
+            />
+            @if (locationForm.get('city')?.invalid && locationForm.get('city')?.touched) {
+              @if (locationForm.get('city')?.hasError('required') || locationForm.get('city')?.hasError('whitespace')) {
+                <p class="location-creation-offer__error">City is required.</p>
+              }
+            }
+          </div>
+
+          <div class="location-creation-offer__field location-creation-offer__field--full">
+            <label class="location-creation-offer__label">
+              Address
+              <span class="location-creation-offer__required">*</span>
+            </label>
+            <textarea
+              pInputTextarea
+              [autoResize]="true"
+              rows="2"
+              placeholder="e.g. 8628+CP Al Khobar"
+              class="location-creation-offer__input"
+              formControlName="address"
+            ></textarea>
+            @if (locationForm.get('address')?.invalid && locationForm.get('address')?.touched) {
+              @if (locationForm.get('address')?.hasError('required') || locationForm.get('address')?.hasError('whitespace')) {
+                <p class="location-creation-offer__error">Address is required.</p>
+              }
+            }
+          </div>
+
+          <div class="location-creation-offer__field location-creation-offer__field--full">
+            <label class="location-creation-offer__label">
+              Google Map Link
+              <span class="location-creation-offer__required">*</span>
+            </label>
+            <input
+              pInputText
+              type="text"
+              placeholder="https://maps.app.goo.gl/..."
+              class="location-creation-offer__input"
+              formControlName="googleMapLink"
+            />
+            @if (locationForm.get('googleMapLink')?.invalid && locationForm.get('googleMapLink')?.touched) {
+              @if (locationForm.get('googleMapLink')?.hasError('required') || locationForm.get('googleMapLink')?.hasError('whitespace')) {
+                <p class="location-creation-offer__error">Google map link is required.</p>
+              }
+              @if (locationForm.get('googleMapLink')?.hasError('pattern')) {
+                <p class="location-creation-offer__error">Please enter a valid URL.</p>
+              }
+            }
+          </div>
+
+          <div class="location-creation-offer__field location-creation-offer__field--full">
+            <label class="location-creation-offer__label">
+              Location Representative Name
+            </label>
+            <input
+              pInputText
+              type="text"
+              placeholder="e.g. Abdullah Khaled"
+              class="location-creation-offer__input"
+              formControlName="representativeName"
+            />
+          </div>
+
+          <div class="location-creation-offer__field location-creation-offer__field--full">
+            <label class="location-creation-offer__label">
+              Location Phone Number
+            </label>
+            <input
+              pInputText
+              type="text"
+              placeholder="e.g. +966 (13) 123 4567"
+              class="location-creation-offer__input"
+              formControlName="phoneNumber"
+              (input)="sanitizePhoneNumber($event)"
+              maxlength="15"
+            />
+            @if (locationPhoneError()) {
+              <p class="location-creation-offer__error location-creation-offer__error--mt">Use English Numbers</p>
+            } @else if (locationForm.get('phoneNumber')?.touched) {
+              @if (locationForm.get('phoneNumber')?.hasError('pattern')) {
+                <p class="location-creation-offer__error">Phone number can only contain numbers, +, (), and spaces.</p>
+              } @else if (locationForm.get('phoneNumber')?.hasError('maxlength')) {
+                <p class="location-creation-offer__error">Phone number cannot exceed 15 characters.</p>
+              }
+            }
+          </div>
+        </div>
+      </section>
+
+      <div class="location-creation-offer__footer">
         <button
           type="button"
-          class="location-creation-offer__cancel-button inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm border transition-colors cursor-pointer"
+          class="location-creation-offer__cancel-button"
           (click)="close()"
         >
           Cancel

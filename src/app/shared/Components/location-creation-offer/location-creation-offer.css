@@ -1,21 +1,153 @@
-.location-creation-offer__title {
-  color: var(--app-text) !important;
+.location-creation-offer__container {
+  background: var(--app-surface);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.location-creation-offer__header,
-.location-creation-offer__footer {
+.location-creation-offer__header {
+  padding: 1.5rem 1.5rem 0.5rem;
   background: var(--app-surface) !important;
+}
+
+.location-creation-offer__header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.location-creation-offer__footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  background: var(--app-surface) !important;
+}
+
+.location-creation-offer__title {
+  color: var(--app-text) !important;
+  margin: 0.25rem 0 0;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 700;
 }
 
 .location-creation-offer__subtitle {
   color: var(--app-muted) !important;
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+
+.location-creation-offer__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.location-creation-offer__section-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.location-creation-offer__section-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+  font-size: 20px;
 }
 
 .location-creation-offer__section-title {
   color: var(--app-text) !important;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.location-creation-offer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.location-creation-offer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.location-creation-offer__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.location-creation-offer__required {
+  color: #dc2626; /* sanctioned validation red */
+}
+
+.location-creation-offer__error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin: 0;
+}
+
+.location-creation-offer__error--mt {
+  margin-top: 0.25rem;
+}
+
+.location-creation-offer__input {
+  width: 100%;
+  padding-left: 1rem;
+}
+
+.location-creation-offer__input--rtl {
+  padding-left: 0;
+  padding-right: 1rem;
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .location-creation-offer__header {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .location-creation-offer__body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .location-creation-offer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .location-creation-offer__field--full {
+    grid-column: span 2;
+  }
+
+  .location-creation-offer__footer {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 }
 
 .location-creation-offer__close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
   color: var(--app-muted) !important;
   border-radius: 0 !important;
 }
@@ -26,8 +158,16 @@
 }
 
 .location-creation-offer__cancel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
   background: var(--app-surface) !important;
-  border-color: var(--app-border) !important;
+  border: 1px solid var(--app-border) !important;
   color: var(--app-muted) !important;
 }
 
@@ -127,11 +267,17 @@
   color: var(--app-text) !important;
 }
 
+::ng-deep .location-creation-offer-dialog.p-dialog,
 ::ng-deep .location-creation-offer-dialog .p-dialog {
+  width: 760px;
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow: hidden;
   border: 1px solid var(--app-border) !important;
   background: var(--app-surface) !important;
   color: var(--app-text) !important;
   box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 ::ng-deep .location-creation-offer-dialog .p-dialog-mask {
@@ -156,7 +302,13 @@
   color: #fff !important;
 }
 
+::ng-deep .location-creation-offer .p-select {
+  width: 100%;
+}
+
 .location-creation-offer__body {
+  padding: 0 1.5rem 1.5rem;
+  overflow-y: auto;
   scrollbar-color: var(--app-scrollbar-thumb) transparent;
   scrollbar-width: thin;
 }

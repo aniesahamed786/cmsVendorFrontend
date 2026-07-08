@@ -1,56 +1,47 @@
-<div
-  class="rounded-none border border-gray-100 p-5 bg-white flex items-start justify-between gap-4 transition md:flex-row md:items-start md:gap-5"
-  [ngClass]="bgColor()"
-  (click)="tileClick.emit()"
->
-  <div class="flex flex-col min-w-0">
+<div class="offer-tile" (click)="tileClick.emit()">
+  <div class="offer-tile__main">
     <div
-      class="rounded-none flex items-center justify-center shrink-0"
-      [ngClass]="iconContainerSizeClass()"
-      [class.bg-gray-100]="!iconContainerBg()"
+      class="offer-tile__icon-box"
+      [class.offer-tile__icon-box--default-bg]="!iconContainerBg()"
       [style.background]="iconContainerBg() || null"
     >
       @if (isSvgIcon(icon())) {
       <span
-        class="inline-block bg-current"
-        [ngClass]="iconContainerSizeClass()"
-        [style.color]="iconColor() || '#64748b'"
+        class="offer-tile__svg-icon"
+        [style.color]="iconColor() || null"
         [style.webkitMaskImage]="'url(' + resolveIconUrl(icon()) + ')'"
         [style.maskImage]="'url(' + resolveIconUrl(icon()) + ')'"
-        [style.webkitMaskRepeat]="'no-repeat'"
-        [style.maskRepeat]="'no-repeat'"
-        [style.webkitMaskSize]="'20px'"
-        [style.maskSize]="'20px'"
-        [style.webkitMaskPosition]="'center'"
-        [style.maskPosition]="'center'"
       ></span>
       } @else {
       <i
-        [class]="icon() + ' ' + iconSizeClass()"
-        [style.color]="iconColor() || '#64748b'"
+        [class]="icon()"
+        class="offer-tile__pi-icon"
+        [style.color]="iconColor() || null"
       ></i>
       }
     </div>
-    <h2 class="text-4xl font-bold text-gray-900 mt-4 truncate">
+    <h2 class="offer-tile__value">
       {{ value() }}
     </h2>
-    <p class="text-gray-900 text-sm font-semibold mt-1">{{ title() }}</p>
-    <p class="text-gray-400 text-xs mt-1 truncate">
+    <p class="offer-tile__title">{{ title() }}</p>
+    <p class="offer-tile__subtitle">
       {{ subtitle() }}
     </p>
   </div>
 
   @if (badgeLabel()) {
-  <span
-    class="px-2.5 py-1 rounded-none text-xs font-medium shrink-0 text-center whitespace-nowrap leading-tight bg-[rgba(240,244,252,1)] text-[rgba(0,51,160,1)]"
-    >{{ badgeLabel() }}</span
-  >
+  <span class="offer-tile__badge">{{ badgeLabel() }}</span>
   } @else if (trendLabel()) {
   <span
-    class="flex items-center gap-0.5 px-2 py-1 rounded-none text-xs font-medium shrink-0"
-    [ngClass]="trendUp() ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'"
+    class="offer-tile__trend"
+    [class.offer-tile__trend--up]="trendUp()"
+    [class.offer-tile__trend--down]="!trendUp()"
   >
-    <i [class]="'pi text-[10px] ' + (trendUp() ? 'pi-arrow-up' : 'pi-arrow-down')"></i>
+    <i
+      class="pi offer-tile__trend-icon"
+      [class.pi-arrow-up]="trendUp()"
+      [class.pi-arrow-down]="!trendUp()"
+    ></i>
     {{ trendLabel() }}
   </span>
   }

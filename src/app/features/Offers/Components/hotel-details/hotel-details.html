@@ -1,27 +1,27 @@
-<div class="hotel-details bg-white p-7">
-  <div class="mb-6 flex items-center gap-4">
-    <div class="hd-chip flex h-10 w-10 items-center justify-center">
-      <i class="pi pi-building hd-accent text-lg"></i>
+<div class="hotel-details">
+  <div class="hotel-details__header">
+    <div class="hotel-details__header-chip">
+      <i class="pi pi-building hotel-details__header-icon"></i>
     </div>
-    <h3 class="hd-accent text-xl font-semibold">Hotel Details</h3>
+    <h3 class="hotel-details__title">Hotel Details</h3>
   </div>
 
-  <div class="space-y-6">
+  <div class="hotel-details__sections">
     <!-- Room Details -->
     <div>
-      <span class="text-sm font-medium block mb-3 hd-muted">Room Details</span>
-      <div class="space-y-3">
+      <span class="hotel-details__section-label">Room Details</span>
+      <div class="hotel-details__rooms">
         @for (room of getRoomDetails(); track room.roomName || $index) {
-        <div class="hd-surface border px-5 py-4">
-          <p class="text-base font-semibold hd-text">{{ room.roomName || 'Room' }}</p>
-          <div class="mt-2 space-y-1">
+        <div class="hotel-details__room-card">
+          <p class="hotel-details__room-name">{{ room.roomName || 'Room' }}</p>
+          <div class="hotel-details__rates">
             @for (rate of room.rates || []; track rate.season || $index) {
-            <div class="flex items-center justify-between gap-4 text-sm hd-muted">
+            <div class="hotel-details__rate-row">
               <span>{{ rate.season }}</span>
-              <span class="flex items-center gap-1 hd-text font-medium">
+              <span class="hotel-details__rate-value">
                 {{ rate.value }}
                 @if (isSAR(getCurrency())) {
-                <span class="hd-riyal inline-block w-3.5 h-3.5"
+                <span class="hd-riyal"
                   [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
                   [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"></span>
                 } @else { {{ getCurrency() }} }
@@ -31,7 +31,7 @@
           </div>
         </div>
         } @empty {
-        <p class="text-sm hd-muted">No room details available.</p>
+        <p class="hotel-details__empty">No room details available.</p>
         }
       </div>
     </div>
@@ -39,12 +39,12 @@
     <!-- Amenities -->
     @if (getAmenities().length > 0) {
     <div>
-      <span class="text-sm font-medium block mb-3 hd-muted">Hotel Amenities</span>
-      <div class="flex flex-wrap gap-2">
+      <span class="hotel-details__section-label">Hotel Amenities</span>
+      <div class="hotel-details__amenities">
         @for (amenity of getAmenities(); track amenity) {
-        <div class="hd-surface border flex items-center gap-2 px-3 py-2">
-          <i class="pi pi-sparkles text-xs hd-muted"></i>
-          <span class="text-sm font-medium hd-text">{{ amenity }}</span>
+        <div class="hotel-details__amenity">
+          <i class="pi pi-sparkles hotel-details__amenity-icon"></i>
+          <span class="hotel-details__amenity-label">{{ amenity }}</span>
         </div>
         }
       </div>
@@ -54,8 +54,8 @@
     <!-- Tax -->
     @if (getTaxValue()) {
     <div>
-      <span class="text-sm font-medium block mb-2 hd-muted">Tax Value</span>
-      <p class="text-base hd-text">{{ getTaxValue() }}</p>
+      <span class="hotel-details__section-label hotel-details__section-label--tight">Tax Value</span>
+      <p class="hotel-details__tax">{{ getTaxValue() }}</p>
     </div>
     }
   </div>

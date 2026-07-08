@@ -1,7 +1,2 @@
-<app-offer-form
-  [actionType]="'create'"
-  [buttonName]="'Create Offer'"
-  [backNavRouteLink]="'/offers'"
-  (submitOfferFormEvent)="save($event)"
-  (saveDraftEvent)="saveDraft($event)"
-></app-offer-form>
+<app-offer-form [actionType]="'create'" [buttonName]="'Add Offer'" [backNavRouteLink]="'/offers'"
+  (submitOfferFormEvent)="save($event)" (saveDraftEvent)="saveDraft($event)"></app-offer-form>

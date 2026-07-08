@@ -1,13 +1,11 @@
-<main class="w-full h-screen overflow-hidden app-shell-bg">
-  <div
-    class="grid h-full w-full gap-0 grid-cols-1 md:grid-cols-[240px_minmax(0,1fr)] lg:grid-cols-[280px_minmax(0,1fr)]"
-  >
+<main class="app-shell app-shell-bg">
+  <div class="app-shell__grid">
     <app-sidenav
-      class="sidenav-desktop h-full"
+      class="sidenav-desktop app-shell__sidenav"
       (sendNavBarHeader)="handledata($event)"
     ></app-sidenav>
 
-    <div class="w-full min-w-0 min-h-0 h-full flex flex-col app-shell-bg">
+    <div class="app-shell__content app-shell-bg">
       <div class="mobile-topbar">
         <button
           pButton
@@ -23,13 +21,11 @@
       </div>
 
       <app-navbar
-        class="hidden md:block shrink-0"
+        class="app-shell__navbar"
         [headerData]="receivedHeaderData()"
       ></app-navbar>
 
-      <div
-        class="main-layout flex-1 min-h-0 overflow-y-auto px-4 py-4 mt-4 md:mt-6 md:px-6 md:py-0 md:pb-6"
-      >
+      <div class="main-layout app-shell__outlet">
         <router-outlet />
       </div>
     </div>
@@ -42,7 +38,7 @@
   [blockScroll]="true"
   [dismissible]="true"
   position="left"
-  styleClass="w-[86vw] max-w-[320px]"
+  styleClass="mobile-sidebar-drawer"
   (visibleChange)="mobileSidebarOpen.set($event)"
 >
   <app-sidenav (sendNavBarHeader)="handleMobileNav($event)"></app-sidenav>

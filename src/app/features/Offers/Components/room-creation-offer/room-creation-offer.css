@@ -1,0 +1,368 @@
+.room-creation-offer__container {
+  background: var(--app-surface);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.room-creation-offer__header {
+  padding: 1.5rem 1.5rem 0.5rem;
+  background: var(--app-surface);
+}
+
+.room-creation-offer__header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.room-creation-offer__title {
+  margin: 0.25rem 0 0;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.room-creation-offer__subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  line-height: 1.75rem;
+  color: var(--app-muted);
+}
+
+.room-creation-offer__close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+  color: var(--app-muted);
+}
+
+.room-creation-offer__close-button:hover {
+  color: var(--app-text);
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+}
+
+.room-creation-offer__body {
+  padding: 0 1.5rem 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  scrollbar-color: var(--app-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+.room-creation-offer__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.room-creation-offer__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.room-creation-offer__body::-webkit-scrollbar-thumb {
+  background: var(--app-scrollbar-thumb);
+}
+
+.room-creation-offer__body::-webkit-scrollbar-thumb:hover {
+  background: var(--app-scrollbar-thumb-hover);
+}
+
+.room-creation-offer__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.room-creation-offer__section-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.room-creation-offer__section-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+  font-size: 20px;
+}
+
+.room-creation-offer__section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--app-text);
+}
+
+.room-creation-offer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.room-creation-offer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.room-creation-offer__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--app-text);
+}
+
+.room-creation-offer__required {
+  color: #dc2626; /* sanctioned validation red */
+}
+
+.room-creation-offer__error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin: 0;
+}
+
+.room-creation-offer__input {
+  width: 100%;
+  padding-left: 1rem;
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border: 1px solid var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+.room-creation-offer__input--rtl {
+  padding-left: 0;
+  padding-right: 1rem;
+  text-align: right;
+}
+
+.room-creation-offer__input--on-panel {
+  background: var(--app-surface) !important;
+}
+
+.room-creation-offer__input::placeholder {
+  color: var(--app-muted) !important;
+  opacity: 1;
+}
+
+.room-creation-offer__input:focus,
+.room-creation-offer__input:focus-visible {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.room-creation-offer__rate-panel {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  border: 1px solid var(--app-border);
+  padding: 1.25rem;
+}
+
+.room-creation-offer__rate-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.room-creation-offer__link-button {
+  border: 0;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--app-primary);
+  transition: color 150ms ease;
+  cursor: pointer;
+}
+
+.room-creation-offer__link-button:hover {
+  color: var(--app-primary-700);
+}
+
+.room-creation-offer__link-button--muted {
+  font-size: 0.875rem;
+  color: var(--app-muted);
+}
+
+.room-creation-offer__link-button--muted:hover {
+  color: var(--app-text);
+}
+
+.room-creation-offer__rate-list {
+  border: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+}
+
+.room-creation-offer__rate-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.room-creation-offer__rate-row--divided {
+  border-top: 1px solid var(--app-border);
+}
+
+.room-creation-offer__rate-name {
+  font-weight: 600;
+  color: var(--app-text);
+  margin: 0;
+}
+
+.room-creation-offer__rate-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+.room-creation-offer__row-action {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--app-primary);
+  cursor: pointer;
+}
+
+.room-creation-offer__row-action--danger {
+  color: #dc2626;
+}
+
+.room-creation-offer__rate-edit {
+  border-top: 1px solid var(--app-border);
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  padding: 1.25rem;
+}
+
+.room-creation-offer__footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.room-creation-offer__cancel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--app-border);
+  color: var(--app-muted);
+  background: var(--app-surface);
+  transition: color 150ms ease, background-color 150ms ease;
+  cursor: pointer;
+}
+
+.room-creation-offer__cancel-button:hover {
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+  color: var(--app-text);
+}
+
+@media (min-width: 768px) {
+  .room-creation-offer__header {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .room-creation-offer__body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .room-creation-offer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .room-creation-offer__field--full {
+    grid-column: span 2;
+  }
+
+  .room-creation-offer__rate-panel,
+  .room-creation-offer__rate-edit {
+    padding: 1.5rem;
+  }
+
+  .room-creation-offer__footer {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+/* PrimeNG-wrapped controls */
+::ng-deep .room-creation-offer .p-inputtext {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border: 1px solid var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .room-creation-offer .room-creation-offer__input--on-panel.p-inputtext {
+  background: var(--app-surface) !important;
+}
+
+::ng-deep .room-creation-offer .p-inputtext:focus {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Dialog shell */
+::ng-deep .room-creation-offer-dialog.p-dialog {
+  width: 760px;
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid var(--app-border) !important;
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+::ng-deep .room-creation-offer-dialog .p-dialog-content {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  padding: 0 !important;
+}
+
+::ng-deep .p-dialog-mask:has(.room-creation-offer) {
+  backdrop-filter: blur(6px);
+}
+
+::ng-deep .room-creation-offer .room-creation-offer__submit-button.p-button {
+  background: var(--app-primary) !important;
+  border: 1px solid var(--app-primary) !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .room-creation-offer .room-creation-offer__submit-button.p-button:not(:disabled):hover {
+  background: var(--app-primary-700) !important;
+  border-color: var(--app-primary-700) !important;
+}
+
+::ng-deep .room-creation-offer .room-creation-offer__submit-button .p-button-icon,
+::ng-deep .room-creation-offer .room-creation-offer__submit-button .p-button-label {
+  color: #fff !important;
+}

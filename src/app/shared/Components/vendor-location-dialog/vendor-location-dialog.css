@@ -1,21 +1,110 @@
-.vendor-location-dialog__title {
-  color: var(--app-text) !important;
+.vendor-location-dialog__container {
+  background: var(--app-surface);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.vendor-location-dialog__header,
-.vendor-location-dialog__footer {
+.vendor-location-dialog__header {
+  padding: 1.5rem 1.5rem 0.5rem;
   background: var(--app-surface) !important;
+}
+
+.vendor-location-dialog__header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.vendor-location-dialog__title {
+  color: var(--app-text) !important;
+  margin: 0.25rem 0 0;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 700;
 }
 
 .vendor-location-dialog__subtitle {
   color: var(--app-muted) !important;
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  line-height: 1.75rem;
 }
 
 .vendor-location-dialog__section-title {
   color: var(--app-text) !important;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.vendor-location-dialog__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.vendor-location-dialog__section-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vendor-location-dialog__section-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+  font-size: 20px;
+}
+
+.vendor-location-dialog__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.vendor-location-dialog__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vendor-location-dialog__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.vendor-location-dialog__required {
+  color: #dc2626; /* sanctioned validation red */
+}
+
+.vendor-location-dialog__input {
+  width: 100%;
+  padding-left: 1rem;
+}
+
+.vendor-location-dialog__input--rtl {
+  padding-left: 0;
+  padding-right: 1rem;
+  text-align: right;
 }
 
 .vendor-location-dialog__close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
   color: var(--app-muted) !important;
   border-radius: 0 !important;
 }
@@ -25,9 +114,25 @@
   background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
 }
 
-.vendor-location-dialog__cancel-button {
+.vendor-location-dialog__footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+  margin-top: 2rem;
   background: var(--app-surface) !important;
-  border-color: var(--app-border) !important;
+}
+
+.vendor-location-dialog__cancel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--app-border) !important;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+  background: var(--app-surface) !important;
   color: var(--app-muted) !important;
 }
 
@@ -37,35 +142,33 @@
   color: var(--app-text) !important;
 }
 
+@media (min-width: 768px) {
+  .vendor-location-dialog__header {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .vendor-location-dialog__body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .vendor-location-dialog__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vendor-location-dialog__field--full {
+    grid-column: span 2;
+  }
+
+  .vendor-location-dialog__footer {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
 .vendor-location-dialog label {
   color: var(--app-text) !important;
-}
-
-.vendor-location-dialog [class*="bg-white"] {
-  background: var(--app-surface) !important;
-}
-
-.vendor-location-dialog [class*="bg-gray-50"] {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-}
-
-.vendor-location-dialog [class*="border-gray-100"],
-.vendor-location-dialog [class*="border-gray-200"],
-.vendor-location-dialog [class*="border-slate-200"] {
-  border-color: var(--app-border) !important;
-}
-
-.vendor-location-dialog [class*="text-gray-700"] {
-  color: var(--app-text) !important;
-}
-
-.vendor-location-dialog .text-\[\#0033A0\],
-.vendor-location-dialog [class*="text-[#0033A0]"] {
-  color: var(--app-primary) !important;
-}
-
-.vendor-location-dialog [class*="bg-[rgba(0,51,160,0.08)]"] {
-  background: var(--app-primary-soft) !important;
 }
 
 .vendor-location-dialog input,
@@ -102,6 +205,10 @@
   box-shadow: none !important;
 }
 
+::ng-deep .vendor-location-dialog .p-select {
+  width: 100%;
+}
+
 ::ng-deep .vendor-location-dialog .p-select-label.p-placeholder,
 ::ng-deep .vendor-location-dialog .p-inputtext::placeholder,
 ::ng-deep .vendor-location-dialog .p-inputtextarea::placeholder {
@@ -129,10 +236,15 @@
 }
 
 ::ng-deep .vendor-location-dialog.p-dialog {
+  width: 760px;
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow: hidden;
   border: 1px solid var(--app-border) !important;
   background: var(--app-surface) !important;
   color: var(--app-text) !important;
   box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 ::ng-deep .p-dialog-mask:has(.vendor-location-dialog) {
@@ -158,6 +270,8 @@
 }
 
 .vendor-location-dialog__body {
+  padding: 0 1.5rem 1.5rem;
+  overflow-y: auto;
   scrollbar-color: var(--app-scrollbar-thumb) transparent;
   scrollbar-width: thin;
 }

@@ -1,0 +1,51 @@
+.inprogress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 0 1rem;
+}
+
+.inprogress__card {
+  max-width: 28rem;
+  width: 100%;
+  text-align: center;
+  border: 1px solid var(--app-border);
+}
+
+.inprogress__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0;
+}
+
+.inprogress__icon-circle {
+  border-radius: 9999px; /* circular icon badge — sanctioned exception */
+  background: var(--app-primary-soft);
+  padding: 1rem;
+}
+
+.inprogress__icon {
+  font-size: 2.25rem;
+  color: var(--app-primary);
+}
+
+.inprogress__text > * + * {
+  margin-top: 0.25rem;
+}
+
+.inprogress__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--app-text);
+  margin: 0;
+}
+
+.inprogress__subtitle {
+  font-size: 0.875rem;
+  color: var(--app-muted);
+  margin: 0;
+}

@@ -1,8 +1,8 @@
-<div class="flex flex-col gap-1">
-  <label class="text-sm font-medium">
+<div class="field-dropdown">
+  <label class="field-dropdown__label">
     {{ label }}
     @if (required) {
-      <span class="text-red-500">*</span>
+      <span class="field-dropdown__required">*</span>
     }
   </label>
   @if (multiple) {
@@ -13,8 +13,8 @@
       optionValue="id"
       [placeholder]="placeholder"
       display="chip"
-      class="w-full bg-gray-50 rounded-none"
-      styleClass="offer-form__field offer-form__multiselect rounded-none"
+      class="field-dropdown__control"
+      styleClass="offer-form__field offer-form__multiselect"
       panelStyleClass="offer-form__overlay-panel offer-form__multiselect-panel"
       appendTo="body">
     </p-multiSelect>
@@ -25,13 +25,13 @@
       optionLabel="name"
       optionValue="id"
       [placeholder]="placeholder"
-      class="w-full bg-gray-50 rounded-none"
-      styleClass="offer-form__field offer-form__select rounded-none"
+      class="field-dropdown__control"
+      styleClass="offer-form__field offer-form__select"
       panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
       appendTo="body">
     </p-select>
   }
   @if (required && control.touched && control.hasError('required')) {
-    <p class="text-xs text-red-500 mt-1">{{ label }} is required.</p>
+    <p class="field-dropdown__error">{{ label }} is required.</p>
   }
 </div>

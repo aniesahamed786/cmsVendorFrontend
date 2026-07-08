@@ -389,12 +389,14 @@
 }
 
 .vendor-profile-page__preview-column {
+  display: none;
   width: 100%;
   flex-shrink: 0;
 }
 
 @media (min-width: 1024px) {
   .vendor-profile-page__preview-column {
+    display: block;
     width: auto;
     position: sticky;
     top: 6rem;

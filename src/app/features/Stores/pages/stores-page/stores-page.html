@@ -6,7 +6,7 @@
       <h1 class="stores-page__title">Branches</h1>
       <p class="stores-page__subtitle">Manage and monitor all of your branches across the enterprise ecosystem.</p>
     </div>
-    <app-button variant="primary" icon="pi pi-plus">Create Branch</app-button>
+    <app-button variant="primary" icon="pi pi-plus">Add Branch</app-button>
   </div>
 
   <!-- KPI Cards -->
@@ -128,24 +128,23 @@
       <div class="app-filters-row">
         <div class="app-filter-group">
           <label class="app-filter-label">Status</label>
-          <p-select [options]="statusOptions" [ngModel]="selectedStatus()"
-            (ngModelChange)="selectedStatus.set($event)" optionLabel="label" optionValue="value" placeholder="Status"
-            styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
+          <p-select [options]="statusOptions" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)"
+            optionLabel="label" optionValue="value" placeholder="Status" styleClass="stores-page__filter-select"
+            panelStyleClass="stores-page__filter-panel"></p-select>
         </div>
 
         <div class="app-filter-group">
           <label class="app-filter-label">Region</label>
-          <p-select [options]="regionOptions" [ngModel]="selectedRegion()"
-            (ngModelChange)="selectedRegion.set($event)" optionLabel="label" optionValue="value" placeholder="Region"
-            styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
+          <p-select [options]="regionOptions" [ngModel]="selectedRegion()" (ngModelChange)="selectedRegion.set($event)"
+            optionLabel="label" optionValue="value" placeholder="Region" styleClass="stores-page__filter-select"
+            panelStyleClass="stores-page__filter-panel"></p-select>
         </div>
 
         <div class="app-filter-group">
           <label class="app-filter-label">Manager</label>
           <p-select [options]="managerOptions" [ngModel]="selectedManager()"
-            (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value"
-            placeholder="Manager" styleClass="stores-page__filter-select"
-            panelStyleClass="stores-page__filter-panel"></p-select>
+            (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value" placeholder="Manager"
+            styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
         </div>
       </div>
     </div>

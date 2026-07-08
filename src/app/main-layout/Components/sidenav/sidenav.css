@@ -1,3 +1,98 @@
+.sidenav {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem 0;
+}
+
+.sidenav__brand-title {
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: var(--app-primary);
+  margin: 0;
+}
+
+.sidenav__brand-light {
+  font-weight: 400;
+}
+
+.sidenav__brand-divider {
+  color: var(--app-primary);
+  margin: 0 0.25rem;
+}
+
+.sidenav__brand-strong {
+  font-weight: 600;
+}
+
+.sidenav__nav {
+  margin-top: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .sidenav__nav {
+    margin-top: 2rem;
+  }
+}
+
+.sidenav__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.sidenav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+  width: 100%;
+}
+
+.sidenav-item__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+}
+
+.sidenav-item__label {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .sidenav-item__label {
+    font-size: 1rem;
+  }
+}
+
+.left-bar {
+  position: absolute;
+  left: -30px;
+  top: 0;
+  height: 100%;
+  width: 0.25rem;
+  border-radius: 0 0.25rem 0.25rem 0;
+  opacity: 0;
+}
+
 .active-link {
   background: linear-gradient(
     93.08deg,
@@ -70,6 +165,12 @@ li:focus-within .sidenav-icon {
   padding: 0;
 }
 
+p-card.sidenav-card {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
 :host ::ng-deep .sidenav-card.p-card,
 :host ::ng-deep .sidenav-card .p-card {
   height: 100%;
@@ -77,4 +178,5 @@ li:focus-within .sidenav-icon {
   border-radius: 0;
   box-shadow: none;
   overflow: hidden;
+  background: var(--app-surface);
 }

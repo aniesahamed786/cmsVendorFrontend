@@ -1,197 +1,192 @@
 <p-dialog [modal]="true" [dismissableMask]="true" [draggable]="false" [resizable]="false" [closable]="false"
     [showHeader]="false" appendTo="body" [visible]="visible" (visibleChange)="onVisibleChange($event)"
-    styleClass="w-[760px] max-w-[92vw] max-h-[90vh] overflow-hidden shadow-2xl"
+    styleClass="room-creation-offer-dialog"
     [contentStyle]="{ padding: '0', overflow: 'hidden' }">
-    <div class="offer-form bg-white rounded-2xl overflow-hidden max-h-[90vh] flex flex-col">
-        <div class="px-6 md:px-8 pt-6 pb-2">
-            <div class="flex items-start justify-between gap-4 mb-4">
+    <div class="room-creation-offer offer-form room-creation-offer__container">
+        <div class="room-creation-offer__header">
+            <div class="room-creation-offer__header-row">
                 <div>
-                    <h2 class="mt-1 text-[2rem] md:text-[2.25rem] leading-none font-bold text-[#1F2937]">
+                    <h2 class="room-creation-offer__title">
                         {{ isEditing ? 'Edit Room' : 'Add Room' }}
                     </h2>
-                    <p class="mt-2 text-base md:text-[1.05rem] leading-7 text-[#64748B]">
+                    <p class="room-creation-offer__subtitle">
                         Define specific room details and seasonal pricing
                     </p>
                 </div>
 
                 <button type="button"
-                    class="inline-flex items-center justify-center p-2 text-[#64748B] bg-transparent hover:text-[#45556C] transition-colors cursor-pointer"
+                    class="room-creation-offer__close-button"
                     (click)="close()">
                     <i class="pi pi-times"></i>
                 </button>
             </div>
         </div>
 
-        <form class="px-6 md:px-8 pb-6 overflow-y-auto" [formGroup]="roomForm" (ngSubmit)="submitRoom()">
-            <div class="space-y-8">
-                <section class="space-y-5">
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-10 h-10 flex items-center justify-center rounded-lg bg-[rgba(0,51,160,0.08)] text-[#0033A0]">
-                            <i class="pi pi-home text-[20px]"></i>
-                        </div>
-                        <h3 class="text-[1.75rem] font-semibold text-[#1F2937]">Room Details</h3>
+        <form class="room-creation-offer__body" [formGroup]="roomForm" (ngSubmit)="submitRoom()">
+            <section class="room-creation-offer__section">
+                <div class="room-creation-offer__section-head">
+                    <div class="room-creation-offer__section-icon">
+                        <i class="pi pi-home"></i>
+                    </div>
+                    <h3 class="room-creation-offer__section-title">Room Details</h3>
+                </div>
+
+                <div class="room-creation-offer__grid">
+                    <div class="room-creation-offer__field">
+                        <label class="room-creation-offer__label">
+                            Room Name
+                            <span class="room-creation-offer__required">*</span>
+                        </label>
+                        <input pInputText type="text" placeholder="e.g. Deluxe Ocean View"
+                            class="room-creation-offer__input"
+                            formControlName="roomName" />
+                        @if (roomForm.get('roomName')?.invalid && roomForm.get('roomName')?.touched) {
+                        <p class="room-creation-offer__error">Room name is required.</p>
+                        }
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-3">
-                            <label class="text-sm font-medium text-gray-700">
-                                Room Name
-                                <span class="text-red-500">*</span>
+                    <div class="room-creation-offer__field">
+                        <label class="room-creation-offer__label">
+                            Room Name (Arabic)
+                            <span class="room-creation-offer__required">*</span>
+                        </label>
+                        <input pInputText type="text" placeholder="e.g. Deluxe Ocean View"
+                            class="room-creation-offer__input room-creation-offer__input--rtl" dir="rtl"
+                            formControlName="roomNameAr" />
+                        @if (roomForm.get('roomNameAr')?.invalid && roomForm.get('roomNameAr')?.touched) {
+                        <p class="room-creation-offer__error">Arabic room name is required.</p>
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <section class="room-creation-offer__section">
+                <div class="room-creation-offer__section-head">
+                    <div class="room-creation-offer__section-icon">
+                        <i class="pi pi-money-bill"></i>
+                    </div>
+                    <h3 class="room-creation-offer__section-title">Room Rates</h3>
+                </div>
+
+                <div class="room-creation-offer__rate-panel">
+                    <div class="room-creation-offer__grid" [formGroup]="rateForm">
+                        <div class="room-creation-offer__field">
+                            <label class="room-creation-offer__label">Rate Season (English)</label>
+                            <input pInputText type="text" placeholder="e.g. High Season"
+                                class="room-creation-offer__input room-creation-offer__input--on-panel"
+                                formControlName="season" />
+                        </div>
+
+                        <div class="room-creation-offer__field">
+                            <label class="room-creation-offer__label">Rate Season (Arabic)</label>
+                            <input pInputText type="text" placeholder="مثال: الموسم المرتفع"
+                                class="room-creation-offer__input room-creation-offer__input--rtl room-creation-offer__input--on-panel"
+                                dir="rtl" formControlName="seasonAr" />
+                        </div>
+
+                        <div class="room-creation-offer__field room-creation-offer__field--full">
+                            <label class="room-creation-offer__label">
+                                Rate Value
                             </label>
-                            <input pInputText type="text" placeholder="e.g. Deluxe Ocean View"
-                                class="w-full pl-4 bg-gray-50 rounded-none border border-gray-100"
-                                formControlName="roomName" />
-                            @if (roomForm.get('roomName')?.invalid && roomForm.get('roomName')?.touched) {
-                            <p class="text-xs text-red-500">Room name is required.</p>
+                            <input pInputText type="number" placeholder="e.g. 150.00"
+                                class="room-creation-offer__input room-creation-offer__input--on-panel"
+                                formControlName="value" step="0.01" />
+                            @if (rateForm.get('value')?.hasError('invalidRateValue') &&
+                            rateForm.get('value')?.touched) {
+                            <p class="room-creation-offer__error">Enter a valid number with up to 2 decimals.</p>
                             }
                         </div>
-
-                        <div class="space-y-3">
-                            <label class="text-sm font-medium text-gray-700">
-                                Room Name (Arabic)
-                                <span class="text-red-500">*</span>
-                            </label>
-                            <input pInputText type="text" placeholder="e.g. Deluxe Ocean View"
-                                class="w-full pr-4 text-right bg-gray-50 rounded-none border border-gray-100" dir="rtl"
-                                formControlName="roomNameAr" />
-                            @if (roomForm.get('roomNameAr')?.invalid && roomForm.get('roomNameAr')?.touched) {
-                            <p class="text-xs text-red-500">Arabic room name is required.</p>
-                            }
-                        </div>
-                    </div>
-                </section>
-
-                <section class="space-y-5">
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-10 h-10 flex items-center justify-center rounded-lg bg-[rgba(0,51,160,0.08)] text-[#0033A0]">
-                            <i class="pi pi-money-bill text-[20px]"></i>
-                        </div>
-                        <h3 class="text-[1.75rem] font-semibold text-[#1F2937]">Room Rates</h3>
                     </div>
 
-                    <div class="bg-gray-50 border border-[#EEF2F6] p-5 md:p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" [formGroup]="rateForm">
-                            <div class="space-y-3">
-                                <label class="text-sm font-medium text-gray-700">Rate Season (English)</label>
+                    <div class="room-creation-offer__rate-actions">
+                        <button type="button"
+                            class="room-creation-offer__link-button"
+                            (click)="addRoomRate()">
+                            + Add room rate
+                        </button>
+                    </div>
+                </div>
+
+                @if (roomRates().length) {
+                <div class="room-creation-offer__rate-list">
+                    @for (rate of roomRates(); track rate.id; let i = $index) {
+                    <div class="room-creation-offer__rate-row" [class.room-creation-offer__rate-row--divided]="i > 0">
+                        <p class="room-creation-offer__rate-name">
+                            {{ rate.season || ('Rate #' + (i + 1)) }}
+                        </p>
+                        <div class="room-creation-offer__rate-row-actions">
+                            <button type="button" class="room-creation-offer__row-action"
+                                (click)="editRoomRate(i)">
+                                Edit
+                            </button>
+                            <button type="button" class="room-creation-offer__row-action room-creation-offer__row-action--danger"
+                                (click)="removeRoomRate(i)">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    @if (expandedRateIndex() === i) {
+                    <div class="room-creation-offer__rate-edit" [formGroup]="editRateForm">
+                        <div class="room-creation-offer__grid">
+                            <div class="room-creation-offer__field">
+                                <label class="room-creation-offer__label">Rate Season (English)</label>
                                 <input pInputText type="text" placeholder="e.g. High Season"
-                                    class="w-full pl-4 bg-white rounded-none border border-gray-100"
+                                    class="room-creation-offer__input room-creation-offer__input--on-panel"
                                     formControlName="season" />
                             </div>
 
-                            <div class="space-y-3">
-                                <label class="text-sm font-medium text-gray-700">Rate Season (Arabic)</label>
+                            <div class="room-creation-offer__field">
+                                <label class="room-creation-offer__label">Rate Season (Arabic)</label>
                                 <input pInputText type="text" placeholder="مثال: الموسم المرتفع"
-                                    class="w-full pr-4 text-right bg-white rounded-none border border-gray-100"
+                                    class="room-creation-offer__input room-creation-offer__input--rtl room-creation-offer__input--on-panel"
                                     dir="rtl" formControlName="seasonAr" />
                             </div>
 
-                            <div class="space-y-3 md:col-span-2">
-                                <label class="text-sm font-medium text-gray-700">
+                            <div class="room-creation-offer__field room-creation-offer__field--full">
+                                <label class="room-creation-offer__label">
                                     Rate Value
                                 </label>
                                 <input pInputText type="number" placeholder="e.g. 150.00"
-                                    class="w-full pl-4 bg-white rounded-none border border-gray-100"
+                                    class="room-creation-offer__input room-creation-offer__input--on-panel"
                                     formControlName="value" step="0.01" />
-                                @if (rateForm.get('value')?.hasError('invalidRateValue') &&
-                                rateForm.get('value')?.touched) {
-                                <p class="text-xs text-red-500">Enter a valid number with up to 2 decimals.</p>
+                                @if (editRateForm.get('value')?.hasError('invalidRateValue') &&
+                                editRateForm.get('value')?.touched) {
+                                <p class="room-creation-offer__error">Enter a valid number with up to 2 decimals.
+                                </p>
                                 }
                             </div>
                         </div>
 
-                        <div class="mt-4 flex justify-end gap-3">
+                        <div class="room-creation-offer__rate-actions">
                             <button type="button"
-                                class="border-0 bg-transparent text-base font-medium text-[#003CC7] hover:text-[#0537A4] transition-colors cursor-pointer"
-                                (click)="addRoomRate()">
-                                + Add room rate
+                                class="room-creation-offer__link-button room-creation-offer__link-button--muted"
+                                (click)="cancelRateEdit()">
+                                Cancel
+                            </button>
+                            <button type="button"
+                                class="room-creation-offer__link-button"
+                                (click)="saveEditedRoomRate(i)">
+                                Update room rate
                             </button>
                         </div>
                     </div>
-
-                    @if (roomRates().length) {
-                    <div class="border border-[#EEF2F6] bg-gray-50">
-                        @for (rate of roomRates(); track rate.id; let i = $index) {
-                        <div class="flex items-center justify-between gap-4 px-3 py-3 text-sm" [class.border-t]="i > 0"
-                            [class.border-[#EEF2F6]]="i > 0">
-                            <p class="font-semibold text-[#374151]">
-                                {{ rate.season || ('Rate #' + (i + 1)) }}
-                            </p>
-                            <div class="flex items-center gap-4 whitespace-nowrap text-sm">
-                                <button type="button" class="border-0 bg-transparent p-0 text-[#003CC7] cursor-pointer"
-                                    (click)="editRoomRate(i)">
-                                    Edit
-                                </button>
-                                <button type="button" class="border-0 bg-transparent p-0 text-[#DC2626] cursor-pointer"
-                                    (click)="removeRoomRate(i)">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                        @if (expandedRateIndex() === i) {
-                        <div class="border-t border-[#EEF2F6] bg-gray-50 p-5 md:p-6" [formGroup]="editRateForm">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-3">
-                                    <label class="text-sm font-medium text-gray-700">Rate Season (English)</label>
-                                    <input pInputText type="text" placeholder="e.g. High Season"
-                                        class="w-full pl-4 bg-white rounded-none border border-gray-100"
-                                        formControlName="season" />
-                                </div>
-
-                                <div class="space-y-3">
-                                    <label class="text-sm font-medium text-gray-700">Rate Season (Arabic)</label>
-                                    <input pInputText type="text" placeholder="مثال: الموسم المرتفع"
-                                        class="w-full pr-4 text-right bg-white rounded-none border border-gray-100"
-                                        dir="rtl" formControlName="seasonAr" />
-                                </div>
-
-                                <div class="space-y-3 md:col-span-2">
-                                    <label class="text-sm font-medium text-gray-700">
-                                        Rate Value
-                                    </label>
-                                    <input pInputText type="number" placeholder="e.g. 150.00"
-                                        class="w-full pl-4 bg-white rounded-none border border-gray-100"
-                                        formControlName="value" step="0.01" />
-                                    @if (editRateForm.get('value')?.hasError('invalidRateValue') &&
-                                    editRateForm.get('value')?.touched) {
-                                    <p class="text-xs text-red-500">Enter a valid number with up to 2 decimals.
-                                    </p>
-                                    }
-                                </div>
-                            </div>
-
-                            <div class="mt-4 flex justify-end gap-3">
-                                <button type="button"
-                                    class="border-0 bg-transparent text-sm font-medium text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                                    (click)="cancelRateEdit()">
-                                    Cancel
-                                </button>
-                                <button type="button"
-                                    class="border-0 bg-transparent text-base font-medium text-[#003CC7] hover:text-[#0537A4] transition-colors cursor-pointer"
-                                    (click)="saveEditedRoomRate(i)">
-                                    Update room rate
-                                </button>
-                            </div>
-                        </div>
-                        }
-                        }
-                    </div>
                     }
+                    }
+                </div>
+                }
 
-                </section>
-            </div>
+            </section>
 
-            <div class="flex flex-col-reverse md:flex-row md:justify-end gap-3 mt-8">
+            <div class="room-creation-offer__footer">
                 <button type="button"
-                    class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm border border-[#E2E8F0] text-[#64748B] bg-white hover:bg-[#F8FAFC] hover:text-[#45556C] transition-colors cursor-pointer"
+                    class="room-creation-offer__cancel-button"
                     (click)="close()">
                     Cancel
                 </button>
 
                 <button type="submit" pButton [label]="isEditing ? 'Update Room' : 'Add Room'"
                     [icon]="isEditing ? 'pi pi-check' : 'pi pi-plus'"
-                    styleClass="bg-[#0033A0] border-[#0033A0] hover:!bg-[#03297d] hover:!border-[#03297d]"></button>
+                    styleClass="room-creation-offer__submit-button"></button>
             </div>
         </form>
     </div>

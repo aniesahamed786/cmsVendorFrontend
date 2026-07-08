@@ -16,14 +16,11 @@ export class OfferTile {
   value = input<string | number>('');
   subtitle = input<string>('');
   icon = input<string>('pi pi-chart-bar');
-  bgColor = input<string>('bg-white');
   iconColor = input<string>('');
   iconContainerBg = input<string>('');
   trendLabel = input<string>('');
   trendUp = input<boolean>(true);
   badgeLabel = input<string>('');
-  iconSizeClass = input<string>('text-lg');
-  iconContainerSizeClass = input<string>('w-10 h-10');
   tileClick = output<void>();
 
   isSvgIcon(icon: string | null | undefined): boolean {
