@@ -8,7 +8,7 @@ export const MOCK_VENDOR_PROFILE: VendorProfile = {
   contractStatus: 'Active Contract',
   description:
     'Lumee Street is a modern casual dining brand offering fresh, flavorful meals in a vibrant and welcoming atmosphere. We specialize in high-quality retail electronics and technology supply chain solutions across the Kingdom.',
-  tags: ['Retail Store', 'Electronics', 'Technology', 'Supply Chain'],
+  tags: ['Retail Branch', 'Electronics', 'Technology', 'Supply Chain'],
   dateSummaries: [
     { label: 'Registration Date', value: 'March 15, 2025', icon: 'pi pi-calendar' },
     { label: 'Approval Date', value: 'March 18, 2025', icon: 'pi pi-check-circle' },
@@ -18,17 +18,17 @@ export const MOCK_VENDOR_PROFILE: VendorProfile = {
   locations: [
     {
       id: 1,
-      name: 'Riyadh Main Store',
+      name: 'Riyadh Main Branch',
       address: 'King Fahd Road, Al Olaya, Riyadh 12211',
     },
     {
       id: 2,
-      name: 'Jeddah Store',
+      name: 'Jeddah Branch',
       address: 'Prince Sultan Street, Al Rawdah, Jeddah 23432',
     },
     {
       id: 3,
-      name: 'Dammam Store',
+      name: 'Dammam Branch',
       address: 'King Fahd Road, Al Faisaliyah, Dammam 32272',
     },
   ],

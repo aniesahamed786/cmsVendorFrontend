@@ -22,7 +22,7 @@ export const routes: Route[] = [
       {
         path: 'stores',
         loadChildren: () => import('../features/Stores/stores.routes').then((m) => m.routes),
-        data: { title: 'Stores' },
+        data: { title: 'Branches' },
       },
       {
         path: 'messaging-center',

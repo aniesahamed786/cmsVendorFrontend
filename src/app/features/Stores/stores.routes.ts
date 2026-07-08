@@ -1,10 +1,10 @@
 import { Route } from '@angular/router';
-import { Inprogress } from '../../shared/Components/inprogress/inprogress';
+import { StoresPage } from './pages/stores-page/stores-page';
 
 export const routes: Route[] = [
   {
     path: '',
-    component: Inprogress,
-    data: { title: 'Stores' },
+    component: StoresPage,
+    data: { title: 'Branches' },
   },
 ];
