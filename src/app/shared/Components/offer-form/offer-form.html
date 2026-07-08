@@ -1,185 +1,182 @@
 @if (!isLoading() && !initialLoading()) {
-<div class="mb-6">
-  <div class="flex items-center">
+<div class="offer-form__back-bar">
+  <div class="offer-form__row">
     <a [routerLink]="backNavRouteLink()" class="offer-back-btn">
       <i class="pi pi-arrow-left"></i>
       <span>Back to Offers</span>
     </a>
   </div>
 </div>
-<div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-4">
-  <form
-    class="offer-form [&_input]:border [&_input]:border-gray-100 [&_textarea]:border [&_textarea]:border-gray-100 [&_select]:border [&_select]:border-gray-100 [&_.p-inputtext]:border [&_.p-inputtext]:border-gray-100 [&_.p-select]:border [&_.p-select]:border-gray-100 [&_.p-datepicker]:border [&_.p-datepicker]:border-gray-100 [&_.p-multiselect]:border [&_.p-multiselect]:border-gray-100 flex-1 min-w-0"
-    [formGroup]="offerForm" (ngSubmit)="submit()">
-    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
-          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-info.svg')"
+<div class="offer-form__layout">
+  <form class="offer-form" [formGroup]="offerForm" (ngSubmit)="submit()">
+    <div class="offer-form__section">
+      <div class="offer-form__section-head">
+        <div class="offer-form__section-icon">
+          <span class="vendor-form-svg-icon offer-form__section-glyph" [style.webkitMaskImage]="getOfferIconMask('ic-info.svg')"
             [style.maskImage]="getOfferIconMask('ic-info.svg')"></span>
         </div>
-        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        <h2 class="offer-form__section-title">
           Basic Information
         </h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <div class="md:col-span-2">
-          <label class="text-sm font-medium">
+      <div class="offer-form__grid">
+        <div class="offer-form__col-2">
+          <label class="offer-form__label">
             Vendor
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
 
-          <div class="card flex justify-center">
+          <div class="card offer-form__row offer-form__row--center">
             <p-select [options]="vendorOptions()" formControlName="selectedVendor" optionLabel="label"
               optionValue="value" optionDisabled="disabled" [filter]="true" filterBy="label"
               filterPlaceholder="Search vendors by name" [loading]="vendorsLoading()"
               (onFilter)="onVendorSearch($event)" (onShow)="onVendorDropdownShow()" (onHide)="onVendorDropdownHide()"
               panelStyleClass="offer-form-vendor-select-panel" placeholder="Choose a Vendor"
-              class="pl-2 w-full bg-gray-50 !rounded-none">
+              class="offer-form__select">
             </p-select>
           </div>
           @if (hasRequiredError('selectedVendor')) {
-          <p class="text-xs text-red-500 mt-1">Vendor is required.</p>
+          <p class="offer-form__error">Vendor is required.</p>
           } @else {
-          <p class="text-xs text-slate-500 mt-1">Type to search vendors, then scroll to load more matches.</p>
+          <p class="offer-form__hint">Type to search vendors, then scroll to load more matches.</p>
           }
         </div>
 
-        <div class="md:col-span-2">
-          <label class="text-sm font-medium">
+        <div class="offer-form__col-2">
+          <label class="offer-form__label">
             Offer Title (English)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
-          <div class="relative">
+          <div class="offer-form__input-wrap">
             <input pInputText formControlName="titleEn" (focus)="setPreviewLanguage('en')"
-              class="w-full pl-5 bg-gray-50 rounded-none" placeholder="e.g. Summer Collection Launch" />
+              class="offer-form__input offer-form__input--pl5" placeholder="e.g. Summer Collection Launch" />
           </div>
           @if (hasRequiredError('titleEn')) {
-          <p class="text-xs text-red-500 mt-1">Offer title (English) is required.</p>
+          <p class="offer-form__error">Offer title (English) is required.</p>
           }
           @if (hasFieldError('titleEn', 'whitespace')) {
-          <p class="text-xs text-red-500 mt-1">Offer title (English) cannot be empty or only whitespace.</p>
+          <p class="offer-form__error">Offer title (English) cannot be empty or only whitespace.</p>
           }
         </div>
 
-        <div class="md:col-span-2">
-          <label class="text-sm font-medium">
+        <div class="offer-form__col-2">
+          <label class="offer-form__label">
             Offer Title (Arabic)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
-          <div class="relative">
+          <div class="offer-form__input-wrap">
             <input pInputText formControlName="titleAr" (input)="sanitizeArabicInput('titleAr')"
-              (focus)="setPreviewLanguage('ar')" class="w-full text-right pr-4 bg-gray-50 rounded-none"
+              (focus)="setPreviewLanguage('ar')" class="offer-form__input offer-form__input--right offer-form__input--pr4"
               placeholder="مثلاً: إطلاق مجموعة الصيف" />
           </div>
           @if (hasRequiredError('titleAr')) {
-          <p class="text-xs text-red-500 mt-1">Offer title (Arabic) is required.</p>
+          <p class="offer-form__error">Offer title (Arabic) is required.</p>
           }
           @if (hasFieldError('titleAr', 'arabicOnly')) {
-          <p class="text-xs text-red-500 mt-1">اسم العرض يجب أن يكون باللغة العربية فقط.</p>
+          <p class="offer-form__error">اسم العرض يجب أن يكون باللغة العربية فقط.</p>
           }
           @if (hasFieldError('titleAr', 'whitespace')) {
-          <p class="text-xs text-red-500 mt-1">اسم العرض لا يمكن أن يكون فارغاً.</p>
+          <p class="offer-form__error">اسم العرض لا يمكن أن يكون فارغاً.</p>
           }
         </div>
 
-        <div class="flex flex-col gap-2 md:col-span-2">
-          <label class="text-sm font-medium block">
+        <div class="offer-form__field-group offer-form__col-2">
+          <label class="offer-form__label offer-form__label--block">
             Offer Description (English)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
           <textarea pInputTextarea formControlName="descriptionEn" (focus)="setPreviewLanguage('en')" rows="4"
-            class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none shadow-none focus:shadow-none"
+            class="offer-form__textarea"
             placeholder="e.g. Summer Collection Launch Description"></textarea>
           @if (hasRequiredError('descriptionEn')) {
-          <p class="text-xs text-red-500 mt-1">Offer description (English) is required.</p>
+          <p class="offer-form__error">Offer description (English) is required.</p>
           }
           @if (hasFieldError('descriptionEn', 'whitespace')) {
-          <p class="text-xs text-red-500 mt-1">Offer description (English) cannot be empty or only whitespace.</p>
+          <p class="offer-form__error">Offer description (English) cannot be empty or only whitespace.</p>
           }
         </div>
 
-        <div class="flex flex-col gap-2 md:col-span-2">
-          <label class="text-sm font-medium block">
+        <div class="offer-form__field-group offer-form__col-2">
+          <label class="offer-form__label offer-form__label--block">
             Offer Description (Arabic)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
           <textarea pInputTextarea formControlName="descriptionAr" (focus)="setPreviewLanguage('ar')" rows="4"
-            class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none text-right shadow-none focus:shadow-none"
+            class="offer-form__textarea offer-form__textarea--right"
             dir="rtl" placeholder="مثلاً: إطلاق مجموعة الصيف"></textarea>
           @if (hasRequiredError('descriptionAr')) {
-          <p class="text-xs text-red-500 mt-1">Offer description (Arabic) is required.</p>
+          <p class="offer-form__error">Offer description (Arabic) is required.</p>
           }
           @if (hasFieldError('descriptionAr', 'arabicOnly')) {
-          <p class="text-xs text-red-500 mt-1">وصف العرض يجب أن يكون باللغة العربية فقط.</p>
+          <p class="offer-form__error">وصف العرض يجب أن يكون باللغة العربية فقط.</p>
           }
           @if (hasFieldError('descriptionAr', 'whitespace')) {
-          <p class="text-xs text-red-500 mt-1">وصف العرض لا يمكن أن يكون فارغاً.</p>
+          <p class="offer-form__error">وصف العرض لا يمكن أن يكون فارغاً.</p>
           }
         </div>
 
-        <div class="flex-auto">
-          <label for="discountStartDate" class="text-sm font-medium">
+        <div class="offer-form__flex-auto">
+          <label for="discountStartDate" class="offer-form__label">
             Start Date
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
           <p-datepicker formControlName="startdate" iconDisplay="input" [minDate]="minDate" showIcon="true"
-            inputId="discountStartDate" styleClass="offer-form__datepicker w-full bg-gray-50 !rounded-none"
+            inputId="discountStartDate" styleClass="offer-form__datepicker offer-form__input"
             panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" placeholder="mm/dd/yyyy"
             variant="filled" />
           @if (hasRequiredError('startdate')) {
-          <p class="text-xs text-red-500 mt-1">Start date is required.</p>
+          <p class="offer-form__error">Start date is required.</p>
           }
         </div>
 
-        <div class="flex-auto">
-          <label for="discountExpireDate" class="text-sm font-medium">
+        <div class="offer-form__flex-auto">
+          <label for="discountExpireDate" class="offer-form__label">
             Expiry Date
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
           <p-datepicker formControlName="expiry" iconDisplay="input" showIcon="true" inputId="discountExpireDate"
-            [minDate]="minExpiryDate()" styleClass="offer-form__datepicker w-full bg-gray-50 !rounded-none"
+            [minDate]="minExpiryDate()" styleClass="offer-form__datepicker offer-form__input"
             panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" placeholder="mm/dd/yyyy"
             variant="filled" />
           @if (hasRequiredError('expiry')) {
-          <p class="text-xs text-red-500 mt-1">Expiry date is required.</p>
+          <p class="offer-form__error">Expiry date is required.</p>
           } @else if (hasFieldError('expiry', 'invalidDateRange')) {
-          <p class="text-xs text-red-500 mt-1">Expiry date must be at least one day after the start date.</p>
+          <p class="offer-form__error">Expiry date must be at least one day after the start date.</p>
           }
         </div>
 
-        <div class="md:col-span-2">
+        <div class="offer-form__col-2">
           <app-category-dropdown [label]="'Category'" [placeholder]="'Select categories'" [multiple]="true"
             [required]="true" [control]="category">
           </app-category-dropdown>
         </div>
 
-        <div class="md:col-span-2">
+        <div class="offer-form__col-2">
           <app-target-audience-dropdown [label]="'Target Audience'" [placeholder]="'Select target audience'"
             [required]="false" [control]="targetAudience" />
         </div>
 
-        <div class="md:col-span-2">
-          <label class="text-sm font-medium">Tags</label>
-          <div class="flex items-center gap-0">
-            <div class="relative flex-1">
+        <div class="offer-form__col-2">
+          <label class="offer-form__label">Tags</label>
+          <div class="offer-form__row">
+            <div class="offer-form__input-wrap offer-form__flex-1">
               <p-autoComplete formControlName="tagInput" [suggestions]="suggestedTags()"
                 (completeMethod)="searchTags($event)" placeholder="Examples of tags: lifestyle, fast food, man, woman"
-                styleClass="w-full offer-form__field offer-form__autocomplete"
+                styleClass="offer-form__field offer-form__autocomplete offer-form__input"
                 panelStyleClass="offer-form__overlay-panel offer-form__autocomplete-panel"
-                inputStyleClass="pl-5 w-full bg-gray-50 rounded-none border-gray-100" (onBlur)="onTagInputBlur()"
+                inputStyleClass="offer-form__input offer-form__input--pl5" (onBlur)="onTagInputBlur()"
                 (onSelect)="addTag()" [forceSelection]="true">
               </p-autoComplete>
             </div>
           </div>
           @if (shouldShowTagDuplicateError()) {
-          <p class="text-xs text-red-500 mt-1">Tag already exists</p>
+          <p class="offer-form__error">Tag already exists</p>
           }
 
           @if (topTags().length > 0) {
-          <div class="mt-2 flex items-center gap-2">
+          <div class="offer-form__mt-2 offer-form__row offer-form__row--gap2">
             <span class="offer-form__frequent-label">Frequent:</span>
-            <div class="flex flex-wrap gap-1.5">
+            <div class="offer-form__tag-wrap">
               @for (tag of topTags(); track tag) {
               <button type="button" (click)="addExistingTag(tag)" class="offer-form__frequent-tag">
                 + {{ tag }}
@@ -189,7 +186,7 @@
           </div>
           }
 
-          <div formArrayName="selectedTags" class="pt-3 flex flex-wrap gap-2">
+          <div formArrayName="selectedTags" class="offer-form__tag-list">
             @for(item of selectedTags.controls; track item; let i = $index) {
             <p-chip [label]="item.value" [removable]="true" styleClass="offer-form__tag-chip"
               (onRemove)="removeTag(i)" />
@@ -199,112 +196,110 @@
       </div>
     </div>
     @if (showHotelDetails()) {
-    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
-          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-offer-settings.svg')"
+    <div class="offer-form__section">
+      <div class="offer-form__section-head">
+        <div class="offer-form__section-icon">
+          <span class="vendor-form-svg-icon offer-form__section-glyph" [style.webkitMaskImage]="getOfferIconMask('ic-offer-settings.svg')"
             [style.maskImage]="getOfferIconMask('ic-offer-settings.svg')"></span>
         </div>
-        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        <h2 class="offer-form__section-title">
           Hotel Details
         </h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div class="offer-form__grid">
         <div>
-          <label class="text-sm font-medium text-gray-700">
+          <label class="offer-form__label">
             Tax Value (English)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
-          <div class="relative">
-            <input pInputText formControlName="taxValue" class="w-full pl-4 bg-gray-50 rounded-none"
+          <div class="offer-form__input-wrap">
+            <input pInputText formControlName="taxValue" class="offer-form__input offer-form__input--pl4"
               placeholder="e.g. 50 SAR" />
           </div>
           @if (offerForm.get('taxValue')?.touched && offerForm.get('taxValue')?.hasError('required')) {
-          <p class="text-xs text-red-500 mt-1">Tax value (English) is required.</p>
+          <p class="offer-form__error">Tax value (English) is required.</p>
           }
         </div>
 
         <div>
-          <label class="text-sm font-medium text-gray-700">
+          <label class="offer-form__label">
             Tax Value (Arabic)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
-          <div class="relative">
-            <input pInputText formControlName="taxValueAr" class="w-full pr-4 text-right bg-gray-50 rounded-none"
+          <div class="offer-form__input-wrap">
+            <input pInputText formControlName="taxValueAr" class="offer-form__input offer-form__input--pr4 offer-form__input--right"
               placeholder="مثلاً: ٥٠ ريال" />
           </div>
           @if (offerForm.get('taxValueAr')?.touched && offerForm.get('taxValueAr')?.hasError('required')) {
-          <p class="text-xs text-red-500 mt-1">Tax value (Arabic) is required.</p>
+          <p class="offer-form__error">Tax value (Arabic) is required.</p>
           }
         </div>
 
-        <div class="md:col-span-2">
-          <label class="text-sm font-medium text-gray-700">
+        <div class="offer-form__col-2">
+          <label class="offer-form__label">
             Currency
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
-          <div class="relative">
-            <input pInputText formControlName="currency" class="w-full pl-4 bg-gray-50 rounded-none"
+          <div class="offer-form__input-wrap">
+            <input pInputText formControlName="currency" class="offer-form__input offer-form__input--pl4"
               placeholder="SAR" />
           </div>
           @if (offerForm.get('currency')?.touched && offerForm.get('currency')?.hasError('required')) {
-          <p class="text-xs text-red-500 mt-1">Currency is required.</p>
+          <p class="offer-form__error">Currency is required.</p>
           }
         </div>
 
-        <div class="md:col-span-2">
-          <label class="text-sm font-medium text-gray-700">
+        <div class="offer-form__col-2">
+          <label class="offer-form__label">
             Hotel Amenities (English)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
-          <div class="relative">
-            <input pInputText formControlName="hotelAmenities" class="w-full pl-4 bg-gray-50 rounded-none"
+          <div class="offer-form__input-wrap">
+            <input pInputText formControlName="hotelAmenities" class="offer-form__input offer-form__input--pl4"
               placeholder="Swimming pool, Spa, ..." />
           </div>
           @if (offerForm.get('hotelAmenities')?.touched && offerForm.get('hotelAmenities')?.hasError('required')) {
-          <p class="text-xs text-red-500 mt-1">Hotel amenities are required.</p>
+          <p class="offer-form__error">Hotel amenities are required.</p>
           }
         </div>
 
-        <div class="md:col-span-2">
-          <label class="text-sm font-medium text-gray-700">
+        <div class="offer-form__col-2">
+          <label class="offer-form__label">
             Hotel Amenities (Arabic)
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
-          <div class="relative">
-            <input pInputText formControlName="hotelAmenitiesAr" class="w-full pl-4 bg-gray-50 rounded-none text-right"
+          <div class="offer-form__input-wrap">
+            <input pInputText formControlName="hotelAmenitiesAr" class="offer-form__input offer-form__input--pl4 offer-form__input--right"
               placeholder="... ،مسبح، سبا" />
           </div>
           @if (offerForm.get('hotelAmenitiesAr')?.touched && offerForm.get('hotelAmenitiesAr')?.hasError('required')) {
-          <p class="text-xs text-red-500 mt-1">Hotel amenities (Arabic) are required.</p>
+          <p class="offer-form__error">Hotel amenities (Arabic) are required.</p>
           }
         </div>
 
-        <div class="md:col-span-2">
+        <div class="offer-form__col-2">
           <div>
-            <h3 class="text-lg font-bold text-slate-700">Hotel Room Details</h3>
+            <h3 class="offer-form__subheading">Hotel Room Details</h3>
           </div>
 
           @if (roomItems().length) {
-          <div class="mt-4 border border-[rgba(202,202,202,1)] bg-[rgba(245,245,245,1)]">
+          <div class="offer-form__room-list">
             @for (room of roomItems(); track room.id; let i = $index) {
-            <div class="flex items-center justify-between gap-4 px-3 py-3 text-sm" [class.border-t]="i > 0"
-              [class.border-[rgba(202,202,202,1)]]="i > 0">
-              <div class="min-w-0">
-                <p class="font-semibold text-[#374151]">{{ room.roomName || ('Room #' + (i + 1)) }}</p>
+            <div class="offer-form__room-row" [class.offer-form__room-row--divided]="i > 0">
+              <div class="offer-form__min-w-0">
+                <p class="offer-form__room-name">{{ room.roomName || ('Room #' + (i + 1)) }}</p>
               </div>
 
-              <div class="flex items-center gap-4 whitespace-nowrap text-sm">
+              <div class="offer-form__room-actions">
                 @if (!room.isPlaceholder) {
-                <button type="button" class="border-0 bg-transparent p-0 text-[#003CC7] cursor-pointer"
+                <button type="button" class="offer-form__link-btn"
                   (click)="openRoomDialog(i)">
                   Edit
                 </button>
                 } @else {
-                <span class="text-[#94A3B8]">Edit</span>
+                <span class="offer-form__link-muted">Edit</span>
                 }
-                <button type="button" class="border-0 bg-transparent p-0 text-[#DC2626] cursor-pointer"
+                <button type="button" class="offer-form__link-btn offer-form__link-btn--danger"
                   (click)="removeRoom(i)">
                   Delete
                 </button>
@@ -313,14 +308,12 @@
             }
           </div>
           } @else {
-          <div
-            class="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-5 py-6 text-sm text-slate-500">
+          <div class="offer-form__empty">
             <p>No rooms added yet.</p>
           </div>
           }
-          <div class="flex justify-end">
-            <button type="button"
-              class="mt-4 border-0 bg-transparent text-base font-medium text-[#003CC7] transition-colors hover:text-[#0537A4] cursor-pointer"
+          <div class="offer-form__row-end">
+            <button type="button" class="offer-form__add-link"
               (click)="openRoomDialog()">
               + Add new room
             </button>
@@ -329,245 +322,243 @@
       </div>
     </div>
     }
-    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
-          <span class="vendor-form-svg-icon h-5 w-5"
+    <div class="offer-form__section">
+      <div class="offer-form__section-head">
+        <div class="offer-form__section-icon">
+          <span class="vendor-form-svg-icon offer-form__section-glyph"
             [style.webkitMaskImage]="getOfferIconMask('ic-discount-details.svg')"
             [style.maskImage]="getOfferIconMask('ic-discount-details.svg')"></span>
         </div>
-        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        <h2 class="offer-form__section-title">
           Discount Details
         </h2>
       </div>
-      <div class="flex flex-col gap-6 mt-6">
-        <div class="offer-form-loading flex flex-col gap-4">
-          <label class="text-sm text-gray-700">
+      <div class="offer-form__stack offer-form__mt-6">
+        <div class="offer-form-loading offer-form__stack offer-form__stack--gap4">
+          <label class="offer-form__label">
             Discount Type
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
 
-          <div class="flex flex-wrap items-center gap-4">
-            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+          <div class="offer-form__radio-group">
+            <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Fixed" formControlName="discountType">
               </p-radiobutton>
-              <span class="text-gray-700 font-medium">Fixed Amount</span>
+              <span class="offer-form__radio-label offer-form__radio-label--medium">Fixed Amount</span>
             </label>
 
-            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+            <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Percentage" formControlName="discountType">
               </p-radiobutton>
-              <span class="text-gray-700 font-medium">Percentage</span>
+              <span class="offer-form__radio-label offer-form__radio-label--medium">Percentage</span>
             </label>
 
-            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+            <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Others" formControlName="discountType">
               </p-radiobutton>
-              <span class="text-gray-700 font-medium">Others</span>
+              <span class="offer-form__radio-label offer-form__radio-label--medium">Others</span>
             </label>
           </div>
           @if (hasRequiredError('discountType')) {
-          <p class="text-xs text-red-500 mt-1">Discount type is required.</p>
+          <p class="offer-form__error">Discount type is required.</p>
           }
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex flex-col gap-3"
-            [ngClass]="{ 'md:col-span-2': offerForm.get('discountType')?.value !== 'Others' }">
-            <label class="text-sm font-medium text-gray-700">
+        <div class="offer-form__grid offer-form__grid--mt-0">
+          <div class="offer-form__field-group offer-form__field-group--gap3"
+            [ngClass]="offerForm.get('discountType')?.value !== 'Others' ? 'offer-form__col-2' : ''">
+            <label class="offer-form__label">
               {{ offerForm.get('discountType')?.value === 'Others' ? 'Amount (English)' : 'Discount Amount (English)' }}
-              <span class="text-red-500">*</span>
+              <span class="offer-form__required">*</span>
             </label>
-            <div class="relative">
-              <input pInputText formControlName="discountEn" class="w-full pl-4 pr-8 bg-gray-50 rounded-none"
+            <div class="offer-form__input-wrap">
+              <input pInputText formControlName="discountEn" class="offer-form__input offer-form__input--pl4 offer-form__input--pr8"
                 (focus)="setPreviewLanguage('en')"
                 [attr.inputmode]="offerForm.get('discountType')?.value === 'Others' ? null : 'decimal'"
                 [placeholder]="offerForm.get('discountType')?.value === 'Others' ? 'e.g. 50' : 'e.g. 50 OMR Off'"
                 (input)="offerForm.get('discountType')?.value === 'Others' ? null : sanitizeDiscountInput('discountEn')" />
               @if (offerForm.get('discountType')?.value === 'Percentage') {
-              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+              <span class="offer-form__input-suffix offer-form__input-suffix--right">
                 %
               </span>
               } @else if (offerForm.get('discountType')?.value === 'Fixed') {
-              <span class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center">
+              <span class="offer-form__input-suffix offer-form__input-suffix--right">
                 <img src="assets/svg/Offers/add-offer/Saudi_Riyal_Symbol.svg" alt="SAR"
-                  class="w-4 h-4 object-contain" />
+                  class="offer-form__suffix-icon" />
               </span>
               }
             </div>
             @if (hasRequiredError('discountEn')) {
-            <p class="text-xs text-red-500 mt-1">Discount amount is required.</p>
+            <p class="offer-form__error">Discount amount is required.</p>
             }
             @if (hasDiscountNumericError('discountEn')) {
-            <p class="text-xs text-red-500 mt-1">Discount amount must be a numeric value.</p>
+            <p class="offer-form__error">Discount amount must be a numeric value.</p>
             }
             @if (hasDiscountPercentageRangeError('discountEn')) {
-            <p class="text-xs text-red-500 mt-1">Percentage must be between 0 and 100.</p>
+            <p class="offer-form__error">Percentage must be between 0 and 100.</p>
             }
           </div>
 
           @if (offerForm.get('discountType')?.value === 'Others') {
-          <div class="flex flex-col gap-3">
-            <label class="text-sm font-medium text-gray-700">
+          <div class="offer-form__field-group offer-form__field-group--gap3">
+            <label class="offer-form__label">
               {{ offerForm.get('discountType')?.value === 'Others' ? 'Amount (Arabic)' : 'Discount Amount (Arabic)' }}
-              <span class="text-red-500">*</span>
+              <span class="offer-form__required">*</span>
             </label>
-            <div class="relative">
-              <input pInputText formControlName="discountAr" class="w-full pr-4 text-right bg-gray-50 rounded-none h-11"
+            <div class="offer-form__input-wrap">
+              <input pInputText formControlName="discountAr" class="offer-form__input offer-form__input--pr4 offer-form__input--right offer-form__input--h11"
                 (focus)="setPreviewLanguage('ar')"
                 [attr.inputmode]="offerForm.get('discountType')?.value === 'Others' ? null : 'decimal'"
                 [placeholder]="offerForm.get('discountType')?.value === 'Others' ? 'مثلاً: ٥٠' : 'مثلاً: خصم ٥٠ ريال'"
                 (input)="offerForm.get('discountType')?.value === 'Others' ? sanitizeArabicInput('discountAr') : sanitizeDiscountInput('discountAr')" />
               @if (offerForm.get('discountType')?.value === 'Percentage') {
-              <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+              <span class="offer-form__input-suffix offer-form__input-suffix--left">
                 %
               </span>
               } @else if (offerForm.get('discountType')?.value === 'Fixed') {
-              <span class="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center">
+              <span class="offer-form__input-suffix offer-form__input-suffix--left">
                 <img src="assets/svg/Offers/add-offer/Saudi_Riyal_Symbol.svg" alt="SAR"
-                  class="w-4 h-4 object-contain" />
+                  class="offer-form__suffix-icon" />
               </span>
               }
             </div>
             @if (hasRequiredError('discountAr')) {
-            <p class="text-xs text-red-500 mt-1">Discount amount (Arabic) is required.</p>
+            <p class="offer-form__error">Discount amount (Arabic) is required.</p>
             }
             @if (hasFieldError('discountAr', 'arabicOnly')) {
-            <p class="text-xs text-red-500 mt-1">Amount (Arabic) must contain Arabic characters only.</p>
+            <p class="offer-form__error">Amount (Arabic) must contain Arabic characters only.</p>
             }
           </div>
           }
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
-          <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium block">
+        <div class="offer-form__grid offer-form__grid--single">
+          <div class="offer-form__field-group">
+            <label class="offer-form__label offer-form__label--block">
               Redemption Instruction (English)
-              <span class="text-red-500">*</span>
+              <span class="offer-form__required">*</span>
             </label>
             <textarea pInputTextarea formControlName="instructionsEn" (focus)="setPreviewLanguage('en')" rows="4"
-              class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none shadow-none focus:shadow-none"
+              class="offer-form__textarea"
               placeholder="How can customers redeem this offer?"></textarea>
             @if (hasRequiredError('instructionsEn')) {
-            <p class="text-xs text-red-500 mt-1">Redemption instruction (English) is required.</p>
+            <p class="offer-form__error">Redemption instruction (English) is required.</p>
             }
             @if (hasFieldError('instructionsEn', 'whitespace')) {
-            <p class="text-xs text-red-500 mt-1">Redemption instruction (English) cannot be empty or only whitespace.
+            <p class="offer-form__error">Redemption instruction (English) cannot be empty or only whitespace.
             </p>
             }
           </div>
 
-          <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium block">
+          <div class="offer-form__field-group">
+            <label class="offer-form__label offer-form__label--block">
               Redemption Instruction (Arabic)
-              <span class="text-red-500">*</span>
+              <span class="offer-form__required">*</span>
             </label>
             <textarea pInputTextarea formControlName="instructionsAr" (focus)="setPreviewLanguage('ar')" rows="4"
-              class="w-full bg-gray-50 rounded-none p-5 h-[120px] min-h-[120px] resize-none text-right shadow-none focus:shadow-none"
+              class="offer-form__textarea offer-form__textarea--right"
               dir="rtl" placeholder="كيف يمكن للعملاء استرداد هذا العرض؟"></textarea>
             @if (hasRequiredError('instructionsAr')) {
-            <p class="text-xs text-red-500 mt-1">Redemption instruction (Arabic) is required.</p>
+            <p class="offer-form__error">Redemption instruction (Arabic) is required.</p>
             }
             @if (hasFieldError('instructionsAr', 'arabicOnly')) {
-            <p class="text-xs text-red-500 mt-1">تعليمات الاسترداد يجب أن تكون باللغة العربية فقط.</p>
+            <p class="offer-form__error">تعليمات الاسترداد يجب أن تكون باللغة العربية فقط.</p>
             }
             @if (hasFieldError('instructionsAr', 'whitespace')) {
-            <p class="text-xs text-red-500 mt-1">تعليمات الاسترداد لا يمكن أن تكون فارغة.</p>
+            <p class="offer-form__error">تعليمات الاسترداد لا يمكن أن تكون فارغة.</p>
             }
           </div>
         </div>
       </div>
     </div>
 
-    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
-          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-offer-settings.svg')"
+    <div class="offer-form__section">
+      <div class="offer-form__section-head">
+        <div class="offer-form__section-icon">
+          <span class="vendor-form-svg-icon offer-form__section-glyph" [style.webkitMaskImage]="getOfferIconMask('ic-offer-settings.svg')"
             [style.maskImage]="getOfferIconMask('ic-offer-settings.svg')"></span>
         </div>
-        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        <h2 class="offer-form__section-title">
           Offer Settings
         </h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-6">
-        <div class="flex flex-col gap-4 md:col-span-2">
-          <label class="text-sm font-medium">
+      <div class="offer-form__grid offer-form__grid--gap-xl">
+        <div class="offer-form__stack offer-form__stack--gap4 offer-form__col-2">
+          <label class="offer-form__label">
             Offer Type
-            <span class="text-red-500">*</span>
+            <span class="offer-form__required">*</span>
           </label>
 
-          <div class="flex flex-wrap items-center gap-4">
-            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+          <div class="offer-form__radio-group">
+            <label class="offer-form__radio-pill">
               <p-radiobutton name="offerLocation" value="In-Store" formControlName="mode">
               </p-radiobutton>
-              <span class="text-gray-700">In Store</span>
+              <span class="offer-form__radio-label">In Store</span>
             </label>
 
-            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+            <label class="offer-form__radio-pill">
               <p-radiobutton name="offerLocation" value="Digital" formControlName="mode">
               </p-radiobutton>
-              <span class="text-gray-700">Digital</span>
+              <span class="offer-form__radio-label">Digital</span>
             </label>
 
-            <label class="flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-5 py-3 rounded-full min-w-[150px]">
+            <label class="offer-form__radio-pill">
               <p-radiobutton name="offerLocation" value="In-Store & Digital" formControlName="mode">
               </p-radiobutton>
-              <span class="text-gray-700">In-Store & Digital</span>
+              <span class="offer-form__radio-label">In-Store & Digital</span>
             </label>
           </div>
           @if (hasRequiredError('mode')) {
-          <p class="text-xs text-red-500 mt-1">Offer type is required.</p>
+          <p class="offer-form__error">Offer type is required.</p>
           }
         </div>
       </div>
 
       <!-- Website + Discount Code -->
-      <div class="mt-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
-          <div class="flex flex-col gap-2" [ngClass]="{ 'md:col-span-2': offerForm.get('mode')?.value === 'In-Store' }">
-            <label class="text-sm font-medium text-gray-700">
+      <div class="offer-form__mt-6">
+        <div class="offer-form__grid offer-form__grid--mt-sm">
+          <div class="offer-form__field-group" [ngClass]="offerForm.get('mode')?.value === 'In-Store' ? 'offer-form__col-2' : ''">
+            <label class="offer-form__label">
               Website @if (offerForm.get('mode')?.value === 'Digital' ||
               offerForm.get('mode')?.value === 'In-Store & Digital') {
-              <span class="text-red-500">*</span>
+              <span class="offer-form__required">*</span>
               }
             </label>
-            <input pInputText formControlName="urlLink" class="pl-5 w-full bg-gray-50 rounded-none" [placeholder]="offerForm.get('mode')?.value === 'In-Store'
+            <input pInputText formControlName="urlLink" class="offer-form__input offer-form__input--pl5" [placeholder]="offerForm.get('mode')?.value === 'In-Store'
                 ? 'e.g. www.companyname.com (optional)'
                 : 'e.g. www.companyname.com'" />
             @if (hasRequiredError('urlLink')) {
-            <p class="text-xs text-red-500 mt-1">Website is required.</p>
+            <p class="offer-form__error">Website is required.</p>
             }
             @if (hasFieldError('urlLink', 'pattern')) {
-            <p class="text-xs text-red-500 mt-1">Please enter a valid URL.</p>
+            <p class="offer-form__error">Please enter a valid URL.</p>
             }
             @if (offerForm.get('mode')?.value === 'In-Store') {
-            <p class="text-xs text-gray-500">Optional link for in-store offer details or redemption.</p>
+            <p class="offer-form__hint">Optional link for in-store offer details or redemption.</p>
             }
           </div>
 
           @if (offerForm.get('mode')?.value !== 'In-Store') {
-          <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium text-gray-700">
+          <div class="offer-form__field-group">
+            <label class="offer-form__label">
               Discount Code
             </label>
-            <input pInputText formControlName="discountCode" class="pl-5 w-full bg-gray-50 rounded-none"
+            <input pInputText formControlName="discountCode" class="offer-form__input offer-form__input--pl5"
               placeholder="e.g. Offer20" />
           </div>
           }
         </div>
       </div>
       @if (offerForm.get('mode')?.value !== 'Digital') {
-      <div class="mt-6">
-        <label class="text-sm font-medium">Selected Locations</label>
-        <div class="flex flex-col gap-4 p-5 border rounded-xl bg-[var(--app-surface)] border-[var(--app-border)] mt-2">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-map-marker text-gray-600 text-xl"></i>
-            <span class="text-gray-800 text-sm font-medium">Select locations for this offer</span>
+      <div class="offer-form__mt-6">
+        <label class="offer-form__label">Selected Locations</label>
+        <div class="offer-form__locations-box">
+          <div class="offer-form__row offer-form__row--gap2">
+            <i class="pi pi-map-marker offer-form__locations-icon"></i>
+            <span class="offer-form__locations-label">Select locations for this offer</span>
           </div>
 
           @if (!offerForm.get('selectedVendor')?.value) {
-          <p class="text-gray-500 text-sm">
+          <p class="offer-form__muted-sm">
             Select a vendor above to view available locations.
           </p>
           } @else if (locationsLoading()) {
@@ -575,12 +566,12 @@
           } @else {
           <p-multiselect [options]="vendorLocations()" formControlName="locationIds" optionLabel="label"
             optionValue="id" placeholder="Select one or more locations"
-            styleClass="w-full offer-form__field offer-form__multiselect !rounded-none"
+            styleClass="offer-form__field offer-form__multiselect offer-form__input"
             panelStyleClass="offer-form__overlay-panel offer-form__multiselect-panel"
             [disabled]="isBranchSelectionDisabled()">
             <ng-template pTemplate="item" let-option>
-              <div class="flex flex-col">
-                <span class="font-medium text-sm">{{ option.label }}</span>
+              <div class="offer-form__col">
+                <span class="offer-form__option-label">{{ option.label }}</span>
                 @if (option.city || option.address) {
                 <span class="offer-form__option-meta">
                   {{ option.city }} @if (option.city && option.address) {
@@ -592,12 +583,12 @@
           </p-multiselect>
           }
           @if (showVendorHasNoBranchesMessage()) {
-          <p class="offer-form__warning-message text-sm px-3 py-2">
+          <p class="offer-form__warning-message">
             This vendor has no branches. In-store or both-mode offers cannot be activated until at least one branch is
             added.
           </p>
           } @else if (showBranchSelectionRequiredMessage()) {
-          <p class="offer-form__warning-message text-sm px-3 py-2">
+          <p class="offer-form__warning-message">
             Select at least one branch to activate this offer.
           </p>
           }
@@ -605,38 +596,36 @@
       </div>
       }
       @if (offerForm.get('mode')?.value !== 'Digital') {
-      <div class="flex justify-end">
-        <button type="button"
-          class="mt-4 text-base font-medium text-slate-400 transition-colors hover:text-[#0537A4] cursor-pointer"
+      <div class="offer-form__row-end">
+        <button type="button" class="offer-form__add-link offer-form__add-link--muted"
           (click)="openLocationDialog()">
           + Add New Location
         </button>
       </div>
       }
     </div>
-    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
-          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-branding.svg')"
+    <div class="offer-form__section">
+      <div class="offer-form__section-head">
+        <div class="offer-form__section-icon">
+          <span class="vendor-form-svg-icon offer-form__section-glyph" [style.webkitMaskImage]="getOfferIconMask('ic-branding.svg')"
             [style.maskImage]="getOfferIconMask('ic-branding.svg')"></span>
         </div>
-        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
-          Branding <span class="text-red-500">*</span>
+        <h2 class="offer-form__section-title">
+          Branding <span class="offer-form__required">*</span>
         </h2>
       </div>
-      <div class="mt-6">
-        <label class="text-sm font-medium block mb-2">
+      <div class="offer-form__mt-6">
+        <label class="offer-form__label offer-form__label--block offer-form__label--mb">
           Background Images
-          <span class="text-red-500">*</span>
+          <span class="offer-form__required">*</span>
         </label>
-        <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg mt-2"
+        <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg offer-form__mt-2"
           (dragover)="onOfferDragOver($event)" (dragleave)="onOfferDragLeave($event)" (drop)="onOfferDrop($event)"
           (click)="offerFileInput.click()" [class.offer-form__upload-dropzone--dragging]="isOfferDragging()">
-          <div class="flex flex-col gap-6 justify-center items-center text-center w-full cursor-pointer">
-            <div class="flex flex-col items-center gap-3 w-full">
-              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-                <span class="vendor-form-svg-icon text-[#0033A0]"
+          <div class="offer-form__dropzone-body">
+            <div class="offer-form__center-col">
+              <div class="offer-form__upload-circle">
+                <span class="vendor-form-svg-icon offer-form__upload-glyph"
                   style="width: 32px; height: 32px; display: inline-block;"
                   [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
               </div>
@@ -644,7 +633,7 @@
               <p class="vendor-upload__help">
                 Mobile will save as `2.39:1` and desktop will save as `16:2`. JPG, PNG, max 10MB.
               </p>
-              <div class="flex items-center justify-center gap-2">
+              <div class="offer-form__btn-row">
                 <button type="button" pButton icon="pi pi-upload"
                   [label]="(previewUrl() || offerLandscapePreviewUrl() || offerForm.get('offerImage')?.value || offerForm.get('offerImageLandscape')?.value) ? 'Upload New Source' : 'Choose Image'"
                   class="p-button-outlined p-button-sm"
@@ -652,7 +641,7 @@
               </div>
             </div>
           </div>
-          <input #offerFileInput type="file" accept="image/*" class="hidden" (change)="onOfferFileSelected($event)" />
+          <input #offerFileInput type="file" accept="image/*" class="offer-form__hidden" (change)="onOfferFileSelected($event)" />
         </div>
         @if (
         previewUrl() ||
@@ -660,38 +649,37 @@
         (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string') ||
         (offerForm.get('offerImageLandscape')?.value && typeof offerForm.get('offerImageLandscape')?.value === 'string')
         ) {
-        <div class="offer-form__background-split grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-4">
-          <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
-            <div class="flex items-center justify-between gap-3 mb-3">
+        <div class="offer-form__background-split offer-form__grid offer-form__grid--gap-sm offer-form__mt-4">
+          <div class="offer-form__preview-card">
+            <div class="offer-form__preview-card-head">
               <div>
-                <p class="text-sm font-semibold text-[#1F2937]">Mobile Background</p>
+                <p class="offer-form__preview-card-title">Mobile Background</p>
               </div>
             </div>
-            <div
-              class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+            <div class="offer-form__preview-box">
               @if (previewUrl(); as preview) {
-              <div class="flex flex-col items-center gap-3 w-full">
-                <div class="h-[220px] w-full flex items-center justify-center">
+              <div class="offer-form__center-col">
+                <div class="offer-form__preview-img-wrap">
                   <img [src]="preview" alt="Mobile background image preview"
-                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                    class="offer-form__preview-img" />
                 </div>
-                <p class="text-gray-500 text-sm">{{ selectedOfferFileName() }}</p>
+                <p class="offer-form__muted-sm">{{ selectedOfferFileName() }}</p>
               </div>
               } @else if (offerForm.get('offerImage')?.value && typeof offerForm.get('offerImage')?.value === 'string')
               {
-              <div class="flex flex-col items-center gap-3 w-full">
-                <div class="h-[220px] w-full flex items-center justify-center">
+              <div class="offer-form__center-col">
+                <div class="offer-form__preview-img-wrap">
                   <img [src]="offerForm.get('offerImage')?.value" alt="Mobile background image"
-                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                    class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
-                <p class="text-gray-500 text-sm">Current mobile background</p>
+                <p class="offer-form__muted-sm">Current mobile background</p>
               </div>
               } @else {
-              <p class="text-sm text-gray-400">Upload a source image to create the mobile crop.</p>
+              <p class="offer-form__muted-sm">Upload a source image to create the mobile crop.</p>
               }
             </div>
-            <div class="flex items-center justify-center gap-2 mt-4">
+            <div class="offer-form__btn-row offer-form__btn-row--mt">
               <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
                 [disabled]="!(previewUrl() || offerForm.get('offerImage')?.value || offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value)"
                 (click)="recropOfferImage('mobile'); $event.stopPropagation()"></button>
@@ -702,37 +690,36 @@
             </div>
           </div>
 
-          <div class="border border-[#EEF2F6] rounded-xl p-4 bg-white flex flex-col">
-            <div class="flex items-center justify-between gap-3 mb-3">
+          <div class="offer-form__preview-card">
+            <div class="offer-form__preview-card-head">
               <div>
-                <p class="text-sm font-semibold text-[#1F2937]">Desktop Background</p>
+                <p class="offer-form__preview-card-title">Desktop Background</p>
               </div>
             </div>
-            <div
-              class="flex-1 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center p-4 text-center min-h-[260px]">
+            <div class="offer-form__preview-box">
               @if (offerLandscapePreviewUrl(); as offerLandscapePreview) {
-              <div class="flex flex-col items-center gap-3 w-full">
-                <div class="h-[220px] w-full flex items-center justify-center">
+              <div class="offer-form__center-col">
+                <div class="offer-form__preview-img-wrap">
                   <img [src]="offerLandscapePreview" alt="Desktop background image preview"
-                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm" />
+                    class="offer-form__preview-img" />
                 </div>
-                <p class="text-gray-500 text-sm">{{ selectedOfferLandscapeFileName() }}</p>
+                <p class="offer-form__muted-sm">{{ selectedOfferLandscapeFileName() }}</p>
               </div>
               } @else if (offerForm.get('offerImageLandscape')?.value && typeof
               offerForm.get('offerImageLandscape')?.value === 'string') {
-              <div class="flex flex-col items-center gap-3 w-full">
-                <div class="h-[220px] w-full flex items-center justify-center">
+              <div class="offer-form__center-col">
+                <div class="offer-form__preview-img-wrap">
                   <img [src]="offerForm.get('offerImageLandscape')?.value" alt="Desktop background image"
-                    class="max-h-[220px] max-w-full w-auto object-contain rounded-lg shadow-sm"
+                    class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
-                <p class="text-gray-500 text-sm">Current desktop background</p>
+                <p class="offer-form__muted-sm">Current desktop background</p>
               </div>
               } @else {
-              <p class="text-sm text-gray-400">Upload a source image to create the desktop crop.</p>
+              <p class="offer-form__muted-sm">Upload a source image to create the desktop crop.</p>
               }
             </div>
-            <div class="flex items-center justify-center gap-2 mt-4">
+            <div class="offer-form__btn-row offer-form__btn-row--mt">
               <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
                 [disabled]="!(offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value || previewUrl() || offerForm.get('offerImage')?.value)"
                 (click)="recropOfferImage('desktop'); $event.stopPropagation()"></button>
@@ -745,18 +732,18 @@
         </div>
         }
         @if (hasRequiredError('offerImage')) {
-        <p class="text-xs text-red-500 mt-1">Background image is required.</p>
+        <p class="offer-form__error">Background image is required.</p>
         } @else if (hasRequiredError('offerImageLandscape')) {
-        <p class="text-xs text-red-500 mt-1">Background image is required.</p>
+        <p class="offer-form__error">Background image is required.</p>
         }
       </div>
 
-      <div class="mt-6">
-        <label class="text-sm font-medium block mb-2">
+      <div class="offer-form__mt-6">
+        <label class="offer-form__label offer-form__label--block offer-form__label--mb">
           Highlight Images
-          <span class="text-red-500">*</span>
+          <span class="offer-form__required">*</span>
         </label>
-        <div class="offer-form__highlight-split grid grid-cols-1 md:grid-cols-2 w-full mt-4">
+        <div class="offer-form__highlight-split offer-form__grid offer-form__grid--gap-sm offer-form__grid--mt-0 offer-form__mt-4">
           <div class="offer-form__crop-card offer-form__crop-card--highlight">
             <div class="offer-form__crop-card-header offer-form__crop-card-header--highlight">
               <div class="offer-form__crop-card-title">
@@ -771,13 +758,13 @@
                 </div>
               </div>
             </div>
-            <div class="offer-form__upload-dropzone mb-4" (dragover)="onHighlightDragOver($event)"
+            <div class="offer-form__upload-dropzone offer-form__mb-4" (dragover)="onHighlightDragOver($event)"
               (dragleave)="onHighlightDragLeave($event)" (drop)="onHighlightDrop($event)"
               [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
               (click)="highlightMobileFileInput.click()">
-              <div class="flex flex-col items-center gap-3 w-full">
-                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center">
-                  <span class="vendor-form-svg-icon text-[#0033A0]"
+              <div class="offer-form__center-col">
+                <div class="offer-form__upload-circle offer-form__upload-circle--sm">
+                  <span class="vendor-form-svg-icon offer-form__upload-glyph"
                     style="width: 28px; height: 28px; display: inline-block;"
                     [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
@@ -788,7 +775,7 @@
                   class="p-button-outlined p-button-sm"
                   (click)="highlightMobileFileInput.click(); $event.stopPropagation()"></button>
               </div>
-              <input #highlightMobileFileInput type="file" accept="image/*" class="hidden"
+              <input #highlightMobileFileInput type="file" accept="image/*" class="offer-form__hidden"
                 (change)="onHighlightFileSelected($event, 'mobile')" />
             </div>
             @if (highlightPreviewUrl() || offerForm.get('highlightImage')?.value) {
@@ -882,13 +869,13 @@
                 </div>
               </div>
             </div>
-            <div class="offer-form__upload-dropzone mb-4" (dragover)="onHighlightDragOver($event)"
+            <div class="offer-form__upload-dropzone offer-form__mb-4" (dragover)="onHighlightDragOver($event)"
               (dragleave)="onHighlightDragLeave($event)" (drop)="onHighlightDrop($event)"
               [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
               (click)="highlightDesktopFileInput.click()">
-              <div class="flex flex-col items-center gap-3 w-full">
-                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center">
-                  <span class="vendor-form-svg-icon text-[#0033A0]"
+              <div class="offer-form__center-col">
+                <div class="offer-form__upload-circle offer-form__upload-circle--sm">
+                  <span class="vendor-form-svg-icon offer-form__upload-glyph"
                     style="width: 28px; height: 28px; display: inline-block;"
                     [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
@@ -899,7 +886,7 @@
                   class="p-button-outlined p-button-sm"
                   (click)="highlightDesktopFileInput.click(); $event.stopPropagation()"></button>
               </div>
-              <input #highlightDesktopFileInput type="file" accept="image/*" class="hidden"
+              <input #highlightDesktopFileInput type="file" accept="image/*" class="offer-form__hidden"
                 (change)="onHighlightFileSelected($event, 'desktop')" />
             </div>
             @if (highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value) {
@@ -979,162 +966,160 @@
           </div>
         </div>
         @if (hasRequiredError('highlightImage')) {
-        <p class="text-xs text-red-500 mt-1">Mobile highlight image is required.</p>
+        <p class="offer-form__error">Mobile highlight image is required.</p>
         } @else if (hasRequiredError('highlightImageLandscape')) {
-        <p class="text-xs text-red-500 mt-1">Desktop highlight image is required.</p>
+        <p class="offer-form__error">Desktop highlight image is required.</p>
         }
       </div>
     </div>
-    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
-          <span class="vendor-form-svg-icon h-5 w-5" [style.webkitMaskImage]="getOfferIconMask('ic-contact-info.svg')"
+    <div class="offer-form__section">
+      <div class="offer-form__section-head">
+        <div class="offer-form__section-icon">
+          <span class="vendor-form-svg-icon offer-form__section-glyph" [style.webkitMaskImage]="getOfferIconMask('ic-contact-info.svg')"
             [style.maskImage]="getOfferIconMask('ic-contact-info.svg')"></span>
         </div>
-        <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+        <h2 class="offer-form__section-title">
           Contact Information
         </h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
-        <div class="flex flex-col gap-2">
-          <label class="text-sm font-medium"> Phone Number 1</label>
-          <div class="relative">
-            <i class="pi pi-phone absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#94A3B8]"></i>
+      <div class="offer-form__grid offer-form__grid--cols3 offer-form__grid--gap-lg">
+        <div class="offer-form__field-group">
+          <label class="offer-form__label"> Phone Number 1</label>
+          <div class="offer-form__input-wrap">
+            <i class="pi pi-phone offer-form__field-icon"></i>
             <input pInputText formControlName="phone" placeholder="+966 5 1234 5678" type="tel" inputmode="tel"
               autocomplete="tel" (input)="sanitizePhoneInput('phone')" maxlength="15"
-              class="pl-11 w-full bg-gray-50 rounded-none" />
+              class="offer-form__input offer-form__input--pl11" />
           </div>
           @if (phoneError()) {
-          <p class="text-xs text-red-500 mt-1">Use English Numbers</p>
+          <p class="offer-form__error">Use English Numbers</p>
           } @else if (offerForm.get('phone')?.touched && offerForm.get('phone')?.hasError('required')) {
-          <p class="text-xs text-red-500 mt-1">Phone number is required.</p>
+          <p class="offer-form__error">Phone number is required.</p>
           } @else if (offerForm.get('phone')?.touched && (offerForm.get('phone')?.hasError('invalidPhone') ||
           offerForm.get('phone')?.hasError('pattern'))) {
-          <p class="text-xs text-red-500">Enter a valid phone number using digits and phone symbols only.</p>
+          <p class="offer-form__error offer-form__error--flush">Enter a valid phone number using digits and phone symbols only.</p>
           } @else if (offerForm.get('phone')?.touched && offerForm.get('phone')?.hasError('maxlength')) {
-          <p class="text-xs text-red-500">Phone number cannot exceed 15 characters.</p>
+          <p class="offer-form__error offer-form__error--flush">Phone number cannot exceed 15 characters.</p>
           }
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label class="text-sm font-medium">Phone Number 2</label>
-          <div class="relative">
-            <i class="pi pi-home absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#94A3B8]"></i>
+        <div class="offer-form__field-group">
+          <label class="offer-form__label">Phone Number 2</label>
+          <div class="offer-form__input-wrap">
+            <i class="pi pi-home offer-form__field-icon"></i>
             <input pInputText formControlName="landline" placeholder="+966 11 1234 5678" type="tel" inputmode="tel"
               autocomplete="tel-national" (input)="sanitizePhoneInput('landline')" maxlength="15"
-              class="pl-11 w-full bg-gray-50 rounded-none" />
+              class="offer-form__input offer-form__input--pl11" />
           </div>
           @if (landlineError()) {
-          <p class="text-xs text-red-500 mt-1">Use English Numbers</p>
+          <p class="offer-form__error">Use English Numbers</p>
           } @else if (offerForm.get('landline')?.touched && offerForm.get('landline')?.hasError('required')) {
-          <p class="text-xs text-red-500 mt-1">Phone number is required.</p>
+          <p class="offer-form__error">Phone number is required.</p>
           } @else if (offerForm.get('landline')?.touched && (offerForm.get('landline')?.hasError('invalidPhone') ||
           offerForm.get('landline')?.hasError('pattern'))) {
-          <p class="text-xs text-red-500">Enter a valid phone number using digits and phone symbols only.</p>
+          <p class="offer-form__error offer-form__error--flush">Enter a valid phone number using digits and phone symbols only.</p>
           } @else if (offerForm.get('landline')?.touched && offerForm.get('landline')?.hasError('maxlength')) {
-          <p class="text-xs text-red-500">Phone number cannot exceed 15 characters.</p>
+          <p class="offer-form__error offer-form__error--flush">Phone number cannot exceed 15 characters.</p>
           }
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label class="text-sm font-medium"> Email Address </label>
-          <div class="relative">
-            <i class="pi pi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#94A3B8]"></i>
+        <div class="offer-form__field-group">
+          <label class="offer-form__label"> Email Address </label>
+          <div class="offer-form__input-wrap">
+            <i class="pi pi-envelope offer-form__field-icon"></i>
             <input pInputText formControlName="email" placeholder="contact@example.com" type="email" inputmode="email"
-              autocomplete="email" class="pl-11 w-full bg-gray-50 rounded-none" />
+              autocomplete="email" class="offer-form__input offer-form__input--pl11" />
           </div>
           @if (offerForm.get('email')?.touched && offerForm.get('email')?.hasError('email')) {
-          <p class="text-xs text-red-500">Enter a valid email address.</p>
+          <p class="offer-form__error offer-form__error--flush">Enter a valid email address.</p>
           }
         </div>
       </div>
     </div>
-    <div class="p-6 bg-white mb-5 border border-[#EEF2F6]">
-      <div class="flex flex-col gap-6">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 flex items-center justify-center round-none bg-[rgba(0,51,160,0.08)] text-[rgba(0,51,160,1)]">
-              <span class="vendor-form-svg-icon h-5 w-5"
+    <div class="offer-form__section">
+      <div class="offer-form__stack">
+        <div class="offer-form__toggle-head">
+          <div class="offer-form__section-head">
+            <div class="offer-form__section-icon">
+              <span class="vendor-form-svg-icon offer-form__section-glyph"
                 [style.webkitMaskImage]="getOfferIconMask('ic-custom-highlights.svg')"
                 [style.maskImage]="getOfferIconMask('ic-custom-highlights.svg')"></span>
             </div>
 
             <div>
-              <h2 class="text-[1.75rem] font-semibold text-[#1F2937]">
+              <h2 class="offer-form__section-title">
                 Custom Highlights
               </h2>
-              <p class="text-gray-500 text-sm leading-relaxed">
+              <p class="offer-form__section-subtitle">
                 Add custom details for the highlight section.
               </p>
             </div>
           </div>
 
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-sm" [class.text-white]="highlightEnabled()"
-              [class.text-[#94A3B8]]="!highlightEnabled()">
+          <div class="offer-form__row offer-form__row--gap3">
+            <span class="offer-form__toggle-status"
+              [class.offer-form__toggle-status--on]="highlightEnabled()"
+              [class.offer-form__toggle-status--off]="!highlightEnabled()">
               {{ highlightEnabled() ? 'Active' : 'In-Active' }}
             </span>
             <p-toggleswitch formControlName="highlight"></p-toggleswitch>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 transition-all duration-500 ease-in-out overflow-hidden" [ngClass]="highlightEnabled()
-                          ? 'opacity-100 translate-y-0 max-h-[2000px]'
-                          : 'opacity-0 -translate-y-2 max-h-0 pointer-events-none'">
-          <div class="flex flex-col gap-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="flex flex-col gap-2">
-                <label class="text-sm font-medium">
+        <div class="offer-form__collapse"
+          [ngClass]="highlightEnabled() ? 'offer-form__collapse--open' : 'offer-form__collapse--closed'">
+          <div class="offer-form__stack">
+            <div class="offer-form__grid offer-form__grid--mt-0">
+              <div class="offer-form__field-group">
+                <label class="offer-form__label">
                   Highlights Title (English)
-                  <span class="text-red-500">*</span>
+                  <span class="offer-form__required">*</span>
                 </label>
                 <input pInputText formControlName="highlightTitleEn"
-                  class="offer-form__highlight-field pl-5 w-full bg-gray-50 rounded-none"
+                  class="offer-form__highlight-field offer-form__input offer-form__input--pl5"
                   placeholder="Enter highlight title" />
                 @if (hasRequiredError('highlightTitleEn')) {
-                <p class="text-xs text-red-500 mt-1">Highlights title (English) is required.</p>
+                <p class="offer-form__error">Highlights title (English) is required.</p>
                 }
               </div>
 
-              <div class="flex flex-col gap-2">
-                <label class="text-sm font-medium">
+              <div class="offer-form__field-group">
+                <label class="offer-form__label">
                   Highlights Title (Arabic)
-                  <span class="text-red-500">*</span>
+                  <span class="offer-form__required">*</span>
                 </label>
                 <input pInputText formControlName="highlightTitleAr" (input)="sanitizeArabicInput('highlightTitleAr')"
-                  class="offer-form__highlight-field w-full bg-gray-50 pl-5 rounded-none text-right"
+                  class="offer-form__highlight-field offer-form__input offer-form__input--pl5 offer-form__input--right"
                   placeholder="أدخل عنوان الميزة" />
                 @if (hasRequiredError('highlightTitleAr')) {
-                <p class="text-xs text-red-500 mt-1">Highlights title (Arabic) is required.</p>
+                <p class="offer-form__error">Highlights title (Arabic) is required.</p>
                 }
               </div>
             </div>
 
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-medium">
+            <div class="offer-form__field-group">
+              <label class="offer-form__label">
                 Highlights Description (English)
-                <span class="text-red-500">*</span>
+                <span class="offer-form__required">*</span>
               </label>
               <input pInputText rows="4" formControlName="highlightDescription"
-                class="offer-form__highlight-field w-full bg-gray-50 p-5 rounded-none"
+                class="offer-form__highlight-field offer-form__input offer-form__input--p5"
                 placeholder="Describe this highlight" />
               @if (hasRequiredError('highlightDescription')) {
-              <p class="text-xs text-red-500 mt-1">Highlights description is required.</p>
+              <p class="offer-form__error">Highlights description is required.</p>
               }
             </div>
 
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-medium">
+            <div class="offer-form__field-group">
+              <label class="offer-form__label">
                 Highlights Description (Arabic)
-                <span class="text-red-500">*</span>
+                <span class="offer-form__required">*</span>
               </label>
               <input pInputText rows="4" formControlName="highlightDescriptionAr"
-                class="offer-form__highlight-field w-full bg-gray-50 p-5 rounded-none text-right" dir="rtl"
+                class="offer-form__highlight-field offer-form__input offer-form__input--p5 offer-form__input--right" dir="rtl"
                 placeholder="اكتب وصف الميزة" />
               @if (hasRequiredError('highlightDescriptionAr')) {
-              <p class="text-xs text-red-500 mt-1">Highlights description (Arabic) is required.</p>
+              <p class="offer-form__error">Highlights description (Arabic) is required.</p>
               }
             </div>
           </div>
@@ -1142,9 +1127,8 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-3 mt-6 px-6 py-5 md:mb-0 sm:flex-row sm:items-center bg-white"
-      [ngClass]="'sm:justify-end'">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+    <div class="offer-form__footer">
+      <div class="offer-form__footer-actions">
         <app-button variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
           Save As Draft
         </app-button>
@@ -1154,7 +1138,7 @@
       </div>
     </div>
   </form>
-  <div class="hidden lg:block shrink-0 sticky top-12 self-start">
+  <div class="offer-form__preview-col">
     <app-preview-offer-details [offer]="previewOffer()" [vendor]="previewOffer().vendor" [language]="previewLanguage"
       [locations]="previewLocations" />
   </div>
@@ -1165,8 +1149,8 @@
     (locationAdded)="onLocationAdded()" (visibleChange)="onLocationDialogVisibleChange($event)" />
 
   <app-confirmation-pop-up [visible]="showConfirmationDialog()" [loading]="isLoading()"
-    [title]="actionType() === 'edit' ? 'Confirm Changes' : 'Confirm Offer Creation'" [message]="actionType() === 'edit' 
-      ? 'Are you sure you want to save the changes to this offer?' 
+    [title]="actionType() === 'edit' ? 'Confirm Changes' : 'Confirm Offer Creation'" [message]="actionType() === 'edit'
+      ? 'Are you sure you want to save the changes to this offer?'
       : 'Are you sure you want to create this new offer?'"
     [confirmLabel]="actionType() === 'edit' ? 'Save Changes' : 'Create Offer'" [cancelLabel]="'Cancel'"
     (confirm)="onConfirmSubmit()" (cancel)="onCancelSubmit()">
@@ -1174,18 +1158,14 @@
 
   <!-- Image Cropper Modal -->
   @if (cropperVisible()) {
-  <div class="fixed inset-0 z-[1100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-6"
-    (click)="cancelCrop()">
-    <div
-      class="offer-form__cropper-dialog w-full max-w-3xl rounded-none shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]"
-      (click)="$event.stopPropagation()">
+  <div class="offer-form__cropper-overlay" (click)="cancelCrop()">
+    <div class="offer-form__cropper-dialog offer-form__cropper-box" (click)="$event.stopPropagation()">
 
       <!-- Header -->
-      <div
-        class="offer-form__cropper-header flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0">
-        <div class="min-w-0">
-          <h3 class="text-base sm:text-lg font-bold text-gray-900 truncate">Crop & Resize Image</h3>
-          <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">
+      <div class="offer-form__cropper-header offer-form__cropper-header-row">
+        <div class="offer-form__min-w-0">
+          <h3 class="offer-form__cropper-heading">Crop & Resize Image</h3>
+          <p class="offer-form__cropper-sub">
             {{ cropperTarget() === 'offer'
             ? 'Adjust the offer background images'
             : highlightCropTab() === 'mobile'
@@ -1193,17 +1173,16 @@
             : 'Adjust the desktop highlight image' }}
           </p>
         </div>
-        <button type="button"
-          class="offer-form__cropper-close w-8 h-8 flex items-center justify-center rounded-full shrink-0 ml-2 cursor-pointer"
+        <button type="button" class="offer-form__cropper-close offer-form__cropper-close-btn"
           (click)="cancelCrop()">
           <i class="pi pi-times"></i>
         </button>
       </div>
 
-      <div class="offer-form__cropper-toolbar flex items-center gap-2 px-4 sm:px-6 py-3 border-b shrink-0">
-        <div class="min-w-0 mr-auto">
-          <span class="offer-form__cropper-meta-label text-[11px] font-semibold uppercase tracking-wide">Frame</span>
-          <p class="offer-form__cropper-meta-value text-xs mt-0.5">
+      <div class="offer-form__cropper-toolbar offer-form__cropper-toolbar-row">
+        <div class="offer-form__cropper-toolbar-meta">
+          <span class="offer-form__cropper-meta-label offer-form__cropper-eyebrow">Frame</span>
+          <p class="offer-form__cropper-meta-value offer-form__cropper-metaval">
             {{ cropperTarget() === 'offer'
             ? offerCropTab() === 'mobile'
             ? '2.39:1 mobile background crop'
@@ -1213,58 +1192,52 @@
             : '16:9 desktop highlight crop' }}
           </p>
         </div>
-        <div class="flex items-center gap-2">
-          <span
-            class="offer-form__cropper-meta-label text-[11px] font-semibold uppercase tracking-wide mr-1">Zoom</span>
-          <button type="button"
-            class="offer-form__cropper-icon-button w-8 h-8 flex items-center justify-center rounded-lg border transition-colors cursor-pointer"
+        <div class="offer-form__cropper-zoom">
+          <span class="offer-form__cropper-meta-label offer-form__cropper-eyebrow offer-form__mr-1">Zoom</span>
+          <button type="button" class="offer-form__cropper-icon-button offer-form__cropper-iconbtn"
             (click)="zoomOut()">
-            <i class="pi pi-minus text-xs"></i>
+            <i class="pi pi-minus offer-form__text-xs"></i>
           </button>
-          <div class="w-24 sm:w-32 flex items-center">
+          <div class="offer-form__cropper-slider-wrap">
             <input type="range" [min]="0.1" [max]="3" [step]="0.1" [value]="cropperZoom()"
               (input)="onZoomSlider($event)"
-              class="offer-form__cropper-slider w-full h-1.5 rounded-full appearance-none cursor-pointer" />
+              class="offer-form__cropper-slider" />
           </div>
-          <button type="button"
-            class="offer-form__cropper-icon-button w-8 h-8 flex items-center justify-center rounded-lg border transition-colors cursor-pointer"
+          <button type="button" class="offer-form__cropper-icon-button offer-form__cropper-iconbtn"
             (click)="zoomIn()">
-            <i class="pi pi-plus text-xs"></i>
+            <i class="pi pi-plus offer-form__text-xs"></i>
           </button>
-          <span class="offer-form__cropper-meta-value text-xs font-mono w-10 text-center">{{ (cropperZoom() *
+          <span class="offer-form__cropper-meta-value offer-form__cropper-metaval offer-form__cropper-pct">{{ (cropperZoom() *
             100).toFixed(0) }}%</span>
         </div>
       </div>
 
       @if (cropperTarget() === 'offer') {
-      <div class="flex items-center gap-2 px-4 sm:px-6 py-3 border-b border-gray-100 bg-white shrink-0">
-        <button type="button" class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer"
-          [class.bg-[#0033A0]]="offerCropTab() === 'mobile'" [class.text-white]="offerCropTab() === 'mobile'"
-          [class.border-[#0033A0]]="offerCropTab() === 'mobile'" [class.bg-white]="offerCropTab() !== 'mobile'"
-          [class.text-gray-600]="offerCropTab() !== 'mobile'" [class.border-gray-200]="offerCropTab() !== 'mobile'"
+      <div class="offer-form__cropper-tabbar">
+        <button type="button" class="offer-form__crop-tab-btn"
+          [class.offer-form__crop-tab-btn--active]="offerCropTab() === 'mobile'"
+          [class.offer-form__crop-tab-btn--inactive]="offerCropTab() !== 'mobile'"
           (click)="switchOfferCropTab('mobile')">
           Mobile 2.39:1
         </button>
-        <button type="button"
-          class="px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer disabled:cursor-not-allowed"
-          [class.bg-[#0033A0]]="offerCropTab() === 'desktop'" [class.text-white]="offerCropTab() === 'desktop'"
-          [class.border-[#0033A0]]="offerCropTab() === 'desktop'" [class.bg-white]="offerCropTab() !== 'desktop'"
-          [class.text-gray-600]="offerCropTab() !== 'desktop'" [class.border-gray-200]="offerCropTab() !== 'desktop'"
+        <button type="button" class="offer-form__crop-tab-btn"
+          [class.offer-form__crop-tab-btn--active]="offerCropTab() === 'desktop'"
+          [class.offer-form__crop-tab-btn--inactive]="offerCropTab() !== 'desktop'"
           [disabled]="!canOpenDesktopOfferTab" (click)="switchOfferCropTab('desktop')">
           Desktop 16:2
         </button>
       </div>
       } @else {
-      <div class="flex items-center gap-2 px-4 sm:px-6 py-3 border-b border-gray-100 bg-white shrink-0">
-        <span class="px-4 py-2 rounded-full text-sm font-medium border bg-[#0033A0] text-white border-[#0033A0]">
+      <div class="offer-form__cropper-tabbar">
+        <span class="offer-form__crop-tab-btn offer-form__crop-tab-btn--active">
           {{ highlightCropTab() === 'mobile' ? 'Mobile 9:16' : 'Desktop 16:9' }}
         </span>
       </div>
       }
 
       <!-- Cropper Area -->
-      <div class="offer-form__cropper-scroll flex-1 overflow-auto px-3 sm:px-6 py-4 min-h-0" style="max-height: 55vh;">
-        <div class="flex items-center justify-center min-h-[200px]">
+      <div class="offer-form__cropper-scroll offer-form__cropper-body" style="max-height: 55vh;">
+        <div class="offer-form__cropper-stage">
           @if (cropperMounted()) {
           <image-cropper [imageURL]="cropperImageUrl()" [maintainAspectRatio]="true" [aspectRatio]="cropperAspectRatio"
             [resizeToWidth]="cropperResizeWidth" [transform]="cropperTransform()" [canvasRotation]="0" format="png"
@@ -1274,85 +1247,84 @@
       </div>
 
       <!-- Footer Actions -->
-      <div
-        class="offer-form__cropper-footer flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t shrink-0">
+      <div class="offer-form__cropper-footer offer-form__cropper-actions">
         <button type="button" pButton label="Cancel" severity="secondary" [outlined]="true" (click)="cancelCrop()"
-          styleClass="offer-form__cropper-cancel w-full sm:w-auto"></button>
+          styleClass="offer-form__cropper-cancel"></button>
         <button type="button" pButton [label]="cropperPrimaryActionLabel" [icon]="cropperPrimaryActionIcon"
           (click)="applyCrop()" [disabled]="!canApplyCrop"
-          styleClass="offer-form__cropper-apply w-full sm:w-auto"></button>
+          styleClass="offer-form__cropper-apply"></button>
       </div>
     </div>
   </div>
   }
 </div>
 } @else {
-<div class="w-full animate-pulse">
+<div class="offer-form__skeleton">
   <!-- Top action bar skeleton -->
-  <div class="w-full flex flex-col md:flex-row justify-between items-center mb-5 gap-3">
-    <div class="flex flex-row gap-3 items-center">
+  <div class="offer-form__skeleton-topbar">
+    <div class="offer-form__row offer-form__row--gap3">
       <p-skeleton shape="circle" size="1.5rem"></p-skeleton>
       <p-skeleton width="5rem" height="1rem"></p-skeleton>
     </div>
-    <div class="flex gap-2">
+    <div class="offer-form__row offer-form__row--gap2">
       <p-skeleton width="8rem" height="2.25rem" borderRadius="0"></p-skeleton>
       <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
     </div>
   </div>
 
   <!-- Main form card skeleton -->
-  <div class="p-6 bg-white border border-[#EEF2F6] space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="md:col-span-2">
-        <p-skeleton width="10rem" height="1rem" class="mb-2"></p-skeleton>
+  <div class="offer-form__skeleton-card">
+    <div class="offer-form__grid offer-form__grid--mt-0">
+      <div class="offer-form__col-2">
+        <p-skeleton width="10rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
         <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
       </div>
 
       @for (field of [1,2,3,4]; track field) {
       <div>
-        <p-skeleton width="8rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="8rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
         <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
       </div>
       }
 
-      <div class="md:col-span-2">
-        <p-skeleton width="9rem" height="1rem" class="mb-2"></p-skeleton>
+      <div class="offer-form__col-2">
+        <p-skeleton width="9rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
         <p-skeleton width="100%" height="6rem" borderRadius="0"></p-skeleton>
       </div>
 
-      <div class="md:col-span-2">
-        <p-skeleton width="9rem" height="1rem" class="mb-2"></p-skeleton>
+      <div class="offer-form__col-2">
+        <p-skeleton width="9rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
         <p-skeleton width="100%" height="6rem" borderRadius="0"></p-skeleton>
       </div>
     </div>
   </div>
 
   <!-- Secondary sections -->
-  <div class="mt-4 p-6 bg-white border border-[#EEF2F6] space-y-5">
-    <div class="flex justify-between items-center">
+  <div class="offer-form__skeleton-card offer-form__skeleton-card--gap5">
+    <div class="offer-form__row offer-form__skeleton-between">
       <p-skeleton width="12rem" height="1.5rem"></p-skeleton>
       <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
     </div>
     @for (row of [1,2]; track row) {
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-[#F8FAFC] border border-[#EEF2F6]">
+    <div class="offer-form__grid offer-form__grid--mt-0 offer-form__skeleton-subcard">
       <div>
-        <p-skeleton width="7rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="7rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
         <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
       </div>
       <div>
-        <p-skeleton width="7rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="7rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
         <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
       </div>
     </div>
     }
   </div>
 
-  <div class="mt-4 p-6 bg-white border border-[#EEF2F6] space-y-4">
+  <div class="offer-form__skeleton-card offer-form__skeleton-card--gap4">
     <p-skeleton width="14rem" height="1.5rem"></p-skeleton>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="offer-form__grid offer-form__grid--cols3 offer-form__grid--mt-0">
       @for (contact of [1,2,3]; track contact) {
       <div>
-        <p-skeleton width="7rem" height="1rem" class="mb-2"></p-skeleton>
+        <p-skeleton width="7rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
         <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
       </div>
       }
