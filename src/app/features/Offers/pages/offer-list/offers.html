@@ -39,41 +39,38 @@
       <div class="offers__toolbar-header">
         <h2 class="offers__card-title">Offers</h2>
         <div class="offers__controls">
-          <span class="offers__search">
-            <i class="pi pi-search"></i>
-            <input type="text" placeholder="Search" [ngModel]="search()" (ngModelChange)="search.set($event)" />
-          </span>
+          <app-search [value]="search()" (valueChange)="search.set($event)"></app-search>
           <app-button variant="primary" icon="pi pi-download">Export</app-button>
         </div>
       </div>
-      <div class="offers__filters-row">
-        <div class="offers__filter-group">
-          <label class="offers__filter-label">Discount Type</label>
+      <div class="app-filters-row">
+        <div class="app-filter-group">
+          <label class="app-filter-label">Discount Type</label>
           <p-select [options]="discountTypeOptions" [ngModel]="discountType()"
             (ngModelChange)="discountType.set($event)" optionLabel="label" optionValue="value"
             placeholder="Discount Type" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
         </div>
-        <div class="offers__filter-group">
-          <label class="offers__filter-label">Status</label>
+        <div class="app-filter-group">
+          <label class="app-filter-label">Status</label>
           <p-select [options]="statusOptions" [ngModel]="status()" (ngModelChange)="status.set($event)"
             optionLabel="label" optionValue="value" placeholder="Status" styleClass="offers__filter"
             panelStyleClass="offers__overlay-panel" />
         </div>
-        <div class="offers__filter-group">
-          <label class="offers__filter-label">Availability</label>
+        <div class="app-filter-group">
+          <label class="app-filter-label">Availability</label>
           <p-select [options]="availabilityOptions" [ngModel]="availability()"
             (ngModelChange)="availability.set($event)" optionLabel="label" optionValue="value"
             placeholder="Availability" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
         </div>
-        <div class="offers__filter-group">
-          <label class="offers__filter-label">Period</label>
+        <div class="app-filter-group">
+          <label class="app-filter-label">Period</label>
           <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="period.set($event)"
             optionLabel="label" optionValue="value" placeholder="Period" styleClass="offers__filter"
             panelStyleClass="offers__overlay-panel" />
         </div>
         @if (period() === 'custom') {
-        <div class="offers__filter-group">
-          <label class="offers__filter-label">Custom Range</label>
+        <div class="app-filter-group">
+          <label class="app-filter-label">Custom Range</label>
           <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
             [readonlyInput]="true" placeholder="Select dates" dateFormat="yy-mm-dd" appendTo="body"
             styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />

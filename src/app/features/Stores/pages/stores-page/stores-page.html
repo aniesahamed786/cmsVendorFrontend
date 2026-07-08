@@ -115,69 +115,56 @@
   </section>
 
   <!-- Table Section -->
-  <section class="insight-card">
+  <section class="stores-page__card">
     <div class="stores-page__toolbar">
       <div class="stores-page__toolbar-header">
         <h2 class="insight-card-title stores-page__toolbar-title">Branches</h2>
         <div class="stores-page__controls">
-          <span class="p-input-icon-left stores-page__search-wrapper">
-            <i class="pi pi-search"></i>
-            <input type="text" pInputText placeholder="Search" class="stores-page__search-input"
-              [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
-          </span>
+          <app-search [value]="searchQuery()" (valueChange)="searchQuery.set($event)"></app-search>
           <app-button variant="primary" icon="pi pi-download" (click)="exportTable()">Export</app-button>
         </div>
       </div>
 
-      <div class="stores-page__filters-row">
-        <div class="stores-page__filters-group">
-          <div class="stores-page__filter-item">
-            <label class="stores-page__filter-label">Status</label>
-            <p-select [options]="statusOptions" [ngModel]="selectedStatus()"
-              (ngModelChange)="selectedStatus.set($event)" optionLabel="label" optionValue="value" placeholder="Status"
-              styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
-          </div>
+      <div class="app-filters-row">
+        <div class="app-filter-group">
+          <label class="app-filter-label">Status</label>
+          <p-select [options]="statusOptions" [ngModel]="selectedStatus()"
+            (ngModelChange)="selectedStatus.set($event)" optionLabel="label" optionValue="value" placeholder="Status"
+            styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
+        </div>
 
-          <div class="stores-page__filter-item">
-            <label class="stores-page__filter-label">Region</label>
-            <p-select [options]="regionOptions" [ngModel]="selectedRegion()"
-              (ngModelChange)="selectedRegion.set($event)" optionLabel="label" optionValue="value" placeholder="Region"
-              styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
-          </div>
+        <div class="app-filter-group">
+          <label class="app-filter-label">Region</label>
+          <p-select [options]="regionOptions" [ngModel]="selectedRegion()"
+            (ngModelChange)="selectedRegion.set($event)" optionLabel="label" optionValue="value" placeholder="Region"
+            styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
+        </div>
 
-          <div class="stores-page__filter-item">
-            <label class="stores-page__filter-label">Manager</label>
-            <p-select [options]="managerOptions" [ngModel]="selectedManager()"
-              (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value"
-              placeholder="Manager" styleClass="stores-page__filter-select"
-              panelStyleClass="stores-page__filter-panel"></p-select>
-          </div>
+        <div class="app-filter-group">
+          <label class="app-filter-label">Manager</label>
+          <p-select [options]="managerOptions" [ngModel]="selectedManager()"
+            (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value"
+            placeholder="Manager" styleClass="stores-page__filter-select"
+            panelStyleClass="stores-page__filter-panel"></p-select>
         </div>
       </div>
     </div>
 
     <!-- Table -->
     <div class="stores-page__table-wrapper">
-      <table class="stores-page__table">
-        <thead>
+      <p-table [value]="filteredStores()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+        paginatorDropdownAppendTo="body" styleClass="stores-page__table">
+        <ng-template pTemplate="header">
           <tr>
-            <th class="stores-page__th-sortable" (click)="toggleSort('name')">
-              Store Name <i class="pi stores-page__sort-icon" [ngClass]="sortIcon('name')"></i>
-            </th>
-            <th class="stores-page__th-sortable" (click)="toggleSort('totalOffers')">
-              Total Offers <i class="pi stores-page__sort-icon" [ngClass]="sortIcon('totalOffers')"></i>
-            </th>
-            <th class="stores-page__th-sortable" (click)="toggleSort('location')">
-              Location <i class="pi stores-page__sort-icon" [ngClass]="sortIcon('location')"></i>
-            </th>
-            <th class="stores-page__th-sortable" (click)="toggleSort('manager')">
-              Manager <i class="pi stores-page__sort-icon" [ngClass]="sortIcon('manager')"></i>
-            </th>
-            <th class="stores-page__th-center">Action</th>
+            <th pSortableColumn="name">Store Name <p-sortIcon field="name" /></th>
+            <th pSortableColumn="totalOffers">Total Offers <p-sortIcon field="totalOffers" /></th>
+            <th pSortableColumn="location">Location <p-sortIcon field="location" /></th>
+            <th pSortableColumn="manager">Manager <p-sortIcon field="manager" /></th>
+            <th>Action</th>
           </tr>
-        </thead>
-        <tbody>
-          @for (store of filteredStores(); track store.id) {
+        </ng-template>
+
+        <ng-template pTemplate="body" let-store>
           <tr>
             <td>{{ store.name }}</td>
             <td>{{ store.totalOffers }}</td>
@@ -189,13 +176,14 @@
               </button>
             </td>
           </tr>
-          } @empty {
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="5" class="stores-page__empty-message">No branches found.</td>
           </tr>
-          }
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
   </section>
 </div>

@@ -134,28 +134,6 @@
     width: 100%;
   }
 
-  &__filters-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
-  &__filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  &__filter-label {
-    color: var(--app-muted);
-    font-size: 0.875rem;
-    font-weight: 600;
-    line-height: 1.25rem;
-  }
-
   &__card-title {
     margin: 0;
     font-size: 1.05rem;
@@ -170,41 +148,6 @@
     gap: 0.75rem;
     flex-wrap: wrap;
   }
-
-  &__search {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: 16rem;
-    padding: 0.55rem 0.9rem;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-    border: 1px solid var(--app-border);
-    color: var(--app-muted);
-
-    i {
-      font-size: 0.95rem;
-    }
-
-    input {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--app-text);
-      font-size: 0.9rem;
-
-      &::placeholder {
-        color: var(--app-muted);
-        opacity: 1;
-      }
-    }
-
-    &:focus-within {
-      border-color: var(--app-primary);
-    }
-  }
-
-
 
   &__availability {
     display: inline-flex;

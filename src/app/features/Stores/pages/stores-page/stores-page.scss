@@ -66,7 +66,7 @@
   .overview-kpi-card {
     background: var(--app-surface);
     padding: 1.25rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--app-border);
     display: flex;
     flex-direction: column;
 
@@ -117,7 +117,7 @@
   .insight-card {
     background: var(--app-surface);
     padding: 1.25rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--app-border);
   }
 
   .insight-card-title {
@@ -125,6 +125,12 @@
     font-size: 1rem;
     font-weight: 600;
     color: var(--app-text);
+  }
+
+  &__card {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    padding: 1.25rem 1.5rem;
   }
 
   &__map-card {
@@ -303,136 +309,6 @@
     }
   }
 
-  &__search-wrapper {
-    position: relative;
-    flex: 1;
-
-    @media (min-width: 768px) {
-      width: 16rem;
-    }
-
-    i {
-      position: absolute;
-      left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--app-muted);
-    }
-  }
-
-  &__search-input {
-    width: 100%;
-    height: 2.5rem;
-    padding-left: 2rem;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-    border: 1px solid var(--app-border);
-    color: var(--app-text);
-    border-radius: 0;
-
-    &:focus {
-      outline: none;
-      border-color: var(--app-primary);
-    }
-
-    &::placeholder {
-      color: var(--app-muted);
-      opacity: 1;
-    }
-  }
-
-  &__filters-row {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-
-    @media (min-width: 768px) {
-      flex-direction: row;
-      align-items: flex-end;
-    }
-  }
-
-  &__filters-group {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  &__filter-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  &__filter-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--app-text);
-    opacity: 0.8;
-  }
-
-  /* Table styling */
-  &__table-wrapper {
-    border: 1px solid var(--app-border);
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  &__table {
-    border-collapse: collapse;
-    width: 100%;
-    min-width: 600px;
-    text-align: left;
-
-    th {
-      padding: 0.75rem 1rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--app-muted);
-      border-bottom: 1px solid var(--app-border);
-      background: var(--app-surface);
-      user-select: none;
-    }
-
-    td {
-      padding: 1.1rem 1rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--app-text);
-      border-bottom: 1px solid var(--app-border);
-    }
-
-    tr {
-      transition: background-color 0.2s;
-
-      &:hover {
-        background: var(--app-primary-hover-soft);
-      }
-
-      &:last-child td {
-        border-bottom: none;
-      }
-    }
-  }
-
-  &__th-sortable {
-    cursor: pointer;
-
-    &:hover {
-      color: var(--app-text) !important;
-    }
-  }
-
-  &__sort-icon {
-    font-size: 10px;
-  }
-
-  &__th-center,
-  &__td-center {
-    text-align: center !important;
-  }
-
   &__action-btn {
     background: transparent;
     border: none;
@@ -452,50 +328,92 @@
   }
 }
 
-/* PrimeNG Select Overrides */
-::ng-deep {
-  .stores-page__filter-select.p-select {
-    min-height: 2.75rem;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-    border: 1px solid var(--app-border) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
+// ---- Table theming (square corners, tokens) ----
+::ng-deep .stores-page__table {
+  background: var(--app-surface);
+  margin: 0 -1.5rem -1.25rem;
 
-    .p-select-label {
-      color: var(--app-text) !important;
-    }
+  .p-datatable-thead>tr>th:first-child,
+  .p-datatable-tbody>tr>td:first-child {
+    padding-left: 1.5rem;
+  }
 
-    .p-select-dropdown {
-      color: var(--app-muted) !important;
-      border-left: 1px solid var(--app-border) !important;
-    }
+  .p-datatable-thead>tr>th:last-child,
+  .p-datatable-tbody>tr>td:last-child {
+    padding-right: 1.5rem;
+  }
 
-    &:focus-within {
-      border-color: var(--app-primary) !important;
-      box-shadow: none !important;
-      outline: none !important;
+  .p-datatable-thead>tr>th {
+    background: transparent;
+    color: var(--app-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.9rem 1rem;
+    border: none;
+    border-top: 1px solid var(--app-border);
+    border-bottom: 1px solid var(--app-border);
+  }
+
+  .p-datatable-tbody>tr {
+    background: var(--app-surface);
+    color: var(--app-text);
+
+    >td {
+      padding: 1.1rem 1rem;
+      border: none;
+      border-bottom: 1px solid var(--app-border);
     }
   }
 
-  .stores-page__filter-panel {
-    background: var(--app-surface) !important;
-    border: 1px solid var(--app-border) !important;
-    border-radius: 0 !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  // sort arrows
+  .p-sortable-column .p-sortable-column-icon,
+  .p-sortable-column:hover .p-sortable-column-icon {
+    color: var(--app-muted);
+  }
 
-    .p-select-option {
-      color: var(--app-text) !important;
-      border-radius: 0 !important;
+  .p-sortable-column.p-highlight,
+  .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--app-primary);
+  }
 
-      &:hover,
-      &.p-focus {
-        background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
-      }
+  // Paginator
+  .p-paginator {
+    background: transparent;
+    border: none;
+    padding: 1rem;
+    justify-content: center;
+    gap: 0.25rem;
+  }
 
-      &.p-select-option-selected {
-        background: var(--app-primary-soft) !important;
-        color: var(--app-primary) !important;
-      }
-    }
+  .p-paginator .p-select {
+    width: auto;
+    min-width: 4.5rem;
+  }
+
+  .p-paginator .p-select-label {
+    padding-right: 0.5rem;
+  }
+
+  .p-paginator .p-paginator-page,
+  .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-prev,
+  .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-last {
+    color: var(--app-muted);
+    background: transparent;
+    border-radius: 0;
+    min-width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .p-paginator .p-paginator-page.p-highlight {
+    background: var(--app-primary);
+    color: #fff;
+    border-radius: 999px;
+  }
+
+  .p-paginator .p-paginator-page:not(.p-highlight):hover {
+    background: var(--app-primary-hover-soft);
+    color: var(--app-text);
   }
 }

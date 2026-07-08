@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { StoresService, StoreKPIs, TopPerformer, StoreRow } from '../../services/stores.service';
 import { Button } from '../../../../shared/Components/button/button';
+import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { ThemeService } from '../../../../shared/services/theme.service';
 import { environment } from '../../../../../environments/environment';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
@@ -11,7 +12,7 @@ import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 @Component({
   selector: 'app-stores-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch],
   templateUrl: './stores-page.html',
   styleUrl: './stores-page.scss'
 })
