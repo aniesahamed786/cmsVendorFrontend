@@ -13,12 +13,13 @@ export class Sidenav {
   private readonly allNavItems = signal([
     { icon: 'assets/svg/Navbar/ic-dashboard.svg', navItem: 'Dashboard', title: 'Dashboard', navLink: '/dashboard' },
     { icon: 'assets/svg/Navbar/ic-vendor.svg', navItem: 'Profile', title: 'Vendor Profile', navLink: '/profile' },
+    { icon: 'assets/svg/Navbar/ic-requests.svg', navItem: 'Request Center', title: 'Request Center', navLink: '/request-center' },
     { icon: 'assets/svg/Navbar/ic-offer.svg', navItem: 'Offers', title: 'Offers', navLink: '/offers' },
     { icon: 'assets/svg/Navbar/ic-vendor.svg', navItem: 'Branches', title: 'Branches', navLink: '/stores' },
+    { icon: 'assets/svg/Navbar/ic-offer.svg', navItem: 'Redemption', title: 'Redemption', navLink: '/redemption' },
     { icon: 'assets/svg/Navbar/ic-msgcenter.svg', navItem: 'Messaging Center', title: 'Messaging Center', navLink: '/messaging-center' },
-    { icon: 'assets/svg/Navbar/ic-requests.svg', navItem: 'Request Center', title: 'Request Center', navLink: '/request-center' },
-    { icon: 'assets/svg/Navbar/ic-log.svg', navItem: 'Recent Activities', title: 'Recent Activities', navLink: '/recent-activities' },
     { icon: 'assets/svg/Navbar/ic-analytics.svg', navItem: 'Analytics', title: 'Analytics', navLink: '/analytics' },
+    { icon: 'assets/svg/Navbar/ic-log.svg', navItem: 'Recent Activities', title: 'Recent Activities', navLink: '/recent-activities' },
   ]);
 
   readonly navItems = this.allNavItems;

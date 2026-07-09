@@ -1,0 +1,101 @@
+<div class="redemption-page">
+  
+  <!-- Header -->
+  <div class="redemption-header">
+    <h1 class="redemption-page__title">Offer Redemption</h1>
+    <app-button variant="primary" icon="pi pi-upload">Upload Excel</app-button>
+  </div>
+
+  <!-- Form Card -->
+  <p-card styleClass="redemption-card redemption-card--spaced">
+    <div class="redemption-card__header">
+      <i class="pi pi-shop"></i>
+      <span>Basic Information</span>
+    </div>
+    
+    <form class="redemption-form" [formGroup]="redemptionForm">
+      <div class="redemption-form__grid">
+        <!-- User ID -->
+        <div class="redemption-form__field-wrapper">
+          <label>User ID <span class="required-star">*</span></label>
+          <input type="text" pInputText formControlName="userId" placeholder="CMSV67363" class="redemption-form__input--full" />
+        </div>
+
+        <!-- Spacer for grid -->
+        <div class="redemption-form__spacer"></div>
+
+        <!-- Offer -->
+        <div class="redemption-form__field-wrapper">
+          <label>Offer <span class="required-star">*</span></label>
+          <p-select formControlName="offer" [options]="offers" optionLabel="label" optionValue="value" placeholder="Select Offer..." styleClass="redemption-form__field--full redemption-form__field" panelStyleClass="redemption-form__overlay-panel"></p-select>
+        </div>
+
+        <!-- Store -->
+        <div class="redemption-form__field-wrapper">
+          <label>Store <span class="required-star">*</span></label>
+          <p-select formControlName="store" [options]="stores" optionLabel="label" optionValue="value" placeholder="Select Store..." styleClass="redemption-form__field--full redemption-form__field" panelStyleClass="redemption-form__overlay-panel"></p-select>
+        </div>
+
+        <!-- Total Amount -->
+        <div class="redemption-form__field-wrapper">
+          <label>Total Amount <span class="required-star">*</span></label>
+          <input type="text" pInputText formControlName="totalAmount" placeholder="e.g. SAR.250" class="redemption-form__input--full" />
+        </div>
+
+        <!-- Paid Amount -->
+        <div class="redemption-form__field-wrapper">
+          <label>Paid Amount <span class="required-star">*</span></label>
+          <input type="text" pInputText formControlName="paidAmount" placeholder="e.g. SAR.250" class="redemption-form__input--full" />
+        </div>
+      </div>
+      
+      <div class="redemption-form__actions">
+        <app-button variant="primary" icon="pi pi-ticket" type="submit">Redeem Offer</app-button>
+      </div>
+    </form>
+  </p-card>
+
+  <!-- Table Section -->
+  <section class="redemption-card">
+    <div class="redemption-card__header redemption-card__header--table">
+      <h2 class="redemption-card__title">Redemption List</h2>
+    </div>
+    
+    <p-table [value]="redemptions" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body" styleClass="redemption-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="userId" class="redemption-table__th--sortable">
+            User ID <p-sortIcon field="userId"></p-sortIcon>
+          </th>
+          <th pSortableColumn="offer" class="redemption-table__th--sortable">
+            Offer <p-sortIcon field="offer"></p-sortIcon>
+          </th>
+          <th pSortableColumn="currentPrice" class="redemption-table__th--sortable">
+            Current Price
+          </th>
+          <th pSortableColumn="discountPrice" class="redemption-table__th--sortable">
+            Discount Price
+          </th>
+          <th pSortableColumn="amountSaved" class="redemption-table__th--sortable">
+            Amount Saved
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.userId }}</td>
+          <td>{{ item.offer }}</td>
+          <td>SAR. {{ item.currentPrice }}</td>
+          <td>SAR. {{ item.discountPrice }}</td>
+          <td>SAR. {{ item.amountSaved }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="redemption-table__empty">No redemptions found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+</div>

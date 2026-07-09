@@ -25,6 +25,11 @@ export const routes: Route[] = [
         data: { title: 'Branches' },
       },
       {
+        path: 'redemption',
+        loadChildren: () => import('../features/Redemption/redemption.routes').then((m) => m.routes),
+        data: { title: 'Redemption' },
+      },
+      {
         path: 'messaging-center',
         loadChildren: () =>
           import('../features/messaging-center/messaging-center.routes').then((m) => m.routes),

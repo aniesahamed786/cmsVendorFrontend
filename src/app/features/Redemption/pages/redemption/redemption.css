@@ -1,0 +1,245 @@
+:host { display: block; }
+
+:host { display: block; }
+
+.redemption-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.redemption-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.redemption-page__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--app-text);
+}
+
+::ng-deep .redemption-card.p-card,
+section.redemption-card {
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  box-shadow: none;
+  border-radius: 0;
+  display: block;
+}
+
+section.redemption-card {
+  padding: 1.5rem;
+}
+
+.redemption-card--spaced {
+  margin-bottom: 1rem;
+}
+
+.redemption-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.redemption-card__header--table {
+  padding-bottom: 1rem;
+}
+
+.redemption-card__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.redemption-card__header i {
+  color: var(--app-primary);
+}
+
+.required-star {
+  color: #dc2626;
+}
+
+/* Form Styles */
+.redemption-form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .redemption-form__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.redemption-form__field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.redemption-form__field-wrapper label {
+  font-weight: 600;
+  color: var(--app-text);
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+/* Input Fields */
+.redemption-form input {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  border: 1px solid var(--app-border) !important;
+  color: var(--app-text) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0.75rem 1rem;
+}
+
+.redemption-form input:focus {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.redemption-form input::placeholder {
+  color: var(--app-muted) !important;
+  opacity: 1;
+}
+
+/* PrimeNG Select Fields */
+::ng-deep .redemption-form .redemption-form__field.p-select,
+::ng-deep .redemption-form .redemption-form__field .p-select-label,
+::ng-deep .redemption-form .redemption-form__field .p-select-dropdown {
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+::ng-deep .redemption-form .redemption-form__field.p-select {
+  min-height: 2.75rem;
+}
+
+::ng-deep .redemption-form .redemption-form__field.p-select:focus-within {
+  border-color: var(--app-primary) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.redemption-table__empty {
+  text-align: center;
+  color: var(--app-muted);
+  padding: 2rem !important;
+}
+
+.redemption-table__th--sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.redemption-form__input--full,
+.redemption-form__field--full {
+  width: 100%;
+}
+
+.redemption-form__spacer {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .redemption-form__spacer {
+    display: block;
+  }
+}
+
+.redemption-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+::ng-deep .redemption-form .redemption-form__field .p-select-dropdown {
+  border-left: 1px solid var(--app-border) !important;
+  color: var(--app-muted) !important;
+  fill: var(--app-muted) !important;
+}
+
+/* Dropdown Overlay Panel (Global) */
+.redemption-form__overlay-panel,
+.redemption-form__overlay-panel .p-select-option {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+  border-radius: 0 !important;
+}
+
+.redemption-form__overlay-panel .p-select-option:hover,
+.redemption-form__overlay-panel .p-select-option.p-focus {
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+}
+
+.redemption-form__overlay-panel .p-select-option.p-select-option-selected {
+  background: var(--app-primary-soft) !important;
+  color: var(--app-primary) !important;
+}
+
+/* Table Styles */
+::ng-deep .redemption-table {
+  margin: 0 -1.5rem;
+}
+
+::ng-deep .redemption-table th,
+::ng-deep .redemption-table td {
+  border: none !important;
+  border-bottom: 1px solid var(--app-border) !important;
+}
+
+::ng-deep .redemption-table th {
+  background: color-mix(in srgb, var(--app-surface) 95%, var(--app-border) 5%) !important;
+  color: var(--app-muted) !important;
+  font-weight: 600 !important;
+  padding: 1rem !important;
+  border-top: 1px solid var(--app-border) !important;
+}
+
+::ng-deep .redemption-table td {
+  color: var(--app-text) !important;
+  padding: 1.1rem 1rem !important;
+}
+
+::ng-deep .redemption-table tr:hover td {
+  background: var(--app-primary-hover-soft) !important;
+}
+
+::ng-deep .redemption-table th:first-child,
+::ng-deep .redemption-table td:first-child {
+  padding-left: 1.5rem !important;
+}
+
+::ng-deep .redemption-table th:last-child,
+::ng-deep .redemption-table td:last-child {
+  padding-right: 1.5rem !important;
+}
+
+::ng-deep .redemption-table .p-sortable-column-icon {
+  color: var(--app-muted) !important;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+::ng-deep .redemption-table th.p-highlight .p-sortable-column-icon {
+  color: var(--app-primary) !important;
+}
