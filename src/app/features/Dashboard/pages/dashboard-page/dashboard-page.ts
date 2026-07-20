@@ -49,7 +49,7 @@ export class DashboardPage {
     {
       icon: 'pi pi-check-circle',
       iconClass: 'dashboard-page__activity-icon--success',
-      title: 'Store hours updated',
+      title: 'Branch hours updated',
       description: 'Dammam Branch',
       time: 'Yesterday',
     },

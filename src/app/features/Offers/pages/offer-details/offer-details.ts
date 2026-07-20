@@ -32,7 +32,7 @@ export class OfferDetailsPage {
     discount_amount: '50',
     discount_amount_ar: '٥٠',
     offerMode: 'both',
-    howToAvail: 'Present your QR code or Aramco ID at the store.',
+    howToAvail: 'Present your QR code or Aramco ID at the branch.',
     howToAvail_ar: 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في المتجر.',
     mobile: '+966 50 123 4567',
     telephone: '+966 11 234 5678',

@@ -20,8 +20,8 @@ export const routes: Route[] = [
         data: { title: 'Offers' },
       },
       {
-        path: 'stores',
-        loadChildren: () => import('../features/Stores/stores.routes').then((m) => m.routes),
+        path: 'branches',
+        loadChildren: () => import('../features/Branches/branches.routes').then((m) => m.routes),
         data: { title: 'Branches' },
       },
       {

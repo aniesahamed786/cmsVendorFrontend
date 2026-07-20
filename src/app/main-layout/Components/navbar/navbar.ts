@@ -6,16 +6,21 @@ import { filter } from 'rxjs';
 import { Popover } from 'primeng/popover';
 import { PrimeUIModules } from '../../../core/prime.import';
 import { ThemeService } from '../../../shared/services/theme.service';
+import { I18nService } from '../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule, FormsModule, PrimeUIModules],
+  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class Navbar {
   private readonly router = inject(Router);
   private readonly themeService = inject(ThemeService);
+  private readonly i18n = inject(I18nService);
+
+  readonly isArabic = this.i18n.isRtl;
 
   @ViewChild('profileMenu') profileMenu!: Popover;
 
@@ -87,5 +92,10 @@ export class Navbar {
 
   onThemeToggle(value: boolean): void {
     this.themeService.setAppearanceMode(value ? 'dark' : 'light');
+  }
+
+  onLanguageToggle(): void {
+    this.closeProfileMenu();
+    void this.i18n.toggle();
   }
 }

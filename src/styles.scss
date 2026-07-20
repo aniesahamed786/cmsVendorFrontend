@@ -17,6 +17,42 @@
   font-display: swap;
 }
 
+/*
+ * Page direction lives here, per the "RTL from CSS, not HTML" rule. I18nService
+ * sets only <html lang>; this turns that into direction. Everything inherits.
+ *
+ * ponytail: `dir="rtl"` on <html> would also expose direction to screen readers
+ * and enable :dir() — one extra line in I18nService.applyLang() if you want it.
+ *
+ * Templates must never hand-write dir for *page* direction. Content-level dir is
+ * a different thing and is correct: dir="rtl" on an Arabic data field, dir="ltr"
+ * on a phone number or discount amount so its digits stay in order inside an RTL
+ * page. Those ~20 existing attributes stay.
+ *
+ * The rest of the RTL work is logical properties in CSS/SCSS
+ * (margin-inline-start over margin-left, text-align: end over right).
+ */
+html[lang="ar"] {
+  direction: rtl;
+
+  /* Ghawar ships no Arabic glyphs (all 7 OTFs are ~46KB, Latin-only), so Arabic
+     falls through to a system Arabic face. Drop a Ghawar Arabic cut in front of
+     this list when the foundry supplies one. */
+  --font-family: "Ghawar", "SF Arabic", "Geeza Pro", "Segoe UI", Tahoma, sans-serif;
+
+  /* Arabic text one step smaller, because the fallback face renders visibly
+     larger than Ghawar at the same size.
+     `font-size-adjust: N` normalises rendered glyph height to N x-heights per em,
+     so it shrinks *text only* — the ~730 rem-based padding/margin/gap rules are
+     untouched. A blanket `font-size: 87.5%` on <html> would have scaled those too
+     and just zoomed the whole UI out, leaving text as proportionally large as
+     before, so it would not have fixed anything.
+     ponytail: 0.47 against a typical ~0.55 fallback aspect lands near one
+     Tailwind step (0.85x). It is a visual knob — eyeball it against the English
+     page and nudge it; lower is smaller. */
+  font-size-adjust: 0.47;
+}
+
 :root {
   --font-family: "Ghawar", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
@@ -206,7 +242,7 @@ p-button[severity="primary"] .p-button:enabled:hover,
 
 .p-menu .p-menuitem-icon {
   color: var(--app-muted) !important;
-  margin-right: 0.75rem;
+  margin-inline-end: 0.75rem;
 }
 
 .p-menu .p-menuitem-text {

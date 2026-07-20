@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-export interface StoreKPIs {
-  totalStores: number;
-  activeStores: number;
+export interface BranchKPIs {
+  totalBranches: number;
+  activeBranches: number;
   totalRedemptions: number;
   pendingRequests: number;
 }
@@ -15,7 +15,7 @@ export interface TopPerformer {
   redemptions: number;
 }
 
-export interface StoreRow {
+export interface BranchRow {
   id: string;
   name: string;
   totalOffers: number;
@@ -31,11 +31,11 @@ export interface StoreRow {
 @Injectable({
   providedIn: 'root'
 })
-export class StoresService {
-  getKPIs(): Observable<StoreKPIs> {
+export class BranchesService {
+  getKPIs(): Observable<BranchKPIs> {
     return of({
-      totalStores: 5,
-      activeStores: 5,
+      totalBranches: 5,
+      activeBranches: 5,
       totalRedemptions: 2847,
       pendingRequests: 3
     }).pipe(delay(500));
@@ -50,7 +50,7 @@ export class StoresService {
     ]).pipe(delay(500));
   }
 
-  getStores(): Observable<StoreRow[]> {
+  getBranches(): Observable<BranchRow[]> {
     return of([
       { id: '1', name: 'East Branch', totalOffers: 12, location: 'Eastern Province', manager: 'Abdullah', status: 'Active', region: 'East', dateAdded: new Date('2023-10-01'), latitude: 26.2361, longitude: 50.0326 },
       { id: '2', name: 'West Branch', totalOffers: 8, location: 'Western Province', manager: 'Al Saud', status: 'Active', region: 'West', dateAdded: new Date('2023-09-15'), latitude: 21.4858, longitude: 39.1925 },

@@ -199,7 +199,7 @@
                     <div class="pt-5 pb-2">
                         @if (activeTab === 'avail') {
                         <p class="preview-offer-details__text-wrap text-[0.75rem] text-gray-800 leading-relaxed font-medium" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
-                            {{ language === 'en' ? (offer?.howToAvail || 'Present your QR code or Aramco ID at the store.') : (offer?.howToAvail_ar || 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في المتجر.') }}
+                            {{ language === 'en' ? (offer?.howToAvail || 'Present your QR code or Aramco ID at the branch.') : (offer?.howToAvail_ar || 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في الفرع.') }}
                         </p>
                         } @else if (activeTab === 'contact') {
                         <div class="space-y-2" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">

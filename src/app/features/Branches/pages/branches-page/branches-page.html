@@ -1,39 +1,39 @@
-<div class="stores-page">
+<div class="branches-page">
 
   <!-- Page Header -->
-  <div class="stores-page__header">
-    <div class="stores-page__header-text">
-      <h1 class="stores-page__title">Branches</h1>
-      <p class="stores-page__subtitle">Manage and monitor all of your branches across the enterprise ecosystem.</p>
+  <div class="branches-page__header">
+    <div class="branches-page__header-text">
+      <h1 class="branches-page__title">Branches</h1>
+      <p class="branches-page__subtitle">Manage and monitor all of your branches across the enterprise ecosystem.</p>
     </div>
     <app-button variant="primary" icon="pi pi-plus">Add Branch</app-button>
   </div>
 
   <!-- KPI Cards -->
-  <section class="stores-page__kpis">
+  <section class="branches-page__kpis">
     @if (kpis()) {
     <div class="overview-kpi-grid">
       <article class="overview-kpi-card">
         <div class="overview-kpi-icon">
-          <i class="pi pi-shop stores-page__icon-lg"></i>
+          <i class="pi pi-shop branches-page__icon-lg"></i>
         </div>
-        <p class="overview-kpi-value">{{ animatedCount(kpis()?.totalStores) }}</p>
+        <p class="overview-kpi-value">{{ animatedCount(kpis()?.totalBranches) }}</p>
         <p class="overview-kpi-label">Total Branches</p>
         <p class="overview-kpi-subtext">All branches</p>
       </article>
 
       <article class="overview-kpi-card">
         <div class="overview-kpi-icon">
-          <i class="pi pi-check-circle stores-page__icon-lg"></i>
+          <i class="pi pi-check-circle branches-page__icon-lg"></i>
         </div>
-        <p class="overview-kpi-value">{{ animatedCount(kpis()?.activeStores) }}</p>
+        <p class="overview-kpi-value">{{ animatedCount(kpis()?.activeBranches) }}</p>
         <p class="overview-kpi-label">Active Branches</p>
         <p class="overview-kpi-subtext">Currently active</p>
       </article>
 
       <article class="overview-kpi-card">
         <div class="overview-kpi-icon">
-          <i class="pi pi-gift stores-page__icon-lg"></i>
+          <i class="pi pi-gift branches-page__icon-lg"></i>
         </div>
         <p class="overview-kpi-value">{{ animatedCount(kpis()?.totalRedemptions) }}</p>
         <p class="overview-kpi-label">Total Redemptions</p>
@@ -42,7 +42,7 @@
 
       <article class="overview-kpi-card">
         <div class="overview-kpi-icon">
-          <i class="pi pi-clock stores-page__icon-lg"></i>
+          <i class="pi pi-clock branches-page__icon-lg"></i>
         </div>
         <p class="overview-kpi-value">{{ animatedCount(kpis()?.pendingRequests) }}</p>
         <p class="overview-kpi-label">Pending Request</p>
@@ -55,8 +55,8 @@
       @for (i of [1,2,3,4]; track i) {
       <article class="overview-kpi-card">
         <p-skeleton shape="circle" size="2.75rem"></p-skeleton>
-        <p-skeleton width="7rem" height="1.9rem" styleClass="stores-page__skel-mt"></p-skeleton>
-        <p-skeleton width="5rem" height="0.9rem" styleClass="stores-page__skel-mt-sm"></p-skeleton>
+        <p-skeleton width="7rem" height="1.9rem" styleClass="branches-page__skel-mt"></p-skeleton>
+        <p-skeleton width="5rem" height="0.9rem" styleClass="branches-page__skel-mt-sm"></p-skeleton>
       </article>
       }
     </div>
@@ -64,24 +64,24 @@
   </section>
 
   <!-- Middle Section: Map and Top Performers -->
-  <section class="stores-page__middle">
+  <section class="branches-page__middle">
     <!-- Map Area -->
-    <div class="insight-card stores-page__map-card">
-      <h3 class="insight-card-title stores-page__card-title">Branch Locations</h3>
-      <div class="stores-page__map-wrapper">
+    <div class="insight-card branches-page__map-card">
+      <h3 class="insight-card-title branches-page__card-title">Branch Locations</h3>
+      <div class="branches-page__map-wrapper">
         @if (!hasMapsKey) {
-        <div class="stores-page__map-empty">
+        <div class="branches-page__map-empty">
           <p>Google Maps is not configured. Add `googleMapsApiKey` to your environment file to enable the map.</p>
         </div>
         } @else {
-        <div #mapContainer class="stores-page__map-container"></div>
+        <div #mapContainer class="branches-page__map-container"></div>
         @if (isMapLoading || !debug.scriptLoaded) {
-        <div class="stores-page__map-badge stores-page__map-badge--loading">
+        <div class="branches-page__map-badge branches-page__map-badge--loading">
           Loading map...
         </div>
         }
         @if (mapError) {
-        <div class="stores-page__map-error">
+        <div class="branches-page__map-error">
           <div><strong>Map didn't load</strong></div>
           <div>{{ mapError }}</div>
         </div>
@@ -91,22 +91,22 @@
     </div>
 
     <!-- Top Performers -->
-    <div class="insight-card stores-page__performers-card">
+    <div class="insight-card branches-page__performers-card">
       <h3 class="insight-card-title">Top Performers</h3>
-      <p class="stores-page__performers-subtitle">Ranked by monthly redemptions</p>
+      <p class="branches-page__performers-subtitle">Ranked by monthly redemptions</p>
 
-      <div class="stores-page__performers-list">
+      <div class="branches-page__performers-list">
         @for (performer of topPerformers(); track performer.id) {
-        <div class="stores-page__performer-row">
-          <div class="stores-page__performer-info">
-            <div class="stores-page__performer-icon">
+        <div class="branches-page__performer-row">
+          <div class="branches-page__performer-info">
+            <div class="branches-page__performer-icon">
               <i class="pi pi-shop"></i>
             </div>
-            <span class="stores-page__performer-name">{{ performer.name }}</span>
+            <span class="branches-page__performer-name">{{ performer.name }}</span>
           </div>
-          <div class="stores-page__performer-stats">
-            <span class="stores-page__performer-score">{{ animatedCount(performer.redemptions) }}</span>
-            <span class="stores-page__performer-trend">20% INCREASE</span>
+          <div class="branches-page__performer-stats">
+            <span class="branches-page__performer-score">{{ animatedCount(performer.redemptions) }}</span>
+            <span class="branches-page__performer-trend">20% INCREASE</span>
           </div>
         </div>
         }
@@ -115,11 +115,11 @@
   </section>
 
   <!-- Table Section -->
-  <section class="stores-page__card">
-    <div class="stores-page__toolbar">
-      <div class="stores-page__toolbar-header">
-        <h2 class="insight-card-title stores-page__toolbar-title">Branches</h2>
-        <div class="stores-page__controls">
+  <section class="branches-page__card">
+    <div class="branches-page__toolbar">
+      <div class="branches-page__toolbar-header">
+        <h2 class="insight-card-title branches-page__toolbar-title">Branches</h2>
+        <div class="branches-page__controls">
           <app-search [value]="searchQuery()" (valueChange)="searchQuery.set($event)"></app-search>
           <app-button variant="primary" icon="pi pi-download" (click)="exportTable()">Export</app-button>
         </div>
@@ -129,33 +129,33 @@
         <div class="app-filter-group">
           <label class="app-filter-label">Status</label>
           <p-select [options]="statusOptions" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Status" styleClass="stores-page__filter-select"
-            panelStyleClass="stores-page__filter-panel"></p-select>
+            optionLabel="label" optionValue="value" placeholder="Status" styleClass="branches-page__filter-select"
+            panelStyleClass="branches-page__filter-panel"></p-select>
         </div>
 
         <div class="app-filter-group">
           <label class="app-filter-label">Region</label>
           <p-select [options]="regionOptions" [ngModel]="selectedRegion()" (ngModelChange)="selectedRegion.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Region" styleClass="stores-page__filter-select"
-            panelStyleClass="stores-page__filter-panel"></p-select>
+            optionLabel="label" optionValue="value" placeholder="Region" styleClass="branches-page__filter-select"
+            panelStyleClass="branches-page__filter-panel"></p-select>
         </div>
 
         <div class="app-filter-group">
           <label class="app-filter-label">Manager</label>
           <p-select [options]="managerOptions" [ngModel]="selectedManager()"
             (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value" placeholder="Manager"
-            styleClass="stores-page__filter-select" panelStyleClass="stores-page__filter-panel"></p-select>
+            styleClass="branches-page__filter-select" panelStyleClass="branches-page__filter-panel"></p-select>
         </div>
       </div>
     </div>
 
     <!-- Table -->
-    <div class="stores-page__table-wrapper">
-      <p-table [value]="filteredStores()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
-        paginatorDropdownAppendTo="body" styleClass="stores-page__table">
+    <div class="branches-page__table-wrapper">
+      <p-table [value]="filteredBranches()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+        paginatorDropdownAppendTo="body" styleClass="branches-page__table">
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">Store Name <p-sortIcon field="name" /></th>
+            <th pSortableColumn="name">Branch Name <p-sortIcon field="name" /></th>
             <th pSortableColumn="totalOffers">Total Offers <p-sortIcon field="totalOffers" /></th>
             <th pSortableColumn="location">Location <p-sortIcon field="location" /></th>
             <th pSortableColumn="manager">Manager <p-sortIcon field="manager" /></th>
@@ -163,14 +163,14 @@
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-store>
+        <ng-template pTemplate="body" let-branch>
           <tr>
-            <td>{{ store.name }}</td>
-            <td>{{ store.totalOffers }}</td>
-            <td>{{ store.location }}</td>
-            <td>{{ store.manager }}</td>
-            <td class="stores-page__td-center">
-              <button class="stores-page__action-btn" type="button">
+            <td>{{ branch.name }}</td>
+            <td>{{ branch.totalOffers }}</td>
+            <td>{{ branch.location }}</td>
+            <td>{{ branch.manager }}</td>
+            <td class="branches-page__td-center">
+              <button class="branches-page__action-btn" type="button">
                 <i class="pi pi-ellipsis-h"></i>
               </button>
             </td>
@@ -179,7 +179,7 @@
 
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="5" class="stores-page__empty-message">No branches found.</td>
+            <td colspan="5" class="branches-page__empty-message">No branches found.</td>
           </tr>
         </ng-template>
       </p-table>

@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal, computed, AfterViewInit, OnDestroy, 
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
-import { StoresService, StoreKPIs, TopPerformer, StoreRow } from '../../services/stores.service';
+import { BranchesService, BranchKPIs, TopPerformer, BranchRow } from '../../services/branches.service';
 import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { ThemeService } from '../../../../shared/services/theme.service';
@@ -10,21 +10,21 @@ import { environment } from '../../../../../environments/environment';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 
 @Component({
-  selector: 'app-stores-page',
+  selector: 'app-branches-page',
   standalone: true,
   imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch],
-  templateUrl: './stores-page.html',
-  styleUrl: './stores-page.scss'
+  templateUrl: './branches-page.html',
+  styleUrl: './branches-page.scss'
 })
-export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
-  private readonly storesService = inject(StoresService);
+export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
+  private readonly branchesService = inject(BranchesService);
   private readonly document = inject(DOCUMENT);
   private readonly themeService = inject(ThemeService);
   private readonly zone = inject(NgZone);
 
-  kpis = signal<StoreKPIs | null>(null);
+  kpis = signal<BranchKPIs | null>(null);
   topPerformers = signal<TopPerformer[]>([]);
-  allStores = signal<StoreRow[]>([]);
+  allBranches = signal<BranchRow[]>([]);
 
   // Table filters
   selectedStatus = signal<string | null>(null);
@@ -33,7 +33,7 @@ export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
   searchQuery = signal<string>('');
   
   // Sort
-  sortField = signal<keyof StoreRow | null>('dateAdded');
+  sortField = signal<keyof BranchRow | null>('dateAdded');
   sortOrder = signal<1 | -1>(-1); // Newest first by default
 
   // Options
@@ -63,8 +63,8 @@ export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  readonly filteredStores = computed(() => {
-    let rows = this.allStores();
+  readonly filteredBranches = computed(() => {
+    let rows = this.allBranches();
     
     const status = this.selectedStatus();
     if (status) rows = rows.filter(r => r.status === status);
@@ -107,18 +107,18 @@ export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
       this.scheduleJsMapRender();
     });
 
-    // We also want to re-render pins if filteredStores change
+    // We also want to re-render pins if filteredBranches change
     effect(() => {
-      this.filteredStores(); // track it
+      this.filteredBranches(); // track it
       this.scheduleJsMapRender();
     });
   }
 
   ngOnInit() {
-    this.storesService.getKPIs().subscribe(data => this.kpis.set(data));
-    this.storesService.getTopPerformers().subscribe(data => this.topPerformers.set(data));
-    this.storesService.getStores().subscribe(data => {
-      this.allStores.set(data);
+    this.branchesService.getKPIs().subscribe(data => this.kpis.set(data));
+    this.branchesService.getTopPerformers().subscribe(data => this.topPerformers.set(data));
+    this.branchesService.getBranches().subscribe(data => {
+      this.allBranches.set(data);
       const managers = new Set(data.map(d => d.manager).filter(m => !!m));
       this.managerOptions = [
         { label: 'All Managers', value: null },
@@ -144,7 +144,7 @@ export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
     this.map = null;
   }
 
-  toggleSort(field: keyof StoreRow) {
+  toggleSort(field: keyof BranchRow) {
     if (this.sortField() === field) {
       this.sortOrder.set(this.sortOrder() === 1 ? -1 : 1);
     } else {
@@ -153,13 +153,13 @@ export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  sortIcon(field: keyof StoreRow): string {
+  sortIcon(field: keyof BranchRow): string {
     if (this.sortField() !== field) return 'pi-sort';
     return this.sortOrder() === 1 ? 'pi-sort-up' : 'pi-sort-down';
   }
 
   exportTable() {
-    const rows = this.filteredStores();
+    const rows = this.filteredBranches();
     if (!rows.length) return;
     const headers = ['Branch Name', 'Total Offers', 'Location', 'Manager', 'Status'];
     const csvContent = rows.map(r => [
@@ -276,7 +276,7 @@ export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
     }
     this.markers = [];
 
-    const branches = this.filteredStores().filter(b => b.latitude && b.longitude);
+    const branches = this.filteredBranches().filter(b => b.latitude && b.longitude);
     if (branches.length === 0) return;
 
     const bounds = new google.maps.LatLngBounds();
@@ -303,7 +303,7 @@ export class StoresPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private createBranchMapMarker(position: { lat: number; lng: number }, loc: StoreRow): any {
+  private createBranchMapMarker(position: { lat: number; lng: number }, loc: BranchRow): any {
     const google = (window as any).google;
     const markerTitle = loc.name;
     const markerColor = this.getThemeColor('--app-primary', '#0033A0');

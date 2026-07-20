@@ -15,7 +15,7 @@ export class Sidenav {
     { icon: 'assets/svg/Navbar/ic-vendor.svg', navItem: 'Profile', title: 'Vendor Profile', navLink: '/profile' },
     { icon: 'assets/svg/Navbar/ic-requests.svg', navItem: 'Request Center', title: 'Request Center', navLink: '/request-center' },
     { icon: 'assets/svg/Navbar/ic-offer.svg', navItem: 'Offers', title: 'Offers', navLink: '/offers' },
-    { icon: 'assets/svg/Navbar/ic-vendor.svg', navItem: 'Branches', title: 'Branches', navLink: '/stores' },
+    { icon: 'assets/svg/Navbar/ic-vendor.svg', navItem: 'Branches', title: 'Branches', navLink: '/branches' },
     { icon: 'assets/svg/Navbar/ic-offer.svg', navItem: 'Redemption', title: 'Redemption', navLink: '/redemption' },
     { icon: 'assets/svg/Navbar/ic-msgcenter.svg', navItem: 'Messaging Center', title: 'Messaging Center', navLink: '/messaging-center' },
     { icon: 'assets/svg/Navbar/ic-analytics.svg', navItem: 'Analytics', title: 'Analytics', navLink: '/analytics' },

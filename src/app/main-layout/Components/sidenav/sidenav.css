@@ -83,13 +83,16 @@
   }
 }
 
+/* ponytail: name says "left", behaviour is now inline-start — mirrors in RTL.
+   Renaming touches sidenav.html too; left alone as cosmetic. */
 .left-bar {
   position: absolute;
-  left: -30px;
+  inset-inline-start: -30px;
   top: 0;
   height: 100%;
   width: 0.25rem;
-  border-radius: 0 0.25rem 0.25rem 0;
+  border-start-end-radius: 0.25rem;
+  border-end-end-radius: 0.25rem;
   opacity: 0;
 }
 

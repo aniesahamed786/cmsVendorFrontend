@@ -20,7 +20,7 @@ export class Redemption {
     { label: 'Exclusive Discount', value: 'exclusive' }
   ];
 
-  stores = [
+  branches = [
     { label: 'Dammam Branch', value: 'dammam' },
     { label: 'Riyadh Branch', value: 'riyadh' },
     { label: 'Jeddah Branch', value: 'jeddah' }
@@ -37,7 +37,7 @@ export class Redemption {
     this.redemptionForm = this.fb.group({
       userId: ['CMSV67363', Validators.required],
       offer: [null, Validators.required],
-      store: [null, Validators.required],
+      branch: [null, Validators.required],
       totalAmount: ['', Validators.required],
       paidAmount: ['', Validators.required]
     });

@@ -1,6 +1,12 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { I18nService } from './shared/i18n/i18n.service';
 import { providePrimeNG } from 'primeng/config';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
@@ -35,6 +41,8 @@ const BluePreset = definePreset(Aura, {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([httpInterceptor])),
+    // Blocks bootstrap until the dictionary is in, so no page paints raw keys.
+    provideAppInitializer(() => inject(I18nService).init()),
     providePrimeNG({
       ripple: true,
       theme: {

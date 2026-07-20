@@ -3,8 +3,8 @@
 
   <div class="navbar-spacer"></div>
 
-  <div class="navbar-actions" aria-label="Toolbar actions">
-    <button type="button" class="profile-trigger" aria-label="Profile menu" (click)="profileMenu.toggle($event)">
+  <div class="navbar-actions" [attr.aria-label]="'navbar.toolbarActions' | translate">
+    <button type="button" class="profile-trigger" [attr.aria-label]="'navbar.profileMenu' | translate" (click)="profileMenu.toggle($event)">
       <p-avatar [label]="avatarLabel()" shape="circle" styleClass="navbar-avatar" aria-label="Profile" />
     </button>
 
@@ -21,25 +21,33 @@
         <div class="profile-menu-section">
           <button type="button" class="profile-menu-item" (click)="onProfile()">
             <i class="pi pi-id-card"></i>
-            <span>Profile</span>
+            <span>{{ 'navbar.profile' | translate }}</span>
           </button>
           <button type="button" class="profile-menu-item" (click)="onSettings()">
             <i class="pi pi-cog"></i>
-            <span>Settings</span>
+            <span>{{ 'navbar.settings' | translate }}</span>
           </button>
           <div class="profile-menu-theme">
             <div class="profile-menu-theme-label">
               <i class="pi pi-moon"></i>
-              <span>Dark theme</span>
+              <span>{{ 'navbar.darkTheme' | translate }}</span>
             </div>
             <p-toggleswitch [ngModel]="isDarkMode()" (ngModelChange)="onThemeToggle($event)"></p-toggleswitch>
           </div>
+          <button type="button" class="profile-menu-item" (click)="onLanguageToggle()">
+            <i class="pi pi-globe"></i>
+            @if (isArabic()) {
+              <span>English</span>
+            } @else {
+              <span>العربية</span>
+            }
+          </button>
         </div>
 
         <div class="profile-menu-section profile-menu-section--footer">
           <button type="button" class="profile-menu-item profile-menu-logout" (click)="onLogout()">
             <i class="pi pi-sign-out"></i>
-            <span>Logout</span>
+            <span>{{ 'navbar.logout' | translate }}</span>
           </button>
         </div>
       </div>

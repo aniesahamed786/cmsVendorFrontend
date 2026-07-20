@@ -1,0 +1,10 @@
+{
+  "navbar": {
+    "toolbarActions": "إجراءات شريط الأدوات",
+    "profileMenu": "قائمة الملف الشخصي",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "darkTheme": "الوضع الداكن",
+    "logout": "تسجيل الخروج"
+  }
+}

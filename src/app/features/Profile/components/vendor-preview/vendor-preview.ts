@@ -93,7 +93,7 @@ export class VendorPreview implements OnChanges {
     if (this.language() === 'ar') {
       return this.descriptionAr || 'وصف المتجر والخدمات التي يقدمها للعملاء.';
     }
-    return this.description || 'Description of the store and the services it offers';
+    return this.description || 'Description of the branch and the services it offers';
   }
 
   getOffers(): unknown[] {

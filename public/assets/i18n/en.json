@@ -1,0 +1,10 @@
+{
+  "navbar": {
+    "toolbarActions": "Toolbar actions",
+    "profileMenu": "Profile menu",
+    "profile": "Profile",
+    "settings": "Settings",
+    "darkTheme": "Dark theme",
+    "logout": "Logout"
+  }
+}
