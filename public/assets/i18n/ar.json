@@ -621,5 +621,65 @@
       "switchToArabic": "التبديل إلى المعاينة العربية",
       "switchToEnglish": "التبديل إلى المعاينة الإنجليزية"
     }
+  },
+
+  "branches": {
+    "title": "الفروع",
+    "subtitle": "إدارة ومتابعة جميع فروعك عبر منظومة المؤسسة.",
+    "addBranch": "إضافة فرع",
+    "export": "تصدير",
+    "kpi": {
+      "totalBranches": "إجمالي الفروع",
+      "totalBranchesSub": "جميع الفروع",
+      "activeBranches": "الفروع النشطة",
+      "activeBranchesSub": "نشطة حالياً",
+      "totalRedemptions": "إجمالي عمليات الاستبدال",
+      "totalRedemptionsSub": "إجمالي العروض المستبدلة",
+      "pendingRequests": "الطلبات المعلقة",
+      "pendingRequestsSub": "بانتظار إجراء المسؤول"
+    },
+    "map": {
+      "title": "مواقع الفروع",
+      "loading": "جارٍ تحميل الخريطة...",
+      "errorTitle": "تعذّر تحميل الخريطة",
+      "notConfigured": "خرائط جوجل غير مهيأة. أضف `googleMapsApiKey` إلى ملف البيئة لتفعيل الخريطة.",
+      "apiUnavailable": "تم تحميل مكتبة خرائط جوجل، لكن واجهة Maps JavaScript API غير متاحة.",
+      "loadFailed": "تعذّر تحميل مكتبة خرائط جوجل.",
+      "initFailed": "تعذّرت تهيئة خريطة جوجل."
+    },
+    "performers": {
+      "title": "أفضل الفروع أداءً",
+      "subtitle": "مرتبة حسب عمليات الاستبدال الشهرية",
+      "increase": "زيادة 20%"
+    },
+    "filter": {
+      "status": "الحالة",
+      "region": "المنطقة",
+      "manager": "المدير"
+    },
+    "status": {
+      "all": "كل الحالات",
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "region": {
+      "all": "كل المناطق",
+      "east": "الشرقية",
+      "west": "الغربية",
+      "south": "الجنوبية",
+      "north": "الشمالية",
+      "central": "الوسطى"
+    },
+    "manager": {
+      "all": "كل المديرين"
+    },
+    "column": {
+      "name": "اسم الفرع",
+      "totalOffers": "إجمالي العروض",
+      "location": "الموقع",
+      "manager": "المدير",
+      "action": "الإجراء"
+    },
+    "empty": "لا توجد فروع."
   }
 }

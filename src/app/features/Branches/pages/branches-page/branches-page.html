@@ -3,10 +3,10 @@
   <!-- Page Header -->
   <div class="branches-page__header">
     <div class="branches-page__header-text">
-      <h1 class="branches-page__title">Branches</h1>
-      <p class="branches-page__subtitle">Manage and monitor all of your branches across the enterprise ecosystem.</p>
+      <h1 class="branches-page__title">{{ 'branches.title' | translate }}</h1>
+      <p class="branches-page__subtitle">{{ 'branches.subtitle' | translate }}</p>
     </div>
-    <app-button variant="primary" icon="pi pi-plus">Add Branch</app-button>
+    <app-button variant="primary" icon="pi pi-plus">{{ 'branches.addBranch' | translate }}</app-button>
   </div>
 
   <!-- KPI Cards -->
@@ -18,8 +18,8 @@
           <i class="pi pi-shop branches-page__icon-lg"></i>
         </div>
         <p class="overview-kpi-value">{{ animatedCount(kpis()?.totalBranches) }}</p>
-        <p class="overview-kpi-label">Total Branches</p>
-        <p class="overview-kpi-subtext">All branches</p>
+        <p class="overview-kpi-label">{{ 'branches.kpi.totalBranches' | translate }}</p>
+        <p class="overview-kpi-subtext">{{ 'branches.kpi.totalBranchesSub' | translate }}</p>
       </article>
 
       <article class="overview-kpi-card">
@@ -27,8 +27,8 @@
           <i class="pi pi-check-circle branches-page__icon-lg"></i>
         </div>
         <p class="overview-kpi-value">{{ animatedCount(kpis()?.activeBranches) }}</p>
-        <p class="overview-kpi-label">Active Branches</p>
-        <p class="overview-kpi-subtext">Currently active</p>
+        <p class="overview-kpi-label">{{ 'branches.kpi.activeBranches' | translate }}</p>
+        <p class="overview-kpi-subtext">{{ 'branches.kpi.activeBranchesSub' | translate }}</p>
       </article>
 
       <article class="overview-kpi-card">
@@ -36,8 +36,8 @@
           <i class="pi pi-gift branches-page__icon-lg"></i>
         </div>
         <p class="overview-kpi-value">{{ animatedCount(kpis()?.totalRedemptions) }}</p>
-        <p class="overview-kpi-label">Total Redemptions</p>
-        <p class="overview-kpi-subtext">Total offers redeemed</p>
+        <p class="overview-kpi-label">{{ 'branches.kpi.totalRedemptions' | translate }}</p>
+        <p class="overview-kpi-subtext">{{ 'branches.kpi.totalRedemptionsSub' | translate }}</p>
       </article>
 
       <article class="overview-kpi-card">
@@ -45,8 +45,8 @@
           <i class="pi pi-clock branches-page__icon-lg"></i>
         </div>
         <p class="overview-kpi-value">{{ animatedCount(kpis()?.pendingRequests) }}</p>
-        <p class="overview-kpi-label">Pending Request</p>
-        <p class="overview-kpi-subtext">Awaiting Admin Action</p>
+        <p class="overview-kpi-label">{{ 'branches.kpi.pendingRequests' | translate }}</p>
+        <p class="overview-kpi-subtext">{{ 'branches.kpi.pendingRequestsSub' | translate }}</p>
       </article>
     </div>
     } @else {
@@ -67,22 +67,22 @@
   <section class="branches-page__middle">
     <!-- Map Area -->
     <div class="insight-card branches-page__map-card">
-      <h3 class="insight-card-title branches-page__card-title">Branch Locations</h3>
+      <h3 class="insight-card-title branches-page__card-title">{{ 'branches.map.title' | translate }}</h3>
       <div class="branches-page__map-wrapper">
         @if (!hasMapsKey) {
         <div class="branches-page__map-empty">
-          <p>Google Maps is not configured. Add `googleMapsApiKey` to your environment file to enable the map.</p>
+          <p>{{ 'branches.map.notConfigured' | translate }}</p>
         </div>
         } @else {
         <div #mapContainer class="branches-page__map-container"></div>
         @if (isMapLoading || !debug.scriptLoaded) {
         <div class="branches-page__map-badge branches-page__map-badge--loading">
-          Loading map...
+          {{ 'branches.map.loading' | translate }}
         </div>
         }
         @if (mapError) {
         <div class="branches-page__map-error">
-          <div><strong>Map didn't load</strong></div>
+          <div><strong>{{ 'branches.map.errorTitle' | translate }}</strong></div>
           <div>{{ mapError }}</div>
         </div>
         }
@@ -92,8 +92,8 @@
 
     <!-- Top Performers -->
     <div class="insight-card branches-page__performers-card">
-      <h3 class="insight-card-title">Top Performers</h3>
-      <p class="branches-page__performers-subtitle">Ranked by monthly redemptions</p>
+      <h3 class="insight-card-title">{{ 'branches.performers.title' | translate }}</h3>
+      <p class="branches-page__performers-subtitle">{{ 'branches.performers.subtitle' | translate }}</p>
 
       <div class="branches-page__performers-list">
         @for (performer of topPerformers(); track performer.id) {
@@ -106,7 +106,7 @@
           </div>
           <div class="branches-page__performer-stats">
             <span class="branches-page__performer-score">{{ animatedCount(performer.redemptions) }}</span>
-            <span class="branches-page__performer-trend">20% INCREASE</span>
+            <span class="branches-page__performer-trend">{{ 'branches.performers.increase' | translate }}</span>
           </div>
         </div>
         }
@@ -118,32 +118,32 @@
   <section class="branches-page__card">
     <div class="branches-page__toolbar">
       <div class="branches-page__toolbar-header">
-        <h2 class="insight-card-title branches-page__toolbar-title">Branches</h2>
+        <h2 class="insight-card-title branches-page__toolbar-title">{{ 'branches.title' | translate }}</h2>
         <div class="branches-page__controls">
           <app-search [value]="searchQuery()" (valueChange)="searchQuery.set($event)"></app-search>
-          <app-button variant="primary" icon="pi pi-download" (click)="exportTable()">Export</app-button>
+          <app-button variant="primary" icon="pi pi-download" (click)="exportTable()">{{ 'branches.export' | translate }}</app-button>
         </div>
       </div>
 
       <div class="app-filters-row">
         <div class="app-filter-group">
-          <label class="app-filter-label">Status</label>
-          <p-select [options]="statusOptions" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Status" styleClass="branches-page__filter-select"
+          <label class="app-filter-label">{{ 'branches.filter.status' | translate }}</label>
+          <p-select [options]="statusOptions()" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)"
+            optionLabel="label" optionValue="value" [placeholder]="'branches.filter.status' | translate" styleClass="branches-page__filter-select"
             panelStyleClass="branches-page__filter-panel"></p-select>
         </div>
 
         <div class="app-filter-group">
-          <label class="app-filter-label">Region</label>
-          <p-select [options]="regionOptions" [ngModel]="selectedRegion()" (ngModelChange)="selectedRegion.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Region" styleClass="branches-page__filter-select"
+          <label class="app-filter-label">{{ 'branches.filter.region' | translate }}</label>
+          <p-select [options]="regionOptions()" [ngModel]="selectedRegion()" (ngModelChange)="selectedRegion.set($event)"
+            optionLabel="label" optionValue="value" [placeholder]="'branches.filter.region' | translate" styleClass="branches-page__filter-select"
             panelStyleClass="branches-page__filter-panel"></p-select>
         </div>
 
         <div class="app-filter-group">
-          <label class="app-filter-label">Manager</label>
-          <p-select [options]="managerOptions" [ngModel]="selectedManager()"
-            (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value" placeholder="Manager"
+          <label class="app-filter-label">{{ 'branches.filter.manager' | translate }}</label>
+          <p-select [options]="managerOptions()" [ngModel]="selectedManager()"
+            (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value" [placeholder]="'branches.filter.manager' | translate"
             styleClass="branches-page__filter-select" panelStyleClass="branches-page__filter-panel"></p-select>
         </div>
       </div>
@@ -155,11 +155,11 @@
         paginatorDropdownAppendTo="body" styleClass="branches-page__table">
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">Branch Name <p-sortIcon field="name" /></th>
-            <th pSortableColumn="totalOffers">Total Offers <p-sortIcon field="totalOffers" /></th>
-            <th pSortableColumn="location">Location <p-sortIcon field="location" /></th>
-            <th pSortableColumn="manager">Manager <p-sortIcon field="manager" /></th>
-            <th>Action</th>
+            <th pSortableColumn="name">{{ 'branches.column.name' | translate }} <p-sortIcon field="name" /></th>
+            <th pSortableColumn="totalOffers">{{ 'branches.column.totalOffers' | translate }} <p-sortIcon field="totalOffers" /></th>
+            <th pSortableColumn="location">{{ 'branches.column.location' | translate }} <p-sortIcon field="location" /></th>
+            <th pSortableColumn="manager">{{ 'branches.column.manager' | translate }} <p-sortIcon field="manager" /></th>
+            <th>{{ 'branches.column.action' | translate }}</th>
           </tr>
         </ng-template>
 
@@ -179,7 +179,7 @@
 
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="5" class="branches-page__empty-message">No branches found.</td>
+            <td colspan="5" class="branches-page__empty-message">{{ 'branches.empty' | translate }}</td>
           </tr>
         </ng-template>
       </p-table>

@@ -7,7 +7,7 @@ import { PrimeUIModules } from '../../../core/prime.import';
 import { MapUrlCoordinatesService } from '../../../features/vendors/services/map-url-coordinates.service';
 import { AddNewVendorLocationService, AddVendorLocationRequest } from '../../../features/vendors/services/add-new-vendor-location';
 import { GetVendorList } from '../../../features/vendors/services/get-vendor-list';
-import { arabicOnlyValidator, noWhitespaceValidator } from '../vendor-form/vendor-form';
+import { arabicOnlyValidator, noWhitespaceValidator } from '../../utils/form-validators';
 import { LocationSettingsService, SettingsLocation } from '../../../features/setting/services/location-settings.service';
 import { I18nService } from '../../i18n/i18n.service';
 import { TranslatePipe } from '../../i18n/translate.pipe';

@@ -621,5 +621,65 @@
       "switchToArabic": "Switch to Arabic Preview",
       "switchToEnglish": "Switch to English Preview"
     }
+  },
+
+  "branches": {
+    "title": "Branches",
+    "subtitle": "Manage and monitor all of your branches across the enterprise ecosystem.",
+    "addBranch": "Add Branch",
+    "export": "Export",
+    "kpi": {
+      "totalBranches": "Total Branches",
+      "totalBranchesSub": "All branches",
+      "activeBranches": "Active Branches",
+      "activeBranchesSub": "Currently active",
+      "totalRedemptions": "Total Redemptions",
+      "totalRedemptionsSub": "Total offers redeemed",
+      "pendingRequests": "Pending Request",
+      "pendingRequestsSub": "Awaiting Admin Action"
+    },
+    "map": {
+      "title": "Branch Locations",
+      "loading": "Loading map...",
+      "errorTitle": "Map didn't load",
+      "notConfigured": "Google Maps is not configured. Add `googleMapsApiKey` to your environment file to enable the map.",
+      "apiUnavailable": "Google Maps library loaded, but Maps JavaScript API is not available.",
+      "loadFailed": "Failed to load Google Maps library.",
+      "initFailed": "Failed to initialize Google Map."
+    },
+    "performers": {
+      "title": "Top Performers",
+      "subtitle": "Ranked by monthly redemptions",
+      "increase": "20% INCREASE"
+    },
+    "filter": {
+      "status": "Status",
+      "region": "Region",
+      "manager": "Manager"
+    },
+    "status": {
+      "all": "All Statuses",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "region": {
+      "all": "All Regions",
+      "east": "East",
+      "west": "West",
+      "south": "South",
+      "north": "North",
+      "central": "Central"
+    },
+    "manager": {
+      "all": "All Managers"
+    },
+    "column": {
+      "name": "Branch Name",
+      "totalOffers": "Total Offers",
+      "location": "Location",
+      "manager": "Manager",
+      "action": "Action"
+    },
+    "empty": "No branches found."
   }
 }

@@ -177,7 +177,7 @@
   .branches-page__map-badge {
     position: absolute;
     top: 12px;
-    right: 12px;
+    inset-inline-end: 12px;
     padding: 4px 8px;
     font-size: 0.75rem;
     background-color: var(--surface-card);
@@ -187,16 +187,15 @@
     z-index: 10;
 
     &--loading {
-      left: 12px;
-      right: auto;
+      inset-inline-start: 12px;
+      inset-inline-end: auto;
     }
   }
 
   .branches-page__map-error {
     position: absolute;
     bottom: 12px;
-    left: 12px;
-    right: 12px;
+    inset-inline: 12px;
     padding: 8px 12px;
     font-size: 0.75rem;
     background-color: var(--red-500);
@@ -335,12 +334,12 @@
 
   .p-datatable-thead>tr>th:first-child,
   .p-datatable-tbody>tr>td:first-child {
-    padding-left: 1.5rem;
+    padding-inline-start: 1.5rem;
   }
 
   .p-datatable-thead>tr>th:last-child,
   .p-datatable-tbody>tr>td:last-child {
-    padding-right: 1.5rem;
+    padding-inline-end: 1.5rem;
   }
 
   .p-datatable-thead>tr>th {
@@ -391,7 +390,7 @@
   }
 
   .p-paginator .p-select-label {
-    padding-right: 0.5rem;
+    padding-inline-end: 0.5rem;
   }
 
   .p-paginator .p-paginator-page,

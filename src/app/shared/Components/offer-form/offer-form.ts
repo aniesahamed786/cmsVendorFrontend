@@ -64,7 +64,7 @@ import {
   TagsListService,
 } from "../../../features/setting/services/tags-list/tags-list";
 import { AutoCompleteCompleteEvent } from "primeng/autocomplete";
-import { noWhitespaceValidator } from "../vendor-form/vendor-form";
+import { noWhitespaceValidator } from "../../utils/form-validators";
 import { ConfirmationPopUp } from "../confirmation-pop-up/confirmation-pop-up";
 import { ImageCropperComponent, ImageCroppedEvent } from "ngx-image-cropper";
 import {

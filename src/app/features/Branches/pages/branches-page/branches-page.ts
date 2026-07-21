@@ -7,12 +7,14 @@ import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { ThemeService } from '../../../../shared/services/theme.service';
 import { environment } from '../../../../../environments/environment';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 
 @Component({
   selector: 'app-branches-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, TranslatePipe],
   templateUrl: './branches-page.html',
   styleUrl: './branches-page.scss'
 })
@@ -21,6 +23,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly themeService = inject(ThemeService);
   private readonly zone = inject(NgZone);
+  private readonly i18n = inject(I18nService);
 
   kpis = signal<BranchKPIs | null>(null);
   topPerformers = signal<TopPerformer[]>([]);
@@ -36,10 +39,29 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   sortField = signal<keyof BranchRow | null>('dateAdded');
   sortOrder = signal<1 | -1>(-1); // Newest first by default
 
-  // Options
-  statusOptions = [{ label: 'All Statuses', value: null }, { label: 'Active', value: 'Active' }, { label: 'Inactive', value: 'Inactive' }];
-  regionOptions = [{ label: 'All Regions', value: null }, { label: 'East', value: 'East' }, { label: 'West', value: 'West' }, { label: 'South', value: 'South' }, { label: 'North', value: 'North' }, { label: 'Central', value: 'Central' }];
-  managerOptions: { label: string; value: string | null }[] = [{ label: 'All Managers', value: null }]; // Populated dynamically
+  // Options — labels are translated, values stay the English data keys.
+  readonly statusOptions = computed(() => [
+    { label: this.i18n.t('branches.status.all'), value: null },
+    { label: this.i18n.t('branches.status.active'), value: 'Active' },
+    { label: this.i18n.t('branches.status.inactive'), value: 'Inactive' },
+  ]);
+
+  readonly regionOptions = computed(() => [
+    { label: this.i18n.t('branches.region.all'), value: null },
+    ...(['East', 'West', 'South', 'North', 'Central'] as const).map((r) => ({
+      label: this.i18n.t(`branches.region.${r.toLowerCase()}`),
+      value: r as string,
+    })),
+  ]);
+
+  // Manager names come from the data, so only the "all" entry is translated.
+  readonly managerOptions = computed(() => [
+    { label: this.i18n.t('branches.manager.all'), value: null as string | null },
+    ...Array.from(new Set(this.allBranches().map((b) => b.manager).filter(Boolean))).map((m) => ({
+      label: m,
+      value: m as string | null,
+    })),
+  ]);
 
   // Map state
   isMapLoading = false;
@@ -119,11 +141,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     this.branchesService.getTopPerformers().subscribe(data => this.topPerformers.set(data));
     this.branchesService.getBranches().subscribe(data => {
       this.allBranches.set(data);
-      const managers = new Set(data.map(d => d.manager).filter(m => !!m));
-      this.managerOptions = [
-        { label: 'All Managers', value: null },
-        ...Array.from(managers).map(m => ({ label: m, value: m }))
-      ];
       this.ensureMapReady();
     });
   }
@@ -161,7 +178,13 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   exportTable() {
     const rows = this.filteredBranches();
     if (!rows.length) return;
-    const headers = ['Branch Name', 'Total Offers', 'Location', 'Manager', 'Status'];
+    const headers = [
+      this.i18n.t('branches.column.name'),
+      this.i18n.t('branches.column.totalOffers'),
+      this.i18n.t('branches.column.location'),
+      this.i18n.t('branches.column.manager'),
+      this.i18n.t('branches.filter.status'),
+    ];
     const csvContent = rows.map(r => [
       `"${r.name}"`, r.totalOffers, `"${r.location}"`, `"${r.manager}"`, `"${r.status || ''}"`
     ].join(','));
@@ -213,13 +236,13 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
         this.debug.mapsAvailable = !!(window as any).google?.maps;
 
         if (!this.debug.mapsAvailable) {
-          this.mapError = 'Google Maps library loaded, but Maps JavaScript API is not available.';
+          this.mapError = this.i18n.t('branches.map.apiUnavailable');
           return;
         }
 
         await this.initMap();
       } catch (e) {
-        this.mapError = 'Failed to load Google Maps library.';
+        this.mapError = this.i18n.t('branches.map.loadFailed');
         this.debug.scriptLoaded = false;
         this.debug.mapsAvailable = false;
       }
@@ -252,7 +275,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       this.debug.mapCreated = true;
       this.scheduleJsMapRender();
     } catch (e) {
-      this.mapError = 'Failed to initialize Google Map.';
+      this.mapError = this.i18n.t('branches.map.initFailed');
     }
   }
 
