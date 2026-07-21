@@ -96,17 +96,27 @@
   opacity: 0;
 }
 
+/* Resolved at the Phase 1 gate: moved onto the shared brand gradient, with the
+   appearance change accepted rather than preserved. The old local gradient ran
+   93.08deg light->dark (#406ED1 -> #0033A0); the token runs 91.48deg
+   dark->light, so the fill visibly reverses direction. That is expected — it is
+   not a regression. In exchange the active item now follows an accent switch and
+   picks up the dark-mode gradient, neither of which the hexes could do. */
 .active-link {
-  background: linear-gradient(
-    93.08deg,
-    rgba(64, 110, 209, 1) 10%,
-    rgba(0, 51, 160, 1) 90%
-  );
-  color: white;
-  box-shadow: 0 4px 15px 0 rgba(102, 141, 225, 0.5);
-  border-radius: 0;
+  background: var(--app-primary-gradient);
+  /* kept: on-primary contrast over the brand gradient — sanctioned literal. */
+  color: #ffffff;
 }
 
+/* FLAGGED — still open after the Phase 1 gate; visibility is being confirmed by
+   eye first, so this rule is deliberately untouched, hex and all.
+   #6668e1 is NOT on the accent ramp (nearest are #5C87F6/400 and #406ED1/500),
+   so unlike .active-link above this one has no honest token mapping at all.
+   Separately: .left-bar sits at inset-inline-start: -30px, i.e. 30px outside
+   the sidenav card, and p-card.sidenav-card sets overflow: hidden — so this
+   element is very likely never visible. If that is confirmed, the fix is to
+   delete .left-bar and its <div> in sidenav.html, and the colour question
+   disappears with it. Needs a human eye; see the phase report. */
 .active-link .left-bar {
   opacity: 1;
   background: linear-gradient(to bottom, #6668e1, #0033a0);
@@ -144,12 +154,18 @@
   background-color: var(--app-primary-hover-soft);
 }
 
+/* converted: rgba(0,51,160) was exactly --app-primary-rgb, so the icon-lift
+   glow now follows an accent switch instead of staying brand-blue. This is a
+   drop-shadow on an icon (a hover micro-interaction), not a surface shadow, so
+   Step 5 rule 6 is read as not applying — noted in the report for the gate. */
 li:hover .sidenav-icon,
 li:focus-within .sidenav-icon {
-  filter: drop-shadow(0 6px 8px rgba(0, 51, 160, 0.22));
+  filter: drop-shadow(0 6px 8px rgba(var(--app-primary-rgb), 0.22));
   transform: translateY(-2px) scale(1.12) rotate(-5deg);
 }
 
+/* kept: the white glow sits on the active item's brand-gradient fill —
+   on-primary contrast, sanctioned literal (REFACTOR.md Step 2). */
 @keyframes sidenav-icon-active {
   0%,
   100% {
@@ -174,11 +190,12 @@ p-card.sidenav-card {
   overflow: hidden;
 }
 
+/* No local border-radius: styles.scss already forces .p-card square.
+   box-shadow: none IS load-bearing — there is no global p-card shadow reset. */
 :host ::ng-deep .sidenav-card.p-card,
 :host ::ng-deep .sidenav-card .p-card {
   height: 100%;
   border: 0;
-  border-radius: 0;
   box-shadow: none;
   overflow: hidden;
   background: var(--app-surface);

@@ -73,8 +73,6 @@
   padding: 0.75rem 1rem;
   background: var(--app-surface);
   color: var(--app-text);
-  border: none;
-  box-shadow: none;
 }
 
 /* Mobile-only bar — hide from the md breakpoint up (matches the sidenav/navbar swap) */

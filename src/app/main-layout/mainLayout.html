@@ -7,6 +7,11 @@
 
     <div class="app-shell__content app-shell-bg">
       <div class="mobile-topbar">
+        <!-- DEFERRED (Phase 1 gate): stays a pButton until <app-button> gains an
+             ariaLabel input. This is icon-only, so converting it as-is would
+             leave the inner <button> with no accessible name. The phase that
+             next touches shared/Components/button/ should add that input and
+             finish this swap. -->
         <button
           pButton
           type="button"

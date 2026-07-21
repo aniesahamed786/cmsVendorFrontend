@@ -63,6 +63,15 @@ html[lang="ar"] {
   --app-muted: #6b7280;
   --app-border: #e5e7eb;
 
+  /* Semantic danger / destructive. Accent-independent on purpose: a destructive
+     action must not restyle itself when the brand accent changes.
+     NOTE: no .dark-mode override yet — #b41340 measures 6.76:1 on the light
+     surface but only 2.63:1 on the dark one (#111827), i.e. below AA. Leaving it
+     un-overridden preserves today's behaviour exactly rather than guessing a new
+     colour; the dark value is an open item at the Phase 1 gate.
+     The stray #dc2626 in .p-menuitem-danger below is a later phase's migration. */
+  --app-danger: #b41340;
+
   /* Brand / primary tokens (derived from the #0033A0 brand color) */
   --app-primary-rgb: 0, 51, 160;
   --app-primary: #0033A0;
@@ -499,7 +508,7 @@ p-button[severity="primary"] .p-button:enabled:hover,
  * rather than asking 20 components to adopt a new class. `!important` is what
  * beats the component stylesheets, which load after this file.
  * ------------------------------------------------------------------------ */
-[class*="__label"]:not([class*="stat-label"]):not([class*="radio-label"]),
+[class*="__label"]:not([class*="stat-label"]):not([class*="radio-label"]):not(.sidenav-item__label),
 .app-filter-label,
 .app-field-label {
   display: block;

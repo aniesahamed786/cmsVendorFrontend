@@ -7,15 +7,6 @@
   padding: 0.75rem 1.5rem;
   background: var(--app-surface);
   color: var(--app-text);
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.navbar-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--app-text);
 }
 
 .navbar-spacer {
@@ -39,6 +30,8 @@
   cursor: pointer;
 }
 
+/* kept: #fff is on-primary contrast over the brand gradient — sanctioned
+   literal, REFACTOR.md Step 2. Applies to both avatars below. */
 :host ::ng-deep .navbar-avatar {
   width: 2rem;
   height: 2rem;
@@ -119,6 +112,11 @@
   transition: background-color 0.15s ease;
 }
 
+/* Composed from tokens, so not a hard-coded colour. Deliberately NOT collapsed
+   onto --field-bg-hover (76/24): this mix matches .p-menu .p-menuitem-link:hover
+   in styles.scss, i.e. the app's menu-hover convention, which is lighter than
+   the field/row hover. Flagged in the report — the real fix is one shared
+   --app-hover-soft token, which is a styles.scss change, not a Phase 1 one. */
 .profile-menu-item:hover {
   background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
 }
@@ -151,28 +149,28 @@
   color: var(--app-muted);
 }
 
-/* Logout keeps its semantic danger hue (no themeable token for it) */
+/* Resolved at the Phase 1 gate: --app-danger now exists in :root. */
 .profile-menu-logout,
 .profile-menu-logout .pi {
-  color: #b41340;
+  color: var(--app-danger);
 }
 
 .profile-menu-logout:hover {
-  background: color-mix(in srgb, var(--app-surface) 90%, #b41340 10%);
+  background: color-mix(in srgb, var(--app-surface) 90%, var(--app-danger) 10%);
 }
 
+/* p-popover is appendTo=body, so these must stay ::ng-deep (scope rule 2).
+   No local border-radius: styles.scss already forces .p-popover square. */
 ::ng-deep .navbar-profile-popover.p-popover,
 ::ng-deep .navbar-profile-popover .p-popover-content {
   background: var(--app-surface) !important;
   color: var(--app-text) !important;
-  border-radius: 0 !important;
 }
 
 ::ng-deep .navbar-profile-popover.p-popover {
   border: 1px solid var(--app-border) !important;
-  box-shadow: 0 12px 30px rgba(var(--app-primary-rgb), 0.12) !important;
   padding: 0 !important;
-  margin-top: 0.5rem;
+  margin-block-start: 0.5rem;
 }
 
 ::ng-deep .navbar-profile-popover .p-popover-content {

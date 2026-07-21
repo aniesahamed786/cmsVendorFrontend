@@ -206,6 +206,54 @@ this codebase and the remaining Sonnet phases should move up.
 
 ---
 
+## Context budget — where to compact
+
+**The subagent split is itself the token strategy.** Each phase's file reads, greps
+and dead ends happen in the *subagent's* context and are discarded when it finishes.
+The main chat grows by the **report only**. So the thing that actually protects the
+budget is never doing phase work inline in the main chat — not compaction frequency.
+
+Four rules:
+
+1. **Compact at the gate, after you approve or reject — never mid-phase.** An
+   unreviewed finding summarised is a decision made by guesswork. Approve first, then
+   compact; the decision is worth keeping, the deliberation isn't.
+2. **Write the outcome to this file before compacting.** The plan is the record, not
+   the summary. Update the phase row and Phase 0's table with: what was deleted, what
+   was kept and why, what couldn't be verified. Then a lossy compaction costs nothing.
+   This matters most for the *hex kept and why* lists — exactly what evaporates in a
+   summary and gets re-litigated three phases later.
+3. **Batch the cheap phases.** Two or three Sonnet delete-phases fit comfortably.
+   Compacting between them costs fidelity on the running picture of what's already
+   been deleted app-wide, and buys little.
+4. **Cap the report** (brief item 10). The report is the only thing that lands in the
+   main chat, so an unbounded one defeats rule 1.
+
+### Compaction points
+
+| After phase | Compact | Carry forward into the next window |
+|---|---|---|
+| 1 Shell | **yes** | the BEM naming conventions chosen — phases 2–14 copy them |
+| 2 Redemption | no — batch | — |
+| 3 Recent activities | **yes** | the table recipe *as validated*, plus any correction to `REFACTOR.md` Step 4 |
+| 4 Branches | no — batch | — |
+| 5 Offers list | **yes** | table rule now applied 3×; note any page that legitimately deviated |
+| 6 Messaging Center | **yes** | back/cancel swap is complete app-wide after this |
+| 7 Analytics | no — batch | — |
+| 8 Shared dialogs | no — batch | — |
+| 9 Offer sub-forms | **yes** | the full list of deleted override rules so far |
+| 10 Vendor profile | **yes** | how the mixed delete+rewrite was sequenced — 11 repeats it bigger |
+| 11 **Offer form** | **yes, plus one mid-phase** | which of the 127 overrides survived and why |
+| 12 Offer details | **yes** | skeleton migration complete; both local keyframes gone |
+| 13 **preview-offer-details** | **yes, plus one mid-phase** | the rewrite-vs-bridge decision and its reasoning |
+| 14 **vendor-preview** | **yes** | final re-grep results |
+
+Phases 11, 13 and 14 are large enough to hit the limit mid-phase regardless of
+cadence. That mid-phase compaction is unavoidable, not a planning failure — but it
+lands inside the *subagent's* context, so it costs you nothing in the main chat.
+
+---
+
 ## Phases
 
 One subagent per phase, run one at a time, ending at a review gate. Ordering is
@@ -255,8 +303,16 @@ target files; the rest is identical every phase.
 7. Grep the `.ts` too — hex hides in bindings and per-item metadata.
 8. Ambiguous color → **list it and ask**, don't guess.
 9. Square corners, no shadows, logical properties for RTL.
-10. `npm run build`, then report: what was deleted, what was converted, every hex
-    kept and why, and **what it could not verify**.
+10. `npm run build`, then report — **and keep it under ~40 lines**, because the report
+    is the only thing that survives into the main chat (see *Context budget*):
+    - deleted: rule counts per file, one line each;
+    - converted: only what wasn't a straight table lookup;
+    - every hex kept, one line each, with the reason;
+    - **what it could not verify** — never padded, never omitted;
+    - anything that should change in `REFACTOR.md` because reality disagreed with it.
+
+    No file dumps, no diffs, no narration of the steps. If it needs more than 40
+    lines, that itself is the finding — say so and stop.
 
 ### Per-phase review gate — what I hand you
 
@@ -265,7 +321,9 @@ target files; the rest is identical every phase.
 - Any hex the agent kept, one line each.
 - Explicitly: what the agent could **not** verify.
 
-You approve, then that phase commits. Then the next phase starts.
+You approve, then that phase commits. **Then the phase row in this file gets its
+outcome, and only then do we compact** — see the compaction table above. Then the
+next phase starts.
 
 ---
 

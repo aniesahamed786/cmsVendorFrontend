@@ -97,8 +97,11 @@ should already respond. If it doesn't, fix the engine first.
 ## Step 1 — Inventory what you're removing
 
 ```bash
-# hard-coded hex colors
-grep -rEn '#[0-9a-fA-F]{3,8}' src/app --include=*.html --include=*.scss --include=*.css
+# hard-coded colors — hex AND rgb()/rgba(). Brand colors hide in rgba() literals
+# (`rgba(0, 51, 160, 1)`), so a hex-only sweep under-reports; exclude the token
+# form `rgba(var(--…))`, which is the correct way to write one.
+grep -rEn '#[0-9a-fA-F]{3,8}|rgba?\(' src/app --include=*.html --include=*.scss --include=*.css \
+  | grep -v 'rgba\?(var(--'
 
 # tailwind color utilities
 grep -rEn '\b(bg|text|border)-(white|black|gray|slate|zinc|neutral)-[0-9]{2,3}\b' src/app --include=*.html
@@ -113,8 +116,10 @@ grep -rn '\[ngStyle\]\|\[style\.' src/app --include=*.html
 # colors hiding in TypeScript (bindings, chart configs, per-item metadata)
 grep -rEn '#[0-9a-fA-F]{3,8}|rgba?\(' src/app --include=*.ts
 
-# corners and shadows (both get removed)
-grep -rEn 'rounded|border-radius|shadow' src/app --include=*.html --include=*.scss
+# corners and shadows (both get removed). Match `radius` not `border-radius` —
+# the logical longhands (border-start-end-radius, border-end-end-radius, …) are
+# what RTL-corrected code actually uses, and a `border-radius` pattern misses them.
+grep -rEn 'rounded|radius|shadow' src/app --include=*.html --include=*.scss
 
 # per-page copies of things that are now global or shared
 grep -rEn '__(back|cancel|submit|btn)[-a-z]*\s*\{' src/app --include=*.scss --include=*.css
