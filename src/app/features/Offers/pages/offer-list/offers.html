@@ -8,6 +8,18 @@
   </header>
 
   <section class="offers__stats">
+    @if (loading()) {
+    <!-- whole card contents, matching the branches KPI cards. Blocks sit in the
+         real __stat article, so its padding, border and column gap are shared. -->
+    @for (i of [1,2,3,4]; track i) {
+    <article class="offers__stat">
+      <span class="app-skeleton offers__skeleton-stat-icon"></span>
+      <span class="app-skeleton offers__skeleton-stat-value"></span>
+      <span class="app-skeleton offers__skeleton-stat-label"></span>
+      <span class="app-skeleton offers__skeleton-stat-hint"></span>
+    </article>
+    }
+    } @else {
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-bolt"></i></span>
       <span class="offers__stat-value">{{ stats().active }}</span>
@@ -32,6 +44,7 @@
       <span class="offers__stat-label">{{ 'offers.stats.total.label' | translate }}</span>
       <span class="offers__stat-hint">{{ 'offers.stats.total.hint' | translate }}</span>
     </article>
+    }
   </section>
 
   <section class="offers__card">
@@ -79,7 +92,7 @@
       </div>
     </div>
 
-    <p-table [value]="rows()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+    <p-table [value]="tableRows()" [paginator]="!loading()" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
       paginatorDropdownAppendTo="body" styleClass="offers__table">
       <ng-template pTemplate="header">
         <tr>
@@ -95,13 +108,13 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-row>
-        <tr [routerLink]="[row.id]" style="cursor: pointer;">
+        <tr [routerLink]="[row.id]">
           <td>
             <div class="offers__title-cell">
               <div class="offers__image-placeholder">
                 <i class="pi pi-image"></i>
               </div>
-              <span class="offers__title-text">{{ row.title }}</span>
+              <span class="offers__row-title">{{ row.title }}</span>
             </div>
           </td>
           <td>{{ row.discount }}</td>
@@ -121,6 +134,26 @@
             </button>
             <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
           </td>
+        </tr>
+      </ng-template>
+
+      <!-- PrimeNG renders this instead of the body row for every falsy entry in
+           [value] — that's what the placeholder rows in tableRows() are for. -->
+      <ng-template pTemplate="loadingbody">
+        <tr class="offers__row--skeleton">
+          <td>
+            <div class="offers__title-cell">
+              <div class="app-skeleton offers__skeleton-thumb"></div>
+              <span class="app-skeleton offers__skeleton-cell offers__skeleton-cell--title"></span>
+            </div>
+          </td>
+          <td><span class="app-skeleton offers__skeleton-cell offers__skeleton-cell--num"></span></td>
+          <td><span class="app-skeleton offers__skeleton-cell offers__skeleton-cell--text"></span></td>
+          <td><span class="app-skeleton offers__skeleton-cell offers__skeleton-cell--text"></span></td>
+          <td><span class="app-skeleton offers__skeleton-cell offers__skeleton-cell--date"></span></td>
+          <td><span class="app-skeleton offers__skeleton-cell offers__skeleton-cell--date"></span></td>
+          <td><span class="app-skeleton app-skeleton--pill offers__skeleton-cell offers__skeleton-cell--pill"></span></td>
+          <td><span class="app-skeleton offers__skeleton-cell offers__skeleton-cell--action"></span></td>
         </tr>
       </ng-template>
 

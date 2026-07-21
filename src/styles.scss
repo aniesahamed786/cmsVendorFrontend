@@ -573,7 +573,21 @@ html body [data-pc-name="toggleswitch"],
 .app-skeleton {
   display: block;
   background: color-mix(in srgb, var(--app-border) 55%, transparent);
+  /* Deliberate exception to the app's square corners (REFACTOR.md Step 5
+     rule 5): placeholders read as soft, unresolved shapes rather than as real
+     square-cornered content. Applies to text bars and icon blocks alike. */
+  border-radius: 0.375rem;
   animation: app-skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Stands in for a pill/lozenge (status chips) — matches the 999px it becomes. */
+.app-skeleton--pill {
+  border-radius: 999px;
+}
+
+/* Stands in for a circular avatar. */
+.app-skeleton--circle {
+  border-radius: 50%;
 }
 
 /* On a primary/gradient surface the border grey disappears — tint from white.

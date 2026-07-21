@@ -401,7 +401,11 @@ Follow `SKILL.md` per component, in order:
 2. Text → `--app-text` / `--app-muted`.
 3. Borders → `--app-border`.
 4. Brand (links, active, selected) → `--app-primary*`.
-5. **Remove every `border-radius`** unless explicitly justified (phone bezel, avatar).
+5. **Remove every `border-radius`** unless explicitly justified (phone bezel, avatar), or it
+   is a **skeleton placeholder**. `.app-skeleton` is deliberately rounded (`0.375rem`, plus
+   the `--pill` and `--circle` modifiers) — see [SKELETON.md](./SKELETON.md). Loading
+   placeholders are the one family of elements the square-corner rule does not govern; leave
+   their radius alone.
 6. **Remove `box-shadow`.** Exactly two survive:
    - the sanctioned focus ring;
    - the **table row hover** inset accent bar — `inset 3px 0 0 var(--app-primary)` on

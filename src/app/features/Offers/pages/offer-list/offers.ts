@@ -41,6 +41,27 @@ export class Offers {
   // ponytail: in-memory dummy data; swap for a service feed when the API exists
   private readonly offers: Offer[] = this.buildRows();
 
+  // ===========================================================================
+  // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
+  // ---------------------------------------------------------------------------
+  // `offers` above is a synchronous in-memory array, so there is no real load to
+  // wait for. This timer fakes one purely so the skeleton state is reachable and
+  // reviewable. When the real service lands:
+  //   1. delete the `setTimeout` in the constructor below;
+  //   2. flip `loading` to false in the service's `subscribe`, exactly as
+  //      `branches-page.ts` does;
+  //   3. delete this comment block.
+  // Keep `loading`, `tableRows` and the skeleton markup — only the fake timer
+  // and the initial `true` sourcing are throwaway.
+  // ===========================================================================
+  readonly loading = signal(true);
+  private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER ABOVE
+
+  constructor() {
+    // DELETE WHEN THE API IS WIRED — see the block above
+    setTimeout(() => this.loading.set(false), Offers.FAKE_LOAD_MS);
+  }
+
   // p-select takes plain label strings, so these rebuild through t() instead of
   // the pipe. Values stay the English literals — they are the filter keys.
   private options<T>(entries: [key: string, value: T][]): Signal<{ label: string; value: T }[]> {
@@ -156,6 +177,13 @@ export class Offers {
       }
     });
   });
+
+  // While loading, feed the table 5 falsy rows. PrimeNG's TableBody renders
+  // `rowData ? bodyTemplate : loadingBodyTemplate` per row, so each null draws
+  // the loadingbody skeleton row while the header and table chrome stay real.
+  readonly tableRows = computed(() =>
+    this.loading() ? new Array(5).fill(null) : this.rows()
+  );
 
   statusClass(status: OfferStatus): string {
     return `offers__status offers__status--${status.toLowerCase()}`;

@@ -57,6 +57,13 @@
     color: var(--app-primary);
     font-size: 1.1rem;
 
+    /* FLAGGED for the Phase 5 gate — danger/expiring-soon red. --app-danger
+       exists (#b41340) but is a different hue from this #dc2626, and
+       styles.scss's own .p-menuitem-danger rule (line ~259) still uses the
+       literal #dc2626 rather than the token — that migration hasn't happened
+       at the global level yet, so mapping this local instance to --app-danger
+       would be a visual change styles.scss itself hasn't made. Left literal,
+       same call as branches-page's flagged trend green. */
     &--danger {
       background: rgba(239, 68, 68, 0.16);
       color: #dc2626;
@@ -187,6 +194,10 @@
     padding: 0.2rem 0.7rem;
     border-radius: 999px;
 
+    /* FLAGGED for the Phase 5 gate — success green, no such token exists in
+       :root. Same case as branches-page's __performer-trend and
+       recent-activities' status green; left literal so light mode is
+       unchanged rather than inventing a --app-success token speculatively. */
     &--active {
       background: rgba(34, 197, 94, 0.16);
       color: #16a34a;
@@ -197,6 +208,8 @@
       color: var(--app-primary);
     }
 
+    /* FLAGGED for the Phase 5 gate — same #dc2626 tension as
+       &__stat-icon--danger above; left literal. */
     &--expired {
       background: rgba(239, 68, 68, 0.16);
       color: #dc2626;
@@ -207,6 +220,53 @@
     display: flex;
     align-items: center;
     gap: 0.85rem;
+  }
+
+  // ---- Skeletons (.app-skeleton owns fill + pulse; these own size only) ----
+  // Stat cards: the whole card contents, matching the branches KPI cards. Each
+  // block mirrors the element it replaces, including that element's margin, so
+  // the card is the same height loading and loaded.
+  &__skeleton-stat-icon {
+    width: 2.5rem; // square, like the real __stat-icon — not branches' circle
+    height: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__skeleton-stat-value {
+    width: 3.5rem;
+    height: 2rem; // the 2rem font-size line it stands in for
+  }
+
+  &__skeleton-stat-label {
+    width: 6rem;
+    height: 0.95rem;
+    margin-top: 0.4rem;
+  }
+
+  &__skeleton-stat-hint {
+    width: 8rem;
+    height: 0.82rem;
+    margin-top: 0.15rem;
+  }
+
+  // Table: the header and the row boxes are real, so these size only the block
+  // standing in for each cell. Widths differ per column so it reads as content
+  // rather than a bar — all comfortably under the column's real width.
+  &__skeleton-thumb {
+    width: 2.5rem; // matches __image-placeholder exactly, so the row can't jump
+    height: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  &__skeleton-cell {
+    height: 1rem; // one text line, so the row keeps the height it will have
+
+    &--title { width: 8rem; }
+    &--num { width: 2.5rem; }
+    &--text { width: 5rem; }
+    &--date { width: 5.5rem; }
+    &--pill { width: 4rem; }
+    &--action { width: 1.25rem; }
   }
 
   &__image-placeholder {
@@ -226,9 +286,6 @@
     }
   }
 
-  &__title-text {
-    font-weight: 600;
-  }
 }
 
 
@@ -263,22 +320,64 @@
     font-size: 0.9rem;
     padding: 0.9rem 1rem;
     border: none;
-    border-top: 1px solid var(--app-border);
-    border-bottom: 1px solid var(--app-border);
+    border-block-start: 1px solid var(--app-border);
+    border-block-end: 1px solid var(--app-border);
   }
 
+  // rows carry no fill of their own — the wrapper above owns the one surface.
+  // (Was `background: var(--app-surface)` here, which REFACTOR.md Step 4 calls
+  // out by name as redundant — the wrapper already declares it.)
   .p-datatable-tbody>tr {
-    background: var(--app-surface);
+    background: transparent;
     color: var(--app-text);
+    cursor: pointer;
+    transition:
+      box-shadow 160ms ease,
+      transform 160ms ease;
 
     >td {
       padding: 1.1rem 1rem;
       border: none;
-      border-bottom: 1px solid var(--app-border);
+      border-block-end: 1px solid var(--app-border);
+      transition: background-color 160ms ease;
     }
   }
 
+  // Row hover, per REFACTOR.md Step 4: lift + leading accent bar + cell tint +
+  // title recolor. The bar is an inset shadow, not a border, so the row doesn't
+  // reflow — it's the sanctioned exception to Step 5 rule 6.
+  .p-datatable-tbody>tr:hover {
+    transform: translateY(-1px);
+    box-shadow: inset 3px 0 0 var(--app-primary);
+  }
 
+  // tint sits on the cell, not the row: an opaque td would cover a tr fill
+  .p-datatable-tbody>tr:hover>td {
+    background: color-mix(
+      in srgb,
+      rgba(var(--app-primary-rgb), 0.08) 40%,
+      var(--app-surface) 60%
+    );
+  }
+
+  .p-datatable-tbody>tr:hover .offers__row-title {
+    color: var(--app-primary);
+  }
+
+  // a placeholder row isn't interactive — no lift, no bar, no tint, and no
+  // pointer cursor either: unlike the real rows it carries no routerLink
+  .p-datatable-tbody>tr.offers__row--skeleton {
+    cursor: default;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+
+      >td {
+        background: transparent;
+      }
+    }
+  }
 
   // sort arrows track the muted token, brand color when active
   .p-sortable-column .p-sortable-column-icon,
@@ -306,9 +405,8 @@
     min-width: 4.5rem;
   }
 
-  .p-paginator .p-select-label {
-    padding-inline-end: 0.5rem;
-  }
+  /* No local .p-select-label rule — styles.scss sets its padding-inline with
+     !important, so the local copy never applied. */
 
   .p-paginator .p-paginator-page,
   .p-paginator .p-paginator-first,
@@ -324,12 +422,42 @@
 
   .p-paginator .p-paginator-page.p-highlight {
     background: var(--app-primary);
-    color: #fff;
+    color: #fff; // sanctioned on-primary contrast literal
     border-radius: 999px; // active page is a filled circle, per the design
   }
 
   .p-paginator .p-paginator-page:not(.p-highlight):hover {
     background: var(--app-primary-hover-soft);
     color: var(--app-text);
+  }
+}
+
+// box-shadow has no logical form, so the accent bar is the one place a physical
+// offset is correct here — it flips by hand for Arabic
+:host-context(html[lang="ar"]) ::ng-deep .offers__table
+  .p-datatable-tbody > tr:hover {
+  box-shadow: inset -3px 0 0 var(--app-primary);
+}
+
+.offers__row-title {
+  font-weight: 600; // carried over from the old __title-text rule
+  color: var(--app-text);
+  transition: color 200ms ease; // slower than the row, so the text trails it
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::ng-deep .offers__table {
+    .p-datatable-tbody > tr,
+    .p-datatable-tbody > tr > td {
+      transition: none;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      transform: none;
+    }
+  }
+
+  .offers__row-title {
+    transition: none;
   }
 }

@@ -152,7 +152,14 @@ The catch that applies to any reused row: reusing it also inherits its **interac
   fill, a pointer cursor or a focus ring will do all of that while it's still a placeholder.
   Add a `--skeleton` modifier that switches those off — it's the one thing the skeleton must
   *not* mirror.
-- **Square corners**, like everything else. Circles are the one exception (avatars only).
+- **Rounded corners — skeletons are the exception to the app's square corners.** `.app-skeleton`
+  carries `border-radius: 0.375rem` globally, on text bars and icon blocks alike, so
+  placeholders read as soft unresolved shapes rather than as real content. **Do not strip this
+  under [REFACTOR.md](./REFACTOR.md) Step 5 rule 5** — it is named there as a sanctioned
+  exception. Two modifiers cover the shapes that aren't rectangles: `.app-skeleton--pill`
+  (999px, for status chips and lozenges) and `.app-skeleton--circle` (avatars). Match whatever
+  the real element becomes — a square block standing in for a pill is a shape that changes on
+  load.
 - **No hard-coded greys.** The fill comes from `--app-border`; a skeleton that stays light
   grey in dark mode is a bug. The only literal is `#fff` in the `--on-primary` variant.
 - **Size in SCSS, never in the template.** No `style="width: 16rem"`, no `w-64`. Same rule
@@ -169,16 +176,14 @@ The catch that applies to any reused row: reusing it also inherits its **interac
 
 ## Using `p-skeleton` instead
 
-Fine where it's already in place; it needs `border-radius: 0` forced, which is why
-`offer-form.css` carries a `::ng-deep .p-skeleton { border-radius: 0 !important; }` block.
-For new work prefer `.app-skeleton` — a div with two classes beats importing a component
-and then fighting its radius.
+Fine where it's already in place. For new work prefer `.app-skeleton` — a div with two classes
+beats importing a component, and it gives you the `--pill` / `--circle` modifiers and the
+token-driven fill for free.
 
-**Note the radius is only forced where someone forced it.** `p-skeleton` is *not* square by
-default anywhere else — `branches-page.scss` has no such block, so its KPI skeletons render
-rounded today. Before adding a `p-skeleton` to a component, grep that component for the
-`border-radius: 0 !important` override; if it isn't there, you are adding a rounded block to
-a square-cornered app, and `.app-skeleton` is the answer instead.
+`p-skeleton` brings its own radius, which no longer conflicts now that skeletons are rounded by
+design. What it does *not* give you is the shared fill: its grey comes from the PrimeNG preset,
+not from `--app-border`, so it will not track the mode the way `.app-skeleton` does. That, not
+the corners, is the reason to prefer `.app-skeleton`.
 
 ### When the component already has the other dialect
 
@@ -194,6 +199,40 @@ instance):
 A temporary, flagged split beats either silently widening `p-skeleton` or quietly converting
 code the task's scope put off limits. What is *not* acceptable is an unflagged split — the
 next person then can't tell which dialect is the intended one.
+
+## Faking the load on a page with no service yet
+
+Some pages hold in-memory dummy data and render synchronously — `offer-list` is one. There is
+no async gap, so the skeleton is unreachable and unreviewable. If you add one anyway, the fake
+timer that makes it visible **must be impossible to miss later**, or it ships to production and
+every visitor waits for nothing.
+
+Convention: one grep-able marker, `DELETE WHEN THE API IS WIRED`, on the block *and* on each
+throwaway line.
+
+```ts
+// ===========================================================================
+// ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
+// ---------------------------------------------------------------------------
+// `offers` is a synchronous in-memory array, so there is no real load to wait
+// for. This timer fakes one purely so the skeleton state is reachable. When the
+// real service lands: delete the setTimeout, flip `loading` in the service's
+// subscribe (as branches-page.ts does), delete this block.
+// Keep `loading`, `tableRows` and the skeleton markup — only the timer goes.
+// ===========================================================================
+readonly loading = signal(true);
+private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER
+
+constructor() {
+  setTimeout(() => this.loading.set(false), Offers.FAKE_LOAD_MS); // DELETE WHEN THE API IS WIRED
+}
+```
+
+Say explicitly which parts survive the swap. The skeleton markup, the sizes and the `loading`
+signal are all real work that the service will reuse — only the timer and the hardcoded initial
+`true` are throwaway. Without that line someone deletes the whole feature along with the timer.
+
+`grep -rn "DELETE WHEN THE API IS WIRED" src/` should list every page still faking it.
 
 ## Checklist
 
