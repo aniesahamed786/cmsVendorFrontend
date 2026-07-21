@@ -1,10 +1,23 @@
 {
+  "nav": {
+    "openMenu": "فتح قائمة التنقل",
+    "dashboard": { "label": "لوحة التحكم", "title": "لوحة التحكم" },
+    "profile": { "label": "ملف البائع", "title": "ملف البائع" },
+    "request-center": { "label": "مركز الطلبات", "title": "مركز الطلبات" },
+    "offers": { "label": "العروض", "title": "العروض" },
+    "branches": { "label": "الفروع", "title": "الفروع" },
+    "redemption": { "label": "الاسترداد", "title": "الاسترداد" },
+    "messaging-center": { "label": "مركز الرسائل", "title": "مركز الرسائل" },
+    "analytics": { "label": "التحليلات", "title": "التحليلات" },
+    "recent-activities": { "label": "النشاطات الأخيرة", "title": "النشاطات الأخيرة" }
+  },
   "navbar": {
     "toolbarActions": "إجراءات شريط الأدوات",
     "profileMenu": "قائمة الملف الشخصي",
     "profile": "الملف الشخصي",
     "settings": "الإعدادات",
     "darkTheme": "الوضع الداكن",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "roleVendor": "البائع"
   }
 }

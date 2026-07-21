@@ -23,9 +23,9 @@
               [style.webkitMaskImage]="'url(' + item.icon + ')'"
               [style.maskImage]="'url(' + item.icon + ')'"
               role="img"
-              [attr.aria-label]="item.navItem"
+              [attr.aria-label]="item.labelKey | translate"
             ></span>
-            <span class="sidenav-item__label">{{ item.navItem }}</span>
+            <span class="sidenav-item__label">{{ item.labelKey | translate }}</span>
           </a>
         </li>
         }

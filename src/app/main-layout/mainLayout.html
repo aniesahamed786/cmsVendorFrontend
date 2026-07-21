@@ -12,10 +12,11 @@
           type="button"
           icon="pi pi-bars"
           class="p-button-text"
+          [attr.aria-label]="'nav.openMenu' | translate"
           (click)="openMobileSidebar()"
         ></button>
         <span class="mobile-topbar__title">
-          {{ receivedHeaderData() || 'Dashboard' }}
+          {{ (receivedHeaderData() || 'nav.dashboard.title') | translate }}
         </span>
         <span class="mobile-topbar__spacer"></span>
       </div>
@@ -37,7 +38,7 @@
   [modal]="true"
   [blockScroll]="true"
   [dismissible]="true"
-  position="left"
+  [position]="isRtl() ? 'right' : 'left'"
   styleClass="mobile-sidebar-drawer"
   (visibleChange)="mobileSidebarOpen.set($event)"
 >

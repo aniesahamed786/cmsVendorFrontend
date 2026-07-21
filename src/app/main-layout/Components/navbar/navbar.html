@@ -5,7 +5,9 @@
 
   <div class="navbar-actions" [attr.aria-label]="'navbar.toolbarActions' | translate">
     <button type="button" class="profile-trigger" [attr.aria-label]="'navbar.profileMenu' | translate" (click)="profileMenu.toggle($event)">
-      <p-avatar [label]="avatarLabel()" shape="circle" styleClass="navbar-avatar" aria-label="Profile" />
+      <!-- No aria-label here: the wrapping button already carries one, and a
+           nested label would have the avatar announced twice. -->
+      <p-avatar [label]="avatarLabel()" shape="circle" styleClass="navbar-avatar" />
     </button>
 
     <p-popover #profileMenu styleClass="navbar-profile-popover">
@@ -14,7 +16,7 @@
           <p-avatar [label]="avatarLabel()" shape="circle" size="large" styleClass="profile-menu-avatar" />
           <div class="profile-menu-user">
             <p class="profile-menu-name">{{ userName() }}</p>
-            <p class="profile-menu-role">{{ userRole() }}</p>
+            <p class="profile-menu-role">{{ userRole() | translate }}</p>
           </div>
         </div>
 

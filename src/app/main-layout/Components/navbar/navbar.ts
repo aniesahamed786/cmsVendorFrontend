@@ -24,15 +24,24 @@ export class Navbar {
 
   @ViewChild('profileMenu') profileMenu!: Popover;
 
+  /** A translation key (`nav.<slug>.title`), emitted by Sidenav — not text. */
   headerData = input<string>('');
-  private readonly routeHeader = signal('Dashboard');
+  private readonly routeSlug = signal('dashboard');
 
   readonly userName = signal('Alex Rivera');
-  readonly userRole = signal('Vendor');
+  // ponytail: a key while the user is mocked. Real auth returns a role string —
+  // pipe it through a `roles.*` lookup then, or drop the pipe in the template.
+  readonly userRole = signal('navbar.roleVendor');
 
-  readonly resolvedHeader = computed(
-    () => this.headerData().trim() || this.routeHeader(),
-  );
+  readonly resolvedHeader = computed(() => {
+    this.i18n.lang();
+    this.i18n.loadSeq();
+    const key = this.headerData().trim() || `nav.${this.routeSlug()}.title`;
+    const text = this.i18n.t(key);
+    // Routes with no sidenav entry (settings, create-offer) have no key, and t()
+    // echoes the key back. Fall back to the prettified slug over painting it raw.
+    return text === key ? this.prettify(this.routeSlug()) : text;
+  });
 
   readonly avatarLabel = computed(() => {
     const parts = this.userName().trim().split(/\s+/).filter(Boolean);
@@ -46,21 +55,20 @@ export class Navbar {
   });
 
   constructor() {
-    this.routeHeader.set(this.formatRouteToHeader(this.router.url));
+    this.routeSlug.set(this.slugFromUrl(this.router.url));
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        this.routeHeader.set(this.formatRouteToHeader(event.urlAfterRedirects));
+        this.routeSlug.set(this.slugFromUrl(event.urlAfterRedirects));
       });
   }
 
-  private formatRouteToHeader(url: string): string {
-    const segments = url.split('?')[0].split('/').filter(Boolean);
-    if (!segments.length) {
-      return 'Dashboard';
-    }
+  private slugFromUrl(url: string): string {
+    return url.split('?')[0].split('/').filter(Boolean)[0] ?? 'dashboard';
+  }
 
-    return segments[0]
+  private prettify(slug: string): string {
+    return slug
       .split('-')
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(' ');

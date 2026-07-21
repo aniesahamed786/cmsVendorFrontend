@@ -1,10 +1,23 @@
 {
+  "nav": {
+    "openMenu": "Open navigation menu",
+    "dashboard": { "label": "Dashboard", "title": "Dashboard" },
+    "profile": { "label": "Profile", "title": "Vendor Profile" },
+    "request-center": { "label": "Request Center", "title": "Request Center" },
+    "offers": { "label": "Offers", "title": "Offers" },
+    "branches": { "label": "Branches", "title": "Branches" },
+    "redemption": { "label": "Redemption", "title": "Redemption" },
+    "messaging-center": { "label": "Messaging Center", "title": "Messaging Center" },
+    "analytics": { "label": "Analytics", "title": "Analytics" },
+    "recent-activities": { "label": "Recent Activities", "title": "Recent Activities" }
+  },
   "navbar": {
     "toolbarActions": "Toolbar actions",
     "profileMenu": "Profile menu",
     "profile": "Profile",
     "settings": "Settings",
     "darkTheme": "Dark theme",
-    "logout": "Logout"
+    "logout": "Logout",
+    "roleVendor": "Vendor"
   }
 }
