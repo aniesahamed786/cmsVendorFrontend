@@ -11,6 +11,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { MOCK_VENDOR_PROFILE_EDIT } from '../../data/mock-vendor-profile-edit';
 import {
   VendorProfileEditData,
@@ -31,7 +32,7 @@ export interface VendorProfilePreviewData {
 
 @Component({
   selector: 'app-vendor-profile-edit-form',
-  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, VendorLocationDialog],
+  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, VendorLocationDialog, TranslatePipe],
   templateUrl: './vendor-profile-edit-form.html',
   styleUrl: './vendor-profile-edit-form.css',
 })

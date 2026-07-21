@@ -3,7 +3,7 @@
     <div class="edit-profile-toolbar__left">
       <button type="button" class="edit-profile-back-btn" (click)="goBack()">
         <i class="pi pi-arrow-left"></i>
-        <span>Back to Profile</span>
+        <span>{{ 'profile.backToProfile' | translate }}</span>
       </button>
     </div>
   </div>
@@ -16,9 +16,9 @@
 
       <div class="edit-profile-form-actions">
         <app-button variant="outline" (click)="triggerSaveDraft()">
-          Save As Draft
+          {{ 'profile.saveAsDraft' | translate }}
         </app-button>
-        <app-button variant="primary" (click)="triggerUpdateChanges()" icon="pi pi-refresh">Update changes</app-button>
+        <app-button variant="primary" (click)="triggerUpdateChanges()" icon="pi pi-refresh">{{ 'profile.updateChanges' | translate }}</app-button>
       </div>
     </div>
 

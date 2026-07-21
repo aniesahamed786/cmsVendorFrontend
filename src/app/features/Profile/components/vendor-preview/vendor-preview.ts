@@ -9,11 +9,12 @@ import {
 } from '@angular/core';
 import { resolveAssetUrl } from '../../../../shared/utils/resolve-asset-url';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-vendor-preview',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules],
+  imports: [CommonModule, PrimeUIModules, TranslatePipe],
   templateUrl: './vendor-preview.html',
   styleUrl: './vendor-preview.scss',
 })
@@ -84,16 +85,16 @@ export class VendorPreview implements OnChanges {
 
   getVendorName(): string {
     if (this.language() === 'ar') {
-      return this.nameAr || 'اسم التاجر';
+      return this.nameAr || 'اسم البائع';
     }
     return this.name || 'Vendor Name';
   }
 
   getVendorDescription(): string {
     if (this.language() === 'ar') {
-      return this.descriptionAr || 'وصف المتجر والخدمات التي يقدمها للعملاء.';
+      return this.descriptionAr || 'وصف البائع والخدمات التي يقدمها للعملاء.';
     }
-    return this.description || 'Description of the branch and the services it offers';
+    return this.description || 'Description of the vendor and the services it offers';
   }
 
   getOffers(): unknown[] {

@@ -43,5 +43,50 @@
     "darkTheme": "الوضع الداكن",
     "logout": "تسجيل الخروج",
     "roleVendor": "البائع"
+  },
+  "profile": {
+    "edit": "تعديل",
+    "statusActive": "نشط",
+    "description": "الوصف",
+    "representativeInformation": "معلومات الممثل",
+    "businessContactDetails": "بيانات التواصل التجارية",
+    "socialMedia": "وسائل التواصل الاجتماعي",
+    "noSocialLinks": "لا توجد روابط تواصل",
+    "inspirationalImages": "الصور التعريفية",
+    "imageMobile": "الجوال",
+    "imageDesktop": "سطح المكتب",
+    "backToProfile": "العودة إلى الملف الشخصي",
+    "saveAsDraft": "حفظ كمسودة",
+    "updateChanges": "تحديث التغييرات",
+    "previewAriaLabel": "معاينة الجوال",
+    "toast": {
+      "draftSavedSummary": "تم حفظ المسودة",
+      "draftSavedDetail": "تم حفظ تغييرات ملفك كمسودة.",
+      "updatedSummary": "تم تحديث الملف",
+      "updatedDetail": "تم تحديث بيانات ملف البائع بنجاح."
+    },
+    "form": {
+      "basicInformation": "المعلومات الأساسية",
+      "businessContactDetails": "بيانات التواصل التجارية",
+      "representativeContactDetails": "بيانات التواصل مع الممثل",
+      "nameEn": "اسم البائع (بالإنجليزية)",
+      "nameAr": "اسم البائع (بالعربية)",
+      "crNumber": "رقم السجل التجاري",
+      "crNumberHint": "مطلوب إذا كان نشاطك التجاري في المملكة العربية السعودية.",
+      "descriptionEn": "الوصف (بالإنجليزية)",
+      "descriptionAr": "الوصف (بالعربية)",
+      "businessPhone": "رقم هاتف النشاط التجاري",
+      "businessEmail": "البريد الإلكتروني للنشاط التجاري",
+      "businessWebsite": "الموقع الإلكتروني للنشاط التجاري",
+      "repFullName": "الاسم الكامل للممثل",
+      "repPhone": "رقم هاتف الممثل",
+      "repEmail": "البريد الإلكتروني للممثل",
+      "placeholderNameEn": "مثال: Lumee Street",
+      "placeholderNameAr": "مثال: لومي ستريت",
+      "placeholderCrNumber": "مثال: 1010456789",
+      "placeholderDescriptionEn": "وصف مختصر للبائع وخدماته بالإنجليزية",
+      "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
+      "placeholderRepName": "مثال: محمد أحمد"
+    }
   }
 }

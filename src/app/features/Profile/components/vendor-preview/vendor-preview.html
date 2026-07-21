@@ -1,6 +1,6 @@
 <!-- mobile-style preview -->
 <aside [class.hidden]="!isDialog" [class.lg:block]="!isDialog" class="w-full lg:flex-none shrink-0"
-    aria-label="Mobile preview">
+    [attr.aria-label]="'profile.previewAriaLabel' | translate">
 
     <div class="preview-wrapper" [class.relative]="isDialog">
 

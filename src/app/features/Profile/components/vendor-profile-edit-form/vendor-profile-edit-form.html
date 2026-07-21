@@ -2,32 +2,32 @@
   <div class="profile-form-section">
     <div class="profile-form-section__header">
       <div class="profile-form-section__icon"><i class="pi pi-info-circle"></i></div>
-      <h2>Basic Information</h2>
+      <h2>{{ 'profile.form.basicInformation' | translate }}</h2>
     </div>
     <div class="profile-form-grid profile-form-grid--two">
       <div>
-        <label>Vendor Name (English) <span class="required">*</span></label>
-        <input pInputText formControlName="nameEn" placeholder="e.g. Lumee Street" (focus)="onFocusLanguage('en')" />
+        <label>{{ 'profile.form.nameEn' | translate }} <span class="required">*</span></label>
+        <input pInputText formControlName="nameEn" [placeholder]="'profile.form.placeholderNameEn' | translate" (focus)="onFocusLanguage('en')" />
       </div>
       <div>
-        <label>Vendor Name (Arabic) <span class="required">*</span></label>
+        <label>{{ 'profile.form.nameAr' | translate }} <span class="required">*</span></label>
         <input pInputText formControlName="nameAr" class="vendor-profile-edit-form__input--rtl"
-          placeholder="مثال: لومي ستريت" (focus)="onFocusLanguage('ar')" />
+          [placeholder]="'profile.form.placeholderNameAr' | translate" (focus)="onFocusLanguage('ar')" />
       </div>
       <div class="profile-form-grid__full">
-        <label>Commercial Registration Number</label>
-        <input pInputText formControlName="crNumber" placeholder="e.g. 1010456789" />
-        <p class="field-hint">Required if your business is based in Saudi Arabia.</p>
+        <label>{{ 'profile.form.crNumber' | translate }}</label>
+        <input pInputText formControlName="crNumber" [placeholder]="'profile.form.placeholderCrNumber' | translate" />
+        <p class="field-hint">{{ 'profile.form.crNumberHint' | translate }}</p>
       </div>
       <div class="profile-form-grid__full">
-        <label>Description (English) <span class="required">*</span></label>
+        <label>{{ 'profile.form.descriptionEn' | translate }} <span class="required">*</span></label>
         <textarea pInputTextarea formControlName="descriptionEn" rows="4"
-          placeholder="Briefly describe the vendor and their services" (focus)="onFocusLanguage('en')"></textarea>
+          [placeholder]="'profile.form.placeholderDescriptionEn' | translate" (focus)="onFocusLanguage('en')"></textarea>
       </div>
       <div class="profile-form-grid__full">
-        <label>Description (Arabic) <span class="required">*</span></label>
+        <label>{{ 'profile.form.descriptionAr' | translate }} <span class="required">*</span></label>
         <textarea pInputTextarea formControlName="descriptionAr" class="vendor-profile-edit-form__input--rtl" rows="4"
-          placeholder="وصف مختصر للتاجر وخدماته" (focus)="onFocusLanguage('ar')"></textarea>
+          [placeholder]="'profile.form.placeholderDescriptionAr' | translate" (focus)="onFocusLanguage('ar')"></textarea>
       </div>
     </div>
   </div>
@@ -35,19 +35,19 @@
   <div class="profile-form-section">
     <div class="profile-form-section__header">
       <div class="profile-form-section__icon"><i class="pi pi-building"></i></div>
-      <h2>Business Contact Details</h2>
+      <h2>{{ 'profile.form.businessContactDetails' | translate }}</h2>
     </div>
     <div class="profile-form-grid profile-form-grid--three">
       <div>
-        <label>Business Phone Number <span class="required">*</span></label>
+        <label>{{ 'profile.form.businessPhone' | translate }} <span class="required">*</span></label>
         <input pInputText formControlName="businessPhone" placeholder="+966 50 123 4567" />
       </div>
       <div>
-        <label>Business Email <span class="required">*</span></label>
+        <label>{{ 'profile.form.businessEmail' | translate }} <span class="required">*</span></label>
         <input pInputText formControlName="businessEmail" placeholder="contact@example.com" />
       </div>
       <div>
-        <label>Business Website</label>
+        <label>{{ 'profile.form.businessWebsite' | translate }}</label>
         <input pInputText formControlName="businessWebsite" placeholder="https://example.com" />
       </div>
     </div>
@@ -56,19 +56,19 @@
   <div class="profile-form-section">
     <div class="profile-form-section__header">
       <div class="profile-form-section__icon"><i class="pi pi-user"></i></div>
-      <h2>Representative Contact Details</h2>
+      <h2>{{ 'profile.form.representativeContactDetails' | translate }}</h2>
     </div>
     <div class="profile-form-grid profile-form-grid--three">
       <div>
-        <label>Representative Full Name <span class="required">*</span></label>
-        <input pInputText formControlName="repFullName" placeholder="e.g. John Doe" />
+        <label>{{ 'profile.form.repFullName' | translate }} <span class="required">*</span></label>
+        <input pInputText formControlName="repFullName" [placeholder]="'profile.form.placeholderRepName' | translate" />
       </div>
       <div>
-        <label>Representative Phone Number <span class="required">*</span></label>
+        <label>{{ 'profile.form.repPhone' | translate }} <span class="required">*</span></label>
         <input pInputText formControlName="repPhone" placeholder="+966 55 987 6543" />
       </div>
       <div>
-        <label>Representative Email <span class="required">*</span></label>
+        <label>{{ 'profile.form.repEmail' | translate }} <span class="required">*</span></label>
         <input pInputText formControlName="repEmail" placeholder="representative@example.com" />
       </div>
     </div>

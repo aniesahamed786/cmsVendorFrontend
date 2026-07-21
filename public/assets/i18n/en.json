@@ -43,5 +43,50 @@
     "darkTheme": "Dark theme",
     "logout": "Logout",
     "roleVendor": "Vendor"
+  },
+  "profile": {
+    "edit": "Edit",
+    "statusActive": "Active",
+    "description": "Description",
+    "representativeInformation": "Representative Information",
+    "businessContactDetails": "Business Contact Details",
+    "socialMedia": "Social Media",
+    "noSocialLinks": "No social links",
+    "inspirationalImages": "Inspirational Images",
+    "imageMobile": "Mobile",
+    "imageDesktop": "Desktop",
+    "backToProfile": "Back to Profile",
+    "saveAsDraft": "Save As Draft",
+    "updateChanges": "Update changes",
+    "previewAriaLabel": "Mobile preview",
+    "toast": {
+      "draftSavedSummary": "Draft saved",
+      "draftSavedDetail": "Your profile changes were saved as draft.",
+      "updatedSummary": "Profile updated",
+      "updatedDetail": "Vendor profile changes were updated successfully."
+    },
+    "form": {
+      "basicInformation": "Basic Information",
+      "businessContactDetails": "Business Contact Details",
+      "representativeContactDetails": "Representative Contact Details",
+      "nameEn": "Vendor Name (English)",
+      "nameAr": "Vendor Name (Arabic)",
+      "crNumber": "Commercial Registration Number",
+      "crNumberHint": "Required if your business is based in Saudi Arabia.",
+      "descriptionEn": "Description (English)",
+      "descriptionAr": "Description (Arabic)",
+      "businessPhone": "Business Phone Number",
+      "businessEmail": "Business Email",
+      "businessWebsite": "Business Website",
+      "repFullName": "Representative Full Name",
+      "repPhone": "Representative Phone Number",
+      "repEmail": "Representative Email",
+      "placeholderNameEn": "e.g. Lumee Street",
+      "placeholderNameAr": "مثال: لومي ستريت",
+      "placeholderCrNumber": "e.g. 1010456789",
+      "placeholderDescriptionEn": "Briefly describe the vendor and their services",
+      "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
+      "placeholderRepName": "e.g. John Doe"
+    }
   }
 }

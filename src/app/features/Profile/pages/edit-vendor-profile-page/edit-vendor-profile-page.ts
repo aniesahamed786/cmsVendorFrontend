@@ -3,6 +3,8 @@ import { Component, ViewChild, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorProfileEditForm } from '../../components/vendor-profile-edit-form/vendor-profile-edit-form';
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
 import { Button } from '../../../../shared/Components/button/button';
@@ -11,7 +13,7 @@ import { VendorProfileEditData } from '../../models/vendor-profile-edit.model';
 
 @Component({
   selector: 'app-edit-vendor-profile-page',
-  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview, Button],
+  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview, Button, TranslatePipe],
   templateUrl: './edit-vendor-profile-page.html',
   styleUrl: './edit-vendor-profile-page.css',
   providers: [MessageService],
@@ -22,6 +24,7 @@ export class EditVendorProfilePage {
 
   private readonly router = inject(Router);
   private readonly messageService = inject(MessageService);
+  private readonly i18n = inject(I18nService);
 
   readonly initialData = signal(MOCK_VENDOR_PROFILE_EDIT);
   readonly isLoading = signal(false);
@@ -33,8 +36,8 @@ export class EditVendorProfilePage {
   onSaveDraft(payload: VendorProfileEditData): void {
     this.messageService.add({
       severity: 'info',
-      summary: 'Draft saved',
-      detail: 'Your profile changes were saved as draft.',
+      summary: this.i18n.t('profile.toast.draftSavedSummary'),
+      detail: this.i18n.t('profile.toast.draftSavedDetail'),
       life: 2200,
     });
   }
@@ -44,8 +47,8 @@ export class EditVendorProfilePage {
     this.initialData.set(payload);
     this.messageService.add({
       severity: 'success',
-      summary: 'Profile updated',
-      detail: 'Vendor profile changes were updated successfully.',
+      summary: this.i18n.t('profile.toast.updatedSummary'),
+      detail: this.i18n.t('profile.toast.updatedDetail'),
       life: 2200,
     });
     this.isLoading.set(false);
