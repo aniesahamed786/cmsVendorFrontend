@@ -8,15 +8,19 @@
   </section>
 
   <div class="dashboard-page__stats">
-    <app-offer-tile title="Total Redemptions" value="2,427" subtitle="All-time redemptions" icon="pi pi-chart-line"
+    <app-offer-tile [title]="'dashboard.stats.totalRedemptions.title' | translate" value="2,427"
+      [subtitle]="'dashboard.stats.totalRedemptions.subtitle' | translate" icon="pi pi-chart-line"
       iconColor="var(--app-primary)" iconContainerBg="var(--app-primary-soft)" [trendUp]="true" />
-    <app-offer-tile title="Active Offers" value="19" subtitle="Currently live"
+    <app-offer-tile [title]="'dashboard.stats.activeOffers.title' | translate" value="19"
+      [subtitle]="'dashboard.stats.activeOffers.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-active-offers.svg" iconColor="var(--app-primary)"
       iconContainerBg="var(--app-primary-soft)" [trendUp]="true" (tileClick)="goToOffers()" />
-    <app-offer-tile title="Pending Offers" value="0" subtitle="Awaiting approval"
+    <app-offer-tile [title]="'dashboard.stats.pendingOffers.title' | translate" value="0"
+      [subtitle]="'dashboard.stats.pendingOffers.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-pending-requests.svg" iconColor="var(--app-primary)"
       iconContainerBg="var(--app-primary-soft)" (tileClick)="goToRequestCenter()" />
-    <app-offer-tile title="Expiring Soon Offers" value="23" subtitle="Offers expiring in 30 days"
+    <app-offer-tile [title]="'dashboard.stats.expiringSoon.title' | translate" value="23"
+      [subtitle]="'dashboard.stats.expiringSoon.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-expiring-soon-offer.svg" iconColor="#dc2626"
       iconContainerBg="rgba(239, 68, 68, 0.16)" [trendUp]="false" (tileClick)="goToOffers()" />
   </div>
@@ -27,23 +31,23 @@
   <div class="dashboard-page__columns">
     <section class="dashboard-page__panel">
       <div class="dashboard-page__panel-head">
-        <h2 class="dashboard-page__panel-title">Recent Activity</h2>
+        <h2 class="dashboard-page__panel-title">{{ 'dashboard.recentActivity' | translate }}</h2>
         <button type="button" class="dashboard-page__link" (click)="goToRecentActivities()">
-          View History
+          {{ 'dashboard.viewHistory' | translate }}
         </button>
       </div>
 
       <div class="dashboard-page__activity-list">
-        @for (activity of recentActivities(); track activity.title + activity.time) {
+        @for (activity of recentActivities(); track activity.key) {
         <div class="dashboard-page__activity">
           <div class="dashboard-page__activity-icon" [ngClass]="activity.iconClass">
             <i [class]="activity.icon"></i>
           </div>
           <div class="dashboard-page__activity-body">
-            <p class="dashboard-page__activity-title">{{ activity.title }}</p>
-            <p class="dashboard-page__activity-desc">{{ activity.description }}</p>
+            <p class="dashboard-page__activity-title">{{ activity.key + '.title' | translate }}</p>
+            <p class="dashboard-page__activity-desc">{{ activity.key + '.description' | translate }}</p>
           </div>
-          <span class="dashboard-page__activity-time">{{ activity.time }}</span>
+          <span class="dashboard-page__activity-time">{{ activity.key + '.time' | translate }}</span>
         </div>
         }
       </div>
@@ -51,7 +55,7 @@
 
     <section class="dashboard-page__panel">
       <h2 class="dashboard-page__panel-title dashboard-page__panel-title--spaced">
-        Pending Requests
+        {{ 'dashboard.pendingRequests' | translate }}
       </h2>
     </section>
   </div>

@@ -11,6 +11,30 @@
     "analytics": { "label": "Analytics", "title": "Analytics" },
     "recent-activities": { "label": "Recent Activities", "title": "Recent Activities" }
   },
+  "dashboard": {
+    "recentActivity": "Recent Activity",
+    "viewHistory": "View History",
+    "pendingRequests": "Pending Requests",
+    "stats": {
+      "totalRedemptions": { "title": "Total Redemptions", "subtitle": "All-time redemptions" },
+      "activeOffers": { "title": "Active Offers", "subtitle": "Currently live" },
+      "pendingOffers": { "title": "Pending Offers", "subtitle": "Awaiting approval" },
+      "expiringSoon": { "title": "Expiring Soon Offers", "subtitle": "Offers expiring in 30 days" }
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "createOffer": "Create New Offer",
+      "editProfile": "Edit Profile",
+      "contactSupport": "Contact Support"
+    },
+    "activity": {
+      "offerActivated": { "title": "New offer activated", "description": "Summer Sale 2025", "time": "2 mins ago" },
+      "offerPending": { "title": "Offer pending approval", "description": "Family Package", "time": "1 hour ago" },
+      "profileSubmitted": { "title": "Profile update submitted", "description": "Profile & media", "time": "3 hours ago" },
+      "branchHours": { "title": "Branch hours updated", "description": "Dammam Branch", "time": "Yesterday" },
+      "ticketReplied": { "title": "Support ticket replied", "description": "Offer visibility issue", "time": "2 days ago" }
+    }
+  },
   "navbar": {
     "toolbarActions": "Toolbar actions",
     "profileMenu": "Profile menu",

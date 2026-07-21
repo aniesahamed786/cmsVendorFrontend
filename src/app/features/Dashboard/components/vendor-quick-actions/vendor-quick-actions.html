@@ -1,26 +1,26 @@
 <div class="vendor-quick-actions">
-  <h2 class="vendor-quick-actions__title">Quick Actions</h2>
+  <h2 class="vendor-quick-actions__title">{{ 'dashboard.quickActions.title' | translate }}</h2>
 
   <div class="vendor-quick-actions__grid">
     <button type="button" class="vendor-quick-actions__card" (click)="onCreateOffer()">
       <span class="vendor-quick-actions__icon">
         <span class="vendor-quick-actions__icon-mask"></span>
       </span>
-      <span class="vendor-quick-actions__label">Create New Offer</span>
+      <span class="vendor-quick-actions__label">{{ 'dashboard.quickActions.createOffer' | translate }}</span>
     </button>
 
     <button type="button" class="vendor-quick-actions__card" (click)="onEditProfile()">
       <span class="vendor-quick-actions__icon">
         <i class="pi pi-user"></i>
       </span>
-      <span class="vendor-quick-actions__label">Edit Profile</span>
+      <span class="vendor-quick-actions__label">{{ 'dashboard.quickActions.editProfile' | translate }}</span>
     </button>
 
     <button type="button" class="vendor-quick-actions__card" (click)="onContactSupport()">
       <span class="vendor-quick-actions__icon">
         <i class="pi pi-headphones"></i>
       </span>
-      <span class="vendor-quick-actions__label">Contact Support</span>
+      <span class="vendor-quick-actions__label">{{ 'dashboard.quickActions.contactSupport' | translate }}</span>
     </button>
   </div>
 </div>
