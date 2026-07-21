@@ -19,7 +19,7 @@
                 </div>
             </div>
             <!-- Scrollable Content -->
-            <div class="flex-1 overflow-y-auto bg-white flex flex-col pointer-events-auto relative custom-scrollbar">
+            <div class="flex-1 overflow-y-auto bg-white flex flex-col pointer-events-auto relative custom-scrollbar" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
                 <!-- Image Section -->
                 <div id="preview-section-image" class="w-full bg-white flex-shrink-0 px-4 pt-4">
                     <div class="relative w-full h-[190px]">
@@ -33,8 +33,7 @@
                         <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-300"><i class="pi pi-image text-5xl"></i></div>
                         }
                         @if (showVendorLogo) {
-                        <div class="absolute -bottom-6 w-[70px] h-[70px] bg-white flex items-center justify-center border-2 border-gray-100 p-1"
-                            [ngClass]="language === 'ar' ? 'right-4' : 'left-4'">
+                        <div class="preview-offer-details__vendor-logo absolute -bottom-6 w-[70px] h-[70px] bg-white flex items-center justify-center border-2 border-gray-100 p-1">
                             @if (getVendorLogo(offer); as logo) {
                             <img [src]="getVendorLogo(offer)" alt="Vendor Logo" class="w-full h-full object-contain" (error)="$event.target.remove()" />
                             } @else {
@@ -44,7 +43,7 @@
                         }
                     </div>
                     <!-- In-Store Badge -->
-                    <div class="w-full flex mt-2" [ngClass]="language === 'ar' ? 'justify-start' : 'justify-end'">
+                    <div class="w-full flex mt-2 justify-end">
                         <div class="flex items-center gap-2 border border-gray-300 px-2.5 py-1.5 text-xs text-gray-500 bg-white">
                             <i class="pi text-sm font-light" [ngClass]="getOfferModeIcon()"></i>
                             <span class="font-medium font-sans">{{ getOfferMode() }}</span>

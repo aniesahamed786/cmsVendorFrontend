@@ -681,5 +681,38 @@
       "action": "Action"
     },
     "empty": "No branches found."
+  },
+
+  "redemption": {
+    "title": "Offer Redemption",
+    "uploadExcel": "Upload Excel",
+    "section": {
+      "basicInfo": "Basic Information"
+    },
+    "label": {
+      "userId": "User ID",
+      "offer": "Offer",
+      "branch": "Branch",
+      "totalAmount": "Total Amount",
+      "paidAmount": "Paid Amount"
+    },
+    "placeholder": {
+      "offer": "Select Offer...",
+      "branch": "Select Branch...",
+      "amount": "e.g. SAR.250"
+    },
+    "submit": "Redeem Offer",
+    "list": {
+      "title": "Redemption List"
+    },
+    "column": {
+      "userId": "User ID",
+      "offer": "Offer",
+      "currentPrice": "Current Price",
+      "discountPrice": "Discount Price",
+      "amountSaved": "Amount Saved"
+    },
+    "currency": "SAR.",
+    "empty": "No redemptions found."
   }
 }

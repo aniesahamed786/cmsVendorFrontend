@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-redemption',
-  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, Button],
+  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, Button, TranslatePipe],
   templateUrl: './redemption.html',
   styleUrl: './redemption.css',
 })

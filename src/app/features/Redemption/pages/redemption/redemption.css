@@ -171,7 +171,7 @@ section.redemption-card {
 }
 
 ::ng-deep .redemption-form .redemption-form__field .p-select-dropdown {
-  border-left: 1px solid var(--app-border) !important;
+  border-inline-start: 1px solid var(--app-border) !important;
   color: var(--app-muted) !important;
   fill: var(--app-muted) !important;
 }
@@ -225,19 +225,19 @@ section.redemption-card {
 
 ::ng-deep .redemption-table th:first-child,
 ::ng-deep .redemption-table td:first-child {
-  padding-left: 1.5rem !important;
+  padding-inline-start: 1.5rem !important;
 }
 
 ::ng-deep .redemption-table th:last-child,
 ::ng-deep .redemption-table td:last-child {
-  padding-right: 1.5rem !important;
+  padding-inline-end: 1.5rem !important;
 }
 
 ::ng-deep .redemption-table .p-sortable-column-icon {
   color: var(--app-muted) !important;
   width: 0.75rem;
   height: 0.75rem;
-  margin-left: 0.5rem;
+  margin-inline-start: 0.5rem;
 }
 
 ::ng-deep .redemption-table th.p-highlight .p-sortable-column-icon {

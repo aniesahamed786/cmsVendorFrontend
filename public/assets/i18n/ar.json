@@ -1,25 +1,64 @@
 {
   "nav": {
     "openMenu": "فتح قائمة التنقل",
-    "dashboard": { "label": "لوحة التحكم", "title": "لوحة التحكم" },
-    "profile": { "label": "ملف البائع", "title": "ملف البائع" },
-    "request-center": { "label": "مركز الطلبات", "title": "مركز الطلبات" },
-    "offers": { "label": "العروض", "title": "العروض" },
-    "branches": { "label": "الفروع", "title": "الفروع" },
-    "redemption": { "label": "الاسترداد", "title": "الاسترداد" },
-    "messaging-center": { "label": "مركز الرسائل", "title": "مركز الرسائل" },
-    "analytics": { "label": "التحليلات", "title": "التحليلات" },
-    "recent-activities": { "label": "النشاطات الأخيرة", "title": "النشاطات الأخيرة" }
+    "dashboard": {
+      "label": "لوحة التحكم",
+      "title": "لوحة التحكم"
+    },
+    "profile": {
+      "label": "ملف البائع",
+      "title": "ملف البائع"
+    },
+    "request-center": {
+      "label": "مركز الطلبات",
+      "title": "مركز الطلبات"
+    },
+    "offers": {
+      "label": "العروض",
+      "title": "العروض"
+    },
+    "branches": {
+      "label": "الفروع",
+      "title": "الفروع"
+    },
+    "redemption": {
+      "label": "الاسترداد",
+      "title": "الاسترداد"
+    },
+    "messaging-center": {
+      "label": "مركز الرسائل",
+      "title": "مركز الرسائل"
+    },
+    "analytics": {
+      "label": "التحليلات",
+      "title": "التحليلات"
+    },
+    "recent-activities": {
+      "label": "النشاطات الأخيرة",
+      "title": "النشاطات الأخيرة"
+    }
   },
   "dashboard": {
     "recentActivity": "النشاط الأخير",
     "viewHistory": "عرض السجل",
     "pendingRequests": "الطلبات قيد المراجعة",
     "stats": {
-      "totalRedemptions": { "title": "إجمالي عمليات الاسترداد", "subtitle": "عمليات الاسترداد منذ البداية" },
-      "activeOffers": { "title": "العروض النشطة", "subtitle": "نشطة حالياً" },
-      "pendingOffers": { "title": "العروض قيد المراجعة", "subtitle": "بانتظار الموافقة" },
-      "expiringSoon": { "title": "العروض التي تنتهي قريباً", "subtitle": "عروض تنتهي خلال 30 يوماً" }
+      "totalRedemptions": {
+        "title": "إجمالي عمليات الاسترداد",
+        "subtitle": "عمليات الاسترداد منذ البداية"
+      },
+      "activeOffers": {
+        "title": "العروض النشطة",
+        "subtitle": "نشطة حالياً"
+      },
+      "pendingOffers": {
+        "title": "العروض قيد المراجعة",
+        "subtitle": "بانتظار الموافقة"
+      },
+      "expiringSoon": {
+        "title": "العروض التي تنتهي قريباً",
+        "subtitle": "عروض تنتهي خلال 30 يوماً"
+      }
     },
     "quickActions": {
       "title": "إجراءات سريعة",
@@ -28,11 +67,31 @@
       "contactSupport": "التواصل مع الدعم"
     },
     "activity": {
-      "offerActivated": { "title": "تم تفعيل عرض جديد", "description": "تخفيضات الصيف 2025", "time": "قبل دقيقتين" },
-      "offerPending": { "title": "عرض بانتظار الموافقة", "description": "باقة العائلة", "time": "قبل ساعة" },
-      "profileSubmitted": { "title": "تم إرسال تحديث الملف الشخصي", "description": "الملف الشخصي والوسائط", "time": "قبل 3 ساعات" },
-      "branchHours": { "title": "تم تحديث ساعات عمل الفرع", "description": "فرع الدمام", "time": "أمس" },
-      "ticketReplied": { "title": "تم الرد على تذكرة الدعم", "description": "مشكلة في ظهور العرض", "time": "قبل يومين" }
+      "offerActivated": {
+        "title": "تم تفعيل عرض جديد",
+        "description": "تخفيضات الصيف 2025",
+        "time": "قبل دقيقتين"
+      },
+      "offerPending": {
+        "title": "عرض بانتظار الموافقة",
+        "description": "باقة العائلة",
+        "time": "قبل ساعة"
+      },
+      "profileSubmitted": {
+        "title": "تم إرسال تحديث الملف الشخصي",
+        "description": "الملف الشخصي والوسائط",
+        "time": "قبل 3 ساعات"
+      },
+      "branchHours": {
+        "title": "تم تحديث ساعات عمل الفرع",
+        "description": "فرع الدمام",
+        "time": "أمس"
+      },
+      "ticketReplied": {
+        "title": "تم الرد على تذكرة الدعم",
+        "description": "مشكلة في ظهور العرض",
+        "time": "قبل يومين"
+      }
     }
   },
   "navbar": {
@@ -98,10 +157,22 @@
     "rowActionsAria": "إجراءات الصف",
     "empty": "لا توجد عروض.",
     "stats": {
-      "active": { "label": "العروض النشطة", "hint": "نشطة حالياً" },
-      "scheduled": { "label": "العروض المجدولة", "hint": "القادمة" },
-      "expiringSoon": { "label": "العروض التي تنتهي قريباً", "hint": "عروض تنتهي خلال 30 يوماً" },
-      "total": { "label": "إجمالي العروض", "hint": "منذ البداية" }
+      "active": {
+        "label": "العروض النشطة",
+        "hint": "نشطة حالياً"
+      },
+      "scheduled": {
+        "label": "العروض المجدولة",
+        "hint": "القادمة"
+      },
+      "expiringSoon": {
+        "label": "العروض التي تنتهي قريباً",
+        "hint": "عروض تنتهي خلال 30 يوماً"
+      },
+      "total": {
+        "label": "إجمالي العروض",
+        "hint": "منذ البداية"
+      }
     },
     "filter": {
       "discountType": "نوع الخصم",
@@ -439,7 +510,6 @@
       "offerImageDesktop": "صورة العرض (لسطح المكتب)"
     }
   },
-
   "roomDialog": {
     "title": {
       "edit": "تعديل الغرفة",
@@ -544,7 +614,6 @@
       "addFailed": "تعذّر إضافة موقع البائع."
     }
   },
-
   "offerDetails": {
     "back": "العودة إلى العروض",
     "raiseTicket": "رفع تذكرة",
@@ -622,7 +691,6 @@
       "switchToEnglish": "التبديل إلى المعاينة الإنجليزية"
     }
   },
-
   "branches": {
     "title": "الفروع",
     "subtitle": "إدارة ومتابعة جميع فروعك عبر منظومة المؤسسة.",
@@ -681,5 +749,37 @@
       "action": "الإجراء"
     },
     "empty": "لا توجد فروع."
+  },
+  "redemption": {
+    "title": "استرداد العروض",
+    "uploadExcel": "رفع ملف Excel",
+    "section": {
+      "basicInfo": "المعلومات الأساسية"
+    },
+    "label": {
+      "userId": "معرّف المستخدم",
+      "offer": "العرض",
+      "branch": "الفرع",
+      "totalAmount": "المبلغ الإجمالي",
+      "paidAmount": "المبلغ المدفوع"
+    },
+    "placeholder": {
+      "offer": "اختر العرض...",
+      "branch": "اختر الفرع...",
+      "amount": "مثال: 250 ريال"
+    },
+    "submit": "استرداد العرض",
+    "list": {
+      "title": "قائمة الاستردادات"
+    },
+    "column": {
+      "userId": "معرّف المستخدم",
+      "offer": "العرض",
+      "currentPrice": "السعر الحالي",
+      "discountPrice": "السعر بعد الخصم",
+      "amountSaved": "المبلغ الموفَّر"
+    },
+    "currency": "ر.س",
+    "empty": "لا توجد عمليات استبدال."
   }
 }
