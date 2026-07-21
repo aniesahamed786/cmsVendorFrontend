@@ -1,10 +1,7 @@
 <div class="edit-vendor-profile-page">
   <div class="edit-profile-toolbar">
     <div class="edit-profile-toolbar__left">
-      <button type="button" class="edit-profile-back-btn" (click)="goBack()">
-        <i class="pi pi-arrow-left"></i>
-        <span>{{ 'profile.backToProfile' | translate }}</span>
-      </button>
+      <app-back-button label="profile.backToProfile" (click)="goBack()" />
     </div>
   </div>
 

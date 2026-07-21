@@ -24,24 +24,6 @@
   color: var(--app-muted);
 }
 
-.edit-profile-back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2.5rem;
-  padding: 0 1rem;
-  border: 1px solid var(--app-border);
-  background: transparent;
-  color: var(--app-muted);
-  cursor: pointer;
-}
-
-.edit-profile-back-btn:hover {
-  border-color: var(--app-primary);
-  color: var(--app-primary);
-  background: var(--app-primary-soft);
-}
-
 .edit-profile-form-actions {
   display: flex;
   justify-content: flex-end;

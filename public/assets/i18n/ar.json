@@ -226,7 +226,8 @@
     "search": "بحث",
     "cancel": "إلغاء",
     "edit": "تعديل",
-    "delete": "حذف"
+    "delete": "حذف",
+    "back": "رجوع"
   },
   "offerForm": {
     "backToOffers": "العودة إلى العروض",

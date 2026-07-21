@@ -8,7 +8,7 @@ import { Component, input } from '@angular/core';
   styleUrl: './button.css',
 })
 export class Button {
-  variant = input<'primary' | 'outline'>('primary');
+  variant = input<'primary' | 'outline' | 'ghost'>('primary');
   type = input<'button' | 'submit'>('button');
   disabled = input(false);
   icon = input<string>(); // optional PrimeIcons class, e.g. 'pi pi-pencil'

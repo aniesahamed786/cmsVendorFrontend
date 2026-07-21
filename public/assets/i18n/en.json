@@ -155,7 +155,8 @@
     "search": "Search",
     "cancel": "Cancel",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "back": "Back"
   },
   "offerForm": {
     "backToOffers": "Back to Offers",

@@ -8,12 +8,13 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorProfileEditForm } from '../../components/vendor-profile-edit-form/vendor-profile-edit-form';
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
 import { Button } from '../../../../shared/Components/button/button';
+import { BackButton } from '../../../../shared/Components/back-button/back-button';
 import { MOCK_VENDOR_PROFILE_EDIT } from '../../data/mock-vendor-profile-edit';
 import { VendorProfileEditData } from '../../models/vendor-profile-edit.model';
 
 @Component({
   selector: 'app-edit-vendor-profile-page',
-  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview, Button, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview, Button, BackButton, TranslatePipe],
   templateUrl: './edit-vendor-profile-page.html',
   styleUrl: './edit-vendor-profile-page.css',
   providers: [MessageService],

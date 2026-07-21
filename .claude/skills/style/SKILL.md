@@ -22,6 +22,8 @@ work automatically.
 > convert → verify), then come back here for the per-component rules.
 > **Migrating a whole project to the token system?** Follow the separate
 > [`REFACTOR.md`](./REFACTOR.md) (installs the engine files first).
+> **Loading states?** [`SKELETON.md`](./SKELETON.md) for anything layout-shaped,
+> [`number_animation.md`](./number_animation.md) for a number in a fixed slot.
 >
 > This file is kept in sync with the admin app's `style` skill
 > (`~/cmsAdminFrontend-1/.claude/skills/style/SKILL.md`) — when a house rule changes in

@@ -554,6 +554,31 @@ html body [data-pc-name="toggleswitch"],
   --p-toggleswitch-checked-handle-color: #ffffff !important;
 }
 
+/* ---------------------------------------------------------------------------
+ * Skeleton loading
+ *
+ * The fill and the pulse are global; each call site adds a BEM class that sets
+ * only its size. The fill is mixed from --app-border so it flips with the mode
+ * instead of staying light grey in dark. See .claude/skills/style/SKELETON.md.
+ * ------------------------------------------------------------------------ */
+.app-skeleton {
+  display: block;
+  background: color-mix(in srgb, var(--app-border) 55%, transparent);
+  animation: app-skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* On a primary/gradient surface the border grey disappears — tint from white.
+   One of the sanctioned #fff uses: it's on-primary contrast, not a color. */
+.app-skeleton--on-primary {
+  background: color-mix(in srgb, #ffffff 30%, transparent);
+}
+
+@keyframes app-skeleton-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
 /* Global Table Toolbar Styles (Search & Filters) */
 /* flex-end, not center: it keeps the controls on one baseline even when a group
    has no label or a label that wraps to two lines. */

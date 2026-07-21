@@ -3,7 +3,8 @@
   [disabled]="disabled()"
   class="app-btn"
   [class.app-btn--primary]="variant() === 'primary'"
-  [class.app-btn--outline]="variant() === 'outline'">
+  [class.app-btn--outline]="variant() === 'outline'"
+  [class.app-btn--ghost]="variant() === 'ghost'">
   @if (icon()) { <i [class]="icon()"></i> }
   <ng-content></ng-content>
 </button>

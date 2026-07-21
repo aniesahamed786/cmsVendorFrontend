@@ -18,20 +18,41 @@
 }
 
 .app-btn--outline {
-  background: var(--app-surface, #fff);
-  color: var(--app-primary, #0033a0);
-  border-color: var(--app-primary, #0033a0);
+  background: var(--app-surface);
+  color: var(--app-primary);
+  border-color: var(--app-primary);
 }
 .app-btn--outline:hover:not(:disabled) {
-  background: var(--app-primary-hover-soft, rgba(0, 51, 160, 0.06));
+  background: var(--app-primary-hover-soft);
 }
 
 .app-btn--primary {
-  background: var(--app-primary, #0033a0);
+  background: var(--app-primary);
   color: #fff;
-  border-color: var(--app-primary, #0033a0);
+  border-color: var(--app-primary);
 }
 .app-btn--primary:hover:not(:disabled) {
-  background: var(--app-primary-700, #002c8a);
-  border-color: var(--app-primary-700, #002c8a);
+  background: var(--app-primary-700);
+  border-color: var(--app-primary-700);
+}
+
+/* Ghost — the back-button / dialog-close look: no fill, muted text, hover flips
+   to primary. Used by <app-back-button>. */
+.app-btn--ghost {
+  background: transparent;
+  color: var(--app-muted);
+  border-color: var(--app-border);
+  font-weight: 400;
+}
+.app-btn--ghost:hover:not(:disabled) {
+  background: var(--app-primary-soft);
+  border-color: var(--app-primary);
+  color: var(--app-primary);
+}
+
+/* Directional icons point the other way in RTL. Lives here, not in the caller,
+   because the <i> is in this component's template. */
+:host-context(html[lang="ar"]) .pi-arrow-left,
+:host-context(html[lang="ar"]) .pi-arrow-right {
+  transform: scaleX(-1);
 }
