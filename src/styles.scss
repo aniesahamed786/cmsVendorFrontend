@@ -72,33 +72,31 @@ html[lang="ar"] {
   --app-primary-hover-soft: rgba(var(--app-primary-rgb), 0.06);
   --app-primary-ring: rgba(var(--app-primary-rgb), 0.16);
   --app-primary-gradient: linear-gradient(91.48deg, #0033A0 10%, #002277 90%);
-}
 
-.p-inputtext,
-.p-select,
-.p-multiselect,
-.p-datepicker,
-.p-dropdown {
-  box-shadow: none !important;
-}
+  /* Form field tokens — every control (select, multiselect, listbox, text,
+     textarea, datepicker, search) reads these, so a field restyle is a token edit. */
+  --field-bg: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  --field-bg-hover: color-mix(in srgb, var(--app-surface) 76%, var(--app-border) 24%);
+  --field-bg-active: var(--app-primary-soft);
+  --field-border: var(--app-border);
+  --field-border-hover: color-mix(in srgb, var(--app-border) 60%, var(--app-text) 40%);
+  --field-border-focus: var(--app-primary);
+  --field-ring: var(--app-primary-ring);
+  --field-text: var(--app-text);
+  --field-placeholder: var(--app-muted);
+  --field-icon: var(--app-muted);
+  --field-height: 2.75rem;
+  --field-padding-x: 0.9rem;
+  --field-padding-y: 0.55rem;
+  --field-font-size: 0.9rem;
 
-/* Square corners are the house rule — keep form controls and their overlays sharp */
-.p-inputtext,
-.p-select,
-.p-select-label,
-.p-select-dropdown,
-.p-multiselect,
-.p-multiselect-label,
-.p-multiselect-dropdown,
-.p-datepicker,
-.p-datepicker-input,
-.p-datepicker-dropdown,
-.p-dropdown,
-.p-select-option,
-.p-multiselect-option,
-.p-datepicker-panel,
-.p-paginator .p-select {
-  border-radius: 0 !important;
+  /* Label tokens — main label above the control, description/hint below it */
+  --label-color: var(--app-text);
+  --label-size: 0.875rem;
+  --label-weight: 600;
+  --label-gap: 0.5rem;
+  --label-desc-color: var(--app-muted);
+  --label-desc-size: 0.75rem;
 }
 
 html,
@@ -155,13 +153,8 @@ body {
   border-color: var(--app-border) !important;
 }
 
-.dark-mode .p-inputtext,
-.dark-mode .p-select,
-.dark-mode .p-datepicker-input {
-  background: #1f2937 !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-}
+/* No dark-mode field overrides needed: --field-bg is mixed from --app-surface
+   and --app-border, both of which flip in .dark-mode above. */
 
 .dark-mode .bg-white {
   background-color: #111827 !important;
@@ -257,74 +250,281 @@ p-button[severity="primary"] .p-button:enabled:hover,
   color: #dc2626 !important;
 }
 
-/* Fields (Select, Datepicker, Multiselect) */
+/* ---------------------------------------------------------------------------
+ * Unified form fields
+ *
+ * One shell for every control the app uses: select, multiselect, listbox,
+ * text/textarea, datepicker, and the custom .app-search. All values come from
+ * the field and label tokens in :root, so restyling every field in the app is
+ * a token edit, not a sweep through these selectors.
+ * ------------------------------------------------------------------------ */
+
+/* The outer shell — the thing that carries the background and the border */
+.p-inputtext,
+.p-textarea,
 .p-select,
-.p-select-label,
-.p-select-dropdown,
+.p-multiselect,
+.p-listbox,
 .p-datepicker,
-.p-multiselect {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
+.p-dropdown,
+.p-password,
+.p-inputnumber,
+.p-autocomplete,
+.app-search {
+  background: var(--field-bg) !important;
+  color: var(--field-text) !important;
+  border: 1px solid var(--field-border) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: var(--field-font-size);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
+/* One height for every single-line control, so a select, a text input and the
+   search box line up exactly in a filter row. Multiselect gets min-height
+   instead — it has to grow when the selected chips wrap to a second line. */
 .p-select,
-.p-multiselect {
-  min-height: 2.75rem;
+.p-datepicker,
+.p-inputtext:not(textarea),
+.app-search {
+  height: var(--field-height);
 }
 
+.p-multiselect,
+.p-listbox {
+  min-height: var(--field-height);
+}
+
+/* Side gap: one token, applied with padding-inline so it mirrors itself in RTL.
+   Wrapper controls carry no padding of their own — their inner label/input does,
+   otherwise the gap lands twice. */
+.p-select,
+.p-multiselect,
+.p-datepicker,
+.p-iconfield {
+  padding-inline: 0 !important;
+}
+
+.p-inputtext,
+.p-textarea,
+.p-select-label,
+.p-multiselect-label,
+.p-datepicker-input,
+.p-password-input,
+.p-inputnumber-input,
+.p-autocomplete-input,
+.p-listbox-option,
+.p-select-option,
+.p-multiselect-option,
+.app-search {
+  padding-inline: var(--field-padding-x) !important;
+}
+
+/* Inner parts ride on the shell — no second background, no second border */
+.p-select-label,
+.p-multiselect-label,
+.p-datepicker-input,
+.p-password-input,
+.p-inputnumber-input,
+.p-autocomplete-input,
+.app-search input {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: inherit !important;
+  height: 100%;
+  min-height: 0 !important;
+  font-size: inherit;
+}
+
+/* Text sits centred in the fixed height. Spans get flex; real <input>s can't. */
+.p-select-label,
+.p-multiselect-label {
+  display: flex !important;
+  align-items: center;
+}
+
+.app-search input {
+  padding-inline: 0 !important;
+}
+
+/* The chevron/calendar button sits --field-padding-x from the end edge, matching
+   the label's start padding. width:auto kills PrimeNG's fixed 2.5rem box. */
+.p-select-dropdown,
+.p-multiselect-dropdown,
+.p-datepicker-dropdown {
+  width: auto !important;
+  padding-inline: 0 var(--field-padding-x) !important;
+}
+
+/* Exception: the paginator's rows-per-page select is a compact table control,
+   not a form field — it stays small rather than growing to --field-height. */
+.p-paginator .p-select {
+  height: auto !important;
+  min-height: 2rem;
+}
+
+.p-paginator .p-select-label,
+.p-paginator .p-select-dropdown {
+  padding-inline: 0.5rem !important;
+}
+
+/* Hover / focus / open — "active" reads as the primary border plus a soft ring */
+.p-inputtext:enabled:hover,
+.p-textarea:enabled:hover,
+.p-select:not(.p-disabled):hover,
+.p-multiselect:not(.p-disabled):hover,
+.p-listbox:not(.p-disabled):hover,
+.p-datepicker:not(.p-disabled):hover,
+.app-search:hover {
+  background: var(--field-bg-hover) !important;
+  border-color: var(--field-border-hover) !important;
+}
+
+.p-inputtext:enabled:focus,
+.p-textarea:enabled:focus,
 .p-select:focus-within,
+.p-multiselect:focus-within,
+.p-listbox:focus-within,
 .p-datepicker:focus-within,
-.p-multiselect:focus-within {
-  border-color: var(--app-primary) !important;
+.p-select.p-select-open,
+.p-multiselect.p-multiselect-open,
+.app-search:focus-within {
+  border-color: var(--field-border-focus) !important;
+  box-shadow: 0 0 0 3px var(--field-ring) !important;
   outline: none !important;
 }
 
+.p-disabled,
+.p-inputtext:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+::placeholder,
+.p-select-label.p-placeholder,
+.p-multiselect-label.p-placeholder {
+  color: var(--field-placeholder) !important;
+  opacity: 1;
+}
+
+/* Trailing icons (chevrons, calendar, search glass) share one muted tone */
 .p-select-dropdown,
+.p-multiselect-dropdown,
 .p-datepicker-dropdown,
-.p-multiselect-dropdown {
-  color: var(--app-muted) !important;
-  fill: var(--app-muted) !important;
-}
-
-.p-datepicker-input {
-  border: none !important;
+.p-inputicon,
+.app-search i {
+  color: var(--field-icon) !important;
+  fill: var(--field-icon) !important;
   background: transparent !important;
+  border: none !important;
 }
 
-/* Overlay lists (Dropdown panels) */
+/* Overlay panels (select / multiselect / datepicker / autocomplete lists) */
+.p-select-overlay,
 .p-select-panel,
+.p-multiselect-overlay,
 .p-multiselect-panel,
+.p-autocomplete-overlay,
 .p-datepicker-panel,
 .p-dropdown-panel,
-.p-select-overlay,
 .p-select-list-container {
   background: var(--app-surface) !important;
   color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
+  border: 1px solid var(--field-border) !important;
   border-radius: 0 !important;
 }
 
+/* In-overlay search boxes (multiselect filter, select filter) are fields too */
+.p-select-filter,
+.p-multiselect-filter,
+.p-autocomplete-filter {
+  background: var(--field-bg) !important;
+  border: 1px solid var(--field-border) !important;
+  border-radius: 0 !important;
+  color: var(--field-text) !important;
+}
+
+.p-select-filter:focus,
+.p-multiselect-filter:focus {
+  border-color: var(--field-border-focus) !important;
+  box-shadow: 0 0 0 3px var(--field-ring) !important;
+  outline: none !important;
+}
+
+/* Options — same three states everywhere: rest, hover/keyboard-focus, selected */
 .p-select-option,
-.p-multiselect-option {
-  background: var(--app-surface) !important;
+.p-multiselect-option,
+.p-listbox-option,
+.p-autocomplete-option {
+  background: transparent !important;
   color: var(--app-text) !important;
+  border-radius: 0 !important;
+  font-size: var(--field-font-size);
 }
 
 .p-select-option:hover,
 .p-select-option.p-focus,
 .p-multiselect-option:hover,
-.p-multiselect-option.p-focus {
-  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
+.p-multiselect-option.p-focus,
+.p-listbox-option:hover,
+.p-listbox-option.p-focus,
+.p-autocomplete-option:hover,
+.p-autocomplete-option.p-focus {
+  background: var(--field-bg-hover) !important;
 }
 
 .p-select-option.p-select-option-selected,
-.p-multiselect-option.p-multiselect-option-selected {
-  background: var(--app-primary-soft) !important;
+.p-multiselect-option.p-multiselect-option-selected,
+.p-listbox-option.p-listbox-option-selected,
+.p-autocomplete-option.p-autocomplete-option-selected {
+  background: var(--field-bg-active) !important;
   color: var(--app-primary) !important;
+  font-weight: 600;
 }
 
-/* Unified label -> field spacing inside profile-style form grids (label sits tight above its control) */
+/* Chips shown for multiselect selections */
+.p-multiselect-chip,
+.p-chip {
+  background: var(--app-primary-soft) !important;
+  color: var(--app-primary) !important;
+  border-radius: 0 !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Unified labels
+ *
+ * Every feature names its label with a BEM `__label` class, so match on that
+ * rather than asking 20 components to adopt a new class. `!important` is what
+ * beats the component stylesheets, which load after this file.
+ * ------------------------------------------------------------------------ */
+[class*="__label"]:not([class*="stat-label"]):not([class*="radio-label"]),
+.app-filter-label,
+.app-field-label {
+  display: block;
+  color: var(--label-color) !important;
+  font-size: var(--label-size) !important;
+  font-weight: var(--label-weight) !important;
+  line-height: 1.25rem;
+  margin-block-end: var(--label-gap) !important;
+}
+
+/* Secondary copy under a label (hints, helper text, descriptions) */
+[class*="__hint"],
+[class*="__helper"],
+[class*="__field-description"],
+.app-field-hint {
+  display: block;
+  color: var(--label-desc-color) !important;
+  font-size: var(--label-desc-size) !important;
+  font-weight: 400 !important;
+  margin-block-start: 0.25rem;
+}
+
+/* The label already owns the gap, so field wrappers must not add their own */
+[class*="__field-group"],
+[class*="__field-wrapper"],
 .profile-form-grid > div {
   display: flex;
   flex-direction: column;
@@ -355,37 +555,31 @@ html body [data-pc-name="toggleswitch"],
 }
 
 /* Global Table Toolbar Styles (Search & Filters) */
+/* flex-end, not center: it keeps the controls on one baseline even when a group
+   has no label or a label that wraps to two lines. */
 .app-filters-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   gap: 1rem;
   flex-wrap: wrap;
   width: 100%;
 }
 
+/* gap: 0 — the label owns the spacing via --label-gap, same as form fields */
 .app-filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0;
 }
 
-.app-filter-label {
-  color: var(--app-muted);
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1.25rem;
-}
-
+/* Background, border, height and focus ring come from the unified field rules above */
 .app-search {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   width: 16rem;
-  padding: 0.55rem 0.9rem;
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  border: 1px solid var(--app-border);
-  color: var(--app-muted);
+  padding-block: var(--field-padding-y); /* inline padding comes from the unified field rules */
 
   i {
     font-size: 0.95rem;
@@ -393,19 +587,6 @@ html body [data-pc-name="toggleswitch"],
 
   input {
     flex: 1;
-    border: none;
     outline: none;
-    background: transparent;
-    color: var(--app-text);
-    font-size: 0.9rem;
-
-    &::placeholder {
-      color: var(--app-muted);
-      opacity: 1;
-    }
-  }
-
-  &:focus-within {
-    border-color: var(--app-primary);
   }
 }
