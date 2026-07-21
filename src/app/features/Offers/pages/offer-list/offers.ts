@@ -58,8 +58,52 @@ export class Offers {
   private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER ABOVE
 
   constructor() {
-    // DELETE WHEN THE API IS WIRED — see the block above
-    setTimeout(() => this.loading.set(false), Offers.FAKE_LOAD_MS);
+    // DELETE WHEN THE API IS WIRED — see the block above. Keep the revealStats()
+    // call; move it into the service's subscribe alongside `loading.set(false)`.
+    setTimeout(() => {
+      this.loading.set(false);
+      this.revealStats();
+    }, Offers.FAKE_LOAD_MS);
+  }
+
+  // ---- Count-up stats (number_animation.md) --------------------------------
+  // One signal holds every animated value, keyed by stat name; one rAF loop per
+  // key eases to the target. The cards skeleton while the data is absent, then
+  // count up once it lands — the skeleton covers the fetch, the count-up covers
+  // the arrival. They never run at the same time.
+  private readonly animated = signal<Record<string, number>>({});
+
+  /** Animated, formatted value for a stat key (starts at 0, animates to target). */
+  animatedCount(key: string): string {
+    return (this.animated()[key] ?? 0).toLocaleString('en-US');
+  }
+
+  /** Kick off every stat's count-up. Call this when the data lands. */
+  private revealStats(): void {
+    const s = this.stats();
+    this.animateTo('active', s.active);
+    this.animateTo('scheduled', s.scheduled);
+    this.animateTo('expiringSoon', s.expiringSoon);
+    this.animateTo('total', s.total);
+  }
+
+  /** easeOutCubic count-up from the current value to target. */
+  private animateTo(key: string, target: number, duration = 900): void {
+    // Accessibility: honour reduced motion by landing on the value directly.
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      this.animated.update((m) => ({ ...m, [key]: target }));
+      return;
+    }
+
+    const from = this.animated()[key] ?? 0;
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      this.animated.update((m) => ({ ...m, [key]: Math.round(from + (target - from) * eased) }));
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
 
   // p-select takes plain label strings, so these rebuild through t() instead of

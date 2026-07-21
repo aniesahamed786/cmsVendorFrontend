@@ -17,7 +17,7 @@
         <div class="overview-kpi-icon">
           <i class="pi pi-shop branches-page__icon-lg"></i>
         </div>
-        <p class="overview-kpi-value">{{ animatedCount(kpis()?.totalBranches) }}</p>
+        <p class="overview-kpi-value">{{ animatedCount('totalBranches') }}</p>
         <p class="overview-kpi-label">{{ 'branches.kpi.totalBranches' | translate }}</p>
         <p class="overview-kpi-subtext">{{ 'branches.kpi.totalBranchesSub' | translate }}</p>
       </article>
@@ -26,7 +26,7 @@
         <div class="overview-kpi-icon">
           <i class="pi pi-check-circle branches-page__icon-lg"></i>
         </div>
-        <p class="overview-kpi-value">{{ animatedCount(kpis()?.activeBranches) }}</p>
+        <p class="overview-kpi-value">{{ animatedCount('activeBranches') }}</p>
         <p class="overview-kpi-label">{{ 'branches.kpi.activeBranches' | translate }}</p>
         <p class="overview-kpi-subtext">{{ 'branches.kpi.activeBranchesSub' | translate }}</p>
       </article>
@@ -35,7 +35,7 @@
         <div class="overview-kpi-icon">
           <i class="pi pi-gift branches-page__icon-lg"></i>
         </div>
-        <p class="overview-kpi-value">{{ animatedCount(kpis()?.totalRedemptions) }}</p>
+        <p class="overview-kpi-value">{{ animatedCount('totalRedemptions') }}</p>
         <p class="overview-kpi-label">{{ 'branches.kpi.totalRedemptions' | translate }}</p>
         <p class="overview-kpi-subtext">{{ 'branches.kpi.totalRedemptionsSub' | translate }}</p>
       </article>
@@ -44,7 +44,7 @@
         <div class="overview-kpi-icon">
           <i class="pi pi-clock branches-page__icon-lg"></i>
         </div>
-        <p class="overview-kpi-value">{{ animatedCount(kpis()?.pendingRequests) }}</p>
+        <p class="overview-kpi-value">{{ animatedCount('pendingRequests') }}</p>
         <p class="overview-kpi-label">{{ 'branches.kpi.pendingRequests' | translate }}</p>
         <p class="overview-kpi-subtext">{{ 'branches.kpi.pendingRequestsSub' | translate }}</p>
       </article>
@@ -116,7 +116,7 @@
             <span class="branches-page__performer-name">{{ performer.name }}</span>
           </div>
           <div class="branches-page__performer-stats">
-            <span class="branches-page__performer-score">{{ animatedCount(performer.redemptions) }}</span>
+            <span class="branches-page__performer-score">{{ animatedCount('perf-' + performer.id) }}</span>
             <span class="branches-page__performer-trend">{{ 'branches.performers.increase' | translate }}</span>
           </div>
         </div>

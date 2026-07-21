@@ -149,10 +149,18 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.branchesService.getKPIs().subscribe(data => this.kpis.set(data));
+    this.branchesService.getKPIs().subscribe(data => {
+      this.kpis.set(data);
+      this.animateTo('totalBranches', data.totalBranches);
+      this.animateTo('activeBranches', data.activeBranches);
+      this.animateTo('totalRedemptions', data.totalRedemptions);
+      this.animateTo('pendingRequests', data.pendingRequests);
+    });
     this.branchesService.getTopPerformers().subscribe(data => {
       this.topPerformers.set(data);
       this.performersLoading.set(false);
+      // keyed per performer, so re-fetching animates from each row's current value
+      data.forEach(p => this.animateTo(`perf-${p.id}`, p.redemptions));
     });
     this.branchesService.getBranches().subscribe(data => {
       this.allBranches.set(data);
@@ -215,8 +223,34 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     document.body.removeChild(link);
   }
 
-  animatedCount(val: number | undefined): number | string {
-    return val !== undefined ? val.toLocaleString() : '...';
+  // ---- Count-up stats (number_animation.md) --------------------------------
+  // One signal holds every animated value, keyed by stat name; one rAF loop per
+  // key eases to the target. The cards skeleton while the data is absent, then
+  // count up once it lands — sequential, never both at once.
+  private readonly animated = signal<Record<string, number>>({});
+
+  /** Animated, formatted value for a stat key (starts at 0, animates to target). */
+  animatedCount(key: string): string {
+    return (this.animated()[key] ?? 0).toLocaleString('en-US');
+  }
+
+  /** easeOutCubic count-up from the current value to target. */
+  private animateTo(key: string, target: number, duration = 900): void {
+    // Accessibility: honour reduced motion by landing on the value directly.
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      this.animated.update((m) => ({ ...m, [key]: target }));
+      return;
+    }
+
+    const from = this.animated()[key] ?? 0;
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      this.animated.update((m) => ({ ...m, [key]: Math.round(from + (target - from) * eased) }));
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
 
   // ==== Map logic ====

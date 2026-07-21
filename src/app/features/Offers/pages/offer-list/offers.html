@@ -22,25 +22,25 @@
     } @else {
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-bolt"></i></span>
-      <span class="offers__stat-value">{{ stats().active }}</span>
+      <span class="offers__stat-value">{{ animatedCount('active') }}</span>
       <span class="offers__stat-label">{{ 'offers.stats.active.label' | translate }}</span>
       <span class="offers__stat-hint">{{ 'offers.stats.active.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-calendar"></i></span>
-      <span class="offers__stat-value">{{ stats().scheduled }}</span>
+      <span class="offers__stat-value">{{ animatedCount('scheduled') }}</span>
       <span class="offers__stat-label">{{ 'offers.stats.scheduled.label' | translate }}</span>
       <span class="offers__stat-hint">{{ 'offers.stats.scheduled.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
       <span class="offers__stat-icon offers__stat-icon--danger"><i class="pi pi-stopwatch"></i></span>
-      <span class="offers__stat-value">{{ stats().expiringSoon }}</span>
+      <span class="offers__stat-value">{{ animatedCount('expiringSoon') }}</span>
       <span class="offers__stat-label">{{ 'offers.stats.expiringSoon.label' | translate }}</span>
       <span class="offers__stat-hint">{{ 'offers.stats.expiringSoon.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-tag"></i></span>
-      <span class="offers__stat-value">{{ stats().total }}</span>
+      <span class="offers__stat-value">{{ animatedCount('total') }}</span>
       <span class="offers__stat-label">{{ 'offers.stats.total.label' | translate }}</span>
       <span class="offers__stat-hint">{{ 'offers.stats.total.hint' | translate }}</span>
     </article>

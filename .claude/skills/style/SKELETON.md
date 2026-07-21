@@ -13,7 +13,13 @@ choice (see *Which one* below).
 | Action buttons that only exist once data loads | skeleton, one block per button |
 | A whole page | skeleton **mirroring the real layout**, never a spinner |
 
-Never both on the same element. Never a centered spinner on a page that has a known shape.
+Never both on the same element **at the same time**. They can run in sequence, and on a stat
+card whose whole contents are gated behind a fetch they should: skeleton while the data is
+absent, count-up when it arrives. See *the exception* in
+[number_animation.md](./number_animation.md). What's wrong is a skeleton that pulses while a
+number is already counting up inside it.
+
+Never a centered spinner on a page that has a known shape.
 
 ## The state today (what a refactor replaces)
 
