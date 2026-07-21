@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, Signal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -23,62 +23,61 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { inject } from '@angular/core';
 import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch, TranslatePipe],
   templateUrl: './offers.html',
   styleUrl: './offers.scss',
 })
 export class Offers {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  
+  private readonly i18n = inject(I18nService);
+
   // ponytail: in-memory dummy data; swap for a service feed when the API exists
   private readonly offers: Offer[] = this.buildRows();
 
-  readonly statusOptions = [
-    { label: 'All statuses', value: null },
-    { label: 'Active', value: 'Active' },
-    { label: 'Scheduled', value: 'Scheduled' },
-    { label: 'Expired', value: 'Expired' },
-  ];
+  // p-select takes plain label strings, so these rebuild through t() instead of
+  // the pipe. Values stay the English literals — they are the filter keys.
+  private options<T>(entries: [key: string, value: T][]): Signal<{ label: string; value: T }[]> {
+    return computed(() => {
+      this.i18n.loadSeq();
+      return entries.map(([key, value]) => ({ label: this.i18n.t(key), value }));
+    });
+  }
 
-  readonly branchOptions = [
-    { label: 'All branches', value: null },
-    { label: 'Main Branch', value: 'Main Branch' },
-    { label: 'Downtown', value: 'Downtown' },
-    { label: 'Mall', value: 'Mall' },
-  ];
+  readonly statusOptions = this.options<OfferStatus | null>([
+    ['offers.filter.allStatuses', null],
+    ['offers.value.active', 'Active'],
+    ['offers.value.scheduled', 'Scheduled'],
+    ['offers.value.expired', 'Expired'],
+  ]);
 
-  readonly discountTypeOptions = [
-    { label: 'All types', value: null },
-    { label: 'Percentage', value: 'Percentage' },
-    { label: 'Fixed Amount', value: 'Fixed Amount' },
-  ];
+  readonly discountTypeOptions = this.options<'Percentage' | 'Fixed Amount' | null>([
+    ['offers.filter.allTypes', null],
+    ['offers.value.percentage', 'Percentage'],
+    ['offers.value.fixedAmount', 'Fixed Amount'],
+  ]);
 
-  readonly availabilityOptions = [
-    { label: 'All availability', value: null },
-    { label: 'Online', value: 'Online' },
-    { label: 'In-Store', value: 'In-Store' },
-    { label: 'Hybrid', value: 'Hybrid' },
-  ];
+  readonly availabilityOptions = this.options<Availability | null>([
+    ['offers.filter.allAvailability', null],
+    ['offers.value.online', 'Online'],
+    ['offers.value.inStore', 'In-Store'],
+    ['offers.value.hybrid', 'Hybrid'],
+  ]);
 
-  readonly sortOptions = [
-    { label: 'Date (Newest)', value: 'newest' },
-    { label: 'Date (Oldest)', value: 'oldest' },
-    { label: 'Title (A–Z)', value: 'title' },
-  ];
-
-  readonly periodOptions = [
-    { label: 'All time', value: 'all' },
-    { label: 'Last 7 days', value: '7' },
-    { label: 'Last 30 days', value: '30' },
-    { label: 'Last 90 days', value: '90' },
-    { label: 'This year', value: 'year' },
-    { label: 'Custom date', value: 'custom' },
-  ];
+  readonly periodOptions = this.options<string>([
+    ['offers.period.all', 'all'],
+    ['offers.period.last7', '7'],
+    ['offers.period.last30', '30'],
+    ['offers.period.last90', '90'],
+    ['offers.period.year', 'year'],
+    ['offers.period.custom', 'custom'],
+  ]);
 
   readonly status = signal<OfferStatus | null>(null);
   readonly branch = signal<string | null>(null);
@@ -91,13 +90,16 @@ export class Offers {
 
   activeOffer: Offer | null = null;
 
-  readonly rowActions = [
-    { label: 'View Offer', icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
-    { label: 'Request Changes', icon: 'pi pi-arrows-v', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
-    { label: 'Request to Renew', icon: 'pi pi-refresh' },
-    { label: 'Create Ticket', icon: 'pi pi-comment' },
-    { label: 'Deactivate Offer', icon: 'pi pi-file-excel', styleClass: 'p-menuitem-danger' }
-  ];
+  readonly rowActions = computed(() => {
+    this.i18n.loadSeq();
+    return [
+      { label: this.i18n.t('offers.action.viewOffer'), icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
+      { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-arrows-v', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
+      { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-refresh' },
+      { label: this.i18n.t('offers.action.createTicket'), icon: 'pi pi-comment' },
+      { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-file-excel', styleClass: 'p-menuitem-danger' },
+    ];
+  });
 
   // resolve the active period to a [from, to] window
   private readonly window = computed<[Date | null, Date | null]>(() => {
@@ -159,8 +161,16 @@ export class Offers {
     return `offers__status offers__status--${status.toLowerCase()}`;
   }
 
-  availabilityLabel(availability: Availability): string {
-    return availability === 'Hybrid' ? 'In-Store & Online' : availability;
+  /**
+   * Table cells hold the English enum value. This maps it to a key so the pipe
+   * translates it; an unmapped value falls through and renders as-is.
+   */
+  valueKey(value: string): string {
+    return VALUE_KEYS[value] ?? value;
+  }
+
+  availabilityKey(availability: Availability): string {
+    return availability === 'Hybrid' ? 'offers.value.hybridLong' : this.valueKey(availability);
   }
 
   availabilityIcon(availability: Availability): string {
@@ -187,6 +197,17 @@ export class Offers {
     });
   }
 }
+
+const VALUE_KEYS: Record<string, string> = {
+  Percentage: 'offers.value.percentage',
+  'Fixed Amount': 'offers.value.fixedAmount',
+  Online: 'offers.value.online',
+  'In-Store': 'offers.value.inStore',
+  Hybrid: 'offers.value.hybrid',
+  Active: 'offers.value.active',
+  Scheduled: 'offers.value.scheduled',
+  Expired: 'offers.value.expired',
+};
 
 function endOfDay(d: Date): Date {
   const e = new Date(d);

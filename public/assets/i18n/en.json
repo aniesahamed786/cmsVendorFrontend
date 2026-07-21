@@ -88,5 +88,70 @@
       "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
       "placeholderRepName": "e.g. John Doe"
     }
+  },
+  "offers": {
+    "title": "Offers",
+    "subtitle": "Manage and track all promotional offers across your catalog.",
+    "addNew": "Add New Offer",
+    "cardTitle": "Offers",
+    "export": "Export",
+    "rowActionsAria": "Row actions",
+    "empty": "No offers found.",
+    "stats": {
+      "active": { "label": "Active Offers", "hint": "Currently active" },
+      "scheduled": { "label": "Scheduled Offers", "hint": "Upcoming" },
+      "expiringSoon": { "label": "Expiring Soon Offers", "hint": "Offers expiring in 30 days" },
+      "total": { "label": "Total Offers", "hint": "Since All time" }
+    },
+    "filter": {
+      "discountType": "Discount Type",
+      "status": "Status",
+      "availability": "Availability",
+      "period": "Period",
+      "customRange": "Custom Range",
+      "selectDates": "Select dates",
+      "allStatuses": "All statuses",
+      "allTypes": "All types",
+      "allAvailability": "All availability"
+    },
+    "period": {
+      "all": "All time",
+      "last7": "Last 7 days",
+      "last30": "Last 30 days",
+      "last90": "Last 90 days",
+      "year": "This year",
+      "custom": "Custom date"
+    },
+    "column": {
+      "title": "Offer Title",
+      "discount": "Discount",
+      "discountType": "Discount Type",
+      "availability": "Availability",
+      "startDate": "Start Date",
+      "expirationDate": "Expiration Date",
+      "status": "Status",
+      "action": "Action"
+    },
+    "value": {
+      "percentage": "Percentage",
+      "fixedAmount": "Fixed Amount",
+      "online": "Online",
+      "inStore": "In-Store",
+      "hybrid": "Hybrid",
+      "hybridLong": "In-Store & Online",
+      "active": "Active",
+      "scheduled": "Scheduled",
+      "expired": "Expired"
+    },
+    "action": {
+      "viewOffer": "View Offer",
+      "requestChanges": "Request Changes",
+      "requestRenew": "Request to Renew",
+      "createTicket": "Create Ticket",
+      "deactivate": "Deactivate Offer"
+    }
+  },
+  "common": {
+    "search": "Search"
   }
 }

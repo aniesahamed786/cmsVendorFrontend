@@ -1,78 +1,78 @@
 <div class="offers">
   <header class="offers__header">
     <div>
-      <h1 class="offers__title">Offers</h1>
-      <p class="offers__subtitle">Manage and track all promotional offers across your catalog.</p>
+      <h1 class="offers__title">{{ 'offers.title' | translate }}</h1>
+      <p class="offers__subtitle">{{ 'offers.subtitle' | translate }}</p>
     </div>
-    <app-button variant="primary" routerLink="create" icon="pi pi-plus">Add New Offer</app-button>
+    <app-button variant="primary" routerLink="create" icon="pi pi-plus">{{ 'offers.addNew' | translate }}</app-button>
   </header>
 
   <section class="offers__stats">
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-bolt"></i></span>
       <span class="offers__stat-value">{{ stats().active }}</span>
-      <span class="offers__stat-label">Active Offers</span>
-      <span class="offers__stat-hint">Currently active</span>
+      <span class="offers__stat-label">{{ 'offers.stats.active.label' | translate }}</span>
+      <span class="offers__stat-hint">{{ 'offers.stats.active.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-calendar"></i></span>
       <span class="offers__stat-value">{{ stats().scheduled }}</span>
-      <span class="offers__stat-label">Scheduled Offers</span>
-      <span class="offers__stat-hint">Upcoming</span>
+      <span class="offers__stat-label">{{ 'offers.stats.scheduled.label' | translate }}</span>
+      <span class="offers__stat-hint">{{ 'offers.stats.scheduled.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
       <span class="offers__stat-icon offers__stat-icon--danger"><i class="pi pi-stopwatch"></i></span>
       <span class="offers__stat-value">{{ stats().expiringSoon }}</span>
-      <span class="offers__stat-label">Expiring Soon Offers</span>
-      <span class="offers__stat-hint">Offers expiring in 30 days</span>
+      <span class="offers__stat-label">{{ 'offers.stats.expiringSoon.label' | translate }}</span>
+      <span class="offers__stat-hint">{{ 'offers.stats.expiringSoon.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-tag"></i></span>
       <span class="offers__stat-value">{{ stats().total }}</span>
-      <span class="offers__stat-label">Total Offers</span>
-      <span class="offers__stat-hint">Since All time</span>
+      <span class="offers__stat-label">{{ 'offers.stats.total.label' | translate }}</span>
+      <span class="offers__stat-hint">{{ 'offers.stats.total.hint' | translate }}</span>
     </article>
   </section>
 
   <section class="offers__card">
     <div class="offers__toolbar">
       <div class="offers__toolbar-header">
-        <h2 class="offers__card-title">Offers</h2>
+        <h2 class="offers__card-title">{{ 'offers.cardTitle' | translate }}</h2>
         <div class="offers__controls">
           <app-search [value]="search()" (valueChange)="search.set($event)"></app-search>
-          <app-button variant="primary" icon="pi pi-download">Export</app-button>
+          <app-button variant="primary" icon="pi pi-download">{{ 'offers.export' | translate }}</app-button>
         </div>
       </div>
       <div class="app-filters-row">
         <div class="app-filter-group">
-          <label class="app-filter-label">Discount Type</label>
-          <p-select [options]="discountTypeOptions" [ngModel]="discountType()"
+          <label class="app-filter-label">{{ 'offers.filter.discountType' | translate }}</label>
+          <p-select [options]="discountTypeOptions()" [ngModel]="discountType()"
             (ngModelChange)="discountType.set($event)" optionLabel="label" optionValue="value"
-            placeholder="Discount Type" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+            [placeholder]="'offers.filter.discountType' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
         </div>
         <div class="app-filter-group">
-          <label class="app-filter-label">Status</label>
-          <p-select [options]="statusOptions" [ngModel]="status()" (ngModelChange)="status.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Status" styleClass="offers__filter"
+          <label class="app-filter-label">{{ 'offers.filter.status' | translate }}</label>
+          <p-select [options]="statusOptions()" [ngModel]="status()" (ngModelChange)="status.set($event)"
+            optionLabel="label" optionValue="value" [placeholder]="'offers.filter.status' | translate" styleClass="offers__filter"
             panelStyleClass="offers__overlay-panel" />
         </div>
         <div class="app-filter-group">
-          <label class="app-filter-label">Availability</label>
-          <p-select [options]="availabilityOptions" [ngModel]="availability()"
+          <label class="app-filter-label">{{ 'offers.filter.availability' | translate }}</label>
+          <p-select [options]="availabilityOptions()" [ngModel]="availability()"
             (ngModelChange)="availability.set($event)" optionLabel="label" optionValue="value"
-            placeholder="Availability" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+            [placeholder]="'offers.filter.availability' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
         </div>
         <div class="app-filter-group">
-          <label class="app-filter-label">Period</label>
-          <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="period.set($event)"
-            optionLabel="label" optionValue="value" placeholder="Period" styleClass="offers__filter"
+          <label class="app-filter-label">{{ 'offers.filter.period' | translate }}</label>
+          <p-select [options]="periodOptions()" [ngModel]="period()" (ngModelChange)="period.set($event)"
+            optionLabel="label" optionValue="value" [placeholder]="'offers.filter.period' | translate" styleClass="offers__filter"
             panelStyleClass="offers__overlay-panel" />
         </div>
         @if (period() === 'custom') {
         <div class="app-filter-group">
-          <label class="app-filter-label">Custom Range</label>
+          <label class="app-filter-label">{{ 'offers.filter.customRange' | translate }}</label>
           <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
-            [readonlyInput]="true" placeholder="Select dates" dateFormat="yy-mm-dd" appendTo="body"
+            [readonlyInput]="true" [placeholder]="'offers.filter.selectDates' | translate" dateFormat="yy-mm-dd" appendTo="body"
             styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
         </div>
         }
@@ -83,14 +83,14 @@
       paginatorDropdownAppendTo="body" styleClass="offers__table">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="title">Offer Title <p-sortIcon field="title" /></th>
-          <th pSortableColumn="discount">Discount <p-sortIcon field="discount" /></th>
-          <th>Discount Type</th>
-          <th>Availability</th>
-          <th pSortableColumn="startDate">Start Date <p-sortIcon field="startDate" /></th>
-          <th pSortableColumn="expirationDate">Expiration Date <p-sortIcon field="expirationDate" /></th>
-          <th>Status </th>
-          <th>Action</th>
+          <th pSortableColumn="title">{{ 'offers.column.title' | translate }} <p-sortIcon field="title" /></th>
+          <th pSortableColumn="discount">{{ 'offers.column.discount' | translate }} <p-sortIcon field="discount" /></th>
+          <th>{{ 'offers.column.discountType' | translate }}</th>
+          <th>{{ 'offers.column.availability' | translate }}</th>
+          <th pSortableColumn="startDate">{{ 'offers.column.startDate' | translate }} <p-sortIcon field="startDate" /></th>
+          <th pSortableColumn="expirationDate">{{ 'offers.column.expirationDate' | translate }} <p-sortIcon field="expirationDate" /></th>
+          <th>{{ 'offers.column.status' | translate }}</th>
+          <th>{{ 'offers.column.action' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -105,28 +105,28 @@
             </div>
           </td>
           <td>{{ row.discount }}</td>
-          <td>{{ row.discountType }}</td>
+          <td>{{ valueKey(row.discountType) | translate }}</td>
           <td>
             <span class="offers__availability">
-              <i [class]="availabilityIcon(row.availability)"></i> {{ availabilityLabel(row.availability) }}
+              <i [class]="availabilityIcon(row.availability)"></i> {{ availabilityKey(row.availability) | translate }}
             </span>
           </td>
           <td>{{ row.startDate | date: 'MMM d, y' }}</td>
           <td>{{ row.expirationDate | date: 'MMM d, y' }}</td>
-          <td><span [class]="statusClass(row.status)">{{ row.status }}</span></td>
+          <td><span [class]="statusClass(row.status)">{{ valueKey(row.status) | translate }}</span></td>
           <td>
-            <button #btn type="button" class="offers__row-action" aria-label="Row actions"
+            <button #btn type="button" class="offers__row-action" [attr.aria-label]="'offers.rowActionsAria' | translate"
               (click)="activeOffer = row; menu.toggle($event); $event.stopPropagation()">
               <i class="pi pi-ellipsis-h"></i>
             </button>
-            <p-menu #menu [model]="rowActions" [popup]="true" appendTo="body"></p-menu>
+            <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
           </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="8" class="offers__empty">No offers found.</td>
+          <td colspan="8" class="offers__empty">{{ 'offers.empty' | translate }}</td>
         </tr>
       </ng-template>
     </p-table>
