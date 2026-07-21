@@ -7,10 +7,10 @@
             <div class="room-creation-offer__header-row">
                 <div>
                     <h2 class="room-creation-offer__title">
-                        {{ isEditing ? 'Edit Room' : 'Add Room' }}
+                        {{ (isEditing ? 'roomDialog.title.edit' : 'roomDialog.title.add') | translate }}
                     </h2>
                     <p class="room-creation-offer__subtitle">
-                        Define specific room details and seasonal pricing
+                        {{ 'roomDialog.subtitle' | translate }}
                     </p>
                 </div>
 
@@ -28,33 +28,33 @@
                     <div class="room-creation-offer__section-icon">
                         <i class="pi pi-home"></i>
                     </div>
-                    <h3 class="room-creation-offer__section-title">Room Details</h3>
+                    <h3 class="room-creation-offer__section-title">{{ 'roomDialog.section.details' | translate }}</h3>
                 </div>
 
                 <div class="room-creation-offer__grid">
                     <div class="room-creation-offer__field">
                         <label class="room-creation-offer__label">
-                            Room Name
+                            {{ 'roomDialog.label.roomNameEn' | translate }}
                             <span class="room-creation-offer__required">*</span>
                         </label>
-                        <input pInputText type="text" placeholder="e.g. Deluxe Ocean View"
+                        <input pInputText type="text" [placeholder]="'roomDialog.placeholder.roomName' | translate"
                             class="room-creation-offer__input"
                             formControlName="roomName" />
                         @if (roomForm.get('roomName')?.invalid && roomForm.get('roomName')?.touched) {
-                        <p class="room-creation-offer__error">Room name is required.</p>
+                        <p class="room-creation-offer__error">{{ 'roomDialog.error.roomNameRequired' | translate }}</p>
                         }
                     </div>
 
                     <div class="room-creation-offer__field">
                         <label class="room-creation-offer__label">
-                            Room Name (Arabic)
+                            {{ 'roomDialog.label.roomNameAr' | translate }}
                             <span class="room-creation-offer__required">*</span>
                         </label>
-                        <input pInputText type="text" placeholder="e.g. Deluxe Ocean View"
+                        <input pInputText type="text" [placeholder]="'roomDialog.placeholder.roomNameAr' | translate"
                             class="room-creation-offer__input room-creation-offer__input--rtl" dir="rtl"
                             formControlName="roomNameAr" />
                         @if (roomForm.get('roomNameAr')?.invalid && roomForm.get('roomNameAr')?.touched) {
-                        <p class="room-creation-offer__error">Arabic room name is required.</p>
+                        <p class="room-creation-offer__error">{{ 'roomDialog.error.roomNameArRequired' | translate }}</p>
                         }
                     </div>
                 </div>
@@ -65,35 +65,35 @@
                     <div class="room-creation-offer__section-icon">
                         <i class="pi pi-money-bill"></i>
                     </div>
-                    <h3 class="room-creation-offer__section-title">Room Rates</h3>
+                    <h3 class="room-creation-offer__section-title">{{ 'roomDialog.section.rates' | translate }}</h3>
                 </div>
 
                 <div class="room-creation-offer__rate-panel">
                     <div class="room-creation-offer__grid" [formGroup]="rateForm">
                         <div class="room-creation-offer__field">
-                            <label class="room-creation-offer__label">Rate Season (English)</label>
-                            <input pInputText type="text" placeholder="e.g. High Season"
+                            <label class="room-creation-offer__label">{{ 'roomDialog.label.seasonEn' | translate }}</label>
+                            <input pInputText type="text" [placeholder]="'roomDialog.placeholder.season' | translate"
                                 class="room-creation-offer__input room-creation-offer__input--on-panel"
                                 formControlName="season" />
                         </div>
 
                         <div class="room-creation-offer__field">
-                            <label class="room-creation-offer__label">Rate Season (Arabic)</label>
-                            <input pInputText type="text" placeholder="مثال: الموسم المرتفع"
+                            <label class="room-creation-offer__label">{{ 'roomDialog.label.seasonAr' | translate }}</label>
+                            <input pInputText type="text" [placeholder]="'roomDialog.placeholder.seasonAr' | translate"
                                 class="room-creation-offer__input room-creation-offer__input--rtl room-creation-offer__input--on-panel"
                                 dir="rtl" formControlName="seasonAr" />
                         </div>
 
                         <div class="room-creation-offer__field room-creation-offer__field--full">
                             <label class="room-creation-offer__label">
-                                Rate Value
+                                {{ 'roomDialog.label.rateValue' | translate }}
                             </label>
-                            <input pInputText type="number" placeholder="e.g. 150.00"
+                            <input pInputText type="number" [placeholder]="'roomDialog.placeholder.rateValue' | translate"
                                 class="room-creation-offer__input room-creation-offer__input--on-panel"
                                 formControlName="value" step="0.01" />
                             @if (rateForm.get('value')?.hasError('invalidRateValue') &&
                             rateForm.get('value')?.touched) {
-                            <p class="room-creation-offer__error">Enter a valid number with up to 2 decimals.</p>
+                            <p class="room-creation-offer__error">{{ 'roomDialog.error.rateValue' | translate }}</p>
                             }
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                         <button type="button"
                             class="room-creation-offer__link-button"
                             (click)="addRoomRate()">
-                            + Add room rate
+                            {{ 'roomDialog.action.addRate' | translate }}
                         </button>
                     </div>
                 </div>
@@ -112,16 +112,16 @@
                     @for (rate of roomRates(); track rate.id; let i = $index) {
                     <div class="room-creation-offer__rate-row" [class.room-creation-offer__rate-row--divided]="i > 0">
                         <p class="room-creation-offer__rate-name">
-                            {{ rate.season || ('Rate #' + (i + 1)) }}
+                            {{ rate.season || ('roomDialog.rate.fallbackName' | translate: { n: i + 1 }) }}
                         </p>
                         <div class="room-creation-offer__rate-row-actions">
                             <button type="button" class="room-creation-offer__row-action"
                                 (click)="editRoomRate(i)">
-                                Edit
+                                {{ 'common.edit' | translate }}
                             </button>
                             <button type="button" class="room-creation-offer__row-action room-creation-offer__row-action--danger"
                                 (click)="removeRoomRate(i)">
-                                Delete
+                                {{ 'common.delete' | translate }}
                             </button>
                         </div>
                     </div>
@@ -129,29 +129,29 @@
                     <div class="room-creation-offer__rate-edit" [formGroup]="editRateForm">
                         <div class="room-creation-offer__grid">
                             <div class="room-creation-offer__field">
-                                <label class="room-creation-offer__label">Rate Season (English)</label>
-                                <input pInputText type="text" placeholder="e.g. High Season"
+                                <label class="room-creation-offer__label">{{ 'roomDialog.label.seasonEn' | translate }}</label>
+                                <input pInputText type="text" [placeholder]="'roomDialog.placeholder.season' | translate"
                                     class="room-creation-offer__input room-creation-offer__input--on-panel"
                                     formControlName="season" />
                             </div>
 
                             <div class="room-creation-offer__field">
-                                <label class="room-creation-offer__label">Rate Season (Arabic)</label>
-                                <input pInputText type="text" placeholder="مثال: الموسم المرتفع"
+                                <label class="room-creation-offer__label">{{ 'roomDialog.label.seasonAr' | translate }}</label>
+                                <input pInputText type="text" [placeholder]="'roomDialog.placeholder.seasonAr' | translate"
                                     class="room-creation-offer__input room-creation-offer__input--rtl room-creation-offer__input--on-panel"
                                     dir="rtl" formControlName="seasonAr" />
                             </div>
 
                             <div class="room-creation-offer__field room-creation-offer__field--full">
                                 <label class="room-creation-offer__label">
-                                    Rate Value
+                                    {{ 'roomDialog.label.rateValue' | translate }}
                                 </label>
-                                <input pInputText type="number" placeholder="e.g. 150.00"
+                                <input pInputText type="number" [placeholder]="'roomDialog.placeholder.rateValue' | translate"
                                     class="room-creation-offer__input room-creation-offer__input--on-panel"
                                     formControlName="value" step="0.01" />
                                 @if (editRateForm.get('value')?.hasError('invalidRateValue') &&
                                 editRateForm.get('value')?.touched) {
-                                <p class="room-creation-offer__error">Enter a valid number with up to 2 decimals.
+                                <p class="room-creation-offer__error">{{ 'roomDialog.error.rateValue' | translate }}
                                 </p>
                                 }
                             </div>
@@ -161,12 +161,12 @@
                             <button type="button"
                                 class="room-creation-offer__link-button room-creation-offer__link-button--muted"
                                 (click)="cancelRateEdit()">
-                                Cancel
+                                {{ 'common.cancel' | translate }}
                             </button>
                             <button type="button"
                                 class="room-creation-offer__link-button"
                                 (click)="saveEditedRoomRate(i)">
-                                Update room rate
+                                {{ 'roomDialog.action.updateRate' | translate }}
                             </button>
                         </div>
                     </div>
@@ -181,10 +181,10 @@
                 <button type="button"
                     class="room-creation-offer__cancel-button"
                     (click)="close()">
-                    Cancel
+                    {{ 'common.cancel' | translate }}
                 </button>
 
-                <button type="submit" pButton [label]="isEditing ? 'Update Room' : 'Add Room'"
+                <button type="submit" pButton [label]="(isEditing ? 'roomDialog.submit.update' : 'roomDialog.title.add') | translate"
                     [icon]="isEditing ? 'pi pi-check' : 'pi pi-plus'"
                     styleClass="room-creation-offer__submit-button"></button>
             </div>

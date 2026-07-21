@@ -34,6 +34,7 @@ describe('translations', () => {
     'offerForm.placeholder.date',
     'offerForm.placeholder.currency',
     'offerForm.placeholder.email',
+    'locationDialog.placeholder.mapLink',
   ]);
 
   it('has no untranslated Arabic values', () => {

@@ -137,7 +137,7 @@
 
 .room-creation-offer__input {
   width: 100%;
-  padding-left: 1rem;
+  padding-inline-start: 1rem;
   background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
   border: 1px solid var(--app-border) !important;
   color: var(--app-text) !important;

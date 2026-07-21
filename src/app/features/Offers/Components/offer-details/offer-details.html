@@ -7,7 +7,7 @@
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-describtion.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-describtion.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">Description</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.section.description' | translate }}</h3>
     </header>
     <div class="offer-card__grid-2">
       <p class="offer-detail-text-wrap offer-card__text">{{offer().description}}</p>
@@ -29,15 +29,15 @@
             [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-publishing.svg') + ')'"
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-publishing.svg') + ')'"></span>
         </div>
-        <h3 class="offer-card__title">Offer Duration</h3>
+        <h3 class="offer-card__title">{{ 'offerDetails.section.duration' | translate }}</h3>
       </header>
       <div class="offer-card__list">
         <div class="offer-card__list-item">
-          <span class="offer-card__label">Start Date:</span>
+          <span class="offer-card__label">{{ 'offerDetails.label.startDate' | translate }}</span>
           <p class="offer-card__value">{{getStartDate(offer()) | date:'dd/MM/yyyy'}}</p>
         </div>
         <div class="offer-card__list-item">
-          <span class="offer-card__label">Expiry Date:</span>
+          <span class="offer-card__label">{{ 'offerDetails.label.expiryDate' | translate }}</span>
           <p class="offer-card__value">{{getEndDate(offer()) | date:'dd/MM/yyyy'}}</p>
         </div>
       </div>
@@ -51,7 +51,7 @@
             [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-category.svg') + ')'"
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-category.svg') + ')'"></span>
         </div>
-        <h3 class="offer-card__title">Category</h3>
+        <h3 class="offer-card__title">{{ 'offerDetails.section.category' | translate }}</h3>
       </header>
       <div class="offer-card__tags">
         @for (category of getCategories(offer()); track category?._id?.$oid || category?._id || category?.id || $index) {
@@ -59,7 +59,7 @@
           @if (isPrimeIcon(category?.icon)) {
           <i [class]="category.icon + ' offer-detail-tile__icon'"></i>
           } @else if (category?.icon && !hasCategoryIconError(category?.icon)) {
-          <img [src]="category.icon" alt="Category icon" class="offer-detail-tile__img"
+          <img [src]="category.icon" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
             (error)="markCategoryIconError(category?.icon)" />
           } @else if (category?.icon) {
           <i class="pi pi-image offer-detail-tile__icon-placeholder"></i>
@@ -71,12 +71,12 @@
           @if (isPrimeIcon(getCategoryIcon(offer()))) {
           <i [class]="getCategoryIcon(offer()) + ' offer-detail-tile__icon'"></i>
           } @else if (getCategoryIcon(offer()) && !hasCategoryIconError(getCategoryIcon(offer()))) {
-          <img [src]="getCategoryIcon(offer())" alt="Category icon" class="offer-detail-tile__img"
+          <img [src]="getCategoryIcon(offer())" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
             (error)="markCategoryIconError(getCategoryIcon(offer()))" />
           } @else if (getCategoryIcon(offer())) {
           <i class="pi pi-image offer-detail-tile__icon-placeholder"></i>
           }
-          <span class="offer-detail-tile__label">Uncategorized</span>
+          <span class="offer-detail-tile__label">{{ 'offerDetails.value.uncategorized' | translate }}</span>
         </div>
         }
       </div>
@@ -90,7 +90,7 @@
             [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-tags.svg') + ')'"
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-tags.svg') + ')'"></span>
         </div>
-        <h3 class="offer-card__title">Tags</h3>
+        <h3 class="offer-card__title">{{ 'offerDetails.section.tags' | translate }}</h3>
       </header>
       <div class="offer-card__tags">
         @for (tag of getTags(offer()); track tag) {
@@ -98,7 +98,7 @@
           <span class="offer-detail-tile__label">{{tag}}</span>
         </div>
         } @empty {
-        <p class="offer-card__empty">No tags</p>
+        <p class="offer-card__empty">{{ 'offerDetails.empty.tags' | translate }}</p>
         }
       </div>
     </section>
@@ -117,7 +117,7 @@
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-discount-details.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-discount-details.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">Discount Details</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.section.discountDetails' | translate }}</h3>
     </header>
 
     <div class="offer-discount">
@@ -133,7 +133,7 @@
               class="offer-discount__currency"
               [style.webkitMaskImage]="'url(assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg)'"
               [style.maskImage]="'url(assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg)'"
-              aria-label="Saudi Riyal"
+              [attr.aria-label]="'offerDetails.aria.sar' | translate"
             ></span>
             }
             <p class="offer-detail-text-wrap offer-discount__amount">{{getDiscountAmount(offer(), 'en')}}</p>
@@ -153,7 +153,7 @@
       <!-- Arabic Column -->
       <div class="offer-discount__col offer-discount__col--rtl" dir="rtl">
         <div class="offer-discount__field">
-          <span class="offer-discount__label">النسبة:</span>
+          <span class="offer-discount__label">{{getDiscountTypeLabel(offer(), 'ar')}}</span>
           <div class="offer-discount__amount-wrap offer-discount__amount-wrap--end" dir="ltr">
             @if (isPercentageDiscount(offer())) {
             <span class="offer-discount__amount-symbol">%</span>
@@ -162,7 +162,7 @@
               class="offer-discount__currency"
               [style.webkitMaskImage]="'url(assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg)'"
               [style.maskImage]="'url(assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg)'"
-              aria-label="Saudi Riyal"
+              [attr.aria-label]="'offerDetails.aria.sar' | translate"
             ></span>
             }
             <p class="offer-detail-text-wrap offer-discount__amount">{{getDiscountAmount(offer(), 'ar')}}</p>
@@ -171,7 +171,7 @@
         <div class="offer-discount__field">
           <span class="offer-discount__label offer-discount__label--fixed">تعليمات الاسترداد:</span>
           <p class="offer-detail-text-wrap offer-discount__instructions">
-            {{offer().howToAvail_ar || 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في المتجر.'}}
+            {{offer().howToAvail_ar || 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في الفرع.'}}
           </p>
         </div>
       </div>
@@ -187,13 +187,13 @@
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-Audience.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-Audience.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">Audience</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.section.audience' | translate }}</h3>
     </header>
     <div class="offer-card__stacked-list">
       @for (aud of getTargetAudience(offer()); track aud) {
         <p class="offer-card__value">{{ formatAudienceLabel(aud) }}</p>
       } @empty {
-        <p class="offer-card__empty">N/A</p>
+        <p class="offer-card__empty">{{ 'offerDetails.value.na' | translate }}</p>
       }
     </div>
   </section>
@@ -207,17 +207,17 @@
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-offer-settings.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-offer-settings.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">Offer Settings</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.section.settings' | translate }}</h3>
     </header>
     <div class="offer-settings">
       <div class="offer-settings__group">
-        <span class="offer-settings__label">Offer Type</span>
+        <span class="offer-settings__label">{{ 'offerDetails.label.offerType' | translate }}</span>
         <div class="offer-settings__badge">
           <span>{{formatOfferMode(offer())}}</span>
         </div>
       </div>
       <div class="offer-settings__group">
-        <span class="offer-settings__label">Offer Locations</span>
+        <span class="offer-settings__label">{{ 'offerDetails.label.locations' | translate }}</span>
         <div class="offer-settings__locations">
           @for (loc of locations(); track loc._id || $index) {
           <div class="offer-settings__location">
@@ -228,7 +228,7 @@
           </div>
           } @empty {
           <div class="offer-settings__location-empty">
-            <p>No locations available.</p>
+            <p>{{ 'offerDetails.empty.locations' | translate }}</p>
           </div>
           }
         </div>
@@ -244,16 +244,16 @@
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-branding.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-branding.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">Branding</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.section.branding' | translate }}</h3>
     </header>
     <div class="offer-settings">
       <div class="offer-settings__group">
-        <span class="offer-settings__label">Background Images</span>
+        <span class="offer-settings__label">{{ 'offerDetails.label.backgroundImages' | translate }}</span>
         <div class="offer-branding-grid">
           <div class="offer-branding-img-box">
-            <span class="offer-branding-img-box__label">Mobile 2.39:1</span>
+            <span class="offer-branding-img-box__label">{{ 'offerDetails.ratio.mobile' | translate }}</span>
             @if (getOfferMobileImage(offer()); as img) {
-            <img [src]="img" class="offer-branding-img-box__img" alt="Offer mobile background"
+            <img [src]="img" class="offer-branding-img-box__img" [alt]="'offerDetails.alt.offerMobile' | translate"
               (error)="markOfferMobileImageError()" />
             } @else {
             <div class="offer-branding-img-box__placeholder">
@@ -262,9 +262,9 @@
             }
           </div>
           <div class="offer-branding-img-box">
-            <span class="offer-branding-img-box__label">Desktop 16:2</span>
+            <span class="offer-branding-img-box__label">{{ 'offerDetails.ratio.desktop' | translate }}</span>
             @if (getOfferDesktopImage(offer()); as img) {
-            <img [src]="img" class="offer-branding-img-box__img" alt="Offer desktop background"
+            <img [src]="img" class="offer-branding-img-box__img" [alt]="'offerDetails.alt.offerDesktop' | translate"
               (error)="markOfferDesktopImageError()" />
             } @else {
             <div class="offer-branding-img-box__placeholder">
@@ -275,12 +275,12 @@
         </div>
       </div>
       <div class="offer-settings__group">
-        <span class="offer-settings__label">Highlight Images</span>
+        <span class="offer-settings__label">{{ 'offerDetails.highlight.images' | translate }}</span>
         <div class="offer-branding-grid">
           <div class="offer-branding-img-box">
-            <span class="offer-branding-img-box__label">Mobile 9:16</span>
+            <span class="offer-branding-img-box__label">{{ 'offerDetails.highlight.ratioMobile' | translate }}</span>
             @if (getHighlightMobileImage(offer()); as img) {
-            <img [src]="img" class="offer-branding-img-box__img" alt="Highlight mobile"
+            <img [src]="img" class="offer-branding-img-box__img" [alt]="'offerDetails.highlight.altMobile' | translate"
               (error)="markHighlightMobileImageError()" />
             } @else {
             <div class="offer-branding-img-box__placeholder offer-branding-img-box__placeholder--sm">
@@ -289,9 +289,9 @@
             }
           </div>
           <div class="offer-branding-img-box">
-            <span class="offer-branding-img-box__label">Desktop 16:9</span>
+            <span class="offer-branding-img-box__label">{{ 'offerDetails.highlight.ratioDesktop' | translate }}</span>
             @if (getHighlightDesktopImage(offer()); as img) {
-            <img [src]="img" class="offer-branding-img-box__img" alt="Highlight desktop"
+            <img [src]="img" class="offer-branding-img-box__img" [alt]="'offerDetails.highlight.altDesktop' | translate"
               (error)="markHighlightDesktopImageError()" />
             } @else {
             <div class="offer-branding-img-box__placeholder offer-branding-img-box__placeholder--sm">
@@ -313,7 +313,7 @@
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-contact-info.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-contact-info.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">Contact Information</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.section.contact' | translate }}</h3>
     </header>
     <div class="offer-contact-list">
       <div class="offer-contact-list__item">
@@ -340,7 +340,7 @@
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-custom-highlights.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-custom-highlights.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">Custom Highlight</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.highlight.section' | translate }}</h3>
     </header>
     <div class="offer-custom-highlight">
       <div class="offer-custom-highlight__info">

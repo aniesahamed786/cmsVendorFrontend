@@ -900,17 +900,17 @@ export class OfferForm {
     ];
     if (this.highlightEnabled()) {
       order.push(
-        { path: "highlightImage", label: "Highlight image (mobile)" },
-        { path: "highlightImageLandscape", label: "Highlight image (desktop)" },
-        { path: "highlightTitleEn", label: "Highlight title (English)" },
-        { path: "highlightTitleAr", label: "Highlight title (Arabic)" },
+        { path: "highlightImage", label: "offerForm.field.highlightImageMobile" },
+        { path: "highlightImageLandscape", label: "offerForm.field.highlightImageDesktop" },
+        { path: "highlightTitleEn", label: "offerForm.field.highlightTitleEn" },
+        { path: "highlightTitleAr", label: "offerForm.field.highlightTitleAr" },
         {
           path: "highlightDescription",
-          label: "Highlight description (English)",
+          label: "offerForm.field.highlightDescEn",
         },
         {
           path: "highlightDescriptionAr",
-          label: "Highlight description (Arabic)",
+          label: "offerForm.field.highlightDescAr",
         },
       );
     }

@@ -152,7 +152,10 @@
     }
   },
   "common": {
-    "search": "Search"
+    "search": "Search",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "offerForm": {
     "backToOffers": "Back to Offers",
@@ -364,7 +367,50 @@
       "vendorRequiredSummary": "Vendor Required",
       "vendorRequiredDetail": "Please select a vendor first to add a location."
     },
+    "highlight": {
+      "imagesLabel": "Highlight Images",
+      "mobileHeading": "Mobile Highlight",
+      "desktopHeading": "Desktop Highlight",
+      "uploadMobile": "Upload mobile highlight image",
+      "uploadDesktop": "Upload desktop highlight image",
+      "helpMobile": "Saved as `9:16`. JPG, PNG, max 10MB.",
+      "helpDesktop": "Saved as `16:9`. JPG, PNG, max 10MB.",
+      "chooseMobile": "Choose Mobile Image",
+      "replaceMobile": "Replace Mobile Image",
+      "chooseDesktop": "Choose Desktop Image",
+      "replaceDesktop": "Replace Desktop Image",
+      "safeArea": "Keep important elements in the safe area",
+      "resizeCrop": "Resize Crop",
+      "altMobilePreview": "Mobile highlight image preview",
+      "altMobile": "Mobile highlight image",
+      "altDesktopPreview": "Desktop highlight image preview",
+      "altDesktop": "Desktop highlight image",
+      "errorMobileRequired": "Mobile highlight image is required.",
+      "errorDesktopRequired": "Desktop highlight image is required.",
+      "sectionTitle": "Custom Highlights",
+      "sectionSubtitle": "Add custom details for the highlight section.",
+      "statusActive": "Active",
+      "statusInactive": "In-Active",
+      "titleEn": "Highlights Title (English)",
+      "titleAr": "Highlights Title (Arabic)",
+      "descriptionEn": "Highlights Description (English)",
+      "descriptionAr": "Highlights Description (Arabic)",
+      "placeholderTitleEn": "Enter highlight title",
+      "placeholderTitleAr": "أدخل عنوان الميزة",
+      "placeholderDescEn": "Describe this highlight",
+      "placeholderDescAr": "اكتب وصف الميزة",
+      "errorTitleEn": "Highlights title (English) is required.",
+      "errorTitleAr": "Highlights title (Arabic) is required.",
+      "errorDescEn": "Highlights description is required.",
+      "errorDescAr": "Highlights description (Arabic) is required."
+    },
     "field": {
+      "highlightImageMobile": "Highlight image (mobile)",
+      "highlightImageDesktop": "Highlight image (desktop)",
+      "highlightTitleEn": "Highlight title (English)",
+      "highlightTitleAr": "Highlight title (Arabic)",
+      "highlightDescEn": "Highlight description (English)",
+      "highlightDescAr": "Highlight description (Arabic)",
       "vendor": "Vendor",
       "titleEn": "Offer title (English)",
       "titleAr": "Offer title (Arabic)",
@@ -391,6 +437,189 @@
       "locations": "Selected locations",
       "offerImageMobile": "Offer image (mobile)",
       "offerImageDesktop": "Offer image (desktop)"
+    }
+  },
+
+  "roomDialog": {
+    "title": {
+      "edit": "Edit Room",
+      "add": "Add Room"
+    },
+    "subtitle": "Define specific room details and seasonal pricing",
+    "section": {
+      "details": "Room Details",
+      "rates": "Room Rates"
+    },
+    "label": {
+      "roomNameEn": "Room Name",
+      "roomNameAr": "Room Name (Arabic)",
+      "seasonEn": "Rate Season (English)",
+      "seasonAr": "Rate Season (Arabic)",
+      "rateValue": "Rate Value"
+    },
+    "placeholder": {
+      "roomName": "e.g. Deluxe Ocean View",
+      "roomNameAr": "مثلاً: غرفة ديلوكس بإطلالة على البحر",
+      "season": "e.g. High Season",
+      "seasonAr": "مثال: الموسم المرتفع",
+      "rateValue": "e.g. 150.00"
+    },
+    "error": {
+      "roomNameRequired": "Room name is required.",
+      "roomNameArRequired": "Arabic room name is required.",
+      "rateValue": "Enter a valid number with up to 2 decimals."
+    },
+    "action": {
+      "addRate": "+ Add room rate",
+      "updateRate": "Update room rate"
+    },
+    "rate": {
+      "fallbackName": "Rate #{{n}}"
+    },
+    "submit": {
+      "update": "Update Room"
+    }
+  },
+  "locationDialog": {
+    "title": {
+      "edit": "Edit Location",
+      "add": "Business Locations"
+    },
+    "subtitle": "Set up and manage your business branches and coordinates",
+    "section": {
+      "details": "Location Details"
+    },
+    "label": {
+      "nameEn": "Location Name (English)",
+      "nameAr": "Location Name (Arabic)",
+      "country": "Country",
+      "region": "Region",
+      "city": "City",
+      "address": "Address",
+      "mapLink": "Google Map Link",
+      "representative": "Location Representative Name",
+      "phone": "Location Phone Number"
+    },
+    "placeholder": {
+      "nameEn": "e.g. Khobar Branch",
+      "nameAr": "مثلاً فرع الخبر",
+      "country": "Select country",
+      "region": "Select region",
+      "city": "Select city",
+      "address": "e.g. 8628+CP Al Khobar",
+      "mapLink": "https://maps.app.goo.gl/...",
+      "representative": "e.g. Abdullah Khaled",
+      "phone": "e.g. +966 (13) 123 4567"
+    },
+    "error": {
+      "nameRequired": "Location name is required.",
+      "nameArRequired": "Arabic location name is required.",
+      "nameArOnly": "The location name must be in Arabic only.",
+      "countryRequired": "Country is required.",
+      "cityRequired": "City is required.",
+      "addressRequired": "Address is required.",
+      "mapLinkRequired": "Google map link is required.",
+      "urlInvalid": "Please enter a valid URL.",
+      "phoneEnglishNumbers": "Use English Numbers",
+      "phonePattern": "Phone number can only contain numbers, +, (), and spaces.",
+      "phoneMaxLength": "Phone number cannot exceed 15 characters."
+    },
+    "submit": {
+      "save": "Save Location",
+      "update": "Update Location"
+    },
+    "toast": {
+      "invalidMapLinkSummary": "Invalid Map Link",
+      "invalidMapLinkDetail": "Could not resolve coordinates from the provided link.",
+      "validationSummary": "Validation Error",
+      "validationDetail": "Please fill in all required fields.",
+      "missingIdSummary": "Missing Location ID",
+      "missingIdDetail": "Cannot update this location because its ID was not found.",
+      "updatedSummary": "Location Updated",
+      "addedSummary": "Location Added",
+      "updatedDetail": "Vendor location has been updated successfully.",
+      "addedDetail": "New vendor location has been added successfully.",
+      "errorSummary": "Error",
+      "updateFailed": "Failed to update vendor location.",
+      "addFailed": "Failed to add vendor location."
+    }
+  },
+
+  "offerDetails": {
+    "back": "Back to Offers",
+    "raiseTicket": "Raise Ticket",
+    "status": {
+      "active": "Active",
+      "scheduled": "Scheduled",
+      "expired": "Expired",
+      "inactive": "Inactive"
+    },
+    "mode": {
+      "inStore": "In-Store",
+      "digital": "Digital",
+      "hybrid": "In-Store & Digital"
+    },
+    "section": {
+      "description": "Description",
+      "duration": "Offer Duration",
+      "category": "Category",
+      "tags": "Tags",
+      "discountDetails": "Discount Details",
+      "audience": "Audience",
+      "settings": "Offer Settings",
+      "branding": "Branding",
+      "contact": "Contact Information"
+    },
+    "label": {
+      "startDate": "Start Date:",
+      "expiryDate": "Expiry Date:",
+      "offerType": "Offer Type",
+      "locations": "Offer Locations",
+      "backgroundImages": "Background Images"
+    },
+    "ratio": {
+      "mobile": "Mobile 2.39:1",
+      "desktop": "Desktop 16:2"
+    },
+    "alt": {
+      "vendorLogo": "Vendor Logo",
+      "categoryIcon": "Category icon",
+      "offerMobile": "Offer mobile background",
+      "offerDesktop": "Offer desktop background"
+    },
+    "aria": {
+      "sar": "Saudi Riyal"
+    },
+    "empty": {
+      "tags": "No tags",
+      "locations": "No locations available."
+    },
+    "value": {
+      "uncategorized": "Uncategorized",
+      "unknownLocation": "Unknown Location",
+      "regularEmployees": "Regular Employees",
+      "na": "N/A"
+    },
+    "hotel": {
+      "title": "Hotel Details",
+      "roomDetails": "Room Details",
+      "amenities": "Hotel Amenities",
+      "taxValue": "Tax Value",
+      "noRooms": "No room details available.",
+      "roomFallback": "Room"
+    },
+    "highlight": {
+      "images": "Highlight Images",
+      "section": "Custom Highlight",
+      "ratioMobile": "Mobile 9:16",
+      "ratioDesktop": "Desktop 16:9",
+      "altMobile": "Highlight mobile",
+      "altDesktop": "Highlight desktop"
+    },
+    "preview": {
+      "aria": "Mobile preview",
+      "switchToArabic": "Switch to Arabic Preview",
+      "switchToEnglish": "Switch to English Preview"
     }
   }
 }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 // ponytail: admin source for hotel-details wasn't provided; minimal port covering
 // the documented shape (roomDetails / amenities / tax / currency). Extend if the
@@ -8,7 +9,7 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 @Component({
   selector: 'app-hotel-details',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules],
+  imports: [CommonModule, PrimeUIModules, TranslatePipe],
   templateUrl: './hotel-details.html',
   styleUrl: './hotel-details.scss',
 })

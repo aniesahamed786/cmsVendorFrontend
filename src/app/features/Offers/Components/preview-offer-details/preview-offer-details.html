@@ -1,5 +1,5 @@
 <!-- mobile-style preview -->
-<aside class="preview-offer-details hidden lg:block w-full lg:flex-none shrink-0" aria-label="Mobile preview">
+<aside class="preview-offer-details hidden lg:block w-full lg:flex-none shrink-0" [attr.aria-label]="'offerDetails.preview.aria' | translate">
     <div class="preview-wrapper">
         <div class="phone-mockup">
             <!-- App Header -->
@@ -102,7 +102,7 @@
                 <div id="preview-section-hotel" class="w-full px-5 py-6 flex flex-col gap-6 flex-shrink-0">
                     @if (getRoomDetails().length > 0) {
                     <div>
-                        <h3 class="text-[1.1rem] font-bold text-gray-900 mb-4">Room Details</h3>
+                        <h3 class="text-[1.1rem] font-bold text-gray-900 mb-4">{{ language === 'en' ? 'Room Details' : 'تفاصيل الغرف' }}</h3>
                         <div class="space-y-4">
                             @for (room of getRoomDetails(); track room.roomName) {
                             <div class="bg-gray-50/50 border border-gray-100 p-4 rounded-none">
@@ -128,7 +128,7 @@
                     }
                     @if (getAmenities().length > 0) {
                     <div>
-                        <h3 class="text-[1.1rem] font-bold text-gray-900 mb-4">Hotel Amenities</h3>
+                        <h3 class="text-[1.1rem] font-bold text-gray-900 mb-4">{{ language === 'en' ? 'Hotel Amenities' : 'مرافق الفندق' }}</h3>
                         <div class="flex flex-col gap-3">
                             @for (amenity of getAmenities(); track amenity) {
                             <div class="flex items-center gap-3 text-gray-700">
@@ -141,7 +141,7 @@
                     }
                     @if (getTaxValue()) {
                     <div>
-                        <h3 class="text-[1.1rem] font-bold text-gray-900 mb-2">Tax Value</h3>
+                        <h3 class="text-[1.1rem] font-bold text-gray-900 mb-2">{{ language === 'en' ? 'Tax Value' : 'قيمة الضريبة' }}</h3>
                         <p class="text-[0.85rem] text-gray-600 leading-relaxed">{{ getTaxValue() }}</p>
                     </div>
                     }
@@ -239,7 +239,7 @@
         <div class="language-toggle-container">
             <button (click)="toggleLanguage()" class="toggle-button">
                 <i class="pi pi-language"></i>
-                {{ language === 'en' ? 'Switch to Arabic Preview' : 'Switch to English Preview' }}
+                {{ (language === 'en' ? 'offerDetails.preview.switchToArabic' : 'offerDetails.preview.switchToEnglish') | translate }}
             </button>
         </div>
     </div>

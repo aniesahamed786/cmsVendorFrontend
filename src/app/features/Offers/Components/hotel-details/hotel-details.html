@@ -3,17 +3,17 @@
     <div class="hotel-details__header-chip">
       <i class="pi pi-building hotel-details__header-icon"></i>
     </div>
-    <h3 class="hotel-details__title">Hotel Details</h3>
+    <h3 class="hotel-details__title">{{ 'offerDetails.hotel.title' | translate }}</h3>
   </div>
 
   <div class="hotel-details__sections">
     <!-- Room Details -->
     <div>
-      <span class="hotel-details__section-label">Room Details</span>
+      <span class="hotel-details__section-label">{{ 'offerDetails.hotel.roomDetails' | translate }}</span>
       <div class="hotel-details__rooms">
         @for (room of getRoomDetails(); track room.roomName || $index) {
         <div class="hotel-details__room-card">
-          <p class="hotel-details__room-name">{{ room.roomName || 'Room' }}</p>
+          <p class="hotel-details__room-name">{{ room.roomName || ('offerDetails.hotel.roomFallback' | translate) }}</p>
           <div class="hotel-details__rates">
             @for (rate of room.rates || []; track rate.season || $index) {
             <div class="hotel-details__rate-row">
@@ -31,7 +31,7 @@
           </div>
         </div>
         } @empty {
-        <p class="hotel-details__empty">No room details available.</p>
+        <p class="hotel-details__empty">{{ 'offerDetails.hotel.noRooms' | translate }}</p>
         }
       </div>
     </div>
@@ -39,7 +39,7 @@
     <!-- Amenities -->
     @if (getAmenities().length > 0) {
     <div>
-      <span class="hotel-details__section-label">Hotel Amenities</span>
+      <span class="hotel-details__section-label">{{ 'offerDetails.hotel.amenities' | translate }}</span>
       <div class="hotel-details__amenities">
         @for (amenity of getAmenities(); track amenity) {
         <div class="hotel-details__amenity">
@@ -54,7 +54,7 @@
     <!-- Tax -->
     @if (getTaxValue()) {
     <div>
-      <span class="hotel-details__section-label hotel-details__section-label--tight">Tax Value</span>
+      <span class="hotel-details__section-label hotel-details__section-label--tight">{{ 'offerDetails.hotel.taxValue' | translate }}</span>
       <p class="hotel-details__tax">{{ getTaxValue() }}</p>
     </div>
     }

@@ -1,16 +1,19 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, effect, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { HotelDetailsComponent } from '../hotel-details/hotel-details';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
     selector: 'app-offer-details',
     standalone: true,
-    imports: [CommonModule, PrimeUIModules, DatePipe, HotelDetailsComponent],
+    imports: [CommonModule, PrimeUIModules, DatePipe, HotelDetailsComponent, TranslatePipe],
     templateUrl: './offer-details.html',
     styleUrl: './offer-details.scss',
 })
 export class OfferDetails {
+    private readonly i18n = inject(I18nService);
     readonly offerDetailIconBasePath = 'assets/svg/Offers/offer-details';
     offer = input.required<any>();
     locations = input<any[]>([]);
@@ -51,8 +54,9 @@ export class OfferDetails {
     }
 
     getCategoryLabel(category: any): string {
-        if (!category || typeof category !== 'object') return 'Uncategorized';
-        return category.name || category.name_ar || 'Uncategorized';
+        const fallback = this.i18n.t('offerDetails.value.uncategorized');
+        if (!category || typeof category !== 'object') return fallback;
+        return category.name || category.name_ar || fallback;
     }
 
     getStartDate(offer: any): Date | null {
@@ -86,7 +90,7 @@ export class OfferDetails {
     formatAudienceLabel(value: string): string {
         const v = String(value || '').trim();
         if (!v) return '';
-        if (v.toLowerCase() === 'employees') return 'Regular Employees';
+        if (v.toLowerCase() === 'employees') return this.i18n.t('offerDetails.value.regularEmployees');
         return v;
     }
 
@@ -162,7 +166,7 @@ export class OfferDetails {
         if (this.isPercentageDiscount(offer)) {
             return `${this.getDiscountAmount(offer, 'en')}%`;
         }
-        return this.getDiscountAmount(offer, 'en') ? `${this.getDiscountAmount(offer, 'en')} Off` : 'N/A';
+        return this.getDiscountAmount(offer, 'en') ? `${this.getDiscountAmount(offer, 'en')} Off` : this.i18n.t('offerDetails.value.na');
     }
 
     getInstructions(offer: any): string {
@@ -171,14 +175,13 @@ export class OfferDetails {
 
     formatOfferMode(offer: any): string {
         const mode = (offer?.offerMode || 'in store').toLowerCase();
-        if (mode === 'in store') return 'In-Store';
-        if (mode === 'online') return 'Digital';
-        if (mode === 'both') return 'In-Store & Digital';
-        return 'In-Store';
+        if (mode === 'online') return this.i18n.t('offerDetails.mode.digital');
+        if (mode === 'both') return this.i18n.t('offerDetails.mode.hybrid');
+        return this.i18n.t('offerDetails.mode.inStore');
     }
 
     getHighlightTitle(offer: any): string {
-        return offer?.highlight_title || 'N/A';
+        return offer?.highlight_title || this.i18n.t('offerDetails.value.na');
     }
 
     getHighlightTitleAr(offer: any): string {
@@ -186,7 +189,7 @@ export class OfferDetails {
     }
 
     getHighlightDescription(offer: any): string {
-        return offer?.highlight_description || 'N/A';
+        return offer?.highlight_description || this.i18n.t('offerDetails.value.na');
     }
 
     getHighlightDescriptionAr(offer: any): string {
@@ -252,7 +255,7 @@ export class OfferDetails {
     }
 
     getLocationTitle(loc: any): string {
-        return loc?.branch_name || loc?.name || loc?.title || 'Unknown Location';
+        return loc?.branch_name || loc?.name || loc?.title || this.i18n.t('offerDetails.value.unknownLocation');
     }
 
     getLocationSubtitle(loc: any): string {
@@ -272,14 +275,14 @@ export class OfferDetails {
                 .map((item) => String(item ?? '').trim())
                 .filter(Boolean)
                 .join(', ');
-            return formatted || 'N/A';
+            return formatted || this.i18n.t('offerDetails.value.na');
         }
 
         if (typeof value === 'string') {
-            return value.trim() || 'N/A';
+            return value.trim() || this.i18n.t('offerDetails.value.na');
         }
 
-        return value ? String(value) : 'N/A';
+        return value ? String(value) : this.i18n.t('offerDetails.value.na');
     }
 
     hasContactInformation(offer: any): boolean {

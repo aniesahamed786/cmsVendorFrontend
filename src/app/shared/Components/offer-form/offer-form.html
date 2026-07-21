@@ -730,7 +730,7 @@
 
       <div class="offer-form__mt-6">
         <label class="offer-form__label offer-form__label--block offer-form__label--mb">
-          Highlight Images
+          {{ 'offerForm.highlight.imagesLabel' | translate }}
           <span class="offer-form__required">*</span>
         </label>
         <div class="offer-form__highlight-split offer-form__grid offer-form__grid--gap-sm offer-form__grid--mt-0 offer-form__mt-4">
@@ -742,7 +742,7 @@
                 </div>
                 <div>
                   <div class="offer-form__crop-card-heading-row">
-                    <p class="offer-form__crop-card-heading">Mobile Highlight</p>
+                    <p class="offer-form__crop-card-heading">{{ 'offerForm.highlight.mobileHeading' | translate }}</p>
                     <span class="offer-form__crop-card-badge">9:16</span>
                   </div>
                 </div>
@@ -758,10 +758,10 @@
                     style="width: 28px; height: 28px; display: inline-block;"
                     [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
-                <p class="vendor-upload__title">Upload mobile highlight image</p>
-                <p class="vendor-upload__help">Saved as `9:16`. JPG, PNG, max 10MB.</p>
+                <p class="vendor-upload__title">{{ 'offerForm.highlight.uploadMobile' | translate }}</p>
+                <p class="vendor-upload__help">{{ 'offerForm.highlight.helpMobile' | translate }}</p>
                 <button type="button" pButton icon="pi pi-upload"
-                  [label]="(highlightPreviewUrl() || offerForm.get('highlightImage')?.value) ? 'Replace Mobile Image' : 'Choose Mobile Image'"
+                  [label]="((highlightPreviewUrl() || offerForm.get('highlightImage')?.value) ? 'offerForm.highlight.replaceMobile' : 'offerForm.highlight.chooseMobile') | translate"
                   class="p-button-outlined p-button-sm"
                   (click)="highlightMobileFileInput.click(); $event.stopPropagation()"></button>
               </div>
@@ -775,7 +775,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
                   <span class="offer-form__crop-ratio-pill">9:16</span>
-                  <img [src]="highlightPreview" alt="Mobile highlight image preview"
+                  <img [src]="highlightPreview" [alt]="'offerForm.highlight.altMobilePreview' | translate"
                     class="offer-form__crop-image offer-form__crop-image--mobile" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
                     <span
@@ -802,7 +802,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
                   <span class="offer-form__crop-ratio-pill">9:16</span>
-                  <img [src]="offerForm.get('highlightImage')?.value" alt="Mobile highlight image"
+                  <img [src]="offerForm.get('highlightImage')?.value" [alt]="'offerForm.highlight.altMobile' | translate"
                     class="offer-form__crop-image offer-form__crop-image--mobile"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
@@ -828,11 +828,11 @@
               }
               <p class="offer-form__crop-safe-note">
                 <i class="pi pi-info-circle" aria-hidden="true"></i>
-                <span>Keep important elements in the safe area</span>
+                <span>{{ 'offerForm.highlight.safeArea' | translate }}</span>
               </p>
             </div>
             <div class="offer-form__crop-actions offer-form__crop-actions--highlight">
-              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop"
+              <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.highlight.resizeCrop' | translate"
                 class="p-button-outlined p-button-sm"
                 [disabled]="!(highlightPreviewUrl() || offerForm.get('highlightImage')?.value)"
                 (click)="recropHighlightImage('mobile'); $event.stopPropagation()"></button>
@@ -853,7 +853,7 @@
                 </div>
                 <div>
                   <div class="offer-form__crop-card-heading-row">
-                    <p class="offer-form__crop-card-heading">Desktop Highlight</p>
+                    <p class="offer-form__crop-card-heading">{{ 'offerForm.highlight.desktopHeading' | translate }}</p>
                     <span class="offer-form__crop-card-badge">16:9</span>
                   </div>
                 </div>
@@ -869,10 +869,10 @@
                     style="width: 28px; height: 28px; display: inline-block;"
                     [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
-                <p class="vendor-upload__title">Upload desktop highlight image</p>
-                <p class="vendor-upload__help">Saved as `16:9`. JPG, PNG, max 10MB.</p>
+                <p class="vendor-upload__title">{{ 'offerForm.highlight.uploadDesktop' | translate }}</p>
+                <p class="vendor-upload__help">{{ 'offerForm.highlight.helpDesktop' | translate }}</p>
                 <button type="button" pButton icon="pi pi-upload"
-                  [label]="(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value) ? 'Replace Desktop Image' : 'Choose Desktop Image'"
+                  [label]="((highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value) ? 'offerForm.highlight.replaceDesktop' : 'offerForm.highlight.chooseDesktop') | translate"
                   class="p-button-outlined p-button-sm"
                   (click)="highlightDesktopFileInput.click(); $event.stopPropagation()"></button>
               </div>
@@ -886,7 +886,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
                   <span class="offer-form__crop-ratio-pill">16:9</span>
-                  <img [src]="highlightLandscapePreview" alt="Desktop highlight image preview"
+                  <img [src]="highlightLandscapePreview" [alt]="'offerForm.highlight.altDesktopPreview' | translate"
                     class="offer-form__crop-image offer-form__crop-image--desktop" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
                     <span
@@ -913,7 +913,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
                   <span class="offer-form__crop-ratio-pill">16:9</span>
-                  <img [src]="offerForm.get('highlightImageLandscape')?.value" alt="Desktop highlight image"
+                  <img [src]="offerForm.get('highlightImageLandscape')?.value" [alt]="'offerForm.highlight.altDesktop' | translate"
                     class="offer-form__crop-image offer-form__crop-image--desktop"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
@@ -939,11 +939,11 @@
               }
               <p class="offer-form__crop-safe-note">
                 <i class="pi pi-info-circle" aria-hidden="true"></i>
-                <span>Keep important elements in the safe area</span>
+                <span>{{ 'offerForm.highlight.safeArea' | translate }}</span>
               </p>
             </div>
             <div class="offer-form__crop-actions offer-form__crop-actions--highlight">
-              <button type="button" pButton icon="pi pi-pencil" label="Resize Crop"
+              <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.highlight.resizeCrop' | translate"
                 class="p-button-outlined p-button-sm"
                 [disabled]="!(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value)"
                 (click)="recropHighlightImage('desktop'); $event.stopPropagation()"></button>
@@ -956,9 +956,9 @@
           </div>
         </div>
         @if (hasRequiredError('highlightImage')) {
-        <p class="offer-form__error">Mobile highlight image is required.</p>
+        <p class="offer-form__error">{{ 'offerForm.highlight.errorMobileRequired' | translate }}</p>
         } @else if (hasRequiredError('highlightImageLandscape')) {
-        <p class="offer-form__error">Desktop highlight image is required.</p>
+        <p class="offer-form__error">{{ 'offerForm.highlight.errorDesktopRequired' | translate }}</p>
         }
       </div>
     </div>
@@ -1038,10 +1038,10 @@
 
             <div>
               <h2 class="offer-form__section-title">
-                Custom Highlights
+                {{ 'offerForm.highlight.sectionTitle' | translate }}
               </h2>
               <p class="offer-form__section-subtitle">
-                Add custom details for the highlight section.
+                {{ 'offerForm.highlight.sectionSubtitle' | translate }}
               </p>
             </div>
           </div>
@@ -1050,7 +1050,7 @@
             <span class="offer-form__toggle-status"
               [class.offer-form__toggle-status--on]="highlightEnabled()"
               [class.offer-form__toggle-status--off]="!highlightEnabled()">
-              {{ highlightEnabled() ? 'Active' : 'In-Active' }}
+              {{ (highlightEnabled() ? 'offerForm.highlight.statusActive' : 'offerForm.highlight.statusInactive') | translate }}
             </span>
             <p-toggleswitch formControlName="highlight"></p-toggleswitch>
           </div>
@@ -1062,54 +1062,54 @@
             <div class="offer-form__grid offer-form__grid--mt-0">
               <div class="offer-form__field-group">
                 <label class="offer-form__label">
-                  Highlights Title (English)
+                  {{ 'offerForm.highlight.titleEn' | translate }}
                   <span class="offer-form__required">*</span>
                 </label>
                 <input pInputText formControlName="highlightTitleEn"
                   class="offer-form__highlight-field offer-form__input offer-form__input--pl5"
-                  placeholder="Enter highlight title" />
+                  [placeholder]="'offerForm.highlight.placeholderTitleEn' | translate" />
                 @if (hasRequiredError('highlightTitleEn')) {
-                <p class="offer-form__error">Highlights title (English) is required.</p>
+                <p class="offer-form__error">{{ 'offerForm.highlight.errorTitleEn' | translate }}</p>
                 }
               </div>
 
               <div class="offer-form__field-group">
                 <label class="offer-form__label">
-                  Highlights Title (Arabic)
+                  {{ 'offerForm.highlight.titleAr' | translate }}
                   <span class="offer-form__required">*</span>
                 </label>
                 <input pInputText formControlName="highlightTitleAr" (input)="sanitizeArabicInput('highlightTitleAr')"
                   class="offer-form__highlight-field offer-form__input offer-form__input--pl5 offer-form__input--right"
-                  placeholder="أدخل عنوان الميزة" />
+                  [placeholder]="'offerForm.highlight.placeholderTitleAr' | translate" />
                 @if (hasRequiredError('highlightTitleAr')) {
-                <p class="offer-form__error">Highlights title (Arabic) is required.</p>
+                <p class="offer-form__error">{{ 'offerForm.highlight.errorTitleAr' | translate }}</p>
                 }
               </div>
             </div>
 
             <div class="offer-form__field-group">
               <label class="offer-form__label">
-                Highlights Description (English)
+                {{ 'offerForm.highlight.descriptionEn' | translate }}
                 <span class="offer-form__required">*</span>
               </label>
               <input pInputText rows="4" formControlName="highlightDescription"
                 class="offer-form__highlight-field offer-form__input offer-form__input--p5"
-                placeholder="Describe this highlight" />
+                [placeholder]="'offerForm.highlight.placeholderDescEn' | translate" />
               @if (hasRequiredError('highlightDescription')) {
-              <p class="offer-form__error">Highlights description is required.</p>
+              <p class="offer-form__error">{{ 'offerForm.highlight.errorDescEn' | translate }}</p>
               }
             </div>
 
             <div class="offer-form__field-group">
               <label class="offer-form__label">
-                Highlights Description (Arabic)
+                {{ 'offerForm.highlight.descriptionAr' | translate }}
                 <span class="offer-form__required">*</span>
               </label>
               <input pInputText rows="4" formControlName="highlightDescriptionAr"
                 class="offer-form__highlight-field offer-form__input offer-form__input--p5 offer-form__input--right" dir="rtl"
-                placeholder="اكتب وصف الميزة" />
+                [placeholder]="'offerForm.highlight.placeholderDescAr' | translate" />
               @if (hasRequiredError('highlightDescriptionAr')) {
-              <p class="offer-form__error">Highlights description (Arabic) is required.</p>
+              <p class="offer-form__error">{{ 'offerForm.highlight.errorDescAr' | translate }}</p>
               }
             </div>
           </div>

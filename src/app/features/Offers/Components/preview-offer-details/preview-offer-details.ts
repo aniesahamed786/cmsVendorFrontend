@@ -2,10 +2,11 @@ import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/cor
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { resolveStoredImageUrl } from '../../../../shared/utils/resolve-stored-image-url';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-preview-offer-details',
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, ButtonModule, TranslatePipe],
   templateUrl: './preview-offer-details.html',
   styleUrl: './preview-offer-details.scss'
 })

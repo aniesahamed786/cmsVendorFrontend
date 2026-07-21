@@ -3,7 +3,7 @@
     <span class="offer-details-page-svg-icon"
       [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-back.svg') + ')'"
       [style.maskImage]="'url(' + getOfferDetailIconPath('ic-back.svg') + ')'"></span>
-    <span>Back to Offers</span>
+    <span>{{ 'offerDetails.back' | translate }}</span>
   </button>
 
   @if (isLoading()) {
@@ -17,13 +17,13 @@
       <span class="offer-details-page-svg-icon"
         [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-raise-ticket.svg') + ')'"
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-raise-ticket.svg') + ')'"></span>
-      <span>Raise Ticket</span>
+      <span>{{ 'offerDetails.raiseTicket' | translate }}</span>
     </app-button>
     <app-button variant="primary" (click)="navigateToEditOffer()">
       <span class="offer-details-page-svg-icon invert-white"
         [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"></span>
-      <span>Edit</span>
+      <span>{{ 'common.edit' | translate }}</span>
     </app-button>
   </div>
   }
@@ -62,7 +62,7 @@
       <!-- Vendor row -->
       <div class="offer-hero-card__vendor-row">
         @if (getVendorLogo(offer)) {
-        <img [src]="getVendorLogo(offer)" alt="Vendor Logo" class="offer-hero-card__vendor-logo"
+        <img [src]="getVendorLogo(offer)" [alt]="'offerDetails.alt.vendorLogo' | translate" class="offer-hero-card__vendor-logo"
           (error)="markVendorLogoError()" />
         } @else {
         <div class="offer-hero-card__vendor-logo-placeholder">
@@ -98,15 +98,16 @@
           [class.offer-status-tag--scheduled]="getOfferStatus(offer) === 'Scheduled'"
           [class.offer-status-tag--expired]="getOfferStatus(offer) === 'Expired'"
           [class.offer-status-tag--inactive]="getOfferStatus(offer) === 'Inactive'"
-          [value]="getOfferStatus(offer)"
+          [value]="('offerDetails.status.' + getOfferStatus(offer).toLowerCase()) | translate"
           [rounded]="true"></p-tag>
       </div>
 
       <!-- Offer mode badge -->
       <div class="offer-hero-card__mode-badge">
         <span>
-          {{ getOfferMode(offer) === 'in store' ? 'In-Store' : getOfferMode(offer) === 'online' ? 'Digital' : 'In-Store
-          & Digital' }}
+          {{ (getOfferMode(offer) === 'in store' ? 'offerDetails.mode.inStore'
+             : getOfferMode(offer) === 'online' ? 'offerDetails.mode.digital'
+             : 'offerDetails.mode.hybrid') | translate }}
         </span>
       </div>
     </div>
@@ -119,7 +120,7 @@
       @if (getVendorNameAr(offer)) {
       <div class="offer-hero-card__vendor-row">
         @if (getVendorLogo(offer)) {
-        <img [src]="getVendorLogo(offer)" alt="Vendor Logo" class="offer-hero-card__vendor-logo"
+        <img [src]="getVendorLogo(offer)" [alt]="'offerDetails.alt.vendorLogo' | translate" class="offer-hero-card__vendor-logo"
           (error)="markVendorLogoError()" />
         } @else {
         <div class="offer-hero-card__vendor-logo-placeholder">
@@ -164,7 +165,7 @@
 
     <!-- Right Preview -->
     <div class="offer-tab-panel__sidebar">
-      <app-preview-offer-details [offer]="offer" [vendor]="vendor()"
+      <app-preview-offer-details [offer]="offer" [vendor]="vendor()" [language]="previewLanguage()"
         [locations]="offerLocations()"></app-preview-offer-details>
     </div>
   </div>

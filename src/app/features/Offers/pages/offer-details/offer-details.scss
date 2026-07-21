@@ -117,7 +117,9 @@
     text-align: right;
     min-width: 0;
     width: 100%;
-    margin-left: auto;
+    // The hero row reverses in RTL, so the Arabic column needs the auto margin
+    // on whichever side is "start" for the page direction.
+    margin-inline-start: auto;
 
     @media (min-width: 768px) {
       width: auto;

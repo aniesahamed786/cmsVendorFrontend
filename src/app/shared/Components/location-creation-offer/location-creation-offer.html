@@ -16,10 +16,10 @@
       <div class="location-creation-offer__header-row">
         <div>
           <h2 class="location-creation-offer__title">
-            {{ locationData ? 'Edit Location' : 'Business Locations' }}
+            {{ (locationData ? 'locationDialog.title.edit' : 'locationDialog.title.add') | translate }}
           </h2>
           <p class="location-creation-offer__subtitle">
-            Set up and manage your business branches and coordinates
+            {{ 'locationDialog.subtitle' | translate }}
           </p>
         </div>
 
@@ -39,38 +39,38 @@
           <div class="location-creation-offer__section-icon">
             <i class="pi pi-map-marker"></i>
           </div>
-          <h3 class="location-creation-offer__section-title">Location Details</h3>
+          <h3 class="location-creation-offer__section-title">{{ 'locationDialog.section.details' | translate }}</h3>
         </div>
 
         <div class="location-creation-offer__grid">
           <div class="location-creation-offer__field">
             <label class="location-creation-offer__label">
-              Location Name (English)
+              {{ 'locationDialog.label.nameEn' | translate }}
               <span class="location-creation-offer__required">*</span>
             </label>
             <input
               pInputText
               type="text"
-              placeholder="e.g. Khobar Branch"
+              [placeholder]="'locationDialog.placeholder.nameEn' | translate"
               class="location-creation-offer__input"
               formControlName="branchName"
             />
             @if (locationForm.get('branchName')?.invalid && locationForm.get('branchName')?.touched) {
               @if (locationForm.get('branchName')?.hasError('required') || locationForm.get('branchName')?.hasError('whitespace')) {
-                <p class="location-creation-offer__error">Location name is required.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.nameRequired' | translate }}</p>
               }
             }
           </div>
 
           <div class="location-creation-offer__field">
             <label class="location-creation-offer__label">
-              Location Name (Arabic)
+              {{ 'locationDialog.label.nameAr' | translate }}
               <span class="location-creation-offer__required">*</span>
             </label>
             <input
               pInputText
               type="text"
-              placeholder="مثلاً فرع الخبر"
+              [placeholder]="'locationDialog.placeholder.nameAr' | translate"
               class="location-creation-offer__input location-creation-offer__input--rtl"
               dir="rtl"
               formControlName="branchNameAr"
@@ -78,24 +78,24 @@
             />
             @if (locationForm.get('branchNameAr')?.invalid && locationForm.get('branchNameAr')?.touched) {
               @if (locationForm.get('branchNameAr')?.hasError('required') || locationForm.get('branchNameAr')?.hasError('whitespace')) {
-                <p class="location-creation-offer__error">Arabic location name is required.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.nameArRequired' | translate }}</p>
               }
               @if (locationForm.get('branchNameAr')?.hasError('arabicOnly')) {
-                <p class="location-creation-offer__error">اسم الفرع يجب أن يكون باللغة العربية فقط.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.nameArOnly' | translate }}</p>
               }
             }
           </div>
 
           <div class="location-creation-offer__field location-creation-offer__field--full">
             <label class="location-creation-offer__label">
-              Country
+              {{ 'locationDialog.label.country' | translate }}
               <span class="location-creation-offer__required">*</span>
             </label>
             <p-select
               [options]="countryOptions()"
               optionLabel="label"
               optionValue="value"
-              placeholder="Select country"
+              [placeholder]="'locationDialog.placeholder.country' | translate"
               appendTo="body"
               styleClass="offer-form__field offer-form__select"
               panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
@@ -103,20 +103,20 @@
             />
             @if (locationForm.get('country')?.invalid && locationForm.get('country')?.touched) {
               @if (locationForm.get('country')?.hasError('required') || locationForm.get('country')?.hasError('whitespace')) {
-                <p class="location-creation-offer__error">Country is required.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.countryRequired' | translate }}</p>
               }
             }
           </div>
 
           <div class="location-creation-offer__field">
             <label class="location-creation-offer__label">
-              Region
+              {{ 'locationDialog.label.region' | translate }}
             </label>
             <p-select
               [options]="regionOptions()"
               optionLabel="label"
               optionValue="value"
-              placeholder="Select region"
+              [placeholder]="'locationDialog.placeholder.region' | translate"
               appendTo="body"
               styleClass="offer-form__field offer-form__select"
               panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
@@ -126,14 +126,14 @@
 
           <div class="location-creation-offer__field">
             <label class="location-creation-offer__label">
-              City
+              {{ 'locationDialog.label.city' | translate }}
               <span class="location-creation-offer__required">*</span>
             </label>
             <p-select
               [options]="cityOptions()"
               optionLabel="label"
               optionValue="value"
-              placeholder="Select city"
+              [placeholder]="'locationDialog.placeholder.city' | translate"
               appendTo="body"
               styleClass="offer-form__field offer-form__select"
               panelStyleClass="offer-form__overlay-panel offer-form__select-panel"
@@ -141,61 +141,61 @@
             />
             @if (locationForm.get('city')?.invalid && locationForm.get('city')?.touched) {
               @if (locationForm.get('city')?.hasError('required') || locationForm.get('city')?.hasError('whitespace')) {
-                <p class="location-creation-offer__error">City is required.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.cityRequired' | translate }}</p>
               }
             }
           </div>
 
           <div class="location-creation-offer__field location-creation-offer__field--full">
             <label class="location-creation-offer__label">
-              Address
+              {{ 'locationDialog.label.address' | translate }}
               <span class="location-creation-offer__required">*</span>
             </label>
             <textarea
               pInputTextarea
               [autoResize]="true"
               rows="2"
-              placeholder="e.g. 8628+CP Al Khobar"
+              [placeholder]="'locationDialog.placeholder.address' | translate"
               class="location-creation-offer__input"
               formControlName="address"
             ></textarea>
             @if (locationForm.get('address')?.invalid && locationForm.get('address')?.touched) {
               @if (locationForm.get('address')?.hasError('required') || locationForm.get('address')?.hasError('whitespace')) {
-                <p class="location-creation-offer__error">Address is required.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.addressRequired' | translate }}</p>
               }
             }
           </div>
 
           <div class="location-creation-offer__field location-creation-offer__field--full">
             <label class="location-creation-offer__label">
-              Google Map Link
+              {{ 'locationDialog.label.mapLink' | translate }}
               <span class="location-creation-offer__required">*</span>
             </label>
             <input
               pInputText
               type="text"
-              placeholder="https://maps.app.goo.gl/..."
+              [placeholder]="'locationDialog.placeholder.mapLink' | translate"
               class="location-creation-offer__input"
               formControlName="googleMapLink"
             />
             @if (locationForm.get('googleMapLink')?.invalid && locationForm.get('googleMapLink')?.touched) {
               @if (locationForm.get('googleMapLink')?.hasError('required') || locationForm.get('googleMapLink')?.hasError('whitespace')) {
-                <p class="location-creation-offer__error">Google map link is required.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.mapLinkRequired' | translate }}</p>
               }
               @if (locationForm.get('googleMapLink')?.hasError('pattern')) {
-                <p class="location-creation-offer__error">Please enter a valid URL.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.urlInvalid' | translate }}</p>
               }
             }
           </div>
 
           <div class="location-creation-offer__field location-creation-offer__field--full">
             <label class="location-creation-offer__label">
-              Location Representative Name
+              {{ 'locationDialog.label.representative' | translate }}
             </label>
             <input
               pInputText
               type="text"
-              placeholder="e.g. Abdullah Khaled"
+              [placeholder]="'locationDialog.placeholder.representative' | translate"
               class="location-creation-offer__input"
               formControlName="representativeName"
             />
@@ -203,24 +203,24 @@
 
           <div class="location-creation-offer__field location-creation-offer__field--full">
             <label class="location-creation-offer__label">
-              Location Phone Number
+              {{ 'locationDialog.label.phone' | translate }}
             </label>
             <input
               pInputText
               type="text"
-              placeholder="e.g. +966 (13) 123 4567"
+              [placeholder]="'locationDialog.placeholder.phone' | translate"
               class="location-creation-offer__input"
               formControlName="phoneNumber"
               (input)="sanitizePhoneNumber($event)"
               maxlength="15"
             />
             @if (locationPhoneError()) {
-              <p class="location-creation-offer__error location-creation-offer__error--mt">Use English Numbers</p>
+              <p class="location-creation-offer__error location-creation-offer__error--mt">{{ 'locationDialog.error.phoneEnglishNumbers' | translate }}</p>
             } @else if (locationForm.get('phoneNumber')?.touched) {
               @if (locationForm.get('phoneNumber')?.hasError('pattern')) {
-                <p class="location-creation-offer__error">Phone number can only contain numbers, +, (), and spaces.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.phonePattern' | translate }}</p>
               } @else if (locationForm.get('phoneNumber')?.hasError('maxlength')) {
-                <p class="location-creation-offer__error">Phone number cannot exceed 15 characters.</p>
+                <p class="location-creation-offer__error">{{ 'locationDialog.error.phoneMaxLength' | translate }}</p>
               }
             }
           </div>
@@ -233,13 +233,13 @@
           class="location-creation-offer__cancel-button"
           (click)="close()"
         >
-          Cancel
+          {{ 'common.cancel' | translate }}
         </button>
 
         <button
           type="submit"
           pButton
-          [label]="locationData ? 'Update Location' : 'Save Location'"
+          [label]="(locationData ? 'locationDialog.submit.update' : 'locationDialog.submit.save') | translate"
           icon="pi pi-check"
           [loading]="loading()"
           styleClass="location-creation-offer__submit-button"

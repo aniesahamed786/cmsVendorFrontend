@@ -105,7 +105,7 @@
 
 .location-creation-offer__input {
   width: 100%;
-  padding-left: 1rem;
+  padding-inline-start: 1rem;
 }
 
 .location-creation-offer__input--rtl {

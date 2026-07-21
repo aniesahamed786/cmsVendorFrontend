@@ -1,21 +1,30 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, linkedSignal, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { OfferDetails } from '../../Components/offer-details/offer-details';
 import { PreviewOfferDetails } from '../../Components/preview-offer-details/preview-offer-details';
 import { Button } from '../../../../shared/Components/button/button';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 type RedemptionTab = 'in-store' | 'online';
 
 @Component({
   selector: 'app-offer-details-page',
-  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button],
+  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button, TranslatePipe],
   templateUrl: './offer-details.html',
   styleUrl: './offer-details.scss',
 })
 export class OfferDetailsPage {
+  private readonly i18n = inject(I18nService);
   readonly offerDetailIconBasePath = 'assets/svg/Offers/offer-details';
+
+  /**
+   * Seeds from the app language on every switch; the preview's own toggle
+   * overrides it until the next switch.
+   */
+  readonly previewLanguage = linkedSignal<'en' | 'ar'>(() => this.i18n.lang());
 
   // Mock data for Vendor project
   OfferBasicData = signal<any>({

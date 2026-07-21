@@ -152,7 +152,10 @@
     }
   },
   "common": {
-    "search": "بحث"
+    "search": "بحث",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف"
   },
   "offerForm": {
     "backToOffers": "العودة إلى العروض",
@@ -364,7 +367,50 @@
       "vendorRequiredSummary": "البائع مطلوب",
       "vendorRequiredDetail": "يرجى اختيار بائع أولاً لإضافة موقع."
     },
+    "highlight": {
+      "imagesLabel": "صور الميزة",
+      "mobileHeading": "ميزة الجوال",
+      "desktopHeading": "ميزة سطح المكتب",
+      "uploadMobile": "ارفع صورة الميزة للجوال",
+      "uploadDesktop": "ارفع صورة الميزة لسطح المكتب",
+      "helpMobile": "تُحفظ بنسبة `9:16`. JPG أو PNG، بحد أقصى 10 ميغابايت.",
+      "helpDesktop": "تُحفظ بنسبة `16:9`. JPG أو PNG، بحد أقصى 10 ميغابايت.",
+      "chooseMobile": "اختر صورة الجوال",
+      "replaceMobile": "استبدل صورة الجوال",
+      "chooseDesktop": "اختر صورة سطح المكتب",
+      "replaceDesktop": "استبدل صورة سطح المكتب",
+      "safeArea": "أبقِ العناصر المهمة داخل المنطقة الآمنة",
+      "resizeCrop": "تغيير حجم القص",
+      "altMobilePreview": "معاينة صورة ميزة الجوال",
+      "altMobile": "صورة ميزة الجوال",
+      "altDesktopPreview": "معاينة صورة ميزة سطح المكتب",
+      "altDesktop": "صورة ميزة سطح المكتب",
+      "errorMobileRequired": "صورة الميزة للجوال مطلوبة.",
+      "errorDesktopRequired": "صورة الميزة لسطح المكتب مطلوبة.",
+      "sectionTitle": "المميزات المخصصة",
+      "sectionSubtitle": "أضف تفاصيل مخصصة لقسم المميزات.",
+      "statusActive": "مفعّل",
+      "statusInactive": "غير مفعّل",
+      "titleEn": "عنوان الميزة (بالإنجليزية)",
+      "titleAr": "عنوان الميزة (بالعربية)",
+      "descriptionEn": "وصف الميزة (بالإنجليزية)",
+      "descriptionAr": "وصف الميزة (بالعربية)",
+      "placeholderTitleEn": "أدخل عنوان الميزة",
+      "placeholderTitleAr": "أدخل عنوان الميزة",
+      "placeholderDescEn": "اكتب وصف الميزة",
+      "placeholderDescAr": "اكتب وصف الميزة",
+      "errorTitleEn": "عنوان الميزة (بالإنجليزية) مطلوب.",
+      "errorTitleAr": "عنوان الميزة (بالعربية) مطلوب.",
+      "errorDescEn": "وصف الميزة مطلوب.",
+      "errorDescAr": "وصف الميزة (بالعربية) مطلوب."
+    },
     "field": {
+      "highlightImageMobile": "صورة الميزة (الجوال)",
+      "highlightImageDesktop": "صورة الميزة (سطح المكتب)",
+      "highlightTitleEn": "عنوان الميزة (بالإنجليزية)",
+      "highlightTitleAr": "عنوان الميزة (بالعربية)",
+      "highlightDescEn": "وصف الميزة (بالإنجليزية)",
+      "highlightDescAr": "وصف الميزة (بالعربية)",
       "vendor": "البائع",
       "titleEn": "عنوان العرض (بالإنجليزية)",
       "titleAr": "عنوان العرض (بالعربية)",
@@ -391,6 +437,189 @@
       "locations": "المواقع المحددة",
       "offerImageMobile": "صورة العرض (للجوال)",
       "offerImageDesktop": "صورة العرض (لسطح المكتب)"
+    }
+  },
+
+  "roomDialog": {
+    "title": {
+      "edit": "تعديل الغرفة",
+      "add": "إضافة غرفة"
+    },
+    "subtitle": "حدّد تفاصيل الغرفة والأسعار الموسمية",
+    "section": {
+      "details": "تفاصيل الغرفة",
+      "rates": "أسعار الغرفة"
+    },
+    "label": {
+      "roomNameEn": "اسم الغرفة",
+      "roomNameAr": "اسم الغرفة (بالعربية)",
+      "seasonEn": "موسم السعر (بالإنجليزية)",
+      "seasonAr": "موسم السعر (بالعربية)",
+      "rateValue": "قيمة السعر"
+    },
+    "placeholder": {
+      "roomName": "مثلاً: غرفة ديلوكس بإطلالة على البحر",
+      "roomNameAr": "مثلاً: غرفة ديلوكس بإطلالة على البحر",
+      "season": "مثلاً: الموسم المرتفع",
+      "seasonAr": "مثال: الموسم المرتفع",
+      "rateValue": "مثلاً: ١٥٠٫٠٠"
+    },
+    "error": {
+      "roomNameRequired": "اسم الغرفة مطلوب.",
+      "roomNameArRequired": "اسم الغرفة بالعربية مطلوب.",
+      "rateValue": "أدخل رقماً صحيحاً بحد أقصى منزلتين عشريتين."
+    },
+    "action": {
+      "addRate": "+ إضافة سعر غرفة",
+      "updateRate": "تحديث سعر الغرفة"
+    },
+    "rate": {
+      "fallbackName": "سعر رقم {{n}}"
+    },
+    "submit": {
+      "update": "تحديث الغرفة"
+    }
+  },
+  "locationDialog": {
+    "title": {
+      "edit": "تعديل الموقع",
+      "add": "مواقع النشاط التجاري"
+    },
+    "subtitle": "أنشئ فروع نشاطك التجاري وإحداثياتها وأدرها",
+    "section": {
+      "details": "تفاصيل الموقع"
+    },
+    "label": {
+      "nameEn": "اسم الموقع (بالإنجليزية)",
+      "nameAr": "اسم الموقع (بالعربية)",
+      "country": "الدولة",
+      "region": "المنطقة",
+      "city": "المدينة",
+      "address": "العنوان",
+      "mapLink": "رابط خرائط جوجل",
+      "representative": "اسم مسؤول الموقع",
+      "phone": "رقم هاتف الموقع"
+    },
+    "placeholder": {
+      "nameEn": "مثلاً: فرع الخبر",
+      "nameAr": "مثلاً فرع الخبر",
+      "country": "اختر الدولة",
+      "region": "اختر المنطقة",
+      "city": "اختر المدينة",
+      "address": "مثلاً: 8628+CP الخبر",
+      "mapLink": "https://maps.app.goo.gl/...",
+      "representative": "مثلاً: عبدالله خالد",
+      "phone": "مثلاً: +966 (13) 123 4567"
+    },
+    "error": {
+      "nameRequired": "اسم الموقع مطلوب.",
+      "nameArRequired": "اسم الموقع بالعربية مطلوب.",
+      "nameArOnly": "اسم الفرع يجب أن يكون باللغة العربية فقط.",
+      "countryRequired": "الدولة مطلوبة.",
+      "cityRequired": "المدينة مطلوبة.",
+      "addressRequired": "العنوان مطلوب.",
+      "mapLinkRequired": "رابط خرائط جوجل مطلوب.",
+      "urlInvalid": "يرجى إدخال رابط صحيح.",
+      "phoneEnglishNumbers": "استخدم الأرقام الإنجليزية",
+      "phonePattern": "يمكن أن يحتوي رقم الهاتف على أرقام وعلامة + وأقواس ومسافات فقط.",
+      "phoneMaxLength": "لا يمكن أن يتجاوز رقم الهاتف ١٥ حرفاً."
+    },
+    "submit": {
+      "save": "حفظ الموقع",
+      "update": "تحديث الموقع"
+    },
+    "toast": {
+      "invalidMapLinkSummary": "رابط خريطة غير صالح",
+      "invalidMapLinkDetail": "تعذّر استخراج الإحداثيات من الرابط المُدخل.",
+      "validationSummary": "خطأ في التحقق",
+      "validationDetail": "يرجى تعبئة جميع الحقول المطلوبة.",
+      "missingIdSummary": "معرّف الموقع مفقود",
+      "missingIdDetail": "تعذّر تحديث هذا الموقع لأن معرّفه غير موجود.",
+      "updatedSummary": "تم تحديث الموقع",
+      "addedSummary": "تمت إضافة الموقع",
+      "updatedDetail": "تم تحديث موقع البائع بنجاح.",
+      "addedDetail": "تمت إضافة موقع بائع جديد بنجاح.",
+      "errorSummary": "خطأ",
+      "updateFailed": "تعذّر تحديث موقع البائع.",
+      "addFailed": "تعذّر إضافة موقع البائع."
+    }
+  },
+
+  "offerDetails": {
+    "back": "العودة إلى العروض",
+    "raiseTicket": "رفع تذكرة",
+    "status": {
+      "active": "نشط",
+      "scheduled": "مجدول",
+      "expired": "منتهي",
+      "inactive": "غير نشط"
+    },
+    "mode": {
+      "inStore": "في المتجر",
+      "digital": "رقمي",
+      "hybrid": "في المتجر ورقمي"
+    },
+    "section": {
+      "description": "الوصف",
+      "duration": "مدة العرض",
+      "category": "الفئة",
+      "tags": "الوسوم",
+      "discountDetails": "تفاصيل الخصم",
+      "audience": "الجمهور المستهدف",
+      "settings": "إعدادات العرض",
+      "branding": "الهوية البصرية",
+      "contact": "معلومات التواصل"
+    },
+    "label": {
+      "startDate": "تاريخ البدء:",
+      "expiryDate": "تاريخ الانتهاء:",
+      "offerType": "نوع العرض",
+      "locations": "مواقع العرض",
+      "backgroundImages": "صور الخلفية"
+    },
+    "ratio": {
+      "mobile": "الجوال 2.39:1",
+      "desktop": "سطح المكتب 16:2"
+    },
+    "alt": {
+      "vendorLogo": "شعار البائع",
+      "categoryIcon": "أيقونة الفئة",
+      "offerMobile": "خلفية العرض للجوال",
+      "offerDesktop": "خلفية العرض لسطح المكتب"
+    },
+    "aria": {
+      "sar": "ريال سعودي"
+    },
+    "empty": {
+      "tags": "لا توجد وسوم",
+      "locations": "لا توجد مواقع متاحة."
+    },
+    "value": {
+      "uncategorized": "غير مصنّف",
+      "unknownLocation": "موقع غير معروف",
+      "regularEmployees": "الموظفون النظاميون",
+      "na": "غير متاح"
+    },
+    "hotel": {
+      "title": "تفاصيل الفندق",
+      "roomDetails": "تفاصيل الغرف",
+      "amenities": "مرافق الفندق",
+      "taxValue": "قيمة الضريبة",
+      "noRooms": "لا توجد تفاصيل غرف متاحة.",
+      "roomFallback": "غرفة"
+    },
+    "highlight": {
+      "images": "صور الميزة",
+      "section": "الميزة المخصصة",
+      "ratioMobile": "الجوال 9:16",
+      "ratioDesktop": "سطح المكتب 16:9",
+      "altMobile": "ميزة الجوال",
+      "altDesktop": "ميزة سطح المكتب"
+    },
+    "preview": {
+      "aria": "معاينة الجوال",
+      "switchToArabic": "التبديل إلى المعاينة العربية",
+      "switchToEnglish": "التبديل إلى المعاينة الإنجليزية"
     }
   }
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 export interface OfferRoomRateDraft {
     id: string;
@@ -32,7 +33,7 @@ interface RateFormValue {
 @Component({
     selector: 'app-room-creation-offer',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, PrimeUIModules],
+    imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, TranslatePipe],
     templateUrl: './room-creation-offer.html',
     styleUrl: './room-creation-offer.css',
 })

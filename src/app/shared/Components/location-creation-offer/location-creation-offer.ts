@@ -9,11 +9,13 @@ import { AddNewVendorLocationService, AddVendorLocationRequest } from '../../../
 import { GetVendorList } from '../../../features/vendors/services/get-vendor-list';
 import { arabicOnlyValidator, noWhitespaceValidator } from '../vendor-form/vendor-form';
 import { LocationSettingsService, SettingsLocation } from '../../../features/setting/services/location-settings.service';
+import { I18nService } from '../../i18n/i18n.service';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-location-creation',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, ReactiveFormsModule],
+  imports: [CommonModule, PrimeUIModules, ReactiveFormsModule, TranslatePipe],
   templateUrl: './location-creation-offer.html',
   styleUrl: './location-creation-offer.css',
 })
@@ -31,6 +33,7 @@ export class LocationCreationOffer {
   private readonly mapUrlCoordinatesService = inject(MapUrlCoordinatesService);
   private readonly getVendorListService = inject(GetVendorList);
   private readonly locationSettingsService = inject(LocationSettingsService);
+  private readonly i18n = inject(I18nService);
 
   locationForm: FormGroup;
   loading = signal(false);
@@ -184,8 +187,8 @@ export class LocationCreationOffer {
           catchError(() => {
             this.messageService.add({
               severity: 'warn',
-              summary: 'Invalid Map Link',
-              detail: 'Could not resolve coordinates from the provided link.',
+              summary: this.i18n.t('locationDialog.toast.invalidMapLinkSummary'),
+              detail: this.i18n.t('locationDialog.toast.invalidMapLinkDetail'),
               life: 3000
             });
             this.locationForm.patchValue({ latitude: null, longitude: null }, { emitEvent: false });
@@ -221,8 +224,8 @@ export class LocationCreationOffer {
       this.locationForm.markAllAsTouched();
       this.messageService.add({
         severity: 'warn',
-        summary: 'Validation Error',
-        detail: 'Please fill in all required fields.',
+        summary: this.i18n.t('locationDialog.toast.validationSummary'),
+        detail: this.i18n.t('locationDialog.toast.validationDetail'),
         life: 3000
       });
       return;
@@ -256,8 +259,8 @@ export class LocationCreationOffer {
         this.loading.set(false);
         this.messageService.add({
           severity: 'warn',
-          summary: 'Invalid Map Link',
-          detail: 'Could not resolve coordinates from the provided link.',
+          summary: this.i18n.t('locationDialog.toast.invalidMapLinkSummary'),
+          detail: this.i18n.t('locationDialog.toast.invalidMapLinkDetail'),
           life: 3000,
         });
         return;
@@ -310,8 +313,8 @@ export class LocationCreationOffer {
       this.loading.set(false);
       this.messageService.add({
         severity: 'error',
-        summary: 'Missing Location ID',
-        detail: 'Cannot update this location because its ID was not found.',
+        summary: this.i18n.t('locationDialog.toast.missingIdSummary'),
+        detail: this.i18n.t('locationDialog.toast.missingIdDetail'),
         life: 3000,
       });
       return;
@@ -327,10 +330,12 @@ export class LocationCreationOffer {
         this.loading.set(false);
         this.messageService.add({
           severity: 'success',
-          summary: isEditing ? 'Location Updated' : 'Location Added',
-          detail: isEditing
-            ? 'Vendor location has been updated successfully.'
-            : 'New vendor location has been added successfully.',
+          summary: this.i18n.t(
+            isEditing ? 'locationDialog.toast.updatedSummary' : 'locationDialog.toast.addedSummary',
+          ),
+          detail: this.i18n.t(
+            isEditing ? 'locationDialog.toast.updatedDetail' : 'locationDialog.toast.addedDetail',
+          ),
           life: 3000
         });
         this.locationAdded.emit();
@@ -345,8 +350,12 @@ export class LocationCreationOffer {
         this.loading.set(false);
         this.messageService.add({
           severity: 'error',
-          summary: 'Error',
-          detail: err.message || (isEditing ? 'Failed to update vendor location.' : 'Failed to add vendor location.'),
+          summary: this.i18n.t('locationDialog.toast.errorSummary'),
+          detail:
+            err.message ||
+            this.i18n.t(
+              isEditing ? 'locationDialog.toast.updateFailed' : 'locationDialog.toast.addFailed',
+            ),
           life: 3000
         });
       }
@@ -366,8 +375,8 @@ export class LocationCreationOffer {
         this.loading.set(false);
         this.messageService.add({
           severity: 'success',
-          summary: 'Location Updated',
-          detail: 'Vendor location was updated successfully.',
+          summary: this.i18n.t('locationDialog.toast.updatedSummary'),
+          detail: this.i18n.t('locationDialog.toast.updatedDetail'),
           life: 3000
         });
         this.locationAdded.emit();
@@ -381,8 +390,8 @@ export class LocationCreationOffer {
     this.loading.set(false);
     this.messageService.add({
       severity: 'error',
-      summary: 'Error',
-      detail: err.message || 'Failed to update vendor location.',
+      summary: this.i18n.t('locationDialog.toast.errorSummary'),
+      detail: err.message || this.i18n.t('locationDialog.toast.updateFailed'),
       life: 3000
     });
   }
