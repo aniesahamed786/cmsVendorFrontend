@@ -36,7 +36,7 @@
       <ng-template pTemplate="body" let-row>
         <tr>
           <td>{{ row.timestamp }}</td>
-          <td>{{ row.actionType }}</td>
+          <td><span class="recent-activities__row-title">{{ row.actionType }}</span></td>
           <td>{{ row.performedBy }}</td>
           <td>{{ row.targetEntity }}</td>
           <td>{{ row.referenceId }}</td>

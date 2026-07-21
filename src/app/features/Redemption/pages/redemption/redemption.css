@@ -183,8 +183,58 @@ section.redemption-card {
   padding: 1.1rem 1rem !important;
 }
 
-::ng-deep .redemption-table tr:hover td {
-  background: var(--app-primary-hover-soft) !important;
+/* Row hover, per REFACTOR.md Step 4: lift + leading accent bar + cell tint +
+   title recolor. The bar is an inset shadow, not a border, so the row doesn't
+   reflow — it's the sanctioned exception to Step 5 rule 6. */
+::ng-deep .redemption-table tbody > tr {
+  transition:
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+::ng-deep .redemption-table tbody > tr > td {
+  transition: background-color 160ms ease;
+}
+
+::ng-deep .redemption-table tbody > tr:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 3px 0 0 var(--app-primary);
+}
+
+/* tint sits on the cell, not the row: an opaque td would cover a tr fill */
+::ng-deep .redemption-table tbody > tr:hover > td {
+  background: color-mix(
+    in srgb,
+    rgba(var(--app-primary-rgb), 0.08) 40%,
+    var(--app-surface) 60%
+  ) !important;
+}
+
+::ng-deep .redemption-table tbody > tr:hover .redemption-table__row-title {
+  color: var(--app-primary);
+}
+
+/* box-shadow has no logical form, so the accent bar is the one place a physical
+   offset is correct here — it flips by hand for Arabic */
+:host-context(html[lang="ar"]) ::ng-deep .redemption-table tbody > tr:hover {
+  box-shadow: inset -3px 0 0 var(--app-primary);
+}
+
+.redemption-table__row-title {
+  color: var(--app-text);
+  transition: color 200ms ease; /* slower than the row, so the text trails it */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::ng-deep .redemption-table tbody > tr,
+  ::ng-deep .redemption-table tbody > tr > td,
+  .redemption-table__row-title {
+    transition: none;
+  }
+
+  ::ng-deep .redemption-table tbody > tr:hover {
+    transform: none;
+  }
 }
 
 ::ng-deep .redemption-table th:first-child,

@@ -52,20 +52,7 @@
     flex-wrap: wrap;
   }
 
-  &__clear {
-    background: transparent;
-    border: 1px solid var(--app-border);
-    border-radius: 0; // square — house rule
-    color: var(--app-muted);
-    padding: 0.5rem 0.9rem;
-    font-size: 0.85rem;
-    cursor: pointer;
-
-    &:hover {
-      background: var(--app-primary-hover-soft);
-      color: var(--app-text);
-    }
-  }
+  /* No local __filter rule — styles.scss owns every .p-select / .p-datepicker. */
 
   &__empty {
     text-align: center;
@@ -82,6 +69,9 @@
     padding: 0.2rem 0.7rem;
     border-radius: 999px;
 
+    /* FLAGGED for the Phase 3 gate — status green. No success/positive token
+       exists in :root, and inventing one is a token decision, not a page one.
+       Left literal so light mode is unchanged. */
     &--created,
     &--approved,
     &--published {
@@ -94,6 +84,9 @@
       color: var(--app-primary);
     }
 
+    /* FLAGGED for the Phase 3 gate — status red. --app-danger (#b41340) is
+       scoped to destructive *actions*, not status, and is a visibly different
+       crimson; swapping would change light mode. */
     &--rejected {
       background: rgba(239, 68, 68, 0.16);
       color: #dc2626;
@@ -109,10 +102,10 @@
   margin: 0 -1.5rem -1.25rem;
 
   .p-datatable-thead > tr > th:first-child,
-  .p-datatable-tbody > tr > td:first-child { padding-left: 1.5rem; }
+  .p-datatable-tbody > tr > td:first-child { padding-inline-start: 1.5rem; }
 
   .p-datatable-thead > tr > th:last-child,
-  .p-datatable-tbody > tr > td:last-child { padding-right: 1.5rem; }
+  .p-datatable-tbody > tr > td:last-child { padding-inline-end: 1.5rem; }
 
   .p-datatable-thead > tr > th {
     background: transparent;
@@ -121,23 +114,45 @@
     font-size: 0.9rem;
     padding: 0.9rem 1rem;
     border: none;
-    border-top: 1px solid var(--app-border);
-    border-bottom: 1px solid var(--app-border);
+    border-block-start: 1px solid var(--app-border);
+    border-block-end: 1px solid var(--app-border);
   }
 
+  // rows carry no fill of their own — the wrapper above owns the one surface
   .p-datatable-tbody > tr {
-    background: var(--app-surface);
+    background: transparent;
     color: var(--app-text);
+    transition:
+      box-shadow 160ms ease,
+      transform 160ms ease;
 
     > td {
       padding: 1.1rem 1rem;
       border: none;
-      border-bottom: 1px solid var(--app-border);
+      border-block-end: 1px solid var(--app-border);
+      transition: background-color 160ms ease;
     }
   }
 
+  // Row hover, per REFACTOR.md Step 4: lift + leading accent bar + cell tint +
+  // title recolor. The bar is an inset shadow, not a border, so the row doesn't
+  // reflow — it's the sanctioned exception to Step 5 rule 6.
   .p-datatable-tbody > tr:hover {
-    background: var(--app-primary-hover-soft);
+    transform: translateY(-1px);
+    box-shadow: inset 3px 0 0 var(--app-primary);
+  }
+
+  // tint sits on the cell, not the row: an opaque td would cover a tr fill
+  .p-datatable-tbody > tr:hover > td {
+    background: color-mix(
+      in srgb,
+      rgba(var(--app-primary-rgb), 0.08) 40%,
+      var(--app-surface) 60%
+    );
+  }
+
+  .p-datatable-tbody > tr:hover .recent-activities__row-title {
+    color: var(--app-primary);
   }
 
   // sort arrows track the muted token, brand color when active
@@ -166,9 +181,8 @@
     min-width: 4.5rem;
   }
 
-  .p-paginator .p-select-label {
-    padding-right: 0.5rem;
-  }
+  /* No local .p-select-label rule — styles.scss sets its padding-inline with
+     !important, so the local copy never applied. */
 
   .p-paginator .p-paginator-page,
   .p-paginator .p-paginator-first,
@@ -184,12 +198,41 @@
 
   .p-paginator .p-paginator-page.p-highlight {
     background: var(--app-primary);
-    color: #fff;
+    color: #fff; /* kept: on-primary contrast over a brand fill — sanctioned literal */
     border-radius: 999px; // active page is a filled circle, per the design
   }
 
   .p-paginator .p-paginator-page:not(.p-highlight):hover {
     background: var(--app-primary-hover-soft);
     color: var(--app-text);
+  }
+}
+
+// box-shadow has no logical form, so the accent bar is the one place a physical
+// offset is correct here — it flips by hand for Arabic
+:host-context(html[lang="ar"]) ::ng-deep .recent-activities__table
+  .p-datatable-tbody > tr:hover {
+  box-shadow: inset -3px 0 0 var(--app-primary);
+}
+
+.recent-activities__row-title {
+  color: var(--app-text);
+  transition: color 200ms ease; // slower than the row, so the text trails it
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::ng-deep .recent-activities__table {
+    .p-datatable-tbody > tr,
+    .p-datatable-tbody > tr > td {
+      transition: none;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      transform: none;
+    }
+  }
+
+  .recent-activities__row-title {
+    transition: none;
   }
 }

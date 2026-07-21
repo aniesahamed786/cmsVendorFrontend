@@ -13,7 +13,10 @@ review gate before anything commits.
   Per-page button CSS is deleted, not converted.
 - **Fields, filters, search, select/multiselect/listbox, labels**: already global
   in `styles.scss`. Per-page copies are deleted, not converted.
-- **Tables**: header strip, rows and paginator are one `--app-surface`.
+- **Tables**: header strip, rows and paginator are one `--app-surface`. Row hover is the
+  four-part effect in `REFACTOR.md` Step 4 — lift, inset accent bar, cell tint, title
+  recolor — written in SCSS against existing tokens. No utility classes: the only markup
+  it costs is `app-table__title` on the cell text that recolors.
 - **Review**: one phase per page, nothing committed until you approve.
 - **Authority**: `.claude/skills/style/REFACTOR.md`. `scss-refactor` is now a
   pointer at it, so there is one procedure, not two.
@@ -329,9 +332,13 @@ next phase starts.
 
 ## What this plan does not do
 
-- **No visual redesign.** Every page should look *the same* after its phase,
-  except where it was wrong in dark mode. If a phase changes the light-mode
-  appearance, that's a finding, not a feature.
+- **No visual redesign**, with **one named exception**. Every page should look *the
+  same* after its phase, except where it was wrong in dark mode. If a phase changes
+  the light-mode appearance, that's a finding, not a feature. The exception is the
+  table row hover effect (`REFACTOR.md` Step 4, *Row hover*), which is an
+  intentional addition — rows previously took a flat tint and now lift, gain an
+  accent edge bar and recolor their title. Every table changes visibly on hover.
+  That one is a feature; everything else that moves is still a finding.
 - **No component consolidation.** `offer-form.css` is 1899 lines and over its
   10 kB budget; splitting that component is a separate job and this plan only
   shrinks the file.
@@ -347,9 +354,13 @@ next phase starts.
 
 ## Open questions
 
-1. **The table rule is unverified.** The Step 4 recipe in `REFACTOR.md` is written
-   but has never been rendered against a real table. Phase 3 is the first
-   application — treat that gate as validating the rule, not just the page.
+1. ~~**The table rule is unverified.**~~ Validated in Phase 3 against `recent-activities`.
+   Step 4 was corrected there (row hover token, transparent rows, logical edge padding) and
+   **the four-part row hover effect was added after it** — so the hover half is *specified
+   but not yet rendered*. It is a deliberate visual addition, the one place this plan adds
+   appearance rather than preserving it. Whichever phase applies it first re-opens this
+   question: check the lift against a dense table, the bar's edge in Arabic, and the tint on
+   a dark surface.
 2. **`preview-offer-details` and `vendor-preview`** — full rewrite, or scoped
    token bridge? 530 utilities between them. The bridge is faster and contained;
    the rewrite is the actual target state. Worth deciding before Phase 13.

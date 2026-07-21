@@ -94,7 +94,7 @@
       <ng-template pTemplate="body" let-item>
         <tr>
           <td>{{ item.userId }}</td>
-          <td>{{ item.offer }}</td>
+          <td><span class="redemption-table__row-title">{{ item.offer }}</span></td>
           <td>{{ 'redemption.currency' | translate }} {{ item.currentPrice }}</td>
           <td>{{ 'redemption.currency' | translate }} {{ item.discountPrice }}</td>
           <td>{{ 'redemption.currency' | translate }} {{ item.amountSaved }}</td>

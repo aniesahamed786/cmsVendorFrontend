@@ -150,7 +150,8 @@ Translate by **role**, using the default (blue) values as the recognition key.
 | `rgba(0,51,160,0.13)` | subtle brand fill | `var(--app-primary-subtle)` |
 | `rgba(0,51,160,0.16)` | focus ring | `var(--app-primary-ring)` |
 | input fill (off-white) | field background | `var(--field-bg)` |
-| subtle hover (off-surface) | option/row hover | `var(--field-bg-hover)` |
+| subtle hover (off-surface) | **field / dropdown-option** hover | `var(--field-bg-hover)` |
+| soft brand tint on hover | **table row** hover | `var(--app-primary-hover-soft)` |
 | brand gradient | hero / banner | `var(--app-primary-gradient)` |
 
 **Zero hard-coded colors survive.** Two exceptions only:
@@ -267,22 +268,128 @@ footer.
       border-block-end: 1px solid var(--app-border);   /* row separator only */
     }
 
-    .p-datatable-tbody > tr:hover > td {
-      background: var(--field-bg-hover);
+    /* row hover — see "Row hover" below for the full four-part effect */
+    .p-datatable-tbody > tr {
+      transition:
+        box-shadow 160ms ease,
+        transform 160ms ease;
     }
+
+    .p-datatable-tbody > tr > td {
+      transition: background-color 160ms ease;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      transform: translateY(-1px);
+      box-shadow: inset 3px 0 0 var(--app-primary);   /* sanctioned, see Step 5 rule 6 */
+    }
+
+    .p-datatable-tbody > tr:hover > td {
+      background: color-mix(
+        in srgb,
+        rgba(var(--app-primary-rgb), 0.08) 40%,
+        var(--app-surface) 60%
+      );
+    }
+
+    .p-datatable-tbody > tr:hover .app-table__title {
+      color: var(--app-primary);
+    }
+  }
+
+  /* the accent bar is physical — box-shadow has no logical form, so RTL flips by hand */
+  :host-context(html[lang="ar"]) ::ng-deep & .p-datatable-tbody > tr:hover {
+    box-shadow: inset -3px 0 0 var(--app-primary);
+  }
+}
+
+.app-table__title {
+  color: var(--app-text);
+  transition: color 200ms ease;   /* slower than the row, so the text trails it */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-datatable-tbody > tr,
+  .p-datatable-tbody > tr > td,
+  .app-table__title {
+    transition: none;
+  }
+  .p-datatable-tbody > tr:hover {
+    transform: none;
   }
 }
 ```
 
 Rules:
 
-- `background: transparent` on `.p-datatable-header`, `thead th`, `.p-datatable-footer`
-  and `.p-paginator` — the wrapper owns the one fill. This is what makes the top and the
-  bottom match.
+- `background: transparent` on `.p-datatable-header`, `thead th`, **`tbody > tr`**,
+  `.p-datatable-footer` and `.p-paginator` — the wrapper owns the one fill. This is what
+  makes the top and the bottom match. Re-declaring `--app-surface` on the rows is
+  redundant; delete it.
 - Separation between rows comes from `--app-border` on the cell, never from an alternating
   fill and never from a shadow.
-- The paginator's rows-per-page select is already handled globally — don't restyle it.
-- Square corners, no shadow, no `border-radius` on the wrapper.
+- **Row hover is the four-part effect below** — not `--field-bg-hover`, which belongs to
+  fields and dropdown options, and no longer `--app-primary-hover-soft` either. A table row
+  hover reads as a soft brand tint; a neutral grey lift is the *field* idiom.
+- Edge padding uses **logical** properties (`padding-inline-start` / `-end` on
+  `:first-child` / `:last-child`), never `padding-left`/`right` — a physical pair silently
+  inverts the full-bleed alignment in RTL.
+- The paginator's rows-per-page **select label/dropdown padding is already global and
+  `!important`** — a local `.p-paginator .p-select-label { padding-… }` never applies.
+  Delete it. A local `.p-paginator .p-select { width: auto; min-width: 4.5rem }` *is* still
+  needed; the global only sets its height.
+- Square corners, no shadow, no `border-radius` on the wrapper. The **active** paginator
+  page is the one sanctioned exception (`border-radius: 999px`, filled brand circle) and
+  its `color: #fff` is sanctioned on-primary contrast.
+
+### Row hover — the four-part effect
+
+Hovering a row changes four things together. Nothing reflows; everything animates.
+
+| # | Change | Where | Duration |
+|---|---|---|---|
+| 1 | lift `translateY(-1px)` | `tr` | 160ms |
+| 2 | 3px accent bar on the row's leading edge | `tr`, **inset box-shadow** | 160ms |
+| 3 | very faint accent tint | `tr > td` | 160ms |
+| 4 | title text turns accent | `.app-table__title` | 200ms |
+
+Five things about it that are not obvious:
+
+- **The bar is an inset `box-shadow`, never a `border`.** A real border changes the box and
+  the row jumps horizontally on hover. If you see a row shifting sideways, someone
+  converted the shadow to a border.
+- **It is the one sanctioned decorative shadow** (Step 5 rule 6). Do not delete it as a
+  shadow violation.
+- **`box-shadow` has no logical form**, so the bar is the single place in a table where a
+  physical offset is correct. It flips by hand under `:host-context(html[lang="ar"])` —
+  `inset 3px` → `inset -3px`. Forget that and the bar sits on the wrong edge in Arabic.
+- **The tint goes on `td`, not `tr`.** This reverses what Phase 3 wrote. Reason: an opaque
+  cell background covers a row background but not its own, so `td` is the robust target.
+  Rows and cells are already `transparent` by the rule above, which is what makes the tint
+  visible at all — a page that re-adds an opaque cell fill breaks this silently.
+- **The tint is `color-mix`, not `--app-primary-hover-soft`.** That token reads `0.06` in
+  `:root` but `ThemeService` overwrites it to `0.24` at runtime, ~4x stronger than this
+  effect wants. The mix — 40% of an 8%-alpha accent over 60% surface, ~`#F7F8FC` on white —
+  sidesteps the engine defect and stays proportionally subtle on a dark surface instead of
+  washing it out.
+
+`transform` on a `tr` creates a stacking context. If a table gains sticky columns or
+in-row overlays, check their z-order; if it breaks, drop the lift and keep the other three
+— the effect still reads.
+
+Markup cost: one class, `app-table__title`, on the cell text that should recolor. Tables
+without an obvious title cell get parts 1–3 and skip part 4.
+
+Tuning, if a table needs it: 160ms is safe from 120–220ms, the title must stay ≥ the row
+duration so it trails, the lift tolerates -1px to -2px (more looks jumpy in a dense table),
+the bar 2–4px, and the tint strengthens by raising the mix percentage.
+
+> **Validated in Phase 3** against `recent-activities`, `offers`, `branches-page` and
+> `redemption`. Those four carry near-identical copies of the block above, differing only
+> in the wrapper class name and comments. **The duplication is the real finding**: this
+> recipe wants to be one global `.app-table` class, at which point Phases 4–6 delete their
+> table blocks instead of converting them. That extraction is out of a feature phase's
+> scope (scope rule 2) — raise it at a gate.
 
 ---
 
@@ -295,7 +402,16 @@ Follow `SKILL.md` per component, in order:
 3. Borders → `--app-border`.
 4. Brand (links, active, selected) → `--app-primary*`.
 5. **Remove every `border-radius`** unless explicitly justified (phone bezel, avatar).
-6. **Remove `box-shadow`** except the sanctioned focus ring.
+6. **Remove `box-shadow`.** Exactly two survive:
+   - the sanctioned focus ring;
+   - the **table row hover** inset accent bar — `inset 3px 0 0 var(--app-primary)` on
+     `.p-datatable-tbody > tr:hover` (Step 4, *Row hover*).
+
+   The second is narrow on purpose. It is a shadow *only* because a real border would
+   reflow the row on hover; it is not a licence for shadows elsewhere. It does not extend
+   to the table wrapper, the header, the paginator, cards, dialogs, or any non-table
+   hover — those all still lose their shadows. A `box-shadow` that isn't one of these two
+   is a deletion, not a judgement call.
 7. Pop-ups → the `p-dialog` recipe; force `.p-dialog*` square via `::ng-deep`.
 8. RTL → logical properties (`margin-inline-start`, `padding-inline`, `text-align: end`),
    never `left`/`right`. Page direction comes from `html[lang="ar"]` in `styles.scss`;
