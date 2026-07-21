@@ -3,7 +3,7 @@
   <!-- Header -->
   <header class="mc-details__header">
     <div class="mc-details__header-top">
-      <span class="mc-details__header-ref">{{ t.reference }} • {{ t.category }}</span>
+      <span class="mc-details__header-ref">{{ t.reference }} • {{ categoryKey(t.category) | translate }}</span>
     </div>
 
     <h2 class="mc-details__title">{{ t.title }}</h2>
@@ -49,10 +49,12 @@
 
       <div class="mc-details__message-body">
         <div class="mc-details__message-head">
-          <span class="mc-details__author">{{ msg.authorName }}</span>
-          @if (msg.isInternalNote) {
-          <span class="mc-details__note-tag">{{ 'messaging.details.internalNote' | translate }}</span>
-          }
+          <div class="mc-details__message-author-row">
+            <span class="mc-details__author">{{ msg.authorName }}</span>
+            @if (msg.isInternalNote) {
+            <span class="mc-details__note-tag">{{ 'messaging.details.internalNote' | translate }}</span>
+            }
+          </div>
           <span class="mc-details__time">{{ msg.timestamp }}</span>
         </div>
 

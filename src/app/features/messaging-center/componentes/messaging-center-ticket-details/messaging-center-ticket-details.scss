@@ -129,12 +129,22 @@
 
   &__message-head {
     display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    .mc-details__message--incoming & {
+      align-items: flex-start;
+    }
 
     .mc-details__message--outgoing & {
-      justify-content: flex-end;
+      align-items: flex-end;
     }
+  }
+
+  &__message-author-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   &__author {

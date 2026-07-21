@@ -15,8 +15,10 @@ import {
   MessageAttachment,
   ParticipantType,
   TicketStatus,
+  TicketCategory,
   SENDER_ROLE_KEYS,
   TICKET_STATUS_KEYS,
+  TICKET_CATEGORY_KEYS,
 } from '../../models/messaging-center.model';
 import { MessagingCenterStore } from '../../services/messaging-center-store';
 import { DialogModule } from 'primeng/dialog';
@@ -57,6 +59,10 @@ export class MessagingCenterTicketDetails {
 
   statusKey(status: TicketStatus): string {
     return TICKET_STATUS_KEYS[status];
+  }
+
+  categoryKey(category: TicketCategory): string {
+    return TICKET_CATEGORY_KEYS[category];
   }
 
   roleKey(role: ParticipantType): string {
