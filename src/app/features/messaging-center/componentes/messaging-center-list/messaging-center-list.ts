@@ -1,11 +1,15 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import {
   SortOrder,
   Ticket,
+  TicketCategory,
+  TicketStatus,
   TicketTabKey,
+  TICKET_CATEGORY_KEYS,
+  TICKET_STATUS_KEYS,
 } from '../../models/messaging-center.model';
 import {
   TICKET_SORT_OPTIONS,
@@ -13,21 +17,43 @@ import {
   TICKET_TYPE_OPTIONS,
 } from '../../data/mock-messaging-center';
 import { MessagingCenterStore } from '../../services/messaging-center-store';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-messaging-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules],
+  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe],
   templateUrl: './messaging-center-list.html',
   styleUrl: './messaging-center-list.scss',
 })
 export class MessagingCenterList {
   private readonly store = inject(MessagingCenterStore);
+  private readonly i18n = inject(I18nService);
 
   createTicket = output<void>();
 
-  readonly typeOptions = TICKET_TYPE_OPTIONS;
-  readonly statusOptions = TICKET_STATUS_OPTIONS;
+  // p-select renders plain strings, so the labels have to be recomputed on a
+  // language switch — the pipe never sees them.
+  readonly typeOptions = computed(() =>
+    TICKET_TYPE_OPTIONS.map((o) => ({
+      ...o,
+      label: this.i18n.t(
+        o.value ? TICKET_CATEGORY_KEYS[o.value as TicketCategory] : 'messaging.all',
+      ),
+    })),
+  );
+
+  readonly statusOptions = computed(() =>
+    TICKET_STATUS_OPTIONS.map((o) => ({
+      ...o,
+      label: this.i18n.t(
+        o.value ? TICKET_STATUS_KEYS[o.value as TicketStatus] : 'messaging.all',
+      ),
+    })),
+  );
+
+  // ponytail: never rendered — no sort control in the template. Left untranslated.
   readonly sortOptions = TICKET_SORT_OPTIONS;
 
   readonly tickets = this.store.filteredTickets;
@@ -64,6 +90,14 @@ export class MessagingCenterList {
 
   onCreateTicket(): void {
     this.createTicket.emit();
+  }
+
+  statusKey(status: TicketStatus): string {
+    return TICKET_STATUS_KEYS[status];
+  }
+
+  categoryKey(category: TicketCategory): string {
+    return TICKET_CATEGORY_KEYS[category];
   }
 
   statusBadgeClass(status: string): string {

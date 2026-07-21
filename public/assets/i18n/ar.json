@@ -781,5 +781,77 @@
     },
     "currency": "ر.س",
     "empty": "لا توجد عمليات استبدال."
+  },
+  "messaging": {
+    "search": "البحث في التذاكر...",
+    "all": "الكل",
+    "label": {
+      "type": "النوع",
+      "status": "الحالة"
+    },
+    "placeholder": {
+      "type": "كل الأنواع",
+      "status": "كل الحالات"
+    },
+    "type": {
+      "technical": "تقني",
+      "billing": "الفوترة",
+      "general": "عام",
+      "account": "الحساب"
+    },
+    "status": {
+      "new": "جديدة",
+      "inProgress": "قيد المعالجة",
+      "open": "مفتوحة",
+      "closed": "مغلقة"
+    },
+    "tab": {
+      "unread": "غير المقروءة",
+      "read": "المقروءة"
+    },
+    "unreadDot": "تذكرة غير مقروءة",
+    "empty": "لا توجد تذاكر",
+    "newTicket": "تذكرة جديدة",
+    "role": {
+      "user": "مستخدم",
+      "admin": "مسؤول",
+      "vendor": "بائع",
+      "system": "نظام"
+    },
+    "details": {
+      "createdBy": "أنشأها",
+      "target": "الجهة المستهدفة",
+      "updatedBy": "آخر تحديث بواسطة",
+      "createdDate": "تاريخ الإنشاء",
+      "lastUpdated": "آخر تحديث",
+      "internalNote": "ملاحظة داخلية",
+      "composer": "اكتب ردك هنا...",
+      "attach": "إرفاق ملف",
+      "send": "إرسال",
+      "empty": "اختر تذكرة لعرض المحادثة",
+      "filePreview": "معاينة الملف"
+    },
+    "create": {
+      "back": "العودة إلى مركز الرسائل",
+      "title": "إنشاء تذكرة",
+      "participantType": "نوع المشارك",
+      "sendTo": "إرسال إلى",
+      "ticketTitle": "عنوان التذكرة",
+      "ticketType": "نوع التذكرة",
+      "linkedItem": "العرض المرتبط",
+      "description": "وصف التذكرة",
+      "attachments": "المرفقات",
+      "placeholder": {
+        "sendTo": "اختر بائعاً...",
+        "title": "أدخل عنواناً مختصراً للتذكرة",
+        "ticketType": "اختر الفئة",
+        "linkedItem": "ابحث عن عرض أو بائع أو قسم في التطبيق...",
+        "description": "أدخل الرسالة الأساسية أو وصف المشكلة..."
+      },
+      "dropzone": "اسحب الملفات وأفلتها هنا، أو",
+      "dropzoneLink": "انقر للتصفح",
+      "dropzoneHelp": "الصيغ المدعومة: JPG وPNG وPDF وDOC وDOCX (بحد أقصى 10 ميجابايت لكل ملف)",
+      "submit": "إرسال التذكرة"
+    }
   }
 }

@@ -18,6 +18,10 @@
     cursor: pointer;
     width: fit-content;
 
+    html[lang="ar"] & {
+      flex-direction: row-reverse;
+    }
+
     i {
       font-size: 0.9rem;
     }
@@ -65,7 +69,7 @@
 
   &__required {
     color: #dc2626;
-    margin-left: 0.15rem;
+    margin-inline-start: 0.15rem;
   }
 
   &__optional {
@@ -193,7 +197,7 @@
 
   &__file-list {
     margin: 0.5rem 0 0;
-    padding-left: 1.1rem;
+    padding-inline-start: 1.1rem;
     color: var(--app-muted);
     font-size: 0.85rem;
   }
@@ -233,6 +237,7 @@
 
 // ---- PrimeNG p-select theming (scoped under root) ----
 :host ::ng-deep {
+
   .create-ticket__control.p-select,
   .create-ticket__control .p-select {
     width: 100%;

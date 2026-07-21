@@ -3,7 +3,7 @@
   <div class="mc-list__search">
     <p-iconField iconPosition="left">
       <p-inputIcon styleClass="pi pi-search" />
-      <input type="text" pInputText class="mc-list__search-input" placeholder="Search tickets..."
+      <input type="text" pInputText class="mc-list__search-input" [placeholder]="'messaging.search' | translate"
         [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
     </p-iconField>
   </div>
@@ -11,16 +11,16 @@
   <!-- Filters -->
   <div class="mc-list__filters">
     <div class="mc-list__field">
-      <label class="mc-list__label">Type</label>
-      <p-select [options]="typeOptions" [ngModel]="selectedType()" (ngModelChange)="onTypeChange($event)"
-        optionLabel="label" optionValue="value" placeholder="All Types" styleClass="mc-list__select"
+      <label class="mc-list__label">{{ 'messaging.label.type' | translate }}</label>
+      <p-select [options]="typeOptions()" [ngModel]="selectedType()" (ngModelChange)="onTypeChange($event)"
+        optionLabel="label" optionValue="value" [placeholder]="'messaging.placeholder.type' | translate" styleClass="mc-list__select"
         panelStyleClass="mc-list__panel" appendTo="body"></p-select>
     </div>
 
     <div class="mc-list__field">
-      <label class="mc-list__label">Status</label>
-      <p-select [options]="statusOptions" [ngModel]="selectedStatus()" (ngModelChange)="onStatusChange($event)"
-        optionLabel="label" optionValue="value" placeholder="All Statuses" styleClass="mc-list__select"
+      <label class="mc-list__label">{{ 'messaging.label.status' | translate }}</label>
+      <p-select [options]="statusOptions()" [ngModel]="selectedStatus()" (ngModelChange)="onStatusChange($event)"
+        optionLabel="label" optionValue="value" [placeholder]="'messaging.placeholder.status' | translate" styleClass="mc-list__select"
         panelStyleClass="mc-list__panel" appendTo="body"></p-select>
     </div>
   </div>
@@ -29,15 +29,15 @@
   <div class="mc-list__tabs">
     <button type="button" class="mc-list__tab" [class.mc-list__tab--active]="activeTab() === 'all'"
       (click)="setTab('all')">
-      All
+      {{ 'messaging.all' | translate }}
     </button>
     <button type="button" class="mc-list__tab" [class.mc-list__tab--active]="activeTab() === 'unread'"
       (click)="setTab('unread')">
-      Unread
+      {{ 'messaging.tab.unread' | translate }}
     </button>
     <button type="button" class="mc-list__tab" [class.mc-list__tab--active]="activeTab() === 'read'"
       (click)="setTab('read')">
-      Read
+      {{ 'messaging.tab.read' | translate }}
     </button>
   </div>
 
@@ -51,13 +51,13 @@
       <div class="mc-list__card-top">
         <div class="mc-list__card-meta">
           @if (ticket.unread) {
-          <span class="mc-list__unread-dot" title="Unread ticket"></span>
+          <span class="mc-list__unread-dot" [title]="'messaging.unreadDot' | translate"></span>
           }
-          <span class="mc-list__badge" [class]="statusBadgeClass(ticket.status)">{{ ticket.status }}</span>
+          <span class="mc-list__badge" [class]="statusBadgeClass(ticket.status)">{{ statusKey(ticket.status) | translate }}</span>
           <span class="mc-list__reference">{{ ticket.reference }}</span>
         </div>
         <div class="mc-list__card-right">
-          <span class="mc-list__category">{{ ticket.category }}</span>
+          <span class="mc-list__category">{{ categoryKey(ticket.category) | translate }}</span>
         </div>
       </div>
 
@@ -68,7 +68,7 @@
     } @empty {
     <div class="mc-list__empty">
       <i class="pi pi-inbox"></i>
-      <span>No tickets found</span>
+      <span>{{ 'messaging.empty' | translate }}</span>
     </div>
     }
   </div>
@@ -77,7 +77,7 @@
   <div class="mc-list__footer">
     <button type="button" class="mc-list__new-btn" (click)="onCreateTicket()">
       <i class="pi pi-plus"></i>
-      <span>New Ticket</span>
+      <span>{{ 'messaging.newTicket' | translate }}</span>
     </button>
   </div>
 </div>

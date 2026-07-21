@@ -714,5 +714,78 @@
     },
     "currency": "SAR.",
     "empty": "No redemptions found."
+  },
+
+  "messaging": {
+    "search": "Search tickets...",
+    "all": "All",
+    "label": {
+      "type": "Type",
+      "status": "Status"
+    },
+    "placeholder": {
+      "type": "All Types",
+      "status": "All Statuses"
+    },
+    "type": {
+      "technical": "Technical",
+      "billing": "Billing",
+      "general": "General",
+      "account": "Account"
+    },
+    "status": {
+      "new": "New",
+      "inProgress": "In Progress",
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "tab": {
+      "unread": "Unread",
+      "read": "Read"
+    },
+    "unreadDot": "Unread ticket",
+    "empty": "No tickets found",
+    "newTicket": "New Ticket",
+    "role": {
+      "user": "User",
+      "admin": "Admin",
+      "vendor": "Vendor",
+      "system": "System"
+    },
+    "details": {
+      "createdBy": "Created By",
+      "target": "Target",
+      "updatedBy": "Updated By",
+      "createdDate": "Created Date",
+      "lastUpdated": "Last Updated",
+      "internalNote": "Internal Note",
+      "composer": "Type your response here...",
+      "attach": "Attach File",
+      "send": "Send",
+      "empty": "Select a ticket to view the conversation",
+      "filePreview": "File Preview"
+    },
+    "create": {
+      "back": "Back to Message Center",
+      "title": "Create Ticket",
+      "participantType": "Participant Type",
+      "sendTo": "Send To",
+      "ticketTitle": "Ticket Title",
+      "ticketType": "Ticket Type",
+      "linkedItem": "Linked Item",
+      "description": "Ticket Description",
+      "attachments": "File Attachments",
+      "placeholder": {
+        "sendTo": "Select a vendor...",
+        "title": "Enter a short subject line for the ticket",
+        "ticketType": "Select a category",
+        "linkedItem": "Search for offer, vendor, or app section...",
+        "description": "Enter the main message or issue description..."
+      },
+      "dropzone": "Drag and drop files here, or",
+      "dropzoneLink": "click to browse",
+      "dropzoneHelp": "Supported formats: JPG, PNG, PDF, DOC, DOCX (Max 10MB each)",
+      "submit": "Submit Ticket"
+    }
   }
 }

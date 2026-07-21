@@ -1,82 +1,65 @@
 <div class="create-ticket">
     <a class="create-ticket__back" (click)="onBack()">
         <i class="pi pi-arrow-left"></i>
-        <span>Back to Message Center</span>
+        <span>{{ 'messaging.create.back' | translate }}</span>
     </a>
 
     <div class="create-ticket__card">
-        <h2 class="create-ticket__heading">Create Ticket</h2>
+        <h2 class="create-ticket__heading">{{ 'messaging.create.title' | translate }}</h2>
 
         <div class="create-ticket__grid">
-            <!-- Row 1 -->
-            <div class="create-ticket__field">
-                <label class="create-ticket__label">
-                    Participant Type<span class="create-ticket__required">*</span>
-                </label>
-                <p-select class="create-ticket__control" [options]="participantTypeOptions()" optionLabel="label"
-                    optionValue="value" [(ngModel)]="participantType" placeholder="Vendor"
-                    panelStyleClass="create-ticket__panel"></p-select>
-            </div>
 
-            <div class="create-ticket__field">
-                <label class="create-ticket__label">
-                    Send To<span class="create-ticket__required">*</span>
-                </label>
-                <p-select class="create-ticket__control" [options]="vendorOptions()" optionLabel="label"
-                    optionValue="value" [(ngModel)]="sendTo" placeholder="Select a vendor..."
-                    panelStyleClass="create-ticket__panel"></p-select>
-            </div>
 
             <!-- Row 2 -->
             <div class="create-ticket__field create-ticket__field--full">
                 <label class="create-ticket__label">
-                    Ticket Title<span class="create-ticket__required">*</span>
+                    {{ 'messaging.create.ticketTitle' | translate }}<span class="create-ticket__required">*</span>
                 </label>
                 <input pInputText class="create-ticket__control" [(ngModel)]="title"
-                    placeholder="Enter a short subject line for the ticket" />
+                    [placeholder]="'messaging.create.placeholder.title' | translate" />
             </div>
 
             <!-- Row 3 -->
             <div class="create-ticket__field">
-                <label class="create-ticket__label">Ticket Type<span class="create-ticket__required">*</span></label>
+                <label class="create-ticket__label">{{ 'messaging.create.ticketType' | translate }}<span class="create-ticket__required">*</span></label>
                 <p-select class="create-ticket__control" [options]="categoryOptions()" optionLabel="label"
-                    optionValue="value" [(ngModel)]="ticketType" placeholder="Select a category"
+                    optionValue="value" [(ngModel)]="ticketType" [placeholder]="'messaging.create.placeholder.ticketType' | translate"
                     panelStyleClass="create-ticket__panel"></p-select>
             </div>
 
             <div class="create-ticket__field">
                 <label class="create-ticket__label">
-                    Linked Item
+                    {{ 'messaging.create.linkedItem' | translate }}
                 </label>
                 <p-select class="create-ticket__control" [options]="linkedItemOptions()" optionLabel="label"
                     optionValue="value" [(ngModel)]="linkedItem"
-                    placeholder="Search for offer, vendor, or app section..."
+                    [placeholder]="'messaging.create.placeholder.linkedItem' | translate"
                     panelStyleClass="create-ticket__panel"></p-select>
             </div>
 
             <!-- Row 4 -->
             <div class="create-ticket__field create-ticket__field--full">
-                <label class="create-ticket__label">Ticket Description<span
+                <label class="create-ticket__label">{{ 'messaging.create.description' | translate }}<span
                         class="create-ticket__required">*</span></label>
                 <div class="create-ticket__editor">
                     <textarea class="create-ticket__textarea" [(ngModel)]="description" rows="6"
-                        placeholder="Enter the main message or issue description..."></textarea>
+                        [placeholder]="'messaging.create.placeholder.description' | translate"></textarea>
                 </div>
             </div>
 
             <!-- Attachments -->
             <div class="create-ticket__field create-ticket__field--full">
                 <label class="create-ticket__label">
-                    File Attachments
+                    {{ 'messaging.create.attachments' | translate }}
                 </label>
                 <label class="create-ticket__dropzone">
                     <i class="pi pi-cloud-upload create-ticket__dropzone-icon"></i>
                     <p class="create-ticket__dropzone-text">
-                        Drag and drop files here, or
-                        <span class="create-ticket__dropzone-link">click to browse</span>
+                        {{ 'messaging.create.dropzone' | translate }}
+                        <span class="create-ticket__dropzone-link">{{ 'messaging.create.dropzoneLink' | translate }}</span>
                     </p>
                     <p class="create-ticket__dropzone-help">
-                        Supported formats: JPG, PNG, PDF, DOC, DOCX (Max 10MB each)
+                        {{ 'messaging.create.dropzoneHelp' | translate }}
                     </p>
                     <input type="file" class="create-ticket__file-input" multiple (change)="onFilesSelected($event)" />
                 </label>
@@ -92,10 +75,10 @@
 
         <div class="create-ticket__actions">
             <button type="button" class="create-ticket__btn create-ticket__btn--cancel" (click)="onCancel()">
-                Cancel
+                {{ 'common.cancel' | translate }}
             </button>
             <button type="button" class="create-ticket__btn create-ticket__btn--submit" (click)="onSubmit()">
-                Submit Ticket
+                {{ 'messaging.create.submit' | translate }}
             </button>
         </div>
     </div>

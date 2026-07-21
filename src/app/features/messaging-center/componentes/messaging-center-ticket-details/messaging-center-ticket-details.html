@@ -10,27 +10,27 @@
 
     <div class="mc-details__meta">
       <div class="mc-details__meta-item">
-        <span class="mc-details__meta-label">Created By</span>
-        <span class="mc-details__meta-value">{{ t.createdBy.name }} · {{ t.createdBy.role }}</span>
+        <span class="mc-details__meta-label">{{ 'messaging.details.createdBy' | translate }}</span>
+        <span class="mc-details__meta-value">{{ t.createdBy.name }} · {{ roleKey(t.createdBy.role) | translate }}</span>
       </div>
       <div class="mc-details__meta-item">
-        <span class="mc-details__meta-label">Target</span>
+        <span class="mc-details__meta-label">{{ 'messaging.details.target' | translate }}</span>
         <span class="mc-details__meta-value">{{ t.target }}</span>
       </div>
       <div class="mc-details__meta-item">
-        <span class="mc-details__meta-label">Updated By</span>
-        <span class="mc-details__meta-value">{{ t.updatedBy.name }} · {{ t.updatedBy.role }}</span>
+        <span class="mc-details__meta-label">{{ 'messaging.details.updatedBy' | translate }}</span>
+        <span class="mc-details__meta-value">{{ t.updatedBy.name }} · {{ roleKey(t.updatedBy.role) | translate }}</span>
       </div>
       <div class="mc-details__meta-item">
-        <span class="mc-details__meta-label">Status</span>
-        <span class="mc-details__meta-value">{{ t.status }}</span>
+        <span class="mc-details__meta-label">{{ 'messaging.label.status' | translate }}</span>
+        <span class="mc-details__meta-value">{{ statusKey(t.status) | translate }}</span>
       </div>
       <div class="mc-details__meta-item">
-        <span class="mc-details__meta-label">Created Date</span>
+        <span class="mc-details__meta-label">{{ 'messaging.details.createdDate' | translate }}</span>
         <span class="mc-details__meta-value">{{ t.createdDate }}</span>
       </div>
       <div class="mc-details__meta-item">
-        <span class="mc-details__meta-label">Last Updated</span>
+        <span class="mc-details__meta-label">{{ 'messaging.details.lastUpdated' | translate }}</span>
         <span class="mc-details__meta-value">{{ t.lastUpdated }}</span>
       </div>
     </div>
@@ -51,7 +51,7 @@
         <div class="mc-details__message-head">
           <span class="mc-details__author">{{ msg.authorName }}</span>
           @if (msg.isInternalNote) {
-          <span class="mc-details__note-tag">Internal Note</span>
+          <span class="mc-details__note-tag">{{ 'messaging.details.internalNote' | translate }}</span>
           }
           <span class="mc-details__time">{{ msg.timestamp }}</span>
         </div>
@@ -93,7 +93,7 @@
 
   <!-- Composer -->
   <footer class="mc-details__composer">
-    <textarea class="mc-details__input" rows="3" placeholder="Type your response here..." [(ngModel)]="draft"
+    <textarea class="mc-details__input" rows="3" [placeholder]="'messaging.details.composer' | translate" [(ngModel)]="draft"
       (keydown)="onComposerKeydown($event)"></textarea>
 
     @if (attachments().length) {
@@ -118,14 +118,14 @@
 
         <button type="button" class="mc-details__attach" (click)="onAttachClick(fileInput)">
           <i class="pi pi-paperclip"></i>
-          <span>Attach File</span>
+          <span>{{ 'messaging.details.attach' | translate }}</span>
         </button>
       </div>
 
       <div class="mc-details__composer-right">
         <button type="button" class="mc-details__btn mc-details__btn--send" (click)="onSend()">
           <i class="pi pi-send"></i>
-          <span>Send</span>
+          <span>{{ 'messaging.details.send' | translate }}</span>
         </button>
       </div>
     </div>
@@ -134,17 +134,17 @@
 } @else {
 <div class="mc-details mc-details--empty">
   <i class="pi pi-comments mc-details__empty-icon"></i>
-  <p class="mc-details__empty-text">Select a ticket to view the conversation</p>
+  <p class="mc-details__empty-text">{{ 'messaging.details.empty' | translate }}</p>
 </div>
 }
 
 <!-- File Preview Dialog -->
 <p-dialog [(visible)]="displayFilePopup" [modal]="true" [style]="{ width: '90vw', maxWidth: '1000px' }"
-  [draggable]="false" [resizable]="false" header="File Preview"
+  [draggable]="false" [resizable]="false" [header]="'messaging.details.filePreview' | translate"
   (onHide)="selectedFileUrl.set(null)" styleClass="file-preview-dialog">
   <div class="preview-content-wrapper">
     @if (selectedFileUrl()) {
-    <img [src]="selectedFileUrl()" class="preview-image" alt="File Preview">
+    <img [src]="selectedFileUrl()" class="preview-image" [alt]="'messaging.details.filePreview' | translate">
     }
   </div>
 </p-dialog>

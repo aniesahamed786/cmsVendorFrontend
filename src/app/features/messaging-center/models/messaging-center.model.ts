@@ -10,6 +10,31 @@ export type TicketTabKey = 'all' | 'unread' | 'read';
 
 export type SortOrder = 'newest' | 'oldest';
 
+/**
+ * Catalog keys for the enum values above. The enums double as stored values, so
+ * they stay English — only the rendered label goes through the catalog.
+ */
+export const TICKET_CATEGORY_KEYS: Record<TicketCategory, string> = {
+  Technical: 'messaging.type.technical',
+  Billing: 'messaging.type.billing',
+  General: 'messaging.type.general',
+  Account: 'messaging.type.account',
+};
+
+export const TICKET_STATUS_KEYS: Record<TicketStatus, string> = {
+  New: 'messaging.status.new',
+  'In Progress': 'messaging.status.inProgress',
+  Open: 'messaging.status.open',
+  Closed: 'messaging.status.closed',
+};
+
+export const SENDER_ROLE_KEYS: Record<SenderRole, string> = {
+  User: 'messaging.role.user',
+  Admin: 'messaging.role.admin',
+  Vendor: 'messaging.role.vendor',
+  System: 'messaging.role.system',
+};
+
 /** A linked entity rendered as a chip inside a message bubble (e.g. an offer). */
 export interface TicketLinkedItem {
   id: string;

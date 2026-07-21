@@ -8,11 +8,12 @@ import {
   SelectOption,
   TicketCategory,
 } from '../../models/messaging-center.model';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-messaging-center-create-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules],
+  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe],
   templateUrl: './messaging-center-create-ticket.html',
   styleUrl: './messaging-center-create-ticket.scss',
 })
@@ -27,7 +28,7 @@ export class MessagingCenterCreateTicket {
   readonly back = output<void>();
 
   readonly participantType = signal<ParticipantType | null>('Vendor');
-  readonly sendTo = signal<string | null>(null);
+  readonly sendTo = signal<string | null>('Admin');
   readonly title = signal<string>('');
   readonly ticketType = signal<TicketCategory | null>(null);
   readonly linkedItem = signal<string | null>(null);

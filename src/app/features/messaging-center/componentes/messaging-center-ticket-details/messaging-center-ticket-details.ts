@@ -11,14 +11,21 @@ import {
 import { FormsModule } from '@angular/forms';
 
 import { PrimeUIModules } from '../../../../core/prime.import';
-import { MessageAttachment } from '../../models/messaging-center.model';
+import {
+  MessageAttachment,
+  ParticipantType,
+  TicketStatus,
+  SENDER_ROLE_KEYS,
+  TICKET_STATUS_KEYS,
+} from '../../models/messaging-center.model';
 import { MessagingCenterStore } from '../../services/messaging-center-store';
 import { DialogModule } from 'primeng/dialog';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-messaging-center-ticket-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, DialogModule],
+  imports: [CommonModule, FormsModule, PrimeUIModules, DialogModule, TranslatePipe],
   templateUrl: './messaging-center-ticket-details.html',
   styleUrl: './messaging-center-ticket-details.scss',
 })
@@ -46,6 +53,14 @@ export class MessagingCenterTicketDetails {
     });
 
 
+  }
+
+  statusKey(status: TicketStatus): string {
+    return TICKET_STATUS_KEYS[status];
+  }
+
+  roleKey(role: ParticipantType): string {
+    return SENDER_ROLE_KEYS[role];
   }
 
   onSend(): void {
