@@ -7,6 +7,7 @@ import {
   inject,
   Injector,
   input,
+  linkedSignal,
   output,
   signal,
   ViewChild,
@@ -77,6 +78,8 @@ import {
   finalize,
 } from "rxjs/operators";
 import { Button } from "../button/button";
+import { I18nService } from "../../i18n/i18n.service";
+import { TranslatePipe } from "../../i18n/translate.pipe";
 
 @Component({
   selector: "app-offer-form",
@@ -95,6 +98,7 @@ import { Button } from "../button/button";
     ImageCropperComponent,
     RouterLink,
     Button,
+    TranslatePipe,
   ],
   templateUrl: "./offer-form.html",
   styleUrl: "./offer-form.css",
@@ -115,6 +119,7 @@ export class OfferForm {
   ] as const;
 
   private readonly document = inject(DOCUMENT);
+  private readonly i18n = inject(I18nService);
   readonly addOfferIconBasePath = "assets/svg/Offers/add-offer";
   submitOfferFormEvent = output<any>();
   saveDraftEvent = output<any>();
@@ -315,7 +320,12 @@ export class OfferForm {
   readonly roomItems = signal<OfferRoomDraft[]>([]);
   readonly editingRoomIndex = signal<number | null>(null);
   readonly showConfirmationDialog = signal(false);
-  previewLanguage: "en" | "ar" = "en";
+  /**
+   * Follows the app language, but a field focus overrides it until the next
+   * language switch — focusing the Arabic title should preview Arabic even
+   * while the UI is in English.
+   */
+  readonly previewLanguage = linkedSignal<"en" | "ar">(() => this.i18n.lang());
   isSubmitting = signal(false);
   /** Tracks which offer was last patched into the form (edit mode). */
   private lastPatchedOfferId: string | null = null;
@@ -365,7 +375,7 @@ export class OfferForm {
   }
 
   setPreviewLanguage(lang: "en" | "ar") {
-    this.previewLanguage = lang;
+    this.previewLanguage.set(lang);
   }
   suggestedTags = signal<string[]>([]);
   topTags = computed(() => {
@@ -857,36 +867,36 @@ export class OfferForm {
    */
   private getValidationOrder(): Array<{ path: string; label: string }> {
     const order: Array<{ path: string; label: string }> = [
-      { path: "selectedVendor", label: "Vendor" },
-      { path: "titleEn", label: "Offer title (English)" },
-      { path: "titleAr", label: "Offer title (Arabic)" },
-      { path: "descriptionEn", label: "Offer description (English)" },
-      { path: "descriptionAr", label: "Offer description (Arabic)" },
-      { path: "discountType", label: "Discount type" },
-      { path: "startdate", label: "Start date" },
-      { path: "expiry", label: "Expiry date" },
-      { path: "category", label: "Category" },
+      { path: "selectedVendor", label: "offerForm.field.vendor" },
+      { path: "titleEn", label: "offerForm.field.titleEn" },
+      { path: "titleAr", label: "offerForm.field.titleAr" },
+      { path: "descriptionEn", label: "offerForm.field.descriptionEn" },
+      { path: "descriptionAr", label: "offerForm.field.descriptionAr" },
+      { path: "discountType", label: "offerForm.field.discountType" },
+      { path: "startdate", label: "offerForm.field.startDate" },
+      { path: "expiry", label: "offerForm.field.expiryDate" },
+      { path: "category", label: "offerForm.field.category" },
       ...(this.showHotelDetails()
         ? [
-          { path: "taxValue", label: "Tax value (English)" },
-          { path: "taxValueAr", label: "Tax value (Arabic)" },
-          { path: "currency", label: "Currency" },
-          { path: "hotelAmenities", label: "Hotel amenities" },
-          { path: "hotelAmenitiesAr", label: "Hotel amenities (Arabic)" },
+          { path: "taxValue", label: "offerForm.field.taxValueEn" },
+          { path: "taxValueAr", label: "offerForm.field.taxValueAr" },
+          { path: "currency", label: "offerForm.field.currency" },
+          { path: "hotelAmenities", label: "offerForm.field.amenities" },
+          { path: "hotelAmenitiesAr", label: "offerForm.field.amenitiesAr" },
         ]
         : []),
-      { path: "instructionsEn", label: "Instruction (English)" },
-      { path: "instructionsAr", label: "Instruction (Arabic)" },
-      { path: "mode", label: "Offer type" },
-      { path: "urlLink", label: "Website" },
-      { path: "discountEn", label: "Discount amount (English)" },
-      { path: "discountAr", label: "Discount amount (Arabic)" },
-      { path: "phone", label: "Phone number 1" },
-      { path: "landline", label: "Phone number 2" },
-      { path: "email", label: "Email address" },
-      { path: "locationIds", label: "Selected locations" },
-      { path: "offerImage", label: "Offer image (mobile)" },
-      { path: "offerImageLandscape", label: "Offer image (desktop)" },
+      { path: "instructionsEn", label: "offerForm.field.instructionsEn" },
+      { path: "instructionsAr", label: "offerForm.field.instructionsAr" },
+      { path: "mode", label: "offerForm.field.offerType" },
+      { path: "urlLink", label: "offerForm.field.website" },
+      { path: "discountEn", label: "offerForm.field.discountEn" },
+      { path: "discountAr", label: "offerForm.field.discountAr" },
+      { path: "phone", label: "offerForm.field.phone1" },
+      { path: "landline", label: "offerForm.field.phone2" },
+      { path: "email", label: "offerForm.field.email" },
+      { path: "locationIds", label: "offerForm.field.locations" },
+      { path: "offerImage", label: "offerForm.field.offerImageMobile" },
+      { path: "offerImageLandscape", label: "offerForm.field.offerImageDesktop" },
     ];
     if (this.highlightEnabled()) {
       order.push(
@@ -1084,11 +1094,11 @@ export class OfferForm {
 
   getBranchActivationMessage(): string {
     if (this.showVendorHasNoBranchesMessage()) {
-      return "This vendor has no branches. In-store or both-mode offers cannot be activated until at least one branch is added.";
+      return this.i18n.t("offerForm.location.noBranches");
     }
 
     if (this.showBranchSelectionRequiredMessage()) {
-      return "Select at least one branch to activate this offer.";
+      return this.i18n.t("offerForm.location.selectRequired");
     }
 
     return "";
@@ -1139,8 +1149,8 @@ export class OfferForm {
     if (this.actionType() === "edit" && !this.hasEditChanges()) {
       this.messageService.add({
         severity: "info",
-        summary: "No changes made",
-        detail: "Please update at least one field before saving.",
+        summary: this.i18n.t("offerForm.toast.noChangesSummary"),
+        detail: this.i18n.t("offerForm.toast.noChangesDetail"),
         life: 2500,
       });
       return;
@@ -1151,7 +1161,7 @@ export class OfferForm {
       this.offerForm.get("locationIds")?.markAsDirty();
       this.messageService.add({
         severity: "warn",
-        summary: "Offer cannot be activated",
+        summary: this.i18n.t("offerForm.toast.cannotActivateSummary"),
         detail: this.getBranchActivationMessage(),
         life: 5000,
       });
@@ -1166,19 +1176,24 @@ export class OfferForm {
         const isRequired = !!first.control.errors?.["required"];
         this.messageService.add({
           severity: "warn",
-          summary: isRequired
-            ? "Missing required field"
-            : "Invalid field value",
-          detail: isRequired
-            ? `Please fill in: ${first.label}.`
-            : `Please enter a valid ${first.label.toLowerCase()}.`,
+          summary: this.i18n.t(
+            isRequired
+              ? "offerForm.toast.missingFieldSummary"
+              : "offerForm.toast.invalidFieldSummary",
+          ),
+          detail: this.i18n.t(
+            isRequired
+              ? "offerForm.toast.missingFieldDetail"
+              : "offerForm.toast.invalidFieldDetail",
+            { field: this.i18n.t(first.label) },
+          ),
           life: 5000,
         });
       } else {
         this.messageService.add({
           severity: "warn",
-          summary: "Missing required fields",
-          detail: "Please fill in all required fields.",
+          summary: this.i18n.t("offerForm.toast.missingFieldsSummary"),
+          detail: this.i18n.t("offerForm.toast.missingFieldsDetail"),
           life: 5000,
         });
       }
@@ -1190,8 +1205,8 @@ export class OfferForm {
     if (isVendorInactive(selectedVendor)) {
       this.messageService.add({
         severity: "warn",
-        summary: "Vendor inactive",
-        detail: "Cannot activate an offer while the vendor is inactive.",
+        summary: this.i18n.t("offerForm.toast.vendorInactiveSummary"),
+        detail: this.i18n.t("offerForm.toast.vendorInactiveDetail"),
         life: 3500,
       });
       return;
@@ -1929,8 +1944,8 @@ export class OfferForm {
     if (!vendorId) {
       this.messageService.add({
         severity: "warn",
-        summary: "Vendor Required",
-        detail: "Please select a vendor first to add a location.",
+        summary: this.i18n.t("offerForm.toast.vendorRequiredSummary"),
+        detail: this.i18n.t("offerForm.toast.vendorRequiredDetail"),
         life: 3000,
       });
       return;
@@ -2275,9 +2290,9 @@ export class OfferForm {
 
   get cropperPrimaryActionLabel(): string {
     if (this.isOfferSequentialFlow() && this.offerCropTab() === "mobile") {
-      return "Next";
+      return "offerForm.cropper.next";
     }
-    return "Apply Crop";
+    return "offerForm.cropper.apply";
   }
 
   get cropperPrimaryActionIcon(): string {

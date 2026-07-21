@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { OfferForm } from '../../../../shared/Components/offer-form/offer-form';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-create-offer',
   standalone: true,
-  imports: [CommonModule, OfferForm],
+  imports: [CommonModule, OfferForm, TranslatePipe],
   templateUrl: './create-offer.html',
   styleUrl: './offer-form.scss',
 })

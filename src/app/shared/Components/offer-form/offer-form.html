@@ -3,7 +3,7 @@
   <div class="offer-form__row">
     <a [routerLink]="backNavRouteLink()" class="offer-back-btn">
       <i class="pi pi-arrow-left"></i>
-      <span>Back to Offers</span>
+      <span>{{ 'offerForm.backToOffers' | translate }}</span>
     </a>
   </div>
 </div>
@@ -16,152 +16,152 @@
             [style.maskImage]="getOfferIconMask('ic-info.svg')"></span>
         </div>
         <h2 class="offer-form__section-title">
-          Basic Information
+          {{ 'offerForm.section.basicInfo' | translate }}
         </h2>
       </div>
       <div class="offer-form__grid">
         <div class="offer-form__col-2">
           <label class="offer-form__label">
-            Vendor
+            {{ 'offerForm.label.vendor' | translate }}
             <span class="offer-form__required">*</span>
           </label>
 
           <div class="card offer-form__row offer-form__row--center">
             <p-select [options]="vendorOptions()" formControlName="selectedVendor" optionLabel="label"
               optionValue="value" optionDisabled="disabled" [filter]="true" filterBy="label"
-              filterPlaceholder="Search vendors by name" [loading]="vendorsLoading()"
+              [filterPlaceholder]="'offerForm.placeholder.vendorSearch' | translate" [loading]="vendorsLoading()"
               (onFilter)="onVendorSearch($event)" (onShow)="onVendorDropdownShow()" (onHide)="onVendorDropdownHide()"
-              panelStyleClass="offer-form-vendor-select-panel" placeholder="Choose a Vendor"
+              panelStyleClass="offer-form-vendor-select-panel" [placeholder]="'offerForm.placeholder.vendor' | translate"
               class="offer-form__select">
             </p-select>
           </div>
           @if (hasRequiredError('selectedVendor')) {
-          <p class="offer-form__error">Vendor is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.vendorRequired' | translate }}</p>
           } @else {
-          <p class="offer-form__hint">Type to search vendors, then scroll to load more matches.</p>
+          <p class="offer-form__hint">{{ 'offerForm.hint.vendorSearch' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__col-2">
           <label class="offer-form__label">
-            Offer Title (English)
+            {{ 'offerForm.label.titleEn' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="titleEn" (focus)="setPreviewLanguage('en')"
-              class="offer-form__input offer-form__input--pl5" placeholder="e.g. Summer Collection Launch" />
+              class="offer-form__input offer-form__input--pl5" [placeholder]="'offerForm.placeholder.titleEn' | translate" />
           </div>
           @if (hasRequiredError('titleEn')) {
-          <p class="offer-form__error">Offer title (English) is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.titleEnRequired' | translate }}</p>
           }
           @if (hasFieldError('titleEn', 'whitespace')) {
-          <p class="offer-form__error">Offer title (English) cannot be empty or only whitespace.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.titleEnWhitespace' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__col-2">
           <label class="offer-form__label">
-            Offer Title (Arabic)
+            {{ 'offerForm.label.titleAr' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="titleAr" (input)="sanitizeArabicInput('titleAr')"
               (focus)="setPreviewLanguage('ar')" class="offer-form__input offer-form__input--right offer-form__input--pr4"
-              placeholder="مثلاً: إطلاق مجموعة الصيف" />
+              [placeholder]="'offerForm.placeholder.titleAr' | translate" />
           </div>
           @if (hasRequiredError('titleAr')) {
-          <p class="offer-form__error">Offer title (Arabic) is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.titleArRequired' | translate }}</p>
           }
           @if (hasFieldError('titleAr', 'arabicOnly')) {
-          <p class="offer-form__error">اسم العرض يجب أن يكون باللغة العربية فقط.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.titleArArabicOnly' | translate }}</p>
           }
           @if (hasFieldError('titleAr', 'whitespace')) {
-          <p class="offer-form__error">اسم العرض لا يمكن أن يكون فارغاً.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.titleArWhitespace' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__field-group offer-form__col-2">
           <label class="offer-form__label offer-form__label--block">
-            Offer Description (English)
+            {{ 'offerForm.label.descriptionEn' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <textarea pInputTextarea formControlName="descriptionEn" (focus)="setPreviewLanguage('en')" rows="4"
             class="offer-form__textarea"
-            placeholder="e.g. Summer Collection Launch Description"></textarea>
+            [placeholder]="'offerForm.placeholder.descriptionEn' | translate"></textarea>
           @if (hasRequiredError('descriptionEn')) {
-          <p class="offer-form__error">Offer description (English) is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.descriptionEnRequired' | translate }}</p>
           }
           @if (hasFieldError('descriptionEn', 'whitespace')) {
-          <p class="offer-form__error">Offer description (English) cannot be empty or only whitespace.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.descriptionEnWhitespace' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__field-group offer-form__col-2">
           <label class="offer-form__label offer-form__label--block">
-            Offer Description (Arabic)
+            {{ 'offerForm.label.descriptionAr' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <textarea pInputTextarea formControlName="descriptionAr" (focus)="setPreviewLanguage('ar')" rows="4"
             class="offer-form__textarea offer-form__textarea--right"
-            dir="rtl" placeholder="مثلاً: إطلاق مجموعة الصيف"></textarea>
+            dir="rtl" [placeholder]="'offerForm.placeholder.descriptionAr' | translate"></textarea>
           @if (hasRequiredError('descriptionAr')) {
-          <p class="offer-form__error">Offer description (Arabic) is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.descriptionArRequired' | translate }}</p>
           }
           @if (hasFieldError('descriptionAr', 'arabicOnly')) {
-          <p class="offer-form__error">وصف العرض يجب أن يكون باللغة العربية فقط.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.descriptionArArabicOnly' | translate }}</p>
           }
           @if (hasFieldError('descriptionAr', 'whitespace')) {
-          <p class="offer-form__error">وصف العرض لا يمكن أن يكون فارغاً.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.descriptionArWhitespace' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__flex-auto">
           <label for="discountStartDate" class="offer-form__label">
-            Start Date
+            {{ 'offerForm.label.startDate' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <p-datepicker formControlName="startdate" iconDisplay="input" [minDate]="minDate" showIcon="true"
             inputId="discountStartDate" styleClass="offer-form__datepicker offer-form__input"
-            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" placeholder="mm/dd/yyyy"
+            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" [placeholder]="'offerForm.placeholder.date' | translate"
             variant="filled" />
           @if (hasRequiredError('startdate')) {
-          <p class="offer-form__error">Start date is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.startDateRequired' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__flex-auto">
           <label for="discountExpireDate" class="offer-form__label">
-            Expiry Date
+            {{ 'offerForm.label.expiryDate' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <p-datepicker formControlName="expiry" iconDisplay="input" showIcon="true" inputId="discountExpireDate"
             [minDate]="minExpiryDate()" styleClass="offer-form__datepicker offer-form__input"
-            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" placeholder="mm/dd/yyyy"
+            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" [placeholder]="'offerForm.placeholder.date' | translate"
             variant="filled" />
           @if (hasRequiredError('expiry')) {
-          <p class="offer-form__error">Expiry date is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.expiryRequired' | translate }}</p>
           } @else if (hasFieldError('expiry', 'invalidDateRange')) {
-          <p class="offer-form__error">Expiry date must be at least one day after the start date.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.expiryRange' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__col-2">
-          <app-category-dropdown [label]="'Category'" [placeholder]="'Select categories'" [multiple]="true"
+          <app-category-dropdown [label]="'offerForm.label.category' | translate" [placeholder]="'offerForm.placeholder.category' | translate" [multiple]="true"
             [required]="true" [control]="category">
           </app-category-dropdown>
         </div>
 
         <div class="offer-form__col-2">
-          <app-target-audience-dropdown [label]="'Target Audience'" [placeholder]="'Select target audience'"
+          <app-target-audience-dropdown [label]="'offerForm.label.targetAudience' | translate" [placeholder]="'offerForm.placeholder.targetAudience' | translate"
             [required]="false" [control]="targetAudience" />
         </div>
 
         <div class="offer-form__col-2">
-          <label class="offer-form__label">Tags</label>
+          <label class="offer-form__label">{{ 'offerForm.label.tags' | translate }}</label>
           <div class="offer-form__row">
             <div class="offer-form__input-wrap offer-form__flex-1">
               <p-autoComplete formControlName="tagInput" [suggestions]="suggestedTags()"
-                (completeMethod)="searchTags($event)" placeholder="Examples of tags: lifestyle, fast food, man, woman"
+                (completeMethod)="searchTags($event)" [placeholder]="'offerForm.placeholder.tags' | translate"
                 styleClass="offer-form__field offer-form__autocomplete offer-form__input"
                 panelStyleClass="offer-form__overlay-panel offer-form__autocomplete-panel"
                 inputStyleClass="offer-form__input offer-form__input--pl5" (onBlur)="onTagInputBlur()"
@@ -170,12 +170,12 @@
             </div>
           </div>
           @if (shouldShowTagDuplicateError()) {
-          <p class="offer-form__error">Tag already exists</p>
+          <p class="offer-form__error">{{ 'offerForm.tag.duplicate' | translate }}</p>
           }
 
           @if (topTags().length > 0) {
           <div class="offer-form__mt-2 offer-form__row offer-form__row--gap2">
-            <span class="offer-form__frequent-label">Frequent:</span>
+            <span class="offer-form__frequent-label">{{ 'offerForm.tag.frequent' | translate }}</span>
             <div class="offer-form__tag-wrap">
               @for (tag of topTags(); track tag) {
               <button type="button" (click)="addExistingTag(tag)" class="offer-form__frequent-tag">
@@ -203,83 +203,83 @@
             [style.maskImage]="getOfferIconMask('ic-offer-settings.svg')"></span>
         </div>
         <h2 class="offer-form__section-title">
-          Hotel Details
+          {{ 'offerForm.section.hotelDetails' | translate }}
         </h2>
       </div>
       <div class="offer-form__grid">
         <div>
           <label class="offer-form__label">
-            Tax Value (English)
+            {{ 'offerForm.label.taxValueEn' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="taxValue" class="offer-form__input offer-form__input--pl4"
-              placeholder="e.g. 50 SAR" />
+              [placeholder]="'offerForm.placeholder.taxValueEn' | translate" />
           </div>
           @if (offerForm.get('taxValue')?.touched && offerForm.get('taxValue')?.hasError('required')) {
-          <p class="offer-form__error">Tax value (English) is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.taxValueEnRequired' | translate }}</p>
           }
         </div>
 
         <div>
           <label class="offer-form__label">
-            Tax Value (Arabic)
+            {{ 'offerForm.label.taxValueAr' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="taxValueAr" class="offer-form__input offer-form__input--pr4 offer-form__input--right"
-              placeholder="مثلاً: ٥٠ ريال" />
+              [placeholder]="'offerForm.placeholder.taxValueAr' | translate" />
           </div>
           @if (offerForm.get('taxValueAr')?.touched && offerForm.get('taxValueAr')?.hasError('required')) {
-          <p class="offer-form__error">Tax value (Arabic) is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.taxValueArRequired' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__col-2">
           <label class="offer-form__label">
-            Currency
+            {{ 'offerForm.label.currency' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="currency" class="offer-form__input offer-form__input--pl4"
-              placeholder="SAR" />
+              [placeholder]="'offerForm.placeholder.currency' | translate" />
           </div>
           @if (offerForm.get('currency')?.touched && offerForm.get('currency')?.hasError('required')) {
-          <p class="offer-form__error">Currency is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.currencyRequired' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__col-2">
           <label class="offer-form__label">
-            Hotel Amenities (English)
+            {{ 'offerForm.label.amenitiesEn' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="hotelAmenities" class="offer-form__input offer-form__input--pl4"
-              placeholder="Swimming pool, Spa, ..." />
+              [placeholder]="'offerForm.placeholder.amenitiesEn' | translate" />
           </div>
           @if (offerForm.get('hotelAmenities')?.touched && offerForm.get('hotelAmenities')?.hasError('required')) {
-          <p class="offer-form__error">Hotel amenities are required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.amenitiesRequired' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__col-2">
           <label class="offer-form__label">
-            Hotel Amenities (Arabic)
+            {{ 'offerForm.label.amenitiesAr' | translate }}
             <span class="offer-form__required">*</span>
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="hotelAmenitiesAr" class="offer-form__input offer-form__input--pl4 offer-form__input--right"
-              placeholder="... ،مسبح، سبا" />
+              [placeholder]="'offerForm.placeholder.amenitiesAr' | translate" />
           </div>
           @if (offerForm.get('hotelAmenitiesAr')?.touched && offerForm.get('hotelAmenitiesAr')?.hasError('required')) {
-          <p class="offer-form__error">Hotel amenities (Arabic) are required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.amenitiesArRequired' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__col-2">
           <div>
-            <h3 class="offer-form__subheading">Hotel Room Details</h3>
+            <h3 class="offer-form__subheading">{{ 'offerForm.label.roomDetails' | translate }}</h3>
           </div>
 
           @if (roomItems().length) {
@@ -287,21 +287,21 @@
             @for (room of roomItems(); track room.id; let i = $index) {
             <div class="offer-form__room-row" [class.offer-form__room-row--divided]="i > 0">
               <div class="offer-form__min-w-0">
-                <p class="offer-form__room-name">{{ room.roomName || ('Room #' + (i + 1)) }}</p>
+                <p class="offer-form__room-name">{{ room.roomName || ('offerForm.room.fallbackName' | translate: { n: i + 1 }) }}</p>
               </div>
 
               <div class="offer-form__room-actions">
                 @if (!room.isPlaceholder) {
                 <button type="button" class="offer-form__link-btn"
                   (click)="openRoomDialog(i)">
-                  Edit
+                  {{ 'offerForm.room.edit' | translate }}
                 </button>
                 } @else {
-                <span class="offer-form__link-muted">Edit</span>
+                <span class="offer-form__link-muted">{{ 'offerForm.room.edit' | translate }}</span>
                 }
                 <button type="button" class="offer-form__link-btn offer-form__link-btn--danger"
                   (click)="removeRoom(i)">
-                  Delete
+                  {{ 'offerForm.room.delete' | translate }}
                 </button>
               </div>
             </div>
@@ -309,13 +309,13 @@
           </div>
           } @else {
           <div class="offer-form__empty">
-            <p>No rooms added yet.</p>
+            <p>{{ 'offerForm.room.empty' | translate }}</p>
           </div>
           }
           <div class="offer-form__row-end">
             <button type="button" class="offer-form__add-link"
               (click)="openRoomDialog()">
-              + Add new room
+              {{ 'offerForm.room.add' | translate }}
             </button>
           </div>
         </div>
@@ -330,13 +330,13 @@
             [style.maskImage]="getOfferIconMask('ic-discount-details.svg')"></span>
         </div>
         <h2 class="offer-form__section-title">
-          Discount Details
+          {{ 'offerForm.section.discountDetails' | translate }}
         </h2>
       </div>
       <div class="offer-form__stack offer-form__mt-6">
         <div class="offer-form-loading offer-form__stack offer-form__stack--gap4">
           <label class="offer-form__label">
-            Discount Type
+            {{ 'offerForm.label.discountType' | translate }}
             <span class="offer-form__required">*</span>
           </label>
 
@@ -344,23 +344,23 @@
             <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Fixed" formControlName="discountType">
               </p-radiobutton>
-              <span class="offer-form__radio-label offer-form__radio-label--medium">Fixed Amount</span>
+              <span class="offer-form__radio-label offer-form__radio-label--medium">{{ 'offerForm.value.fixedAmount' | translate }}</span>
             </label>
 
             <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Percentage" formControlName="discountType">
               </p-radiobutton>
-              <span class="offer-form__radio-label offer-form__radio-label--medium">Percentage</span>
+              <span class="offer-form__radio-label offer-form__radio-label--medium">{{ 'offerForm.value.percentage' | translate }}</span>
             </label>
 
             <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Others" formControlName="discountType">
               </p-radiobutton>
-              <span class="offer-form__radio-label offer-form__radio-label--medium">Others</span>
+              <span class="offer-form__radio-label offer-form__radio-label--medium">{{ 'offerForm.value.others' | translate }}</span>
             </label>
           </div>
           @if (hasRequiredError('discountType')) {
-          <p class="offer-form__error">Discount type is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.discountTypeRequired' | translate }}</p>
           }
         </div>
 
@@ -368,14 +368,14 @@
           <div class="offer-form__field-group offer-form__field-group--gap3"
             [ngClass]="offerForm.get('discountType')?.value !== 'Others' ? 'offer-form__col-2' : ''">
             <label class="offer-form__label">
-              {{ offerForm.get('discountType')?.value === 'Others' ? 'Amount (English)' : 'Discount Amount (English)' }}
+              {{ (offerForm.get('discountType')?.value === 'Others' ? 'offerForm.label.amountEn' : 'offerForm.label.discountAmountEn') | translate }}
               <span class="offer-form__required">*</span>
             </label>
             <div class="offer-form__input-wrap">
               <input pInputText formControlName="discountEn" class="offer-form__input offer-form__input--pl4 offer-form__input--pr8"
                 (focus)="setPreviewLanguage('en')"
                 [attr.inputmode]="offerForm.get('discountType')?.value === 'Others' ? null : 'decimal'"
-                [placeholder]="offerForm.get('discountType')?.value === 'Others' ? 'e.g. 50' : 'e.g. 50 OMR Off'"
+                [placeholder]="(offerForm.get('discountType')?.value === 'Others' ? 'offerForm.placeholder.discountEnOther' : 'offerForm.placeholder.discountEn') | translate"
                 (input)="offerForm.get('discountType')?.value === 'Others' ? null : sanitizeDiscountInput('discountEn')" />
               @if (offerForm.get('discountType')?.value === 'Percentage') {
               <span class="offer-form__input-suffix offer-form__input-suffix--right">
@@ -389,27 +389,27 @@
               }
             </div>
             @if (hasRequiredError('discountEn')) {
-            <p class="offer-form__error">Discount amount is required.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.discountRequired' | translate }}</p>
             }
             @if (hasDiscountNumericError('discountEn')) {
-            <p class="offer-form__error">Discount amount must be a numeric value.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.discountNumeric' | translate }}</p>
             }
             @if (hasDiscountPercentageRangeError('discountEn')) {
-            <p class="offer-form__error">Percentage must be between 0 and 100.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.discountPercentageRange' | translate }}</p>
             }
           </div>
 
           @if (offerForm.get('discountType')?.value === 'Others') {
           <div class="offer-form__field-group offer-form__field-group--gap3">
             <label class="offer-form__label">
-              {{ offerForm.get('discountType')?.value === 'Others' ? 'Amount (Arabic)' : 'Discount Amount (Arabic)' }}
+              {{ (offerForm.get('discountType')?.value === 'Others' ? 'offerForm.label.amountAr' : 'offerForm.label.discountAmountAr') | translate }}
               <span class="offer-form__required">*</span>
             </label>
             <div class="offer-form__input-wrap">
               <input pInputText formControlName="discountAr" class="offer-form__input offer-form__input--pr4 offer-form__input--right offer-form__input--h11"
                 (focus)="setPreviewLanguage('ar')"
                 [attr.inputmode]="offerForm.get('discountType')?.value === 'Others' ? null : 'decimal'"
-                [placeholder]="offerForm.get('discountType')?.value === 'Others' ? 'مثلاً: ٥٠' : 'مثلاً: خصم ٥٠ ريال'"
+                [placeholder]="(offerForm.get('discountType')?.value === 'Others' ? 'offerForm.placeholder.discountArOther' : 'offerForm.placeholder.discountAr') | translate"
                 (input)="offerForm.get('discountType')?.value === 'Others' ? sanitizeArabicInput('discountAr') : sanitizeDiscountInput('discountAr')" />
               @if (offerForm.get('discountType')?.value === 'Percentage') {
               <span class="offer-form__input-suffix offer-form__input-suffix--left">
@@ -423,10 +423,10 @@
               }
             </div>
             @if (hasRequiredError('discountAr')) {
-            <p class="offer-form__error">Discount amount (Arabic) is required.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.discountArRequired' | translate }}</p>
             }
             @if (hasFieldError('discountAr', 'arabicOnly')) {
-            <p class="offer-form__error">Amount (Arabic) must contain Arabic characters only.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.discountArArabicOnly' | translate }}</p>
             }
           </div>
           }
@@ -434,37 +434,36 @@
         <div class="offer-form__grid offer-form__grid--single">
           <div class="offer-form__field-group">
             <label class="offer-form__label offer-form__label--block">
-              Redemption Instruction (English)
+              {{ 'offerForm.label.instructionsEn' | translate }}
               <span class="offer-form__required">*</span>
             </label>
             <textarea pInputTextarea formControlName="instructionsEn" (focus)="setPreviewLanguage('en')" rows="4"
               class="offer-form__textarea"
-              placeholder="How can customers redeem this offer?"></textarea>
+              [placeholder]="'offerForm.placeholder.instructionsEn' | translate"></textarea>
             @if (hasRequiredError('instructionsEn')) {
-            <p class="offer-form__error">Redemption instruction (English) is required.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.instructionsEnRequired' | translate }}</p>
             }
             @if (hasFieldError('instructionsEn', 'whitespace')) {
-            <p class="offer-form__error">Redemption instruction (English) cannot be empty or only whitespace.
-            </p>
+            <p class="offer-form__error">{{ 'offerForm.error.instructionsEnWhitespace' | translate }}</p>
             }
           </div>
 
           <div class="offer-form__field-group">
             <label class="offer-form__label offer-form__label--block">
-              Redemption Instruction (Arabic)
+              {{ 'offerForm.label.instructionsAr' | translate }}
               <span class="offer-form__required">*</span>
             </label>
             <textarea pInputTextarea formControlName="instructionsAr" (focus)="setPreviewLanguage('ar')" rows="4"
               class="offer-form__textarea offer-form__textarea--right"
-              dir="rtl" placeholder="كيف يمكن للعملاء استرداد هذا العرض؟"></textarea>
+              dir="rtl" [placeholder]="'offerForm.placeholder.instructionsAr' | translate"></textarea>
             @if (hasRequiredError('instructionsAr')) {
-            <p class="offer-form__error">Redemption instruction (Arabic) is required.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.instructionsArRequired' | translate }}</p>
             }
             @if (hasFieldError('instructionsAr', 'arabicOnly')) {
-            <p class="offer-form__error">تعليمات الاسترداد يجب أن تكون باللغة العربية فقط.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.instructionsArArabicOnly' | translate }}</p>
             }
             @if (hasFieldError('instructionsAr', 'whitespace')) {
-            <p class="offer-form__error">تعليمات الاسترداد لا يمكن أن تكون فارغة.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.instructionsArWhitespace' | translate }}</p>
             }
           </div>
         </div>
@@ -478,13 +477,13 @@
             [style.maskImage]="getOfferIconMask('ic-offer-settings.svg')"></span>
         </div>
         <h2 class="offer-form__section-title">
-          Offer Settings
+          {{ 'offerForm.section.offerSettings' | translate }}
         </h2>
       </div>
       <div class="offer-form__grid offer-form__grid--gap-xl">
         <div class="offer-form__stack offer-form__stack--gap4 offer-form__col-2">
           <label class="offer-form__label">
-            Offer Type
+            {{ 'offerForm.label.offerType' | translate }}
             <span class="offer-form__required">*</span>
           </label>
 
@@ -492,23 +491,23 @@
             <label class="offer-form__radio-pill">
               <p-radiobutton name="offerLocation" value="In-Store" formControlName="mode">
               </p-radiobutton>
-              <span class="offer-form__radio-label">In Store</span>
+              <span class="offer-form__radio-label">{{ 'offerForm.value.inStore' | translate }}</span>
             </label>
 
             <label class="offer-form__radio-pill">
               <p-radiobutton name="offerLocation" value="Digital" formControlName="mode">
               </p-radiobutton>
-              <span class="offer-form__radio-label">Digital</span>
+              <span class="offer-form__radio-label">{{ 'offerForm.value.digital' | translate }}</span>
             </label>
 
             <label class="offer-form__radio-pill">
               <p-radiobutton name="offerLocation" value="In-Store & Digital" formControlName="mode">
               </p-radiobutton>
-              <span class="offer-form__radio-label">In-Store & Digital</span>
+              <span class="offer-form__radio-label">{{ 'offerForm.value.inStoreAndDigital' | translate }}</span>
             </label>
           </div>
           @if (hasRequiredError('mode')) {
-          <p class="offer-form__error">Offer type is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.offerTypeRequired' | translate }}</p>
           }
         </div>
       </div>
@@ -518,54 +517,52 @@
         <div class="offer-form__grid offer-form__grid--mt-sm">
           <div class="offer-form__field-group" [ngClass]="offerForm.get('mode')?.value === 'In-Store' ? 'offer-form__col-2' : ''">
             <label class="offer-form__label">
-              Website @if (offerForm.get('mode')?.value === 'Digital' ||
+              {{ 'offerForm.label.website' | translate }} @if (offerForm.get('mode')?.value === 'Digital' ||
               offerForm.get('mode')?.value === 'In-Store & Digital') {
               <span class="offer-form__required">*</span>
               }
             </label>
-            <input pInputText formControlName="urlLink" class="offer-form__input offer-form__input--pl5" [placeholder]="offerForm.get('mode')?.value === 'In-Store'
-                ? 'e.g. www.companyname.com (optional)'
-                : 'e.g. www.companyname.com'" />
+            <input pInputText formControlName="urlLink" class="offer-form__input offer-form__input--pl5" [placeholder]="(offerForm.get('mode')?.value === 'In-Store'
+                ? 'offerForm.placeholder.websiteOptional'
+                : 'offerForm.placeholder.website') | translate" />
             @if (hasRequiredError('urlLink')) {
-            <p class="offer-form__error">Website is required.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.websiteRequired' | translate }}</p>
             }
             @if (hasFieldError('urlLink', 'pattern')) {
-            <p class="offer-form__error">Please enter a valid URL.</p>
+            <p class="offer-form__error">{{ 'offerForm.error.websitePattern' | translate }}</p>
             }
             @if (offerForm.get('mode')?.value === 'In-Store') {
-            <p class="offer-form__hint">Optional link for in-store offer details or redemption.</p>
+            <p class="offer-form__hint">{{ 'offerForm.hint.websiteInStore' | translate }}</p>
             }
           </div>
 
           @if (offerForm.get('mode')?.value !== 'In-Store') {
           <div class="offer-form__field-group">
             <label class="offer-form__label">
-              Discount Code
+              {{ 'offerForm.label.discountCode' | translate }}
             </label>
             <input pInputText formControlName="discountCode" class="offer-form__input offer-form__input--pl5"
-              placeholder="e.g. Offer20" />
+              [placeholder]="'offerForm.placeholder.discountCode' | translate" />
           </div>
           }
         </div>
       </div>
       @if (offerForm.get('mode')?.value !== 'Digital') {
       <div class="offer-form__mt-6">
-        <label class="offer-form__label">Selected Locations</label>
+        <label class="offer-form__label">{{ 'offerForm.label.selectedLocations' | translate }}</label>
         <div class="offer-form__locations-box">
           <div class="offer-form__row offer-form__row--gap2">
             <i class="pi pi-map-marker offer-form__locations-icon"></i>
-            <span class="offer-form__locations-label">Select locations for this offer</span>
+            <span class="offer-form__locations-label">{{ 'offerForm.location.selectPrompt' | translate }}</span>
           </div>
 
           @if (!offerForm.get('selectedVendor')?.value) {
-          <p class="offer-form__muted-sm">
-            Select a vendor above to view available locations.
-          </p>
+          <p class="offer-form__muted-sm">{{ 'offerForm.location.noVendor' | translate }}</p>
           } @else if (locationsLoading()) {
           <p-skeleton width="100%" height="2.5rem"></p-skeleton>
           } @else {
           <p-multiselect [options]="vendorLocations()" formControlName="locationIds" optionLabel="label"
-            optionValue="id" placeholder="Select one or more locations"
+            optionValue="id" [placeholder]="'offerForm.placeholder.locations' | translate"
             styleClass="offer-form__field offer-form__multiselect offer-form__input"
             panelStyleClass="offer-form__overlay-panel offer-form__multiselect-panel"
             [disabled]="isBranchSelectionDisabled()">
@@ -583,14 +580,9 @@
           </p-multiselect>
           }
           @if (showVendorHasNoBranchesMessage()) {
-          <p class="offer-form__warning-message">
-            This vendor has no branches. In-store or both-mode offers cannot be activated until at least one branch is
-            added.
-          </p>
+          <p class="offer-form__warning-message">{{ 'offerForm.location.noBranches' | translate }}</p>
           } @else if (showBranchSelectionRequiredMessage()) {
-          <p class="offer-form__warning-message">
-            Select at least one branch to activate this offer.
-          </p>
+          <p class="offer-form__warning-message">{{ 'offerForm.location.selectRequired' | translate }}</p>
           }
         </div>
       </div>
@@ -599,7 +591,7 @@
       <div class="offer-form__row-end">
         <button type="button" class="offer-form__add-link offer-form__add-link--muted"
           (click)="openLocationDialog()">
-          + Add New Location
+          {{ 'offerForm.location.add' | translate }}
         </button>
       </div>
       }
@@ -611,12 +603,12 @@
             [style.maskImage]="getOfferIconMask('ic-branding.svg')"></span>
         </div>
         <h2 class="offer-form__section-title">
-          Branding <span class="offer-form__required">*</span>
+          {{ 'offerForm.section.branding' | translate }} <span class="offer-form__required">*</span>
         </h2>
       </div>
       <div class="offer-form__mt-6">
         <label class="offer-form__label offer-form__label--block offer-form__label--mb">
-          Background Images
+          {{ 'offerForm.label.backgroundImages' | translate }}
           <span class="offer-form__required">*</span>
         </label>
         <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg offer-form__mt-2"
@@ -629,13 +621,11 @@
                   style="width: 32px; height: 32px; display: inline-block;"
                   [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
               </div>
-              <p class="vendor-upload__title">Upload one cover image and crop it for mobile and desktop</p>
-              <p class="vendor-upload__help">
-                Mobile will save as `2.39:1` and desktop will save as `16:2`. JPG, PNG, max 10MB.
-              </p>
+              <p class="vendor-upload__title">{{ 'offerForm.upload.title' | translate }}</p>
+              <p class="vendor-upload__help">{{ 'offerForm.upload.help' | translate }}</p>
               <div class="offer-form__btn-row">
                 <button type="button" pButton icon="pi pi-upload"
-                  [label]="(previewUrl() || offerLandscapePreviewUrl() || offerForm.get('offerImage')?.value || offerForm.get('offerImageLandscape')?.value) ? 'Upload New Source' : 'Choose Image'"
+                  [label]="((previewUrl() || offerLandscapePreviewUrl() || offerForm.get('offerImage')?.value || offerForm.get('offerImageLandscape')?.value) ? 'offerForm.upload.uploadNew' : 'offerForm.upload.chooseImage') | translate"
                   class="p-button-outlined p-button-sm"
                   (click)="offerFileInput.click(); $event.stopPropagation()"></button>
               </div>
@@ -653,14 +643,14 @@
           <div class="offer-form__preview-card">
             <div class="offer-form__preview-card-head">
               <div>
-                <p class="offer-form__preview-card-title">Mobile Background</p>
+                <p class="offer-form__preview-card-title">{{ 'offerForm.upload.mobileBackground' | translate }}</p>
               </div>
             </div>
             <div class="offer-form__preview-box">
               @if (previewUrl(); as preview) {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="preview" alt="Mobile background image preview"
+                  <img [src]="preview" [alt]="'offerForm.upload.altMobilePreview' | translate"
                     class="offer-form__preview-img" />
                 </div>
                 <p class="offer-form__muted-sm">{{ selectedOfferFileName() }}</p>
@@ -669,21 +659,21 @@
               {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="offerForm.get('offerImage')?.value" alt="Mobile background image"
+                  <img [src]="offerForm.get('offerImage')?.value" [alt]="'offerForm.upload.altMobile' | translate"
                     class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
-                <p class="offer-form__muted-sm">Current mobile background</p>
+                <p class="offer-form__muted-sm">{{ 'offerForm.upload.currentMobile' | translate }}</p>
               </div>
               } @else {
-              <p class="offer-form__muted-sm">Upload a source image to create the mobile crop.</p>
+              <p class="offer-form__muted-sm">{{ 'offerForm.upload.emptyMobile' | translate }}</p>
               }
             </div>
             <div class="offer-form__btn-row offer-form__btn-row--mt">
-              <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
+              <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate" class="p-button-outlined p-button-sm"
                 [disabled]="!(previewUrl() || offerForm.get('offerImage')?.value || offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value)"
                 (click)="recropOfferImage('mobile'); $event.stopPropagation()"></button>
-              <button type="button" pButton icon="pi pi-trash" label="Remove"
+              <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
                 class="p-button-outlined p-button-danger p-button-sm"
                 [disabled]="!(previewUrl() || offerForm.get('offerImage')?.value)"
                 (click)="removeOfferImage(); $event.stopPropagation()"></button>
@@ -693,14 +683,14 @@
           <div class="offer-form__preview-card">
             <div class="offer-form__preview-card-head">
               <div>
-                <p class="offer-form__preview-card-title">Desktop Background</p>
+                <p class="offer-form__preview-card-title">{{ 'offerForm.upload.desktopBackground' | translate }}</p>
               </div>
             </div>
             <div class="offer-form__preview-box">
               @if (offerLandscapePreviewUrl(); as offerLandscapePreview) {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="offerLandscapePreview" alt="Desktop background image preview"
+                  <img [src]="offerLandscapePreview" [alt]="'offerForm.upload.altDesktopPreview' | translate"
                     class="offer-form__preview-img" />
                 </div>
                 <p class="offer-form__muted-sm">{{ selectedOfferLandscapeFileName() }}</p>
@@ -709,21 +699,21 @@
               offerForm.get('offerImageLandscape')?.value === 'string') {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="offerForm.get('offerImageLandscape')?.value" alt="Desktop background image"
+                  <img [src]="offerForm.get('offerImageLandscape')?.value" [alt]="'offerForm.upload.altDesktop' | translate"
                     class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
-                <p class="offer-form__muted-sm">Current desktop background</p>
+                <p class="offer-form__muted-sm">{{ 'offerForm.upload.currentDesktop' | translate }}</p>
               </div>
               } @else {
-              <p class="offer-form__muted-sm">Upload a source image to create the desktop crop.</p>
+              <p class="offer-form__muted-sm">{{ 'offerForm.upload.emptyDesktop' | translate }}</p>
               }
             </div>
             <div class="offer-form__btn-row offer-form__btn-row--mt">
-              <button type="button" pButton icon="pi pi-pencil" label="Edit Crop" class="p-button-outlined p-button-sm"
+              <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate" class="p-button-outlined p-button-sm"
                 [disabled]="!(offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value || previewUrl() || offerForm.get('offerImage')?.value)"
                 (click)="recropOfferImage('desktop'); $event.stopPropagation()"></button>
-              <button type="button" pButton icon="pi pi-trash" label="Remove"
+              <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
                 class="p-button-outlined p-button-danger p-button-sm"
                 [disabled]="!(offerLandscapePreviewUrl() || offerForm.get('offerImageLandscape')?.value)"
                 (click)="removeOfferLandscapeImage(); $event.stopPropagation()"></button>
@@ -732,9 +722,9 @@
         </div>
         }
         @if (hasRequiredError('offerImage')) {
-        <p class="offer-form__error">Background image is required.</p>
+        <p class="offer-form__error">{{ 'offerForm.error.backgroundRequired' | translate }}</p>
         } @else if (hasRequiredError('offerImageLandscape')) {
-        <p class="offer-form__error">Background image is required.</p>
+        <p class="offer-form__error">{{ 'offerForm.error.backgroundRequired' | translate }}</p>
         }
       </div>
 
@@ -846,7 +836,7 @@
                 class="p-button-outlined p-button-sm"
                 [disabled]="!(highlightPreviewUrl() || offerForm.get('highlightImage')?.value)"
                 (click)="recropHighlightImage('mobile'); $event.stopPropagation()"></button>
-              <button type="button" pButton icon="pi pi-trash" label="Remove"
+              <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
                 class="p-button-outlined p-button-danger p-button-sm"
                 [disabled]="!(highlightPreviewUrl() || offerForm.get('highlightImage')?.value)"
                 (click)="removeHighlightImage(); $event.stopPropagation()"></button>
@@ -957,7 +947,7 @@
                 class="p-button-outlined p-button-sm"
                 [disabled]="!(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value)"
                 (click)="recropHighlightImage('desktop'); $event.stopPropagation()"></button>
-              <button type="button" pButton icon="pi pi-trash" label="Remove"
+              <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
                 class="p-button-outlined p-button-danger p-button-sm"
                 [disabled]="!(highlightLandscapePreviewUrl() || offerForm.get('highlightImageLandscape')?.value)"
                 (click)="removeHighlightLandscapeImage(); $event.stopPropagation()"></button>
@@ -979,59 +969,59 @@
             [style.maskImage]="getOfferIconMask('ic-contact-info.svg')"></span>
         </div>
         <h2 class="offer-form__section-title">
-          Contact Information
+          {{ 'offerForm.section.contactInfo' | translate }}
         </h2>
       </div>
       <div class="offer-form__grid offer-form__grid--cols3 offer-form__grid--gap-lg">
         <div class="offer-form__field-group">
-          <label class="offer-form__label"> Phone Number 1</label>
+          <label class="offer-form__label">{{ 'offerForm.label.phone1' | translate }}</label>
           <div class="offer-form__input-wrap">
             <i class="pi pi-phone offer-form__field-icon"></i>
-            <input pInputText formControlName="phone" placeholder="+966 5 1234 5678" type="tel" inputmode="tel"
+            <input pInputText formControlName="phone" [placeholder]="'offerForm.placeholder.phone1' | translate" type="tel" inputmode="tel"
               autocomplete="tel" (input)="sanitizePhoneInput('phone')" maxlength="15"
               class="offer-form__input offer-form__input--pl11" />
           </div>
           @if (phoneError()) {
-          <p class="offer-form__error">Use English Numbers</p>
+          <p class="offer-form__error">{{ 'offerForm.error.phoneEnglishNumbers' | translate }}</p>
           } @else if (offerForm.get('phone')?.touched && offerForm.get('phone')?.hasError('required')) {
-          <p class="offer-form__error">Phone number is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.phoneRequired' | translate }}</p>
           } @else if (offerForm.get('phone')?.touched && (offerForm.get('phone')?.hasError('invalidPhone') ||
           offerForm.get('phone')?.hasError('pattern'))) {
-          <p class="offer-form__error offer-form__error--flush">Enter a valid phone number using digits and phone symbols only.</p>
+          <p class="offer-form__error offer-form__error--flush">{{ 'offerForm.error.phoneInvalid' | translate }}</p>
           } @else if (offerForm.get('phone')?.touched && offerForm.get('phone')?.hasError('maxlength')) {
-          <p class="offer-form__error offer-form__error--flush">Phone number cannot exceed 15 characters.</p>
+          <p class="offer-form__error offer-form__error--flush">{{ 'offerForm.error.phoneMaxLength' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__field-group">
-          <label class="offer-form__label">Phone Number 2</label>
+          <label class="offer-form__label">{{ 'offerForm.label.phone2' | translate }}</label>
           <div class="offer-form__input-wrap">
             <i class="pi pi-home offer-form__field-icon"></i>
-            <input pInputText formControlName="landline" placeholder="+966 11 1234 5678" type="tel" inputmode="tel"
+            <input pInputText formControlName="landline" [placeholder]="'offerForm.placeholder.phone2' | translate" type="tel" inputmode="tel"
               autocomplete="tel-national" (input)="sanitizePhoneInput('landline')" maxlength="15"
               class="offer-form__input offer-form__input--pl11" />
           </div>
           @if (landlineError()) {
-          <p class="offer-form__error">Use English Numbers</p>
+          <p class="offer-form__error">{{ 'offerForm.error.phoneEnglishNumbers' | translate }}</p>
           } @else if (offerForm.get('landline')?.touched && offerForm.get('landline')?.hasError('required')) {
-          <p class="offer-form__error">Phone number is required.</p>
+          <p class="offer-form__error">{{ 'offerForm.error.phoneRequired' | translate }}</p>
           } @else if (offerForm.get('landline')?.touched && (offerForm.get('landline')?.hasError('invalidPhone') ||
           offerForm.get('landline')?.hasError('pattern'))) {
-          <p class="offer-form__error offer-form__error--flush">Enter a valid phone number using digits and phone symbols only.</p>
+          <p class="offer-form__error offer-form__error--flush">{{ 'offerForm.error.phoneInvalid' | translate }}</p>
           } @else if (offerForm.get('landline')?.touched && offerForm.get('landline')?.hasError('maxlength')) {
-          <p class="offer-form__error offer-form__error--flush">Phone number cannot exceed 15 characters.</p>
+          <p class="offer-form__error offer-form__error--flush">{{ 'offerForm.error.phoneMaxLength' | translate }}</p>
           }
         </div>
 
         <div class="offer-form__field-group">
-          <label class="offer-form__label"> Email Address </label>
+          <label class="offer-form__label">{{ 'offerForm.label.email' | translate }}</label>
           <div class="offer-form__input-wrap">
             <i class="pi pi-envelope offer-form__field-icon"></i>
-            <input pInputText formControlName="email" placeholder="contact@example.com" type="email" inputmode="email"
+            <input pInputText formControlName="email" [placeholder]="'offerForm.placeholder.email' | translate" type="email" inputmode="email"
               autocomplete="email" class="offer-form__input offer-form__input--pl11" />
           </div>
           @if (offerForm.get('email')?.touched && offerForm.get('email')?.hasError('email')) {
-          <p class="offer-form__error offer-form__error--flush">Enter a valid email address.</p>
+          <p class="offer-form__error offer-form__error--flush">{{ 'offerForm.error.emailInvalid' | translate }}</p>
           }
         </div>
       </div>
@@ -1130,7 +1120,7 @@
     <div class="offer-form__footer">
       <div class="offer-form__footer-actions">
         <app-button variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
-          Save As Draft
+          {{ 'offerForm.footer.saveDraft' | translate }}
         </app-button>
         <app-button variant="primary" type="submit" icon="pi pi-check" [disabled]="isSubmitDisabled()">
           {{ buttonName() }}
@@ -1139,7 +1129,7 @@
     </div>
   </form>
   <div class="offer-form__preview-col">
-    <app-preview-offer-details [offer]="previewOffer()" [vendor]="previewOffer().vendor" [language]="previewLanguage"
+    <app-preview-offer-details [offer]="previewOffer()" [vendor]="previewOffer().vendor" [language]="previewLanguage()"
       [locations]="previewLocations" />
   </div>
   <app-room-creation-offer [visible]="showRoomDialog()"
@@ -1149,10 +1139,10 @@
     (locationAdded)="onLocationAdded()" (visibleChange)="onLocationDialogVisibleChange($event)" />
 
   <app-confirmation-pop-up [visible]="showConfirmationDialog()" [loading]="isLoading()"
-    [title]="actionType() === 'edit' ? 'Confirm Changes' : 'Confirm Offer Creation'" [message]="actionType() === 'edit'
-      ? 'Are you sure you want to save the changes to this offer?'
-      : 'Are you sure you want to create this new offer?'"
-    [confirmLabel]="actionType() === 'edit' ? 'Save Changes' : 'Create Offer'" [cancelLabel]="'Cancel'"
+    [title]="(actionType() === 'edit' ? 'offerForm.confirm.titleEdit' : 'offerForm.confirm.titleCreate') | translate" [message]="(actionType() === 'edit'
+      ? 'offerForm.confirm.messageEdit'
+      : 'offerForm.confirm.messageCreate') | translate"
+    [confirmLabel]="(actionType() === 'edit' ? 'offerForm.confirm.confirmEdit' : 'offerForm.confirm.confirmCreate') | translate" [cancelLabel]="'offerForm.confirm.cancel' | translate"
     (confirm)="onConfirmSubmit()" (cancel)="onCancelSubmit()">
   </app-confirmation-pop-up>
 
@@ -1164,13 +1154,13 @@
       <!-- Header -->
       <div class="offer-form__cropper-header offer-form__cropper-header-row">
         <div class="offer-form__min-w-0">
-          <h3 class="offer-form__cropper-heading">Crop & Resize Image</h3>
+          <h3 class="offer-form__cropper-heading">{{ 'offerForm.cropper.heading' | translate }}</h3>
           <p class="offer-form__cropper-sub">
-            {{ cropperTarget() === 'offer'
-            ? 'Adjust the offer background images'
+            {{ (cropperTarget() === 'offer'
+            ? 'offerForm.cropper.subOffer'
             : highlightCropTab() === 'mobile'
-            ? 'Adjust the mobile highlight image'
-            : 'Adjust the desktop highlight image' }}
+            ? 'offerForm.cropper.subHighlightMobile'
+            : 'offerForm.cropper.subHighlightDesktop') | translate }}
           </p>
         </div>
         <button type="button" class="offer-form__cropper-close offer-form__cropper-close-btn"
@@ -1181,19 +1171,19 @@
 
       <div class="offer-form__cropper-toolbar offer-form__cropper-toolbar-row">
         <div class="offer-form__cropper-toolbar-meta">
-          <span class="offer-form__cropper-meta-label offer-form__cropper-eyebrow">Frame</span>
+          <span class="offer-form__cropper-meta-label offer-form__cropper-eyebrow">{{ 'offerForm.cropper.frame' | translate }}</span>
           <p class="offer-form__cropper-meta-value offer-form__cropper-metaval">
-            {{ cropperTarget() === 'offer'
+            {{ (cropperTarget() === 'offer'
             ? offerCropTab() === 'mobile'
-            ? '2.39:1 mobile background crop'
-            : '16:2 desktop background crop'
+            ? 'offerForm.cropper.frameMobileBg'
+            : 'offerForm.cropper.frameDesktopBg'
             : highlightCropTab() === 'mobile'
-            ? '9:16 mobile highlight crop'
-            : '16:9 desktop highlight crop' }}
+            ? 'offerForm.cropper.frameMobileHighlight'
+            : 'offerForm.cropper.frameDesktopHighlight') | translate }}
           </p>
         </div>
         <div class="offer-form__cropper-zoom">
-          <span class="offer-form__cropper-meta-label offer-form__cropper-eyebrow offer-form__mr-1">Zoom</span>
+          <span class="offer-form__cropper-meta-label offer-form__cropper-eyebrow offer-form__mr-1">{{ 'offerForm.cropper.zoom' | translate }}</span>
           <button type="button" class="offer-form__cropper-icon-button offer-form__cropper-iconbtn"
             (click)="zoomOut()">
             <i class="pi pi-minus offer-form__text-xs"></i>
@@ -1218,19 +1208,19 @@
           [class.offer-form__crop-tab-btn--active]="offerCropTab() === 'mobile'"
           [class.offer-form__crop-tab-btn--inactive]="offerCropTab() !== 'mobile'"
           (click)="switchOfferCropTab('mobile')">
-          Mobile 2.39:1
+          {{ 'offerForm.cropper.tabMobile' | translate }}
         </button>
         <button type="button" class="offer-form__crop-tab-btn"
           [class.offer-form__crop-tab-btn--active]="offerCropTab() === 'desktop'"
           [class.offer-form__crop-tab-btn--inactive]="offerCropTab() !== 'desktop'"
           [disabled]="!canOpenDesktopOfferTab" (click)="switchOfferCropTab('desktop')">
-          Desktop 16:2
+          {{ 'offerForm.cropper.tabDesktop' | translate }}
         </button>
       </div>
       } @else {
       <div class="offer-form__cropper-tabbar">
         <span class="offer-form__crop-tab-btn offer-form__crop-tab-btn--active">
-          {{ highlightCropTab() === 'mobile' ? 'Mobile 9:16' : 'Desktop 16:9' }}
+          {{ (highlightCropTab() === 'mobile' ? 'offerForm.cropper.tabHighlightMobile' : 'offerForm.cropper.tabHighlightDesktop') | translate }}
         </span>
       </div>
       }
@@ -1248,9 +1238,9 @@
 
       <!-- Footer Actions -->
       <div class="offer-form__cropper-footer offer-form__cropper-actions">
-        <button type="button" pButton label="Cancel" severity="secondary" [outlined]="true" (click)="cancelCrop()"
+        <button type="button" pButton [label]="'offerForm.cropper.cancel' | translate" severity="secondary" [outlined]="true" (click)="cancelCrop()"
           styleClass="offer-form__cropper-cancel"></button>
-        <button type="button" pButton [label]="cropperPrimaryActionLabel" [icon]="cropperPrimaryActionIcon"
+        <button type="button" pButton [label]="cropperPrimaryActionLabel | translate" [icon]="cropperPrimaryActionIcon"
           (click)="applyCrop()" [disabled]="!canApplyCrop"
           styleClass="offer-form__cropper-apply"></button>
       </div>

@@ -29,8 +29,17 @@ describe('translations', () => {
     expect(Object.keys(a).sort()).toEqual(Object.keys(e).sort());
   });
 
+  // Format masks and codes, not copy — identical in both languages on purpose.
+  const sameByDesign = new Set([
+    'offerForm.placeholder.date',
+    'offerForm.placeholder.currency',
+    'offerForm.placeholder.email',
+  ]);
+
   it('has no untranslated Arabic values', () => {
-    const same = Object.keys(e).filter((k) => e[k] === a[k] && /[a-z]{3}/i.test(e[k]));
+    const same = Object.keys(e).filter(
+      (k) => !sameByDesign.has(k) && e[k] === a[k] && /[a-z]{3}/i.test(e[k]),
+    );
     expect(same).toEqual([]);
   });
 

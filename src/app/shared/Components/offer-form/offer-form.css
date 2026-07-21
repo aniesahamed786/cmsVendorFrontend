@@ -308,7 +308,7 @@
 
 ::ng-deep .offer-form__datepicker .p-datepicker-dropdown {
   border: none !important;
-  border-left: 1px solid var(--app-border) !important;
+  border-inline-start: 1px solid var(--app-border) !important;
   background: transparent !important;
   cursor: pointer !important;
 }
@@ -318,7 +318,7 @@
 }
 
 ::ng-deep .offer-form__datepicker .p-datepicker:focus-within .p-datepicker-dropdown {
-  border-left-color: var(--app-primary) !important;
+  border-inline-start-color: var(--app-primary) !important;
 }
 
 .offer-form input,
@@ -512,7 +512,7 @@
 ::ng-deep .offer-form .offer-form__field .p-select-dropdown,
 ::ng-deep .offer-form .offer-form__field .p-multiselect-dropdown,
 ::ng-deep .offer-form .offer-form__field .p-autocomplete-dropdown {
-  border-left: none !important;
+  border-inline-start: none !important;
 }
 
 ::ng-deep .offer-form .offer-form__field .p-multiselect-dropdown,
@@ -1320,10 +1320,10 @@
 
 /* Inputs */
 .offer-form__input { width: 100%; }
-.offer-form__input--pl2 { padding-left: 0.5rem; }
-.offer-form__input--pl4 { padding-left: 1rem; }
-.offer-form__input--pl5 { padding-left: 1.25rem; }
-.offer-form__input--pl11 { padding-left: 2.75rem; }
+.offer-form__input--pl2 { padding-inline-start: 0.5rem; }
+.offer-form__input--pl4 { padding-inline-start: 1rem; }
+.offer-form__input--pl5 { padding-inline-start: 1.25rem; }
+.offer-form__input--pl11 { padding-inline-start: 2.75rem; }
 .offer-form__input--pr4 { padding-right: 1rem; }
 .offer-form__input--right { text-align: right; }
 
@@ -1361,7 +1361,7 @@
 
 .offer-form__field-icon {
   position: absolute;
-  left: 1rem;
+  inset-inline-start: 1rem;
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.875rem;
@@ -1370,7 +1370,14 @@
 
 .offer-form__select {
   width: 100%;
-  padding-left: 0.5rem;
+  padding-inline-start: 0.5rem;
+}
+
+/* PrimeNG's autocomplete host is inline-flex, so it ignores the flex-1 wrapper. */
+::ng-deep .offer-form .offer-form__autocomplete,
+::ng-deep .offer-form .offer-form__autocomplete .p-autocomplete,
+::ng-deep .offer-form .offer-form__autocomplete .p-autocomplete-input {
+  width: 100%;
 }
 
 /* Radio pills */
@@ -1721,7 +1728,7 @@
 .offer-form__cropper-close-btn {
   width: 2rem;
   height: 2rem;
-  margin-left: 0.5rem;
+  margin-inline-start: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1742,7 +1749,7 @@
 }
 .offer-form__cropper-toolbar-meta {
   min-width: 0;
-  margin-right: auto;
+  margin-inline-end: auto;
 }
 .offer-form__cropper-eyebrow {
   font-size: 11px;
@@ -1904,7 +1911,7 @@
 .offer-form__flex-auto { flex: 1 1 auto; }
 .offer-form__flex-1 { flex: 1 1 0%; }
 .offer-form__hidden { display: none; }
-.offer-form__mr-1 { margin-right: 0.25rem; }
+.offer-form__mr-1 { margin-inline-end: 0.25rem; }
 .offer-form__text-xs { font-size: 0.75rem; }
 .offer-form__error--flush { margin-top: 0; }
 
