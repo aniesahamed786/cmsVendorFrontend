@@ -308,7 +308,6 @@
 
 ::ng-deep .offer-form__datepicker .p-datepicker-dropdown {
   border: none !important;
-  border-inline-start: 1px solid var(--app-border) !important;
   background: transparent !important;
   cursor: pointer !important;
 }

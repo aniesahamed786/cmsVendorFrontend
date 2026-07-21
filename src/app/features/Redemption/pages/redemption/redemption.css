@@ -1,7 +1,5 @@
 :host { display: block; }
 
-:host { display: block; }
-
 .redemption-page {
   display: flex;
   flex-direction: column;
@@ -30,8 +28,9 @@ section.redemption-card {
   color: var(--app-text);
   border: 1px solid var(--app-border);
   box-shadow: none;
-  border-radius: 0;
   display: block;
+  /* No local border-radius override — .p-card { border-radius: 0 !important }
+     in styles.scss already covers it */
 }
 
 section.redemption-card {
@@ -68,7 +67,7 @@ section.redemption-card {
 }
 
 .required-star {
-  color: #dc2626;
+  color: #dc2626; /* kept: sanctioned validation-red literal — REFACTOR.md Step 2 exception */
 }
 
 /* Form Styles */
@@ -84,11 +83,8 @@ section.redemption-card {
   }
 }
 
-.redemption-form__field-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
+/* No local .redemption-form__field-wrapper display/flex-direction/gap rule —
+   the global [class*="__field-wrapper"] rule in styles.scss already covers it */
 
 .redemption-form__field-wrapper label {
   font-weight: 600;
@@ -97,47 +93,31 @@ section.redemption-card {
   font-size: 0.875rem;
 }
 
-/* Input Fields */
-.redemption-form input {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  border: 1px solid var(--app-border) !important;
-  color: var(--app-text) !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  padding: 0.75rem 1rem;
-}
+/* No local input background/border/color/shadow/radius/height override —
+   .p-inputtext in styles.scss already covers it */
 
 .redemption-form input:focus {
-  border-color: var(--app-primary) !important;
+  /* Ring suppressed to match the border-only focus treatment already used
+     across the app's other forms (offer-form, vendor-location-dialog,
+     analytics-page, room-creation-offer, …). border-color and outline already
+     come from the global .p-inputtext:enabled:focus rule. */
   box-shadow: none !important;
-  outline: none !important;
 }
 
-.redemption-form input::placeholder {
-  color: var(--app-muted) !important;
-  opacity: 1;
-}
+/* No local input::placeholder color override — the global ::placeholder rule
+   in styles.scss already covers it */
 
-/* PrimeNG Select Fields */
-::ng-deep .redemption-form .redemption-form__field.p-select,
-::ng-deep .redemption-form .redemption-form__field .p-select-label,
-::ng-deep .redemption-form .redemption-form__field .p-select-dropdown {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-}
+/* No local .p-select background/color/border/shadow/radius override —
+   the global .p-select rule in styles.scss already covers it */
 
-::ng-deep .redemption-form .redemption-form__field.p-select {
-  min-height: 2.75rem;
-}
+/* No local .p-select min-height override — global already sets
+   height: var(--field-height) on .p-select */
 
 ::ng-deep .redemption-form .redemption-form__field.p-select:focus-within {
-  border-color: var(--app-primary) !important;
+  /* Same intentional ring suppression as .redemption-form input:focus above */
   box-shadow: none !important;
-  outline: none !important;
 }
+
 .redemption-table__empty {
   text-align: center;
   color: var(--app-muted);
@@ -170,30 +150,11 @@ section.redemption-card {
   margin-top: 1rem;
 }
 
-::ng-deep .redemption-form .redemption-form__field .p-select-dropdown {
-  border-inline-start: 1px solid var(--app-border) !important;
-  color: var(--app-muted) !important;
-  fill: var(--app-muted) !important;
-}
-
-/* Dropdown Overlay Panel (Global) */
-.redemption-form__overlay-panel,
-.redemption-form__overlay-panel .p-select-option {
-  background: var(--app-surface) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-  border-radius: 0 !important;
-}
-
-.redemption-form__overlay-panel .p-select-option:hover,
-.redemption-form__overlay-panel .p-select-option.p-focus {
-  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
-}
-
-.redemption-form__overlay-panel .p-select-option.p-select-option-selected {
-  background: var(--app-primary-soft) !important;
-  color: var(--app-primary) !important;
-}
+/* No local overlay-panel background/color/border/radius, option-hover or
+   option-selected override — .p-select-panel / .p-select-option(-selected)
+   in styles.scss already style these regardless of panelStyleClass, because
+   PrimeNG's own .p-select-panel/.p-select-option classes are always present
+   alongside it. */
 
 /* Table Styles */
 ::ng-deep .redemption-table {
@@ -207,7 +168,10 @@ section.redemption-card {
 }
 
 ::ng-deep .redemption-table th {
-  background: color-mix(in srgb, var(--app-surface) 95%, var(--app-border) 5%) !important;
+  /* Transparent, not a tinted fill — the header sits on the card's single
+     --app-surface instead of bringing its own shade, matching the
+     already-established convention in recent-activities/offer-list/branches-page. */
+  background: transparent !important;
   color: var(--app-muted) !important;
   font-weight: 600 !important;
   padding: 1rem !important;

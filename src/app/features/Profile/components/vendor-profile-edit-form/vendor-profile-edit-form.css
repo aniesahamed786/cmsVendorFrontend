@@ -153,8 +153,7 @@ label {
 
 :host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-select-dropdown,
 :host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-multiselect-trigger {
-  border-inline-start: 1px solid var(--app-border) !important;
-  color: var(--app-muted) !important; 
+  color: var(--app-muted) !important;
   fill: var(--app-muted) !important;
 }
 
