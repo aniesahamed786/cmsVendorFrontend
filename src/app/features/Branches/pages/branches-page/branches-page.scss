@@ -49,6 +49,36 @@
     margin-top: 0.5rem;
   }
 
+  // ---- Skeletons (.app-skeleton owns fill + pulse; these own size only) ----
+  // Top performers: the blocks sit inside a real __performer-row, so the
+  // border, padding and gap all come from the loaded layout — nothing shifts.
+  &__skeleton-avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &__skeleton-name {
+    width: 8rem;
+    height: 1rem;
+  }
+
+  &__skeleton-score {
+    width: 3.5rem;
+    height: 1rem;
+  }
+
+  // Table: the header and the row boxes are real, so these size only the block
+  // standing in for each cell's text. Widths differ per column so it reads as
+  // content rather than a bar — all under the column's real width.
+  &__skeleton-cell {
+    height: 1rem; // one text line, so the row keeps the height it will have
+
+    &--name { width: 9rem; }
+    &--num { width: 2.5rem; }
+    &--text { width: 7rem; }
+    &--action { width: 1.25rem; margin-inline: auto; }
+  }
+
   .overview-kpi-grid {
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -151,9 +181,11 @@
     width: 100%;
     height: 360px;
     min-height: 360px;
-    border-radius: var(--border-radius-lg);
     overflow: hidden;
-    background-color: var(--surface-hover);
+    // --surface-hover was an undefined custom property (no such token exists
+    // in styles.scss or the PrimeNG preset) — mapped by role to the page
+    // canvas fill, distinct from the surrounding card's --app-surface.
+    background-color: var(--app-bg);
   }
 
   .branches-page__map-container {
@@ -170,7 +202,9 @@
     justify-content: center;
     padding: 1rem;
     text-align: center;
-    color: var(--text-color-secondary);
+    // --text-color-secondary was undefined (no such token exists) — role is
+    // secondary/muted text, same as everywhere else in the app.
+    color: var(--app-muted);
     font-size: 0.875rem;
   }
 
@@ -180,11 +214,12 @@
     inset-inline-end: 12px;
     padding: 4px 8px;
     font-size: 0.75rem;
-    background-color: var(--surface-card);
-    color: var(--text-color);
-    border-radius: var(--border-radius-sm);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    // --surface-card / --text-color were undefined (no such tokens exist) —
+    // this is a raised badge floating over the map, i.e. the surface role.
+    background-color: var(--app-surface);
+    color: var(--app-text);
     z-index: 10;
+    // no border-radius / box-shadow: square corners, no shadow (Step 5 rules 5-6)
 
     &--loading {
       inset-inline-start: 12px;
@@ -198,11 +233,12 @@
     inset-inline: 12px;
     padding: 8px 12px;
     font-size: 0.75rem;
-    background-color: var(--red-500);
-    color: white;
-    border-radius: var(--border-radius-sm);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    // --red-500 was undefined (no such token exists) — this is an error
+    // banner, which is exactly --app-danger's scope (destructive/error state).
+    background-color: var(--app-danger);
+    color: #fff; // kept: sanctioned on-primary(-fill) contrast literal
     z-index: 10;
+    // no border-radius / box-shadow: square corners, no shadow (Step 5 rules 5-6)
   }
 
   &__performers-card {
@@ -232,6 +268,11 @@
 
     &:hover {
       background: color-mix(in srgb, var(--app-surface) 98%, var(--app-primary) 2%);
+    }
+
+    // reusing the real row brings its hover along; a placeholder isn't interactive
+    &--skeleton:hover {
+      background: none;
     }
   }
 
@@ -269,6 +310,10 @@
     color: var(--app-text);
   }
 
+  /* FLAGGED for the Phase 4 gate — trend/positive-increase green, same case
+     as recent-activities' status green. No success/positive token exists in
+     :root, and inventing one is a token decision, not a page one. Left
+     literal so light mode is unchanged. */
   &__performer-trend {
     font-size: 10px;
     color: #16a34a;
@@ -349,18 +394,54 @@
     font-size: 0.9rem;
     padding: 0.9rem 1rem;
     border: none;
-    border-top: 1px solid var(--app-border);
-    border-bottom: 1px solid var(--app-border);
+    border-block-start: 1px solid var(--app-border);
+    border-block-end: 1px solid var(--app-border);
   }
 
+  // rows carry no fill of their own — the wrapper above owns the one surface
   .p-datatable-tbody>tr {
-    background: var(--app-surface);
+    background: transparent;
     color: var(--app-text);
+    transition:
+      box-shadow 160ms ease,
+      transform 160ms ease;
 
     >td {
       padding: 1.1rem 1rem;
       border: none;
-      border-bottom: 1px solid var(--app-border);
+      border-block-end: 1px solid var(--app-border);
+      transition: background-color 160ms ease;
+    }
+  }
+
+  // Row hover, per REFACTOR.md Step 4: lift + leading accent bar + cell tint +
+  // title recolor. The bar is an inset shadow, not a border, so the row doesn't
+  // reflow — it's the sanctioned exception to Step 5 rule 6.
+  .p-datatable-tbody>tr:hover {
+    transform: translateY(-1px);
+    box-shadow: inset 3px 0 0 var(--app-primary);
+  }
+
+  // tint sits on the cell, not the row: an opaque td would cover a tr fill
+  .p-datatable-tbody>tr:hover>td {
+    background: color-mix(
+      in srgb,
+      rgba(var(--app-primary-rgb), 0.08) 40%,
+      var(--app-surface) 60%
+    );
+  }
+
+  .p-datatable-tbody>tr:hover .branches-page__row-title {
+    color: var(--app-primary);
+  }
+
+  // a placeholder row isn't interactive — no lift, no bar, no tint
+  .p-datatable-tbody>tr.branches-page__row--skeleton:hover {
+    transform: none;
+    box-shadow: none;
+
+    >td {
+      background: transparent;
     }
   }
 
@@ -389,9 +470,8 @@
     min-width: 4.5rem;
   }
 
-  .p-paginator .p-select-label {
-    padding-inline-end: 0.5rem;
-  }
+  /* No local .p-select-label rule — styles.scss sets its padding-inline with
+     !important, so the local copy never applied. */
 
   .p-paginator .p-paginator-page,
   .p-paginator .p-paginator-first,
@@ -414,5 +494,34 @@
   .p-paginator .p-paginator-page:not(.p-highlight):hover {
     background: var(--app-primary-hover-soft);
     color: var(--app-text);
+  }
+}
+
+// box-shadow has no logical form, so the accent bar is the one place a physical
+// offset is correct here — it flips by hand for Arabic
+:host-context(html[lang="ar"]) ::ng-deep .branches-page__table
+  .p-datatable-tbody > tr:hover {
+  box-shadow: inset -3px 0 0 var(--app-primary);
+}
+
+.branches-page__row-title {
+  color: var(--app-text);
+  transition: color 200ms ease; // slower than the row, so the text trails it
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::ng-deep .branches-page__table {
+    .p-datatable-tbody > tr,
+    .p-datatable-tbody > tr > td {
+      transition: none;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      transform: none;
+    }
+  }
+
+  .branches-page__row-title {
+    transition: none;
   }
 }

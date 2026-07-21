@@ -29,6 +29,11 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   topPerformers = signal<TopPerformer[]>([]);
   allBranches = signal<BranchRow[]>([]);
 
+  // Explicit flags, not `length === 0`: an empty array is the loaded-but-empty
+  // state too, and the table has its own emptymessage template for that.
+  performersLoading = signal(true);
+  branchesLoading = signal(true);
+
   // Table filters
   selectedStatus = signal<string | null>(null);
   selectedRegion = signal<string | null>(null);
@@ -121,6 +126,13 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     });
   });
 
+  // While loading, feed the table 5 falsy rows. PrimeNG's TableBody renders
+  // `rowData ? bodyTemplate : loadingBodyTemplate` per row, so each null draws
+  // the loadingbody skeleton row while the header and table chrome stay real.
+  readonly tableRows = computed(() =>
+    this.branchesLoading() ? new Array(5).fill(null) : this.filteredBranches()
+  );
+
   constructor() {
     effect(() => {
       const dark = this.themeService.isDarkMode();
@@ -138,9 +150,13 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.branchesService.getKPIs().subscribe(data => this.kpis.set(data));
-    this.branchesService.getTopPerformers().subscribe(data => this.topPerformers.set(data));
+    this.branchesService.getTopPerformers().subscribe(data => {
+      this.topPerformers.set(data);
+      this.performersLoading.set(false);
+    });
     this.branchesService.getBranches().subscribe(data => {
       this.allBranches.set(data);
+      this.branchesLoading.set(false);
       this.ensureMapReady();
     });
   }
@@ -329,6 +345,10 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private createBranchMapMarker(position: { lat: number; lng: number }, loc: BranchRow): any {
     const google = (window as any).google;
     const markerTitle = loc.name;
+    // Fallback here is a JS-level guard on a getComputedStyle() read, not a CSS
+    // var() fallback — --app-primary always resolves from :root, but kept in
+    // case this runs before global styles are attached. Left as-is (styling
+    // refactor scope; changing the guard is a logic decision, not a token one).
     const markerColor = this.getThemeColor('--app-primary', '#0033A0');
 
     class BranchMapMarker extends google.maps.OverlayView {
@@ -353,7 +373,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
         wrapper.style.height = '32px';
         wrapper.style.padding = '4px 12px';
         wrapper.style.background = markerColor;
-        wrapper.style.color = '#ffffff';
+        wrapper.style.color = '#ffffff'; // sanctioned: on-primary contrast over the brand-fill pin
         wrapper.style.borderRadius = '16px';
         wrapper.style.boxShadow = '0 4px 12px rgba(15, 23, 42, 0.22)';
         wrapper.style.cursor = 'pointer';
@@ -440,6 +460,9 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private getMapStyles(dark = this.themeService.isDarkMode()): any[] {
     const base = [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }];
     if (!dark) return base;
+    // Google Maps JS API style array — plain data consumed by the Maps
+    // renderer, not CSS. It cannot take `var(--app-*)` custom properties, so
+    // these hexes are a deliberate one-off dark palette, left untouched.
     return [
       ...base,
       { elementType: 'geometry', stylers: [{ color: '#0f1b3d' }] },

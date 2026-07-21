@@ -96,6 +96,17 @@
       <p class="branches-page__performers-subtitle">{{ 'branches.performers.subtitle' | translate }}</p>
 
       <div class="branches-page__performers-list">
+        @if (performersLoading()) {
+        @for (i of [1,2,3,4]; track i) {
+        <div class="branches-page__performer-row branches-page__performer-row--skeleton">
+          <div class="branches-page__performer-info">
+            <div class="app-skeleton branches-page__skeleton-avatar"></div>
+            <div class="app-skeleton branches-page__skeleton-name"></div>
+          </div>
+          <div class="app-skeleton branches-page__skeleton-score"></div>
+        </div>
+        }
+        } @else {
         @for (performer of topPerformers(); track performer.id) {
         <div class="branches-page__performer-row">
           <div class="branches-page__performer-info">
@@ -109,6 +120,7 @@
             <span class="branches-page__performer-trend">{{ 'branches.performers.increase' | translate }}</span>
           </div>
         </div>
+        }
         }
       </div>
     </div>
@@ -151,7 +163,7 @@
 
     <!-- Table -->
     <div class="branches-page__table-wrapper">
-      <p-table [value]="filteredBranches()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+      <p-table [value]="tableRows()" [paginator]="!branchesLoading()" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
         paginatorDropdownAppendTo="body" styleClass="branches-page__table">
         <ng-template pTemplate="header">
           <tr>
@@ -165,7 +177,7 @@
 
         <ng-template pTemplate="body" let-branch>
           <tr>
-            <td>{{ branch.name }}</td>
+            <td><span class="branches-page__row-title">{{ branch.name }}</span></td>
             <td>{{ branch.totalOffers }}</td>
             <td>{{ branch.location }}</td>
             <td>{{ branch.manager }}</td>
@@ -173,6 +185,20 @@
               <button class="branches-page__action-btn" type="button">
                 <i class="pi pi-ellipsis-h"></i>
               </button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <!-- PrimeNG renders this instead of the body row for every falsy entry in
+             [value] — that's what the placeholder rows in tableRows() are for. -->
+        <ng-template pTemplate="loadingbody">
+          <tr class="branches-page__row--skeleton">
+            <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--name"></span></td>
+            <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--num"></span></td>
+            <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--text"></span></td>
+            <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--text"></span></td>
+            <td class="branches-page__td-center">
+              <span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--action"></span>
             </td>
           </tr>
         </ng-template>
