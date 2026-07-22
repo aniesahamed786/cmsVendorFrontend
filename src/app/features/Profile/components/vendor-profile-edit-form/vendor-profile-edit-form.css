@@ -70,12 +70,13 @@ label {
   color: var(--app-text);
 }
 
+/* Fixed geometry the global field shell doesn't set — height, no resize, inner
+   padding. Colours/border/focus/placeholder come from the global .p-textarea. */
 .profile-form-grid__full textarea {
   padding: 1.25rem !important;
   height: 120px !important;
   min-height: 120px !important;
   resize: none !important;
-  box-shadow: none !important;
   font-size: 1rem !important;
   line-height: 1.5rem !important;
 }
@@ -90,97 +91,10 @@ label {
   color: var(--app-muted);
 }
 
-/* House field recipe based on SKILL.md */
-.vendor-profile-edit-form input,
-.vendor-profile-edit-form textarea,
-:host ::ng-deep .vendor-profile-edit-form .p-inputtext,
-:host ::ng-deep .vendor-profile-edit-form .p-inputtextarea {
-  width: 100%;
-  border-radius: 0 !important;
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  border: 1px solid var(--app-border) !important;
-  color: var(--app-text) !important;
-  box-shadow: none !important;
-}
-
-.vendor-profile-edit-form input:focus,
-.vendor-profile-edit-form textarea:focus,
-:host ::ng-deep .vendor-profile-edit-form .p-inputtext:focus,
-:host ::ng-deep .vendor-profile-edit-form .p-inputtextarea:focus {
-  border-color: var(--app-primary) !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.vendor-profile-edit-form input::placeholder,
-.vendor-profile-edit-form textarea::placeholder,
-:host ::ng-deep .vendor-profile-edit-form .p-inputtext::placeholder,
-:host ::ng-deep .vendor-profile-edit-form .p-inputtextarea::placeholder {
-  color: var(--app-muted) !important;
-  opacity: 1;
-}
-
+/* Fixed-RTL content: the Arabic name/description inputs stay right-aligned
+   regardless of page direction, so `right` is intentional (not a logical prop). */
 .vendor-profile-edit-form__input--rtl {
   text-align: right;
-}
-
-/* PrimeNG Select Styling */
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field.p-select,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-select-label,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-select-dropdown,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field.p-multiselect,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-multiselect-label,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-multiselect-trigger {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-}
-
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field.p-select,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field.p-multiselect { 
-  min-height: 2.75rem; 
-  width: 100% !important;
-}
-
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field.p-select:focus-within,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field.p-multiselect:focus-within {
-  border-color: var(--app-primary) !important;
-  box-shadow: none !important; 
-  outline: none !important;
-}
-
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-select-dropdown,
-:host ::ng-deep .vendor-profile-edit-form .vendor-profile-edit-form__field .p-multiselect-trigger {
-  color: var(--app-muted) !important;
-  fill: var(--app-muted) !important;
-}
-
-/* Portal overlay panel (global pierce) */
-::ng-deep .vendor-profile-edit-form__overlay-panel,
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-select-option,
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-multiselect-item {
-  background: var(--app-surface) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-}
-
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-select-option,
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-multiselect-item { 
-  border-radius: 0 !important; 
-}
-
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-select-option:hover,
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-select-option.p-focus,
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-multiselect-item:hover,
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-multiselect-item.p-highlight {
-  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
-}
-
-::ng-deep .vendor-profile-edit-form__overlay-panel .p-select-option.p-select-option-selected {
-  background: var(--app-primary-soft) !important;
-  color: var(--app-primary) !important;
 }
 
 .profile-form-actions-row {
@@ -199,8 +113,26 @@ label {
   padding: 0;
 }
 
+.profile-link-action:hover {
+  text-decoration: underline;
+}
+
 .profile-link-action--danger {
   color: #dc2626;
+}
+
+.profile-link-action--add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--app-muted);
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.profile-link-action--add:hover {
+  color: var(--app-primary);
+  text-decoration: none;
 }
 
 .profile-location-list {

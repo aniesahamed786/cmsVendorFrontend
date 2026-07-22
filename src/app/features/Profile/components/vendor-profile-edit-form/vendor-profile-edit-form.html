@@ -74,27 +74,31 @@
     </div>
   </div>
 
+  <!-- Disabled feature stub (savedLocations UI). De-Tailwinded to BEM so it stays
+       grep-clean and ready; keep commented until the locations feature is wired.
+       NOTE (out of styling scope): section title + Edit/Delete/Add labels are
+       hardcoded English and need i18n keys before this is enabled. -->
   <!-- <div class="profile-form-section">
     <div class="profile-form-section__header">
       <div class="profile-form-section__icon"><i class="pi pi-map-marker"></i></div>
       <h2>Business Locations</h2>
     </div>
     @if (savedLocations().length > 0) {
-      <div class="border border-[var(--app-border)] mt-6 rounded-none flex flex-col">
+      <div class="profile-location-list">
         @for (location of savedLocations(); track location.id) {
-          <div class="flex items-center justify-between px-4 py-4 border-b border-[var(--app-border)] last:border-b-0">
-            <span class="text-[var(--app-text)] font-medium text-[0.95rem]">{{ location.nameEn }}</span>
-            <div class="flex items-center gap-4 text-sm font-medium">
-              <button type="button" data-preview-section="branches" class="text-[#0033A0] hover:underline cursor-pointer" (click)="editLocation(location)">Edit</button>
-              <button type="button" class="text-[#dc2626] hover:underline cursor-pointer" (click)="removeLocation(location.id)">Delete</button>
+          <div class="profile-location-item">
+            <span class="profile-location-item__title">{{ location.nameEn }}</span>
+            <div class="profile-location-item__actions">
+              <button type="button" data-preview-section="branches" class="profile-link-action" (click)="editLocation(location)">Edit</button>
+              <button type="button" class="profile-link-action profile-link-action--danger" (click)="removeLocation(location.id)">Delete</button>
             </div>
           </div>
         }
       </div>
     }
 
-    <div class="flex justify-end mt-4">
-      <button type="button" data-preview-section="branches" class="text-base font-medium text-slate-400 transition-colors hover:text-[#0537A4] cursor-pointer flex items-center gap-1" (click)="openNewLocationDialog()">
+    <div class="profile-form-actions-row">
+      <button type="button" data-preview-section="branches" class="profile-link-action profile-link-action--add" (click)="openNewLocationDialog()">
         <span>+</span> Add new location
       </button>
     </div>

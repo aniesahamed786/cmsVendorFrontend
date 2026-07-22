@@ -18,12 +18,6 @@
   }
 }
 
-.edit-profile-breadcrumb {
-  margin: 0 0 0.75rem;
-  font-size: 0.8125rem;
-  color: var(--app-muted);
-}
-
 .edit-profile-form-actions {
   display: flex;
   justify-content: flex-end;
