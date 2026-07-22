@@ -11,5 +11,6 @@ export class Button {
   variant = input<'primary' | 'outline' | 'ghost'>('primary');
   type = input<'button' | 'submit'>('button');
   disabled = input(false);
+  loading = input(false); // shows a spinner and blocks clicks during async work
   icon = input<string>(); // optional PrimeIcons class, e.g. 'pi pi-pencil'
 }

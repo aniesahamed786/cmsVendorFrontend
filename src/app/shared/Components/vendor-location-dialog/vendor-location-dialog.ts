@@ -3,11 +3,13 @@ import { Component, EventEmitter, inject, Input, Output, OnChanges, SimpleChange
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PrimeUIModules } from '../../../core/prime.import';
 import { VendorProfileEditLocation } from '../../../features/Profile/models/vendor-profile-edit.model';
+import { Button } from '../button/button';
+import { CancelButton } from '../cancel-button/cancel-button';
 
 @Component({
   selector: 'app-vendor-location-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules],
+  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, Button, CancelButton],
   templateUrl: './vendor-location-dialog.html',
   styleUrl: './vendor-location-dialog.css',
 })

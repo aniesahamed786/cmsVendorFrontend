@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { PrimeUIModules } from '../../../core/prime.import';
+import { Button } from '../button/button';
+import { CancelButton } from '../cancel-button/cancel-button';
 
 @Component({
   selector: 'app-confirmation-pop-up',
-  imports: [CommonModule, PrimeUIModules],
+  imports: [CommonModule, PrimeUIModules, Button, CancelButton],
   templateUrl: './confirmation-pop-up.html',
   styleUrl: './confirmation-pop-up.css',
 })

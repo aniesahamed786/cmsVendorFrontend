@@ -146,6 +146,12 @@
       "placeholderDescriptionEn": "وصف مختصر للبائع وخدماته بالإنجليزية",
       "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
       "placeholderRepName": "مثال: محمد أحمد"
+    },
+    "confirm": {
+      "title": "تأكيد التغييرات",
+      "message": "هل أنت متأكد من تحديث ملف البائع؟",
+      "confirm": "تحديث التغييرات",
+      "cancel": "إلغاء"
     }
   },
   "offers": {

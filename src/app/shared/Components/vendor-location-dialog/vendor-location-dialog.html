@@ -172,21 +172,9 @@
       </section>
 
       <div class="vendor-location-dialog__footer">
-        <button
-          type="button"
-          class="vendor-location-dialog__cancel-button"
-          (click)="close()"
-        >
-          Cancel
-        </button>
+        <app-cancel-button (click)="close()"></app-cancel-button>
 
-        <button
-          type="submit"
-          pButton
-          label="Save Location"
-          icon="pi pi-check"
-          styleClass="vendor-location-dialog__submit-button"
-        ></button>
+        <app-button type="submit" icon="pi pi-check">Save Location</app-button>
       </div>
     </form>
   </div>

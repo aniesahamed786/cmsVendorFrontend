@@ -11,11 +11,13 @@ import { arabicOnlyValidator, noWhitespaceValidator } from '../../utils/form-val
 import { LocationSettingsService, SettingsLocation } from '../../../features/setting/services/location-settings.service';
 import { I18nService } from '../../i18n/i18n.service';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { Button } from '../button/button';
+import { CancelButton } from '../cancel-button/cancel-button';
 
 @Component({
   selector: 'app-location-creation',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, ReactiveFormsModule, TranslatePipe, Button, CancelButton],
   templateUrl: './location-creation-offer.html',
   styleUrl: './location-creation-offer.css',
 })

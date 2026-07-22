@@ -223,6 +223,13 @@ p-button[severity="primary"] .p-button:enabled:hover,
   border-radius: 0 !important;
 }
 
+/* Confirmation dialog: header/footer share the body's --app-surface */
+.p-dialog.confirmation-pop-up .p-dialog-header,
+.p-dialog.confirmation-pop-up .p-dialog-content,
+.p-dialog.confirmation-pop-up .p-dialog-footer {
+  background: var(--app-surface) !important;
+}
+
 /* Global PrimeNG Component Overrides (Token-based Themes) */
 
 /* Menu (p-menu) */

@@ -228,22 +228,11 @@
       </section>
 
       <div class="location-creation-offer__footer">
-        <button
-          type="button"
-          class="location-creation-offer__cancel-button"
-          (click)="close()"
-        >
-          {{ 'common.cancel' | translate }}
-        </button>
+        <app-cancel-button (click)="close()"></app-cancel-button>
 
-        <button
-          type="submit"
-          pButton
-          [label]="(locationData ? 'locationDialog.submit.update' : 'locationDialog.submit.save') | translate"
-          icon="pi pi-check"
-          [loading]="loading()"
-          styleClass="location-creation-offer__submit-button"
-        ></button>
+        <app-button type="submit" icon="pi pi-check" [loading]="loading()">
+          {{ (locationData ? 'locationDialog.submit.update' : 'locationDialog.submit.save') | translate }}
+        </app-button>
       </div>
     </form>
   </div>

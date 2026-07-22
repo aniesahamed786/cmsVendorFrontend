@@ -30,5 +30,11 @@
     </div>
   </div>
 
+  <app-confirmation-pop-up [visible]="showUpdateConfirm()" [loading]="isLoading()"
+    [title]="'profile.confirm.title' | translate" [message]="'profile.confirm.message' | translate"
+    [confirmLabel]="'profile.confirm.confirm' | translate" [cancelLabel]="'profile.confirm.cancel' | translate"
+    (confirm)="onConfirmUpdate()" (cancel)="onCancelUpdate()">
+  </app-confirmation-pop-up>
+
   <p-toast />
 </div>

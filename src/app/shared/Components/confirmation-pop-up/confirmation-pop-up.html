@@ -23,19 +23,9 @@
   <ng-template pTemplate="footer">
     <div class="confirmation-pop-up__actions">
       @if (showCancel()) {
-        <p-button
-          [label]="cancelLabel()"
-          severity="secondary"
-          styleClass="confirmation-pop-up__cancel"
-          (onClick)="cancel.emit()"
-        />
+        <app-cancel-button [label]="cancelLabel()" [disabled]="loading()" (click)="cancel.emit()"></app-cancel-button>
       }
-      <p-button
-        [label]="confirmLabel()"
-        [loading]="loading()"
-        styleClass="confirmation-pop-up__confirm"
-        (onClick)="confirm.emit()"
-      />
+      <app-button [loading]="loading()" (click)="confirm.emit()">{{ confirmLabel() }}</app-button>
     </div>
   </ng-template>
 </p-dialog>

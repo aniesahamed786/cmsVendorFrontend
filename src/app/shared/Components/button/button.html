@@ -1,10 +1,11 @@
 <button
   [type]="type()"
-  [disabled]="disabled()"
+  [disabled]="disabled() || loading()"
   class="app-btn"
   [class.app-btn--primary]="variant() === 'primary'"
   [class.app-btn--outline]="variant() === 'outline'"
   [class.app-btn--ghost]="variant() === 'ghost'">
-  @if (icon()) { <i [class]="icon()"></i> }
+  @if (loading()) { <i class="pi pi-spin pi-spinner"></i> }
+  @else if (icon()) { <i [class]="icon()"></i> }
   <ng-content></ng-content>
 </button>

@@ -9,12 +9,13 @@ import { VendorProfileEditForm } from '../../components/vendor-profile-edit-form
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
 import { Button } from '../../../../shared/Components/button/button';
 import { BackButton } from '../../../../shared/Components/back-button/back-button';
+import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
 import { MOCK_VENDOR_PROFILE_EDIT } from '../../data/mock-vendor-profile-edit';
 import { VendorProfileEditData } from '../../models/vendor-profile-edit.model';
 
 @Component({
   selector: 'app-edit-vendor-profile-page',
-  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview, Button, BackButton, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, VendorProfileEditForm, VendorPreview, Button, BackButton, ConfirmationPopUp, TranslatePipe],
   templateUrl: './edit-vendor-profile-page.html',
   styleUrl: './edit-vendor-profile-page.css',
   providers: [MessageService],
@@ -29,6 +30,8 @@ export class EditVendorProfilePage {
 
   readonly initialData = signal(MOCK_VENDOR_PROFILE_EDIT);
   readonly isLoading = signal(false);
+  readonly showUpdateConfirm = signal(false);
+  private pendingUpdate: VendorProfileEditData | null = null;
 
   goBack(): void {
     this.router.navigate(['/profile']);
@@ -44,16 +47,34 @@ export class EditVendorProfilePage {
   }
 
   onUpdateChanges(payload: VendorProfileEditData): void {
+    this.pendingUpdate = payload;
+    this.showUpdateConfirm.set(true);
+  }
+
+  onConfirmUpdate(): void {
+    const payload = this.pendingUpdate;
+    if (!payload || this.isLoading()) return;
     this.isLoading.set(true);
-    this.initialData.set(payload);
-    this.messageService.add({
-      severity: 'success',
-      summary: this.i18n.t('profile.toast.updatedSummary'),
-      detail: this.i18n.t('profile.toast.updatedDetail'),
-      life: 2200,
-    });
-    this.isLoading.set(false);
-    this.router.navigate(['/profile']);
+    // ponytail: fake async delay until the real update API is wired in
+    setTimeout(() => {
+      this.initialData.set(payload);
+      this.messageService.add({
+        severity: 'success',
+        summary: this.i18n.t('profile.toast.updatedSummary'),
+        detail: this.i18n.t('profile.toast.updatedDetail'),
+        life: 2200,
+      });
+      this.isLoading.set(false);
+      this.showUpdateConfirm.set(false);
+      this.pendingUpdate = null;
+      this.router.navigate(['/profile']);
+    }, 1200);
+  }
+
+  onCancelUpdate(): void {
+    if (this.isLoading()) return;
+    this.showUpdateConfirm.set(false);
+    this.pendingUpdate = null;
   }
 
   triggerSaveDraft(): void {

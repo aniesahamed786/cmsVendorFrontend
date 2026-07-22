@@ -1,25 +1,64 @@
 {
   "nav": {
     "openMenu": "Open navigation menu",
-    "dashboard": { "label": "Dashboard", "title": "Dashboard" },
-    "profile": { "label": "Profile", "title": "Vendor Profile" },
-    "request-center": { "label": "Request Center", "title": "Request Center" },
-    "offers": { "label": "Offers", "title": "Offers" },
-    "branches": { "label": "Branches", "title": "Branches" },
-    "redemption": { "label": "Redemption", "title": "Redemption" },
-    "messaging-center": { "label": "Messaging Center", "title": "Messaging Center" },
-    "analytics": { "label": "Analytics", "title": "Analytics" },
-    "recent-activities": { "label": "Recent Activities", "title": "Recent Activities" }
+    "dashboard": {
+      "label": "Dashboard",
+      "title": "Dashboard"
+    },
+    "profile": {
+      "label": "Profile",
+      "title": "Vendor Profile"
+    },
+    "request-center": {
+      "label": "Request Center",
+      "title": "Request Center"
+    },
+    "offers": {
+      "label": "Offers",
+      "title": "Offers"
+    },
+    "branches": {
+      "label": "Branches",
+      "title": "Branches"
+    },
+    "redemption": {
+      "label": "Redemption",
+      "title": "Redemption"
+    },
+    "messaging-center": {
+      "label": "Messaging Center",
+      "title": "Messaging Center"
+    },
+    "analytics": {
+      "label": "Analytics",
+      "title": "Analytics"
+    },
+    "recent-activities": {
+      "label": "Recent Activities",
+      "title": "Recent Activities"
+    }
   },
   "dashboard": {
     "recentActivity": "Recent Activity",
     "viewHistory": "View History",
     "pendingRequests": "Pending Requests",
     "stats": {
-      "totalRedemptions": { "title": "Total Redemptions", "subtitle": "All-time redemptions" },
-      "activeOffers": { "title": "Active Offers", "subtitle": "Currently live" },
-      "pendingOffers": { "title": "Pending Offers", "subtitle": "Awaiting approval" },
-      "expiringSoon": { "title": "Expiring Soon Offers", "subtitle": "Offers expiring in 30 days" }
+      "totalRedemptions": {
+        "title": "Total Redemptions",
+        "subtitle": "All-time redemptions"
+      },
+      "activeOffers": {
+        "title": "Active Offers",
+        "subtitle": "Currently live"
+      },
+      "pendingOffers": {
+        "title": "Pending Offers",
+        "subtitle": "Awaiting approval"
+      },
+      "expiringSoon": {
+        "title": "Expiring Soon Offers",
+        "subtitle": "Offers expiring in 30 days"
+      }
     },
     "quickActions": {
       "title": "Quick Actions",
@@ -28,11 +67,31 @@
       "contactSupport": "Contact Support"
     },
     "activity": {
-      "offerActivated": { "title": "New offer activated", "description": "Summer Sale 2025", "time": "2 mins ago" },
-      "offerPending": { "title": "Offer pending approval", "description": "Family Package", "time": "1 hour ago" },
-      "profileSubmitted": { "title": "Profile update submitted", "description": "Profile & media", "time": "3 hours ago" },
-      "branchHours": { "title": "Branch hours updated", "description": "Dammam Branch", "time": "Yesterday" },
-      "ticketReplied": { "title": "Support ticket replied", "description": "Offer visibility issue", "time": "2 days ago" }
+      "offerActivated": {
+        "title": "New offer activated",
+        "description": "Summer Sale 2025",
+        "time": "2 mins ago"
+      },
+      "offerPending": {
+        "title": "Offer pending approval",
+        "description": "Family Package",
+        "time": "1 hour ago"
+      },
+      "profileSubmitted": {
+        "title": "Profile update submitted",
+        "description": "Profile & media",
+        "time": "3 hours ago"
+      },
+      "branchHours": {
+        "title": "Branch hours updated",
+        "description": "Dammam Branch",
+        "time": "Yesterday"
+      },
+      "ticketReplied": {
+        "title": "Support ticket replied",
+        "description": "Offer visibility issue",
+        "time": "2 days ago"
+      }
     }
   },
   "navbar": {
@@ -87,6 +146,12 @@
       "placeholderDescriptionEn": "Briefly describe the vendor and their services",
       "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
       "placeholderRepName": "e.g. John Doe"
+    },
+    "confirm": {
+      "title": "Confirm Changes",
+      "message": "Are you sure you want to update the vendor profile?",
+      "confirm": "Update Changes",
+      "cancel": "Cancel"
     }
   },
   "offers": {
@@ -98,10 +163,22 @@
     "rowActionsAria": "Row actions",
     "empty": "No offers found.",
     "stats": {
-      "active": { "label": "Active Offers", "hint": "Currently active" },
-      "scheduled": { "label": "Scheduled Offers", "hint": "Upcoming" },
-      "expiringSoon": { "label": "Expiring Soon Offers", "hint": "Offers expiring in 30 days" },
-      "total": { "label": "Total Offers", "hint": "Since All time" }
+      "active": {
+        "label": "Active Offers",
+        "hint": "Currently active"
+      },
+      "scheduled": {
+        "label": "Scheduled Offers",
+        "hint": "Upcoming"
+      },
+      "expiringSoon": {
+        "label": "Expiring Soon Offers",
+        "hint": "Offers expiring in 30 days"
+      },
+      "total": {
+        "label": "Total Offers",
+        "hint": "Since All time"
+      }
     },
     "filter": {
       "discountType": "Discount Type",
@@ -440,7 +517,6 @@
       "offerImageDesktop": "Offer image (desktop)"
     }
   },
-
   "roomDialog": {
     "title": {
       "edit": "Edit Room",
@@ -545,7 +621,6 @@
       "addFailed": "Failed to add vendor location."
     }
   },
-
   "offerDetails": {
     "back": "Back to Offers",
     "raiseTicket": "Raise Ticket",
@@ -623,7 +698,6 @@
       "switchToEnglish": "Switch to English Preview"
     }
   },
-
   "branches": {
     "title": "Branches",
     "subtitle": "Manage and monitor all of your branches across the enterprise ecosystem.",
@@ -683,7 +757,6 @@
     },
     "empty": "No branches found."
   },
-
   "redemption": {
     "title": "Offer Redemption",
     "uploadExcel": "Upload Excel",
@@ -716,7 +789,6 @@
     "currency": "SAR.",
     "empty": "No redemptions found."
   },
-
   "messaging": {
     "search": "Search tickets...",
     "all": "All",
