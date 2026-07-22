@@ -178,15 +178,11 @@
             </section>
 
             <div class="room-creation-offer__footer">
-                <button type="button"
-                    class="room-creation-offer__cancel-button"
-                    (click)="close()">
-                    {{ 'common.cancel' | translate }}
-                </button>
+                <app-cancel-button (click)="close()" />
 
-                <button type="submit" pButton [label]="(isEditing ? 'roomDialog.submit.update' : 'roomDialog.title.add') | translate"
-                    [icon]="isEditing ? 'pi pi-check' : 'pi pi-plus'"
-                    styleClass="room-creation-offer__submit-button"></button>
+                <app-button type="submit" [icon]="isEditing ? 'pi pi-check' : 'pi pi-plus'">
+                    {{ (isEditing ? 'roomDialog.submit.update' : 'roomDialog.title.add') | translate }}
+                </app-button>
             </div>
         </form>
     </div>

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface Category {
@@ -23,7 +24,19 @@ export class GetCategoriesService {
 
   constructor(private http: HttpClient) {}
 
+  // ponytail: test-only dummy hotel category; delete this const + the map below to revert
+  private static readonly DUMMY_HOTEL: Category = {
+    _id: '000000000000000000000001',
+    name: 'Hotels',
+    name_ar: 'الفنادق',
+    icon: 'pi pi-building',
+    order: 999,
+    isActive: true,
+  };
+
   getAllCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.base_url + '/category');
+    return this.http
+      .get<Category[]>(this.base_url + '/category')
+      .pipe(map((cats) => [...(cats || []), GetCategoriesService.DUMMY_HOTEL]));
   }
 }

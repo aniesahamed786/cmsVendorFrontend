@@ -145,9 +145,9 @@
 }
 
 .room-creation-offer__input--rtl {
-  padding-left: 0;
-  padding-right: 1rem;
-  text-align: right;
+  padding-inline-start: 0;
+  padding-inline-end: 1rem;
+  text-align: end;
 }
 
 .room-creation-offer__input--on-panel {
@@ -259,34 +259,13 @@
   margin-top: 2rem;
 }
 
-.room-creation-offer__cancel-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  font-size: 0.875rem;
-  border: 1px solid var(--app-border);
-  color: var(--app-muted);
-  background: var(--app-surface);
-  transition: color 150ms ease, background-color 150ms ease;
-  cursor: pointer;
-}
-
-.room-creation-offer__cancel-button:hover {
-  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
-  color: var(--app-text);
-}
-
 @media (min-width: 768px) {
   .room-creation-offer__header {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-inline: 2rem;
   }
 
   .room-creation-offer__body {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-inline: 2rem;
   }
 
   .room-creation-offer__grid {
@@ -306,24 +285,6 @@
     flex-direction: row;
     justify-content: flex-end;
   }
-}
-
-/* PrimeNG-wrapped controls */
-::ng-deep .room-creation-offer .p-inputtext {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  border: 1px solid var(--app-border) !important;
-  color: var(--app-text) !important;
-  box-shadow: none !important;
-}
-
-::ng-deep .room-creation-offer .room-creation-offer__input--on-panel.p-inputtext {
-  background: var(--app-surface) !important;
-}
-
-::ng-deep .room-creation-offer .p-inputtext:focus {
-  border-color: var(--app-primary) !important;
-  box-shadow: none !important;
-  outline: none !important;
 }
 
 /* Dialog shell */
@@ -347,22 +308,4 @@
 
 ::ng-deep .p-dialog-mask:has(.room-creation-offer) {
   backdrop-filter: blur(6px);
-}
-
-::ng-deep .room-creation-offer .room-creation-offer__submit-button.p-button {
-  background: var(--app-primary) !important;
-  border: 1px solid var(--app-primary) !important;
-  border-radius: 0 !important;
-  color: #fff !important;
-  box-shadow: none !important;
-}
-
-::ng-deep .room-creation-offer .room-creation-offer__submit-button.p-button:not(:disabled):hover {
-  background: var(--app-primary-700) !important;
-  border-color: var(--app-primary-700) !important;
-}
-
-::ng-deep .room-creation-offer .room-creation-offer__submit-button .p-button-icon,
-::ng-deep .room-creation-offer .room-creation-offer__submit-button .p-button-label {
-  color: #fff !important;
 }

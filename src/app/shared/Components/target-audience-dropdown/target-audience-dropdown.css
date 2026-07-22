@@ -5,11 +5,6 @@
   gap: 0.25rem;
 }
 
-.field-dropdown__label {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
 .field-dropdown__required {
   color: #dc2626; /* sanctioned validation red */
 }
@@ -20,7 +15,6 @@
 
 .field-dropdown__control ::ng-deep .p-multiselect {
   width: 100%;
-  border-radius: 0;
 }
 
 .field-dropdown__error {

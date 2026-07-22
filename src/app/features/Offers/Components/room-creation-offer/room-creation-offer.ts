@@ -3,6 +3,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, signa
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { Button } from '../../../../shared/Components/button/button';
+import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
 
 export interface OfferRoomRateDraft {
     id: string;
@@ -33,7 +35,7 @@ interface RateFormValue {
 @Component({
     selector: 'app-room-creation-offer',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, TranslatePipe],
+    imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, TranslatePipe, Button, CancelButton],
     templateUrl: './room-creation-offer.html',
     styleUrl: './room-creation-offer.css',
 })
