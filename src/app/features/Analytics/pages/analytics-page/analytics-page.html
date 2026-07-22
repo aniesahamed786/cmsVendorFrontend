@@ -22,7 +22,7 @@
             +0%
           </span>
         </div>
-        <p class="analytics-page__stat-value">{{ locationCount }}</p>
+        <p class="analytics-page__stat-value">{{ animatedCount('locations') }}</p>
         <p class="analytics-page__stat-label">Locations</p>
       </div>
 
@@ -36,7 +36,7 @@
             +0%
           </span>
         </div>
-        <p class="analytics-page__stat-value">{{ activeOfferCount }}</p>
+        <p class="analytics-page__stat-value">{{ animatedCount('activeOffers') }}</p>
         <p class="analytics-page__stat-label">Active Offers</p>
       </div>
 
@@ -50,7 +50,7 @@
             +0%
           </span>
         </div>
-        <p class="analytics-page__stat-value">{{ vendorViewEvents }}</p>
+        <p class="analytics-page__stat-value">{{ animatedCount('vendorViews') }}</p>
         <p class="analytics-page__stat-label">Vendor Views</p>
       </div>
 
@@ -64,7 +64,7 @@
             +0%
           </span>
         </div>
-        <p class="analytics-page__stat-value">0</p>
+        <p class="analytics-page__stat-value">{{ animatedCount('highlightViews') }}</p>
         <p class="analytics-page__stat-label">Highlight Views</p>
       </div>
 
@@ -78,7 +78,7 @@
             +0%
           </span>
         </div>
-        <p class="analytics-page__stat-value">{{ totalOfferViewEvents }}</p>
+        <p class="analytics-page__stat-value">{{ animatedCount('totalOfferViews') }}</p>
         <p class="analytics-page__stat-label">Total Offer Views</p>
       </div>
 
@@ -92,7 +92,7 @@
             +0%
           </span>
         </div>
-        <p class="analytics-page__stat-value">0</p>
+        <p class="analytics-page__stat-value">{{ animatedCount('redemptions') }}</p>
         <p class="analytics-page__stat-label">Redemptions</p>
       </div>
     </div>
@@ -114,13 +114,13 @@
                 <i [class]="getSortIcon('type')"></i>
               </button>
             </th>
-            <th class="align-right">
+            <th class="analytics-page__cell--right">
               <button type="button" class="analytics-page__sort-btn" (click)="sortOffers('clicks')">
                 Clicks
                 <i [class]="getSortIcon('clicks')"></i>
               </button>
             </th>
-            <th class="align-right">
+            <th class="analytics-page__cell--right">
               <button type="button" class="analytics-page__sort-btn" (click)="sortOffers('views')">
                 Views
                 <i [class]="getSortIcon('views')"></i>
@@ -129,14 +129,26 @@
           </tr>
         </thead>
         <tbody>
+          @if (loading()) {
+          @for (i of [1, 2, 3, 4, 5]; track i) {
+          <tr class="analytics-page__row--skeleton">
+            <td><span class="app-skeleton analytics-page__skel-cell"></span></td>
+            <td><span class="app-skeleton analytics-page__skel-cell"></span></td>
+            <td><span class="app-skeleton analytics-page__skel-cell"></span></td>
+            <td class="analytics-page__cell--right"><span class="app-skeleton analytics-page__skel-cell analytics-page__skel-cell--right"></span></td>
+            <td class="analytics-page__cell--right"><span class="app-skeleton analytics-page__skel-cell analytics-page__skel-cell--right"></span></td>
+          </tr>
+          }
+          } @else {
           @for (offer of offerInsightRows; track $index) {
           <tr [class.is-clickable]="offer.id" (click)="viewOfferDetails(offer)">
             <td>{{ offer.title }}</td>
             <td>{{ offer.discount }}</td>
             <td>{{ offer.type }}</td>
-            <td class="align-right text-primary">{{ offer.clicks }} Clicks</td>
-            <td class="align-right text-primary">{{ offer.views }} Views</td>
+            <td class="analytics-page__cell--right analytics-page__cell--primary">{{ offer.clicks }} Clicks</td>
+            <td class="analytics-page__cell--right analytics-page__cell--primary">{{ offer.views }} Views</td>
           </tr>
+          }
           }
         </tbody>
       </table>
@@ -150,6 +162,9 @@
     <div class="analytics-page__insights-grid">
       <div class="analytics-page__insight-card">
         <h4 class="analytics-page__insight-title">By Employee Types</h4>
+        @if (loading()) {
+        <span class="app-skeleton analytics-page__skel-chart"></span>
+        } @else {
         <div class="analytics-page__chart-container">
           <div class="analytics-page__chart-y-axis">
             <span>1000</span>
@@ -179,10 +194,14 @@
             }
           </div>
         </div>
+        }
       </div>
 
       <div class="analytics-page__insight-card">
         <h4 class="analytics-page__insight-title">By Platform</h4>
+        @if (loading()) {
+        <span class="app-skeleton analytics-page__skel-chart"></span>
+        } @else {
         <div class="analytics-page__platform-container">
           <!-- Empty donut ring — no analytics endpoint yet -->
           <div class="analytics-page__donut-chart">
@@ -200,6 +219,7 @@
             </div>
           </div>
         </div>
+        }
       </div>
     </div>
   </section>
@@ -215,12 +235,13 @@
           <label>Country</label>
           <p-select [options]="countryOptions" [ngModel]="selectedCountry()"
             (ngModelChange)="updateSelectedCountry($event)" optionLabel="label" optionValue="value"
-            placeholder="Select Country" appendTo="body" styleClass="analytics-page__filter-select"
-            panelStyleClass="analytics-page__filter-panel"></p-select>
+            placeholder="Select Country" appendTo="body"></p-select>
         </div>
       </div>
 
-      @if (locationInsightRows.length > 0) {
+      @if (loading()) {
+      <span class="app-skeleton analytics-page__skel-chart analytics-page__skel-chart--tall"></span>
+      } @else if (locationInsightRows.length > 0) {
       <div class="analytics-page__chart-container analytics-page__chart-container--locations">
         <div class="analytics-page__chart-y-axis">
           @for (label of locationAxisLabels; track $index) {

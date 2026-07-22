@@ -25,28 +25,6 @@
     color: var(--app-muted);
   }
 
-  &__export-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--app-primary);
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background: var(--app-primary-700);
-    }
-
-    i {
-      font-size: 0.875rem;
-    }
-  }
-
   &__section {
     display: flex;
     flex-direction: column;
@@ -158,10 +136,6 @@
       font-weight: 600;
       color: var(--app-text);
       border-bottom: 1px solid var(--app-border);
-
-      &.align-right {
-        text-align: right;
-      }
     }
 
     td {
@@ -170,15 +144,6 @@
       font-weight: 500;
       color: var(--app-text);
       border-bottom: 1px solid var(--app-border);
-
-      &.align-right {
-        text-align: right;
-      }
-
-      &.text-primary {
-        color: var(--app-primary);
-        font-weight: 600;
-      }
     }
 
     tr {
@@ -197,6 +162,39 @@
         color: var(--app-primary);
       }
     }
+  }
+
+  &__cell--right {
+    text-align: right;
+  }
+
+  &__cell--primary {
+    color: var(--app-primary);
+    font-weight: 600;
+  }
+
+  // ---- Loading skeletons (sizes only; fill + pulse come from .app-skeleton) ----
+  &__row--skeleton {
+    cursor: default;
+  }
+
+  &__skel-cell {
+    width: 60%;
+    height: 0.9rem;
+  }
+
+  &__skel-cell--right {
+    margin-inline-start: auto; // right-align inside the numeric cells
+  }
+
+  &__skel-chart {
+    width: 100%;
+    height: 12rem;
+    margin-top: 1.25rem; // matches __chart-container / __platform-container
+  }
+
+  &__skel-chart--tall {
+    height: 14rem; // matches __chart-container--locations
   }
 
   &__sort-btn {
@@ -431,41 +429,4 @@
       opacity: 0.8;
     }
   }
-}
-
-// Override PrimeNG select for the country filter to be square and themed
-::ng-deep .analytics-page__filter-select.p-select,
-::ng-deep .analytics-page__filter-select .p-select-label,
-::ng-deep .analytics-page__filter-select .p-select-dropdown {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-}
-
-::ng-deep .analytics-page__filter-select.p-select:focus-within {
-  border-color: var(--app-primary) !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-::ng-deep .analytics-page__filter-panel {
-  background: var(--app-surface) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-}
-
-::ng-deep .analytics-page__filter-panel .p-select-option {
-  border-radius: 0 !important;
-}
-
-::ng-deep .analytics-page__filter-panel .p-select-option:hover,
-::ng-deep .analytics-page__filter-panel .p-select-option.p-focus {
-  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%) !important;
-}
-
-::ng-deep .analytics-page__filter-panel .p-select-option.p-select-option-selected {
-  background: var(--app-primary-soft) !important;
-  color: var(--app-primary) !important;
 }
