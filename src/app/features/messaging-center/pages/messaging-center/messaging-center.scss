@@ -36,16 +36,3 @@
     height: auto;
   }
 }
-
-:host ::ng-deep .messaging-center-create-dialog.p-dialog,
-:host ::ng-deep .messaging-center-create-dialog .p-dialog-header,
-:host ::ng-deep .messaging-center-create-dialog .p-dialog-content {
-  border-radius: 0 !important;
-  background: var(--app-surface) !important;
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-}
-
-:host ::ng-deep .messaging-center-create-dialog .p-dialog-header-icons .p-dialog-header-icon {
-  color: var(--app-muted) !important;
-}

@@ -29,7 +29,9 @@ export class MessagingCenterStore {
   );
 
   readonly tickets = this.ticketsSignal.asReadonly();
-  readonly selectedTicketId = signal<string | null>(MOCK_TICKETS[0]?.id ?? null);
+  // No auto-select: the details pane shows its "select a ticket" empty state until
+  // the user picks one. selectTicket()/createTicket() are the only things that set it.
+  readonly selectedTicketId = signal<string | null>(null);
 
   // Filter state
   readonly searchQuery = signal('');

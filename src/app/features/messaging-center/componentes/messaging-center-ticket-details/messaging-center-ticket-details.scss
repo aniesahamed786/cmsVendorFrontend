@@ -338,12 +338,6 @@
     gap: 0.6rem;
   }
 
-  &__note-label {
-    font-size: 0.85rem;
-    color: var(--app-text);
-    cursor: pointer;
-  }
-
   &__attach {
     display: inline-flex;
     align-items: center;
@@ -370,36 +364,6 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-  }
-
-  &__btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.55rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid transparent;
-
-    &--close {
-      background: var(--app-surface);
-      border-color: #dc2626;
-      color: #dc2626;
-
-      &:hover {
-        background: color-mix(in srgb, var(--app-surface) 92%, #ef4444 8%);
-      }
-    }
-
-    &--send {
-      background: var(--app-primary);
-      color: #ffffff;
-
-      &:hover {
-        background: var(--app-primary-700);
-      }
-    }
   }
 }
 

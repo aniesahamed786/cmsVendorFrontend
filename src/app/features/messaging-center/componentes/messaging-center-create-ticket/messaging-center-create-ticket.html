@@ -1,8 +1,5 @@
 <div class="create-ticket">
-    <a class="create-ticket__back" (click)="onBack()">
-        <i class="pi pi-arrow-left"></i>
-        <span>{{ 'messaging.create.back' | translate }}</span>
-    </a>
+    <app-back-button label="messaging.create.back" (click)="onBack()" />
 
     <div class="create-ticket__card">
         <h2 class="create-ticket__heading">{{ 'messaging.create.title' | translate }}</h2>
@@ -74,12 +71,8 @@
         </div>
 
         <div class="create-ticket__actions">
-            <button type="button" class="create-ticket__btn create-ticket__btn--cancel" (click)="onCancel()">
-                {{ 'common.cancel' | translate }}
-            </button>
-            <button type="button" class="create-ticket__btn create-ticket__btn--submit" (click)="onSubmit()">
-                {{ 'messaging.create.submit' | translate }}
-            </button>
+            <app-cancel-button (click)="onCancel()" />
+            <app-button (click)="onSubmit()">{{ 'messaging.create.submit' | translate }}</app-button>
         </div>
     </div>
 </div>

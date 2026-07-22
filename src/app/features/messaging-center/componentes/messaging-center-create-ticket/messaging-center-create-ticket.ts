@@ -9,11 +9,14 @@ import {
   TicketCategory,
 } from '../../models/messaging-center.model';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { Button } from '../../../../shared/Components/button/button';
+import { BackButton } from '../../../../shared/Components/back-button/back-button';
+import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
 
 @Component({
   selector: 'app-messaging-center-create-ticket',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe],
+  imports: [CommonModule, FormsModule, PrimeUIModules, Button, BackButton, CancelButton, TranslatePipe],
   templateUrl: './messaging-center-create-ticket.html',
   styleUrl: './messaging-center-create-ticket.scss',
 })

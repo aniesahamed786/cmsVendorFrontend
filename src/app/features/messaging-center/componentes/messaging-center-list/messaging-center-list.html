@@ -1,11 +1,8 @@
 <div class="mc-list">
   <!-- Search -->
   <div class="mc-list__search">
-    <p-iconField iconPosition="left">
-      <p-inputIcon styleClass="pi pi-search" />
-      <input type="text" pInputText class="mc-list__search-input" [placeholder]="'messaging.search' | translate"
-        [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
-    </p-iconField>
+    <app-search [value]="searchText()" (valueChange)="onSearchChange($event)"
+      [placeholder]="'messaging.search' | translate"></app-search>
   </div>
 
   <!-- Filters -->
@@ -43,6 +40,23 @@
 
   <!-- Ticket list -->
   <div class="mc-list__cards">
+    @if (loading()) {
+    <!-- Reuses the real __card geometry; --skeleton kills its interactive state. -->
+    @for (i of [1,2,3,4,5]; track i) {
+    <div class="mc-list__card mc-list__card--skeleton">
+      <div class="mc-list__card-top">
+        <div class="mc-list__card-meta">
+          <span class="app-skeleton mc-list__skeleton-badge"></span>
+          <span class="app-skeleton mc-list__skeleton-ref"></span>
+        </div>
+        <span class="app-skeleton mc-list__skeleton-category"></span>
+      </div>
+      <span class="app-skeleton mc-list__skeleton-title"></span>
+      <span class="app-skeleton mc-list__skeleton-preview"></span>
+      <span class="app-skeleton mc-list__skeleton-time"></span>
+    </div>
+    }
+    } @else {
     @for (ticket of tickets(); track ticket.id) {
     <button type="button" class="mc-list__card" [class.mc-list__card--selected]="ticket.id === selectedTicketId()"
       [class.mc-list__card--unread]="ticket.unread" [class.mc-list__card--status-new]="ticket.status === 'New'"
@@ -70,6 +84,7 @@
       <i class="pi pi-inbox"></i>
       <span>{{ 'messaging.empty' | translate }}</span>
     </div>
+    }
     }
   </div>
 

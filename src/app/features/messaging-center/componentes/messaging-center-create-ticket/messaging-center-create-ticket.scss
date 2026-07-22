@@ -9,28 +9,6 @@
   gap: 1rem;
   padding: 1.5rem;
 
-  &__back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--app-text);
-    font-weight: 600;
-    cursor: pointer;
-    width: fit-content;
-
-    html[lang="ar"] & {
-      flex-direction: row-reverse;
-    }
-
-    i {
-      font-size: 0.9rem;
-    }
-
-    &:hover {
-      color: var(--app-primary);
-    }
-  }
-
   &__card {
     background: var(--app-surface);
     border: 1px solid var(--app-border);
@@ -72,11 +50,6 @@
     margin-inline-start: 0.15rem;
   }
 
-  &__optional {
-    color: var(--app-muted);
-    font-weight: 400;
-  }
-
   // Shared field control (input + select host)
   &__control {
     width: 100%;
@@ -108,30 +81,6 @@
   &__editor {
     border: 1px solid var(--app-border);
     background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  }
-
-  &__toolbar {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.4rem 0.5rem;
-    border-bottom: 1px solid var(--app-border);
-  }
-
-  &__toolbar-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    background: transparent;
-    border: none;
-    color: var(--app-muted);
-    cursor: pointer;
-
-    &:hover {
-      color: var(--app-primary);
-    }
   }
 
   &__textarea {
@@ -208,30 +157,6 @@
     justify-content: flex-end;
     gap: 0.75rem;
     margin-top: 1.75rem;
-  }
-
-  &__btn {
-    min-height: 2.6rem;
-    padding: 0 1.5rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    border: 1px solid transparent;
-
-    &--cancel {
-      background: var(--app-surface);
-      border-color: var(--app-primary);
-      color: var(--app-primary);
-    }
-
-    &--submit {
-      background: var(--app-primary);
-      color: #ffffff;
-
-      &:hover {
-        background: var(--app-primary-700);
-      }
-    }
   }
 }
 

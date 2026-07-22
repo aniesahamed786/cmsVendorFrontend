@@ -125,10 +125,7 @@
       </div>
 
       <div class="mc-details__composer-right">
-        <button type="button" class="mc-details__btn mc-details__btn--send" (click)="onSend()">
-          <i class="pi pi-send"></i>
-          <span>{{ 'messaging.details.send' | translate }}</span>
-        </button>
+        <app-button icon="pi pi-send" (click)="onSend()">{{ 'messaging.details.send' | translate }}</app-button>
       </div>
     </div>
   </footer>

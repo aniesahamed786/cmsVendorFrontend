@@ -1,4 +1,4 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
@@ -19,11 +19,12 @@ import {
 import { MessagingCenterStore } from '../../services/messaging-center-store';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 
 @Component({
   selector: 'app-messaging-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe],
+  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe, AppSearch],
   templateUrl: './messaging-center-list.html',
   styleUrl: './messaging-center-list.scss',
 })
@@ -32,6 +33,23 @@ export class MessagingCenterList {
   private readonly i18n = inject(I18nService);
 
   createTicket = output<void>();
+
+  // ===========================================================================
+  // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
+  // ---------------------------------------------------------------------------
+  // The store is a synchronous in-memory array, so there is no real load to wait
+  // for. This timer fakes one purely so the ticket-list skeleton is reachable and
+  // reviewable. When the real fetch lands: delete the setTimeout below, and flip
+  // `loading` to false in the store's subscribe instead. Keep `loading` and the
+  // skeleton markup — only the timer and the initial `true` are throwaway.
+  // ===========================================================================
+  readonly loading = signal(true);
+  private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER BELOW
+
+  constructor() {
+    // DELETE WHEN THE API IS WIRED — see the block above.
+    setTimeout(() => this.loading.set(false), MessagingCenterList.FAKE_LOAD_MS);
+  }
 
   // p-select renders plain strings, so the labels have to be recomputed on a
   // language switch — the pipe never sees them.

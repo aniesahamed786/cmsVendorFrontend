@@ -15,14 +15,10 @@
   &__search {
     padding: 1rem 1rem 0;
 
-    p-iconfield,
-    :ng-deep .p-iconfield {
+    // app-search defaults to a fixed 16rem; fill the sidebar here
+    ::ng-deep .app-search {
       width: 100%;
     }
-  }
-
-  &__search-input {
-    width: 100%;
   }
 
   // ---- Filters ----
@@ -131,7 +127,20 @@
       border-inline-start: 3px solid var(--app-muted);
       opacity: 0.7;
     }
+
+    // Placeholder card: reuses the geometry above, drops the interactive cursor.
+    &--skeleton {
+      cursor: default;
+    }
   }
+
+  // ---- Loading skeleton (sizes only; fill + pulse come from .app-skeleton) ----
+  &__skeleton-badge { width: 3.25rem; height: 0.9rem; }
+  &__skeleton-ref { width: 4rem; height: 0.7rem; }
+  &__skeleton-category { width: 3rem; height: 0.7rem; }
+  &__skeleton-title { width: 70%; height: 0.9rem; }
+  &__skeleton-preview { width: 90%; height: 0.75rem; }
+  &__skeleton-time { width: 3rem; height: 0.7rem; }
 
   &__card-top {
     display: flex;
@@ -213,11 +222,6 @@
     background: var(--app-primary);
     border-radius: 50%; // Circular dot for notification indicator (sanctioned exception in SKILL.md)
     flex-shrink: 0;
-  }
-
-  &__creator {
-    font-size: 0.75rem;
-    color: var(--app-muted);
   }
 
   &__title {
@@ -312,44 +316,4 @@
     }
   }
 
-  .mc-list__search {
-    .p-iconfield {
-      width: 100%;
-      display: block;
-    }
-
-    input.p-inputtext {
-      width: 100%;
-      border-radius: 0;
-      box-shadow: none;
-      background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-      border: 1px solid var(--app-border);
-      color: var(--app-text);
-      font-size: 0.8125rem;
-
-      &::placeholder {
-        color: var(--app-muted);
-      }
-
-      &:focus {
-        border-color: var(--app-primary);
-        box-shadow: none;
-      }
-    }
-
-    .p-inputicon {
-      color: var(--app-muted);
-    }
-  }
-}
-
-.tickets-new-btn-wrapper {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1.25rem 1.5rem 1.5rem;
-  background: #ffffff;
-  border-top: 1px solid var(--app-border, #e5e7eb);
-  z-index: 20;
 }
