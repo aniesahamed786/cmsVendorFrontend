@@ -26,7 +26,7 @@
             <span class="offer-form__required">*</span>
           </label>
 
-          <div class="card offer-form__row offer-form__row--center">
+          <div class="offer-form__row offer-form__row--center">
             <p-select [options]="vendorOptions()" formControlName="selectedVendor" optionLabel="label"
               optionValue="value" optionDisabled="disabled" [filter]="true" filterBy="label"
               [filterPlaceholder]="'offerForm.placeholder.vendorSearch' | translate" [loading]="vendorsLoading()"
@@ -617,8 +617,7 @@
           <div class="offer-form__dropzone-body">
             <div class="offer-form__center-col">
               <div class="offer-form__upload-circle">
-                <span class="vendor-form-svg-icon offer-form__upload-glyph"
-                  style="width: 32px; height: 32px; display: inline-block;"
+                <span class="vendor-form-svg-icon offer-form__upload-glyph offer-form__upload-glyph--lg"
                   [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
               </div>
               <p class="vendor-upload__title">{{ 'offerForm.upload.title' | translate }}</p>
@@ -755,7 +754,6 @@
               <div class="offer-form__center-col">
                 <div class="offer-form__upload-circle offer-form__upload-circle--sm">
                   <span class="vendor-form-svg-icon offer-form__upload-glyph"
-                    style="width: 28px; height: 28px; display: inline-block;"
                     [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
                 <p class="vendor-upload__title">{{ 'offerForm.highlight.uploadMobile' | translate }}</p>
@@ -866,7 +864,6 @@
               <div class="offer-form__center-col">
                 <div class="offer-form__upload-circle offer-form__upload-circle--sm">
                   <span class="vendor-form-svg-icon offer-form__upload-glyph"
-                    style="width: 28px; height: 28px; display: inline-block;"
                     [style.webkitMaskImage]="getUploadIconMask()" [style.maskImage]="getUploadIconMask()"></span>
                 </div>
                 <p class="vendor-upload__title">{{ 'offerForm.highlight.uploadDesktop' | translate }}</p>
@@ -1226,7 +1223,7 @@
       }
 
       <!-- Cropper Area -->
-      <div class="offer-form__cropper-scroll offer-form__cropper-body" style="max-height: 55vh;">
+      <div class="offer-form__cropper-scroll offer-form__cropper-body">
         <div class="offer-form__cropper-stage">
           @if (cropperMounted()) {
           <image-cropper [imageURL]="cropperImageUrl()" [maintainAspectRatio]="true" [aspectRatio]="cropperAspectRatio"
