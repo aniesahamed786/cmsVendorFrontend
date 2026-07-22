@@ -94,7 +94,7 @@ html[lang="ar"] {
   --field-text: var(--app-text);
   --field-placeholder: var(--app-muted);
   --field-icon: var(--app-muted);
-  --field-height: 2.75rem;
+  --field-height: 2.5rem; /* matches .app-btn height so fields align with buttons */
   --field-padding-x: 0.9rem;
   --field-padding-y: 0.55rem;
   --field-font-size: 0.9rem;
