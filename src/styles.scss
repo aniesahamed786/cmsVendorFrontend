@@ -299,12 +299,9 @@ p-button[severity="primary"] .p-button:enabled:hover,
 /* One height for every single-line control, so a select, a text input and the
    search box line up exactly in a filter row. Multiselect gets min-height
    instead — it has to grow when the selected chips wrap to a second line. */
-// .p-select,
-// .p-datepicker,
-// .p-inputtext:not(textarea),
-// .app-search {
-//   // height: var(--field-height);
-// }
+.p-datepicker{
+  padding:2px;
+}
 
 .p-multiselect,
 .p-listbox {
