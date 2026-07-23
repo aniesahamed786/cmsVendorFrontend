@@ -8,8 +8,8 @@
 
   @if (isLoading()) {
   <div class="offer-page-header__actions-skeleton">
-    <div class="skeleton-btn animate-pulse"></div>
-    <div class="skeleton-btn animate-pulse"></div>
+    <div class="skeleton-btn app-skeleton"></div>
+    <div class="skeleton-btn app-skeleton"></div>
   </div>
   } @else {
   <div class="offer-page-header__actions">
@@ -34,24 +34,29 @@
   <div class="offer-hero-card__content">
     <div class="offer-hero-card__left">
       <div class="offer-hero-card__vendor-row">
-        <div class="skeleton-avatar animate-pulse"></div>
-        <div class="skeleton-text animate-pulse"></div>
+        <div class="skeleton-avatar app-skeleton app-skeleton--on-primary"></div>
+        <div class="skeleton-text app-skeleton app-skeleton--on-primary"></div>
       </div>
-      <div class="skeleton-title animate-pulse"></div>
-      <div class="skeleton-tag animate-pulse"></div>
-      <div class="skeleton-badge animate-pulse"></div>
+      <div class="skeleton-title app-skeleton app-skeleton--on-primary"></div>
+      <div class="skeleton-tag app-skeleton app-skeleton--on-primary app-skeleton--pill"></div>
+      <div class="skeleton-badge app-skeleton app-skeleton--on-primary"></div>
     </div>
     <div class="offer-hero-card__right">
       <div class="offer-hero-card__vendor-row">
-        <div class="skeleton-text animate-pulse"></div>
-        <div class="skeleton-avatar animate-pulse"></div>
+        <div class="skeleton-text app-skeleton app-skeleton--on-primary"></div>
+        <div class="skeleton-avatar app-skeleton app-skeleton--on-primary"></div>
       </div>
-      <div class="skeleton-title animate-pulse"></div>
+      <div class="skeleton-title app-skeleton app-skeleton--on-primary"></div>
     </div>
   </div>
 </div>
-<br>
-<div class="skeleton-bar animate-pulse"></div>
+<div class="offer-details-layout">
+  <div class="offer-tab-panel__content">
+    <div class="offer-tab-panel__main">
+      <app-offer-details [loading]="true" [offer]="null"></app-offer-details>
+    </div>
+  </div>
+</div>
 } @else {
 @if (OfferBasicData(); as offer) {
 <p-card class="offer-hero-card">

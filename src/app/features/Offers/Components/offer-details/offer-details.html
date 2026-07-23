@@ -1,3 +1,47 @@
+@if (loading()) {
+<div class="offer-details-section">
+  <!-- Each skeleton mirrors a real .offer-card (header + body) so nothing jumps on load. -->
+  <section class="offer-card offer-card-skel">
+    <header class="offer-card__header">
+      <div class="offer-card__icon-wrap"><span class="app-skeleton offer-card-skel__icon"></span></div>
+      <span class="app-skeleton offer-card-skel__title"></span>
+    </header>
+    <div class="offer-card-skel__body">
+      <span class="app-skeleton offer-card-skel__line"></span>
+      <span class="app-skeleton offer-card-skel__line offer-card-skel__line--short"></span>
+    </div>
+  </section>
+
+  <div class="offer-details-grid-3">
+    @for (c of skeletonCards; track c) {
+    <section class="offer-card offer-card-skel">
+      <header class="offer-card__header">
+        <div class="offer-card__icon-wrap"><span class="app-skeleton offer-card-skel__icon"></span></div>
+        <span class="app-skeleton offer-card-skel__title"></span>
+      </header>
+      <div class="offer-card-skel__body">
+        <span class="app-skeleton offer-card-skel__line"></span>
+        <span class="app-skeleton offer-card-skel__line offer-card-skel__line--short"></span>
+      </div>
+    </section>
+    }
+  </div>
+
+  @for (c of skeletonCards; track c) {
+  <section class="offer-card offer-card-skel">
+    <header class="offer-card__header">
+      <div class="offer-card__icon-wrap"><span class="app-skeleton offer-card-skel__icon"></span></div>
+      <span class="app-skeleton offer-card-skel__title"></span>
+    </header>
+    <div class="offer-card-skel__body">
+      <span class="app-skeleton offer-card-skel__line"></span>
+      <span class="app-skeleton offer-card-skel__line"></span>
+      <span class="app-skeleton offer-card-skel__line offer-card-skel__line--short"></span>
+    </div>
+  </section>
+  }
+</div>
+} @else {
 <div class="offer-details-section">
   <!-- Description -->
   <section class="offer-card">
@@ -373,3 +417,4 @@
     </div>
   </section>
 </div>
+}

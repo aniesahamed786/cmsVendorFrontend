@@ -17,6 +17,9 @@ export class OfferDetails {
     readonly offerDetailIconBasePath = 'assets/svg/Offers/offer-details';
     offer = input.required<any>();
     locations = input<any[]>([]);
+    loading = input<boolean>(false);
+    /** Placeholder cards rendered while loading; count only, values unused. */
+    readonly skeletonCards = [0, 1, 2];
     offerMobileImageFailed = signal(false);
     offerDesktopImageFailed = signal(false);
     highlightMobileImageFailed = signal(false);

@@ -483,3 +483,32 @@
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
+/* Loading-state card skeletons — sizes only; fill, pulse and soft corners
+   come from the global .app-skeleton. Reuses .offer-card so cards don't jump. */
+.offer-card-skel {
+  &__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &__title {
+    height: 1.25rem;
+    width: 40%;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__line {
+    height: 1rem;
+    width: 100%;
+
+    &--short {
+      width: 60%;
+    }
+  }
+}
