@@ -77,34 +77,16 @@
     }
   }
 
-  // Description editor
-  &__editor {
-    border: 1px solid var(--app-border);
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  }
-
+  // Description textarea — bg/border/focus/color/placeholder come from the
+  // global .p-textarea field rules in styles.scss. Only sizing lives here.
   &__textarea {
-    display: block;
     width: 100%;
-    border: none;
-    background: transparent;
-    padding: 0.75rem 0.85rem;
-    color: var(--app-text);
-    font-size: 0.95rem;
-    font-family: inherit;
+    padding-block: 0.6rem;
     resize: vertical;
-
-    &::placeholder {
-      color: var(--app-muted);
-      opacity: 1;
-    }
-
-    &:focus {
-      outline: none;
-    }
   }
 
   // Drop zone
+  // Box appearance (border, rounding, fill, hover) comes from global .app-dropzone
   &__dropzone {
     display: flex;
     flex-direction: column;
@@ -112,10 +94,6 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 2rem 1rem;
-    border: 2px dashed var(--app-border);
-    background: color-mix(in srgb, var(--app-surface) 90%, var(--app-border) 10%);
-    text-align: center;
-    cursor: pointer;
   }
 
   &__dropzone-icon {

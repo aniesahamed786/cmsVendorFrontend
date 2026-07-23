@@ -366,18 +366,15 @@
     height: auto;
     width: 100%;
     object-fit: contain;
-    border: 1px solid var(--app-border);
   }
 
   &__placeholder {
     height: 18rem;
     width: 100%;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--app-muted);
-    border: 1px solid var(--app-border);
 
     i {
       font-size: 3rem;

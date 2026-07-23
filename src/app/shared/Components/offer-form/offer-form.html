@@ -611,9 +611,9 @@
           {{ 'offerForm.label.backgroundImages' | translate }}
           <span class="offer-form__required">*</span>
         </label>
-        <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg offer-form__mt-2"
+        <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg offer-form__mt-2 app-dropzone"
           (dragover)="onOfferDragOver($event)" (dragleave)="onOfferDragLeave($event)" (drop)="onOfferDrop($event)"
-          (click)="offerFileInput.click()" [class.offer-form__upload-dropzone--dragging]="isOfferDragging()">
+          (click)="offerFileInput.click()" [class.app-dropzone--dragging]="isOfferDragging()">
           <div class="offer-form__dropzone-body">
             <div class="offer-form__center-col">
               <div class="offer-form__upload-circle">
@@ -747,9 +747,9 @@
                 </div>
               </div>
             </div>
-            <div class="offer-form__upload-dropzone offer-form__mb-4" (dragover)="onHighlightDragOver($event)"
+            <div class="offer-form__upload-dropzone offer-form__mb-4 app-dropzone" (dragover)="onHighlightDragOver($event)"
               (dragleave)="onHighlightDragLeave($event)" (drop)="onHighlightDrop($event)"
-              [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
+              [class.app-dropzone--dragging]="isHighlightDragging()"
               (click)="highlightMobileFileInput.click()">
               <div class="offer-form__center-col">
                 <div class="offer-form__upload-circle offer-form__upload-circle--sm">
@@ -857,9 +857,9 @@
                 </div>
               </div>
             </div>
-            <div class="offer-form__upload-dropzone offer-form__mb-4" (dragover)="onHighlightDragOver($event)"
+            <div class="offer-form__upload-dropzone offer-form__mb-4 app-dropzone" (dragover)="onHighlightDragOver($event)"
               (dragleave)="onHighlightDragLeave($event)" (drop)="onHighlightDrop($event)"
-              [class.offer-form__upload-dropzone--dragging]="isHighlightDragging()"
+              [class.app-dropzone--dragging]="isHighlightDragging()"
               (click)="highlightDesktopFileInput.click()">
               <div class="offer-form__center-col">
                 <div class="offer-form__upload-circle offer-form__upload-circle--sm">

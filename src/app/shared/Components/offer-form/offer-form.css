@@ -504,22 +504,11 @@
 .offer-form__text-xs { font-size: 0.75rem; }
 
 /* ---- Upload dropzone ---- */
+/* Box appearance (border, rounding, fill, hover, --dragging) comes from global
+   .app-dropzone in styles.scss. Only padding/alignment lives here. */
 .offer-form__upload-dropzone {
   padding: 1rem;
-  border: 2px dashed color-mix(in srgb, var(--app-border) 92%, transparent 8%);
-  border-radius: 0;
-  background: color-mix(in srgb, var(--app-surface) 88%, var(--app-border) 12%);
   text-align: center;
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
-}
-.offer-form__upload-dropzone:hover,
-.offer-form__upload-dropzone:focus-within,
-.offer-form__upload-dropzone--dragging {
-  border-color: var(--app-primary);
-  background: var(--app-primary-soft);
 }
 .offer-form__upload-dropzone--lg {
   padding: 1.5rem;

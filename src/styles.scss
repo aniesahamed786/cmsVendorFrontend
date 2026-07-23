@@ -609,6 +609,30 @@ html body [data-pc-name="toggleswitch"],
   }
 }
 
+/* ---------------------------------------------------------------------------
+ * Upload dropzone
+ *
+ * The dashed drop/click box for file uploads. One class carries the border,
+ * fill, rounding and the primary hover/focus highlight; each call site adds
+ * only its own padding/layout. Add `.app-dropzone--dragging` while a drag is
+ * over it. Rounded corners are a deliberate exception to the square-corner
+ * rule — a dropzone reads as a soft target, like the skeleton placeholders.
+ * ------------------------------------------------------------------------ */
+.app-dropzone {
+  border: 2px dashed var(--app-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--app-surface) 90%, var(--app-border) 10%);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.app-dropzone:hover,
+.app-dropzone:focus-within,
+.app-dropzone--dragging {
+  border-color: var(--app-primary);
+  background: var(--app-primary-soft);
+}
+
 /* Global Table Toolbar Styles (Search & Filters) */
 /* flex-end, not center: it keeps the controls on one baseline even when a group
    has no label or a label that wraps to two lines. */

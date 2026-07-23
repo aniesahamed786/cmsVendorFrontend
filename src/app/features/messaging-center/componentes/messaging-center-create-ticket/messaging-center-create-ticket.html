@@ -38,10 +38,8 @@
             <div class="create-ticket__field create-ticket__field--full">
                 <label class="create-ticket__label">{{ 'messaging.create.description' | translate }}<span
                         class="create-ticket__required">*</span></label>
-                <div class="create-ticket__editor">
-                    <textarea class="create-ticket__textarea" [(ngModel)]="description" rows="6"
-                        [placeholder]="'messaging.create.placeholder.description' | translate"></textarea>
-                </div>
+                <textarea class="create-ticket__textarea p-textarea" [(ngModel)]="description" rows="6"
+                    [placeholder]="'messaging.create.placeholder.description' | translate"></textarea>
             </div>
 
             <!-- Attachments -->
@@ -49,7 +47,7 @@
                 <label class="create-ticket__label">
                     {{ 'messaging.create.attachments' | translate }}
                 </label>
-                <label class="create-ticket__dropzone">
+                <label class="create-ticket__dropzone app-dropzone">
                     <i class="pi pi-cloud-upload create-ticket__dropzone-icon"></i>
                     <p class="create-ticket__dropzone-text">
                         {{ 'messaging.create.dropzone' | translate }}
