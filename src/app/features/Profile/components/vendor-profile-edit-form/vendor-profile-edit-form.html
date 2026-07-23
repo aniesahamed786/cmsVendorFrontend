@@ -119,7 +119,8 @@
     <!-- Cover images -->
     <div class="profile-branding__field profile-branding__field--mt">
       <label>{{ 'profile.form.coverImages' | translate }} <span class="required">*</span></label>
-      <div class="app-dropzone profile-dropzone" [class.app-dropzone--dragging]="isCoverDragging()"
+      <div class="profile-cover-zone" [class.profile-cover-zone--dragging]="isCoverDragging()"
+        [class.profile-cover-zone--empty]="!(coverMobilePreview() || coverDesktopPreview())"
         (dragover)="onCoverDragOver($event)" (dragleave)="onCoverDragLeave($event)" (drop)="onCoverDrop($event)"
         (click)="coverInput.click()">
         <div class="profile-dropzone__body">
@@ -132,23 +133,31 @@
         </div>
         <input #coverInput type="file" accept="image/jpeg,image/png" class="profile-dropzone__input"
           (change)="onCoverFileSelected($event)" />
-      </div>
 
-      @if (coverMobilePreview() || coverDesktopPreview()) {
-      <div class="profile-cover-grid">
+        @if (coverMobilePreview() || coverDesktopPreview()) {
+        <div class="profile-cover-grid" (click)="$event.stopPropagation()">
         <div class="profile-cover-card">
-          <p class="profile-cover-card__title">{{ 'offerForm.upload.mobileBackground' | translate }} <span
-              dir="ltr">2.39:1</span></p>
+          <div class="profile-cover-card__head">
+            <span class="profile-cover-card__head-icon" aria-hidden="true"><i class="pi pi-mobile"></i></span>
+            <p class="profile-cover-card__title">{{ 'offerForm.upload.mobileBackground' | translate }}</p>
+            <span class="profile-cover-card__badge" dir="ltr">2.39:1</span>
+          </div>
           <div class="profile-cover-card__frame profile-cover-card__frame--mobile">
             @if (coverMobilePreview(); as m) {
             <img [src]="m" [alt]="'offerForm.upload.altMobilePreview' | translate" class="profile-cover-card__img" />
+            <span class="profile-cover-card__ratio" dir="ltr">2.39:1</span>
+            <span class="profile-cover-card__overlay" aria-hidden="true"></span>
             } @else {
             <span class="profile-cover-card__empty">{{ 'offerForm.upload.emptyMobile' | translate }}</span>
             }
           </div>
+          @if (coverMobilePreview()) {
+          <p class="profile-cover-card__safe"><i class="pi pi-info-circle" aria-hidden="true"></i>
+            {{ 'offerForm.highlight.safeArea' | translate }}</p>
+          }
           <div class="profile-image-preview__actions">
             <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate"
-              class="p-button-outlined p-button-sm" (click)="recropCover('mobile')"></button>
+              class="p-button-sm" (click)="recropCover('mobile')"></button>
             <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
               class="p-button-outlined p-button-danger p-button-sm" [disabled]="!coverMobilePreview()"
               (click)="removeCover('mobile')"></button>
@@ -156,25 +165,35 @@
         </div>
 
         <div class="profile-cover-card">
-          <p class="profile-cover-card__title">{{ 'offerForm.upload.desktopBackground' | translate }} <span
-              dir="ltr">16:2</span></p>
+          <div class="profile-cover-card__head">
+            <span class="profile-cover-card__head-icon" aria-hidden="true"><i class="pi pi-desktop"></i></span>
+            <p class="profile-cover-card__title">{{ 'offerForm.upload.desktopBackground' | translate }}</p>
+            <span class="profile-cover-card__badge" dir="ltr">16:2</span>
+          </div>
           <div class="profile-cover-card__frame profile-cover-card__frame--desktop">
             @if (coverDesktopPreview(); as d) {
             <img [src]="d" [alt]="'offerForm.upload.altDesktopPreview' | translate" class="profile-cover-card__img" />
+            <span class="profile-cover-card__ratio" dir="ltr">16:2</span>
+            <span class="profile-cover-card__overlay" aria-hidden="true"></span>
             } @else {
             <span class="profile-cover-card__empty">{{ 'offerForm.upload.emptyDesktop' | translate }}</span>
             }
           </div>
+          @if (coverDesktopPreview()) {
+          <p class="profile-cover-card__safe"><i class="pi pi-info-circle" aria-hidden="true"></i>
+            {{ 'offerForm.highlight.safeArea' | translate }}</p>
+          }
           <div class="profile-image-preview__actions">
             <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate"
-              class="p-button-outlined p-button-sm" (click)="recropCover('desktop')"></button>
+              class="p-button-sm" (click)="recropCover('desktop')"></button>
             <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
               class="p-button-outlined p-button-danger p-button-sm" [disabled]="!coverDesktopPreview()"
               (click)="removeCover('desktop')"></button>
           </div>
         </div>
+        </div>
+        }
       </div>
-      }
       <p class="field-hint">{{ 'profile.form.coverHint' | translate }}</p>
     </div>
   </div>
