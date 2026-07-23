@@ -21,6 +21,11 @@ export class Redemption {
     { label: 'Exclusive Discount', value: 'exclusive' }
   ];
 
+  transactionTypes = [
+    { label: 'Single Transaction', value: 'single' },
+    { label: 'Collective Transaction', value: 'collective' },
+  ];
+
   branches = [
     { label: 'Dammam Branch', value: 'dammam' },
     { label: 'Riyadh Branch', value: 'riyadh' },
@@ -36,11 +41,29 @@ export class Redemption {
 
   constructor(private fb: FormBuilder) {
     this.redemptionForm = this.fb.group({
+      transactionType: ['single', Validators.required],
       userId: ['CMSV67363', Validators.required],
+      transactionDate: ['', Validators.required],
       offer: [null, Validators.required],
-      branch: [null, Validators.required],
-      totalAmount: ['', Validators.required],
-      paidAmount: ['', Validators.required]
+      branch: [null],
+      totalInvoiceAmount: ['', Validators.required],
+      totalAmountPaid: ['', Validators.required],
+      currency: ['', Validators.required],
+      discountAmount: ['', Validators.required],
+    });
+
+    this.redemptionForm.get('transactionType')!.valueChanges.subscribe(() => this.updateTransactionValidators());
+  }
+
+  get isCollectiveTransaction(): boolean {
+    return this.redemptionForm.get('transactionType')?.value === 'collective';
+  }
+
+  private updateTransactionValidators(): void {
+    ['userId', 'offer'].forEach((field) => {
+      const control = this.redemptionForm.get(field)!;
+      control.setValidators(this.isCollectiveTransaction ? [] : [Validators.required]);
+      control.updateValueAndValidity({ emitEvent: false });
     });
   }
 }

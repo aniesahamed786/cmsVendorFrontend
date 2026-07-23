@@ -14,46 +14,74 @@
 
     <form class="redemption-form" [formGroup]="redemptionForm">
       <div class="redemption-form__grid">
-        <!-- User ID -->
-        <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.userId' | translate }} <span class="required-star">*</span></label>
-          <input type="text" pInputText formControlName="userId" placeholder="CMSV67363"
-            class="redemption-form__input--full" />
-        </div>
-
-        <!-- Spacer for grid -->
-        <div class="redemption-form__spacer"></div>
-
-        <!-- Offer -->
-        <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.offer' | translate }} <span class="required-star">*</span></label>
-          <p-select formControlName="offer" [options]="offers" optionLabel="label" optionValue="value"
-            [placeholder]="'redemption.placeholder.offer' | translate"
-            styleClass="redemption-form__field--full redemption-form__field"
+        <div class="redemption-form__field-wrapper redemption-form__field-wrapper--full">
+          <label>{{ 'redemption.label.transactionType' | translate }} <span class="required-star">*</span></label>
+          <p-select formControlName="transactionType" [options]="transactionTypes" optionLabel="label"
+            optionValue="value" styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
 
-        <!-- Branch -->
-        <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.branch' | translate }} <span class="required-star">*</span></label>
-          <p-select formControlName="branch" [options]="branches" optionLabel="label" optionValue="value"
-            [placeholder]="'redemption.placeholder.branch' | translate"
+        @if (!isCollectiveTransaction) {
+          <!-- User ID -->
+          <div class="redemption-form__field-wrapper">
+            <label>{{ 'redemption.label.userId' | translate }} <span class="required-star">*</span></label>
+            <input type="text" pInputText formControlName="userId" placeholder="CMSV67363"
+              class="redemption-form__input--full" />
+          </div>
+        }
+
+        <div class="redemption-form__field-wrapper" [class.redemption-form__field-wrapper--full]="isCollectiveTransaction">
+          <label>{{ 'redemption.label.transactionDate' | translate }} <span class="required-star">*</span></label>
+          <p-datepicker formControlName="transactionDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
-            panelStyleClass="redemption-form__overlay-panel"></p-select>
+            panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
+            [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
         </div>
 
-        <!-- Total Amount -->
+        @if (!isCollectiveTransaction) {
+          <!-- Offer -->
+          <div class="redemption-form__field-wrapper">
+            <label>{{ 'redemption.label.offer' | translate }} <span class="required-star">*</span></label>
+            <p-select formControlName="offer" [options]="offers" optionLabel="label" optionValue="value"
+              [placeholder]="'redemption.placeholder.offer' | translate"
+              styleClass="redemption-form__field--full redemption-form__field"
+              panelStyleClass="redemption-form__overlay-panel"></p-select>
+          </div>
+
+          <!-- Branch -->
+          <div class="redemption-form__field-wrapper">
+            <label>{{ 'redemption.label.branch' | translate }}</label>
+            <p-select formControlName="branch" [options]="branches" optionLabel="label" optionValue="value"
+              [placeholder]="'redemption.placeholder.branch' | translate"
+              styleClass="redemption-form__field--full redemption-form__field"
+              panelStyleClass="redemption-form__overlay-panel"></p-select>
+          </div>
+        }
+
+        <!-- Total Invoice Amount -->
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.totalAmount' | translate }} <span class="required-star">*</span></label>
-          <input type="text" pInputText formControlName="totalAmount"
+          <label>{{ 'redemption.label.totalInvoiceAmount' | translate }} <span class="required-star">*</span></label>
+          <input type="text" pInputText formControlName="totalInvoiceAmount"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
         </div>
 
-        <!-- Paid Amount -->
+        <!-- Total Amount Paid -->
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.paidAmount' | translate }} <span class="required-star">*</span></label>
-          <input type="text" pInputText formControlName="paidAmount"
+          <label>{{ 'redemption.label.totalAmountPaid' | translate }} <span class="required-star">*</span></label>
+          <input type="text" pInputText formControlName="totalAmountPaid"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
+        </div>
+
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.currency' | translate }} <span class="required-star">*</span></label>
+          <input type="text" pInputText formControlName="currency"
+            [placeholder]="'redemption.placeholder.currency' | translate" class="redemption-form__input--full" />
+        </div>
+
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.discountAmount' | translate }} <span class="required-star">*</span></label>
+          <input type="text" pInputText formControlName="discountAmount"
+            [placeholder]="'redemption.placeholder.discountAmount' | translate" class="redemption-form__input--full" />
         </div>
       </div>
 

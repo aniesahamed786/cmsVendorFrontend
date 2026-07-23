@@ -764,16 +764,23 @@
       "basicInfo": "Basic Information"
     },
     "label": {
+      "transactionType": "Transaction Type",
       "userId": "User ID",
+      "transactionDate": "Transaction Date",
       "offer": "Offer",
       "branch": "Branch",
-      "totalAmount": "Total Amount",
-      "paidAmount": "Paid Amount"
+      "totalInvoiceAmount": "Total Invoice Amount (Including VAT)",
+      "totalAmountPaid": "Total Amount Paid",
+      "currency": "Currency",
+      "discountAmount": "Discount Amount"
     },
     "placeholder": {
       "offer": "Select Offer...",
       "branch": "Select Branch...",
-      "amount": "e.g. SAR.250"
+      "amount": "e.g. SAR.250",
+      "date": "e.g. 2024-01-15",
+      "currency": "e.g. SAR",
+      "discountAmount": "e.g. 50.00"
     },
     "submit": "Redeem Offer",
     "list": {

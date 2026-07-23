@@ -95,6 +95,10 @@ section.redemption-card {
   font-size: 0.875rem;
 }
 
+.redemption-form__field-wrapper--full {
+  grid-column: 1 / -1;
+}
+
 /* No local input background/border/color/shadow/radius/height override —
    .p-inputtext in styles.scss already covers it */
 
