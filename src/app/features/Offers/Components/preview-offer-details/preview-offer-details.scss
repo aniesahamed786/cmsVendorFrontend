@@ -2,76 +2,633 @@
 
 :host { display: block; word-break: break-word; overflow-wrap: break-word; }
 
-/* Token bridge: the phone mockup mirrors the consumer app's utility markup.
-   Re-map those utilities to vendor tokens, scoped under .phone-mockup, so the
-   preview follows the active mode/accent (pattern from the styling skill). */
-.phone-mockup {
-  .bg-white,
-  [class*='bg-white/'] { background-color: var(--app-surface) !important; }
+/* Token bridge: this phone mockup mirrors the consumer app's mobile screen, so
+   every colour is an --app-* token — the preview follows the active mode/accent
+   exactly like offer-details. Layout is plain SCSS; no utilities in the markup. */
+.preview-offer-details {
+  display: none;
+  width: 100%;
+  flex-shrink: 0;
 
-  .bg-slate-50,
-  .bg-gray-50,
-  [class*='bg-gray-50/'],
-  .bg-gray-100 {
-    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
+  @media (min-width: 1024px) {
+    display: block;
+    flex: none;
   }
 
-  .text-gray-900,
-  .text-gray-800,
-  .text-black { color: var(--app-text) !important; }
+  /* ---- App status bar ---- */
+  &__statusbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1.5rem;
+    padding-top: 1rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
 
-  .text-gray-700,
-  .text-gray-600,
-  .text-gray-500,
-  .text-gray-400,
-  .text-slate-300 { color: var(--app-muted) !important; }
+  &__statusbar-icons {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
 
-  .border-gray-100,
-  .border-gray-200,
-  .border-gray-300 { border-color: var(--app-border) !important; }
+  /* ---- Top actions bar ---- */
+  &__topbar {
+    position: relative;
+    z-index: 30;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1.25rem;
+    padding-block: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  &__topbar-back {
+    font-size: 1.125rem;
+    color: var(--app-muted);
+  }
+
+  &__topbar-actions {
+    display: flex;
+    gap: 1rem;
+
+    i { color: var(--app-muted); }
+  }
+
+  /* ---- Scrollable screen ---- */
+  &__screen {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: var(--app-surface);
+    pointer-events: auto;
+  }
+
+  /* ---- Image section ---- */
+  &__image-section {
+    width: 100%;
+    flex-shrink: 0;
+    background: var(--app-surface);
+    padding-inline: 1rem;
+    padding-top: 1rem;
+  }
+
+  &__image-frame {
+    position: relative;
+    width: 100%;
+    height: 190px;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__img-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    color: var(--app-muted);
+  }
+
+  &__img-fallback-icon {
+    font-size: 3rem;
+
+    &--sm { font-size: 1.5rem; }
+  }
+
+  &__vendor-logo {
+    position: absolute;
+    bottom: -1.5rem;
+    inset-inline-start: 1rem;
+    inset-inline-end: auto;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    background: var(--app-surface);
+    border: 2px solid var(--app-border);
+  }
+
+  &__vendor-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* ---- In-store / mode badge ---- */
+  &__mode-badge-row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  &__mode-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.625rem;
+    padding-block: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--app-muted);
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__mode-badge-icon {
+    font-size: 0.875rem;
+    font-weight: 300;
+  }
+
+  &__mode-badge-text { font-weight: 500; }
+
+  /* ---- Main info ---- */
+  &__main {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding-inline: 1.25rem;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+  }
+
+  &__headline {
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    color: var(--app-text);
+    text-align: start;
+
+    &--flex {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  &__discount-amount {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &__riyal-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+
+    &--sm {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+  }
+
+  &__vendor-name {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__description {
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    line-height: 1.625;
+    color: var(--app-text);
+    white-space: pre-wrap;
+  }
+
+  &__validity {
+    margin-bottom: 1.5rem;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--app-muted);
+    text-align: start;
+  }
+
+  &__redeem-button {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding-block: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    color: #ffffff; /* on-primary contrast — button fill is the primary token */
+    background: var(--app-primary);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover { background: var(--app-primary-700); }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3.5rem;
+    color: var(--app-muted);
+
+    &--rtl { flex-direction: row-reverse; }
+  }
+
+  &__action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+    cursor: default;
+    transition: color 0.2s;
+
+    &:hover { color: var(--app-text); }
+  }
+
+  &__action-icon {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+
+  &__action-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+  }
+
+  /* ---- Section divider strip ---- */
+  &__divider {
+    width: 100%;
+    height: 0.75rem;
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border-top: 1px solid var(--app-border);
+    border-bottom: 1px solid var(--app-border);
+  }
+
+  /* ---- Hotel section ---- */
+  &__hotel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex-shrink: 0;
+    padding-inline: 1.25rem;
+    padding-block: 1.5rem;
+  }
+
+  &__hotel-heading {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--app-text);
+
+    &--tight { margin-bottom: 0.5rem; }
+  }
+
+  &__room-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__room-card {
+    padding: 1rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+  }
+
+  &__room-name {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__room-rates {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__amenity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__amenity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--app-muted);
+  }
+
+  &__amenity-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.125rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  }
+
+  &__amenity-icon {
+    font-size: 0.7rem;
+    color: var(--app-muted);
+  }
+
+  &__amenity-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  &__tax-value {
+    font-size: 0.85rem;
+    line-height: 1.625;
+    color: var(--app-muted);
+  }
+
+  /* ---- Locations ---- */
+  &__locations {
+    width: 100%;
+    flex-shrink: 0;
+    padding-inline: 1.25rem;
+    padding-block: 1.5rem;
+  }
+
+  &__locations-heading {
+    margin-bottom: 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--app-text);
+  }
+
+  &__location-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  &__location-row {
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--app-border);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    &--rtl {
+      justify-content: flex-end;
+      text-align: right;
+    }
+  }
+
+  &__location-content {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    gap: 1rem;
+
+    &--rtl {
+      flex-direction: row-reverse;
+      text-align: right;
+
+      .preview-offer-details__location-icon { order: 2; }
+      .preview-offer-details__location-text {
+        order: 1;
+        align-items: flex-end;
+      }
+    }
+  }
+
+  &__location-icon {
+    order: 1;
+    margin-top: 0.125rem;
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--app-muted);
+  }
+
+  &__location-text {
+    order: 2;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-top: 0.125rem;
+  }
+
+  &__location-title {
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    color: var(--app-text);
+    text-align: start;
+  }
+
+  &__location-subtitle {
+    width: 100%;
+    margin-top: 0.125rem;
+    font-size: 0.8rem;
+    letter-spacing: -0.025em;
+    color: var(--app-muted);
+    text-align: start;
+  }
+
+  &__locations-empty {
+    font-size: 0.875rem;
+    color: var(--app-muted);
+  }
+
+  &__branches-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--app-primary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover { color: var(--app-primary-700); }
+
+    &--rtl { flex-direction: row-reverse; }
+  }
+
+  &__branches-icon {
+    font-size: 1.125rem;
+    font-weight: 300;
+  }
+
+  /* ---- Tabs ---- */
+  &__tabs {
+    width: 100%;
+    flex-shrink: 0;
+    padding-inline: 1.25rem;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+
+  &__tab-list {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid var(--app-border);
+
+    /* Arabic reading order: feedback, contact, avail (right→left via inherited dir) */
+    &--rtl {
+      .preview-offer-details__tab-button--avail { order: 3; }
+      .preview-offer-details__tab-button--contact { order: 2; }
+      .preview-offer-details__tab-button--feedback { order: 1; }
+    }
+  }
+
+  &__tab-button {
+    flex: 1;
+    padding-bottom: 0.75rem;
+    padding-inline: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--app-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &--active {
+      font-weight: 700;
+      color: var(--app-text);
+      border-bottom: 2px solid var(--app-text);
+    }
+
+    &--sm-only {
+      display: none;
+
+      @media (min-width: 640px) { display: block; }
+    }
+  }
+
+  &__tab-panel {
+    padding-top: 1.25rem;
+    padding-bottom: 0.5rem;
+  }
+
+  &__tab-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.625;
+    color: var(--app-text);
+  }
+
+  &__contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__contact-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--app-muted);
+
+    &--rtl { flex-direction: row-reverse; }
+  }
+
+  &__contact-icon { color: var(--app-muted); }
+
+  /* ---- Bottom nav ---- */
+  /* ponytail: original markup had both `absolute` and `sticky` position utilities;
+     sticky is the effective one (nav pins to the scroll container's bottom edge). */
+  &__bottom-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    width: 100%;
+    height: 3.5rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: 0.25rem;
+    font-size: 0.55rem;
+    color: var(--app-muted);
+    background: var(--app-surface);
+    border-top: 1px solid var(--app-border);
+    pointer-events: auto;
+  }
+
+  &__nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+
+    i { font-size: 0.875rem; }
+
+    &--home {
+      color: var(--app-text);
+      font-weight: 700;
+    }
+  }
+
+  &__nav-item-home-icon { font-size: 1rem; }
+
+  &__text-wrap {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 }
 
-/* Preview's own controls — semantic classes + tokens */
-.preview-offer-details__redeem-button {
-  background: var(--app-primary) !important;
-  color: #ffffff !important;
-  &:hover { background: var(--app-primary-700) !important; }
-}
-
-.preview-offer-details__branches-button {
-  color: var(--app-primary) !important;
-  &:hover { color: var(--app-primary-700) !important; }
-}
-
-.preview-offer-details__tab-button.font-bold {
-  color: var(--app-text) !important;
-  border-bottom-color: var(--app-text) !important;
-}
-
-.preview-offer-details__bottom-nav {
-  background: var(--app-surface) !important;
-  border-top: 1px solid var(--app-border) !important;
-  color: var(--app-muted) !important;
-}
-
-.preview-offer-details__text-wrap { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
-
-/* RTL */
-.preview-offer-details__location-row--rtl { justify-content: flex-end; text-align: right; }
-.preview-offer-details__branches-button--rtl,
-.preview-offer-details__contact-row--rtl { flex-direction: row-reverse; }
+/* dark:invert on the SAR glyph — dark mode is a `.dark-mode` ancestor (see tailwind.css) */
+:host-context(.dark-mode) .preview-offer-details__riyal-icon { filter: invert(1); }
 
 /* Dotted line separator for room rates */
-.rate-item { display: flex; align-items: flex-end; gap: 8px; width: 100%; }
+.rate-item {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+  font-size: 0.8rem;
+  color: var(--app-muted);
+}
 .rate-label { white-space: nowrap; }
 .rate-dots {
   flex: 1;
   border-bottom: 1px dotted color-mix(in srgb, var(--app-border) 85%, var(--app-muted) 15%);
   margin-bottom: 4px;
 }
-.rate-value { white-space: nowrap; font-weight: 600; }
-
-.preview-offer-details__vendor-logo {
-  inset-inline-start: 1rem !important;
-  inset-inline-end: auto !important;
+.rate-value {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--app-text);
 }

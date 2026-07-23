@@ -1,96 +1,489 @@
 @use '../../../../shared/styles/mobile-preview-mockup' as *;
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--app-surface);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--app-border);
-  border-radius: 10px;
-}
-
-.vendor-preview__phone {
-  direction: ltr;
-  unicode-bidi: isolate;
-}
-
-.vendor-preview__social-icon {
-  display: inline-block;
-  width: 0.95rem;
-  height: 0.95rem;
-  color: var(--app-muted);
-  background-color: currentColor;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  -webkit-mask-size: contain;
-}
-
-.vendor-preview__social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  flex: 0 0 1.5rem;
-  text-decoration: none;
-  color: var(--app-muted);
-}
-
-/* Token bridge: the phone mockup mirrors the consumer app's utility-class markup.
-   Re-map those utilities to tokens, scoped under .phone-mockup, so the preview
-   follows the admin's active mode/accent (the pattern from the styling skill). */
-.phone-mockup {
-  .bg-white,
-  [class*='bg-white/'] {
-    background-color: var(--app-surface) !important;
-  }
-
-  .bg-gray-50,
-  [class*='bg-gray-50/'],
-  .bg-gray-100 {
-    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%) !important;
-  }
-
-  .text-gray-800,
-  .text-gray-700 {
-    color: var(--app-text) !important;
-  }
-
-  .text-gray-600,
-  .text-gray-500,
-  .text-gray-400,
-  .text-gray-300 {
-    color: var(--app-muted) !important;
-  }
-
-  .border-gray-50,
-  .border-gray-100 {
-    border-color: var(--app-border) !important;
-  }
-
-  [class~='hover:text-[#0033A0]']:hover {
-    color: var(--app-primary) !important;
-  }
-
-  [class~='text-[#4285F4]'] {
-    color: var(--app-primary) !important;
-  }
-}
-
-.vendor-preview__social-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.3rem;
+/* The phone mockup mirrors the consumer app. Colours are expressed as --app-*
+   tokens (not raw greys) so the preview follows the admin's active mode/accent —
+   the same token bridge offer-details uses, now written as real BEM instead of a
+   utility remap. bg-white → --app-surface; bg-gray-50/100 → surface/border mix;
+   text-gray-700/800 → --app-text; text-gray-300–600 → --app-muted;
+   border-gray-50/100 → --app-border; the two brand hexes → --app-primary. */
+.vendor-preview {
   width: 100%;
-  max-width: 12rem;
-  margin: 0 auto;
+  flex-shrink: 0;
+
+  @media (min-width: 1024px) {
+    flex: none;
+  }
+
+  /* inline sidebar variant: hidden on mobile, shown at lg. Dialog mode keeps the
+     aside's default block display so it is always visible. */
+  &--inline {
+    display: none;
+
+    @media (min-width: 1024px) {
+      display: block;
+    }
+  }
+
+  &__wrapper--relative {
+    position: relative;
+  }
+
+  &__statusbar {
+    width: 100%;
+    height: 3rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 2rem;
+    padding-top: 1.5rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--app-text);
+    z-index: 30;
+  }
+
+  &__statusbar-icons {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  &__battery {
+    transform: rotate(90deg);
+  }
+
+  &__topbar {
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1.25rem;
+    padding-block: 0.5rem;
+    z-index: 30;
+  }
+
+  &__topbar-icon {
+    color: var(--app-muted);
+
+    &--lg {
+      font-size: 1.125rem;
+    }
+  }
+
+  &__topbar-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__screen {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 5rem;
+  }
+
+  &__hero {
+    position: relative;
+    width: 100%;
+    height: 11rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  }
+
+  &__banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__banner-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  }
+
+  &__banner-fallback-icon {
+    font-size: 3rem;
+    color: var(--app-muted);
+    opacity: 0.5;
+  }
+
+  &__logo {
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5rem;
+    height: 5rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  &__logo-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  }
+
+  &__logo-fallback-icon {
+    font-size: 1.875rem;
+    color: var(--app-muted);
+  }
+
+  &__identity {
+    margin-top: 3rem;
+    padding-inline: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--app-text);
+    text-align: center;
+    line-height: 1.25;
+    margin: 0 0 1.5rem;
+  }
+
+  &__contact {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--app-muted);
+  }
+
+  &__contact-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &--desc {
+      align-items: flex-start;
+      margin-top: 0.25rem;
+      line-height: 1.625;
+    }
+  }
+
+  &__contact-icon {
+    font-size: 0.75rem;
+
+    &--top {
+      margin-top: 0.125rem;
+    }
+  }
+
+  &__phone {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  &__social {
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__social-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    width: 100%;
+    max-width: 12rem;
+    margin: 0 auto;
+    color: var(--app-muted);
+  }
+
+  &__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    flex: 0 0 1.5rem;
+    text-decoration: none;
+    color: var(--app-muted);
+  }
+
+  &__social-icon {
+    display: inline-block;
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--app-muted);
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+  }
+
+  &__social-fallback-icon {
+    font-size: 0.875rem;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    width: 100%;
+    margin-bottom: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--app-border);
+    color: var(--app-muted);
+  }
+
+  &__action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--app-primary);
+    }
+  }
+
+  &__action-icon {
+    font-size: 1.125rem;
+    font-weight: 300;
+  }
+
+  &__action-label {
+    font-size: 0.6rem;
+    font-weight: 500;
+  }
+
+  &__offers {
+    padding-inline: 1.25rem;
+    padding-block: 1rem;
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  }
+
+  &__section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--app-text);
+    margin: 0 0 1rem;
+
+    &--branches {
+      margin-bottom: 1.25rem;
+    }
+  }
+
+  &__offer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__offer-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background-color: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__offer-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__offer-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  }
+
+  &__offer-icon-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    opacity: 0.8;
+  }
+
+  &__offer-icon-placeholder {
+    color: var(--app-muted);
+  }
+
+  &__offer-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__offer-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__offer-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  &__offer-fav {
+    font-size: 0.875rem;
+    color: var(--app-muted);
+  }
+
+  &__offer-tag {
+    font-size: 0.55rem;
+    color: var(--app-muted);
+  }
+
+  &__branches {
+    padding-inline: 1.25rem;
+    padding-block: 1.5rem;
+  }
+
+  &__branch-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__branch {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--app-border);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+
+  &__branch-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  &__branch-icon {
+    font-size: 1.125rem;
+    color: var(--app-muted);
+    margin-top: 0.125rem;
+  }
+
+  &__branch-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__branch-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--app-text);
+    line-height: 1.25;
+  }
+
+  &__branch-city {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--app-muted);
+  }
+
+  &__branches-button {
+    width: 100%;
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--app-primary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__branches-button-icon {
+    font-size: 1.125rem;
+  }
+
+  &__bottom-nav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 4rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: 0.5rem;
+    font-size: 0.55rem;
+    color: var(--app-muted);
+    background-color: var(--app-surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--app-border);
+    z-index: 30;
+  }
+
+  &__nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  &__nav-icon {
+    font-size: 1.1rem;
+  }
+
+  &__nav-label {
+    transform: scale(0.9);
+    opacity: 0.8;
+
+    &--active {
+      font-weight: 700;
+    }
+  }
 }
