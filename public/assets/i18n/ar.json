@@ -774,7 +774,13 @@
       "basicInfo": "المعلومات الأساسية"
     },
     "label": {
+      "transactionType": "نوع العملية",
       "userId": "معرّف المستخدم",
+      "transactionDate": "تاريخ العملية",
+      "totalInvoiceAmount": "إجمالي مبلغ الفاتورة (شامل ضريبة القيمة المضافة)",
+      "totalAmountPaid": "إجمالي المبلغ المدفوع",
+      "currency": "العملة",
+      "discountAmount": "مبلغ الخصم",
       "offer": "العرض",
       "branch": "الفرع",
       "totalAmount": "المبلغ الإجمالي",
@@ -783,7 +789,10 @@
     "placeholder": {
       "offer": "اختر العرض...",
       "branch": "اختر الفرع...",
-      "amount": "مثال: 250 ريال"
+      "amount": "مثال: 250 ريال",
+      "date": "مثال: 2024-01-15",
+      "currency": "مثال: ر.س",
+      "discountAmount": "مثال: 50.00"
     },
     "submit": "استرداد العرض",
     "list": {
