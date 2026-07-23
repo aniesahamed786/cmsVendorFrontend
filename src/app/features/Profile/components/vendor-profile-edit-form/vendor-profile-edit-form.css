@@ -187,16 +187,6 @@ label {
   margin-bottom: 0.5rem;
 }
 
-/* Box border/fill/hover come from the global .app-dropzone; this adds only the
-   inner padding + centred layout. */
-.profile-dropzone {
-  position: relative;
-  margin-top: 0.5rem;
-  padding: 2.5rem 1.5rem;
-  cursor: pointer;
-  text-align: center;
-}
-
 .profile-dropzone__body {
   display: flex;
   flex-direction: column;
@@ -234,36 +224,49 @@ label {
   display: none;
 }
 
-.profile-image-preview {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.profile-image-preview__frame {
-  border: 1px solid var(--app-border);
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  overflow: hidden;
-}
-
-.profile-image-preview__frame--logo {
-  width: 7rem;
-  height: 7rem;
-}
-
-.profile-image-preview__img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
 .profile-image-preview__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.75rem;
+}
+
+/* Logo preview: large centred image + filename + actions, shown inside the
+   dashed .profile-cover-zone (replaces the empty-state prompt when a logo
+   exists). */
+.profile-logo-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.profile-logo-preview__frame {
+  width: 100%;
+  max-width: 14rem;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.profile-logo-preview__img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.profile-logo-preview__name {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--app-muted);
+  word-break: break-all;
+  text-align: center;
+}
+
+.profile-logo-preview .profile-image-preview__actions {
+  justify-content: center;
 }
 
 /* Cover upload zone: dashed container wrapping the upload header + both preview

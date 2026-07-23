@@ -3,7 +3,6 @@
 }
 
 .recent-activities {
-  padding: 1.5rem 2rem;
   color: var(--app-text);
 
   &__header {
@@ -101,13 +100,17 @@
   // paginator's own padding isn't doubled by the card's bottom padding
   margin: 0 -1.5rem -1.25rem;
 
-  .p-datatable-thead > tr > th:first-child,
-  .p-datatable-tbody > tr > td:first-child { padding-inline-start: 1.5rem; }
+  .p-datatable-thead>tr>th:first-child,
+  .p-datatable-tbody>tr>td:first-child {
+    padding-inline-start: 1.5rem;
+  }
 
-  .p-datatable-thead > tr > th:last-child,
-  .p-datatable-tbody > tr > td:last-child { padding-inline-end: 1.5rem; }
+  .p-datatable-thead>tr>th:last-child,
+  .p-datatable-tbody>tr>td:last-child {
+    padding-inline-end: 1.5rem;
+  }
 
-  .p-datatable-thead > tr > th {
+  .p-datatable-thead>tr>th {
     background: transparent;
     color: var(--app-muted);
     font-weight: 600;
@@ -119,14 +122,14 @@
   }
 
   // rows carry no fill of their own — the wrapper above owns the one surface
-  .p-datatable-tbody > tr {
+  .p-datatable-tbody>tr {
     background: transparent;
     color: var(--app-text);
     transition:
       box-shadow 160ms ease,
       transform 160ms ease;
 
-    > td {
+    >td {
       padding: 1.1rem 1rem;
       border: none;
       border-block-end: 1px solid var(--app-border);
@@ -137,21 +140,19 @@
   // Row hover, per REFACTOR.md Step 4: lift + leading accent bar + cell tint +
   // title recolor. The bar is an inset shadow, not a border, so the row doesn't
   // reflow — it's the sanctioned exception to Step 5 rule 6.
-  .p-datatable-tbody > tr:hover {
+  .p-datatable-tbody>tr:hover {
     transform: translateY(-1px);
     box-shadow: inset 3px 0 0 var(--app-primary);
   }
 
   // tint sits on the cell, not the row: an opaque td would cover a tr fill
-  .p-datatable-tbody > tr:hover > td {
-    background: color-mix(
-      in srgb,
-      rgba(var(--app-primary-rgb), 0.08) 40%,
-      var(--app-surface) 60%
-    );
+  .p-datatable-tbody>tr:hover>td {
+    background: color-mix(in srgb,
+        rgba(var(--app-primary-rgb), 0.08) 40%,
+        var(--app-surface) 60%);
   }
 
-  .p-datatable-tbody > tr:hover .recent-activities__row-title {
+  .p-datatable-tbody>tr:hover .recent-activities__row-title {
     color: var(--app-primary);
   }
 
@@ -198,7 +199,8 @@
 
   .p-paginator .p-paginator-page.p-highlight {
     background: var(--app-primary);
-    color: #fff; /* kept: on-primary contrast over a brand fill — sanctioned literal */
+    color: #fff;
+    /* kept: on-primary contrast over a brand fill — sanctioned literal */
     border-radius: 999px; // active page is a filled circle, per the design
   }
 
@@ -210,8 +212,7 @@
 
 // box-shadow has no logical form, so the accent bar is the one place a physical
 // offset is correct here — it flips by hand for Arabic
-:host-context(html[lang="ar"]) ::ng-deep .recent-activities__table
-  .p-datatable-tbody > tr:hover {
+:host-context(html[lang="ar"]) ::ng-deep .recent-activities__table .p-datatable-tbody>tr:hover {
   box-shadow: inset -3px 0 0 var(--app-primary);
 }
 
@@ -222,12 +223,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   ::ng-deep .recent-activities__table {
-    .p-datatable-tbody > tr,
-    .p-datatable-tbody > tr > td {
+
+    .p-datatable-tbody>tr,
+    .p-datatable-tbody>tr>td {
       transition: none;
     }
 
-    .p-datatable-tbody > tr:hover {
+    .p-datatable-tbody>tr:hover {
       transform: none;
     }
   }

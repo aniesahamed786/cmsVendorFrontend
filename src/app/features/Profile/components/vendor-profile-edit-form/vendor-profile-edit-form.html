@@ -84,36 +84,38 @@
     <!-- Vendor Logo -->
     <div class="profile-branding__field">
       <label>{{ 'profile.form.vendorLogo' | translate }} <span class="required">*</span></label>
-      <div class="app-dropzone profile-dropzone" [class.app-dropzone--dragging]="isLogoDragging()"
+      <div class="profile-cover-zone" [class.profile-cover-zone--dragging]="isLogoDragging()"
+        [class.profile-cover-zone--empty]="!logoPreview()"
         (dragover)="onLogoDragOver($event)" (dragleave)="onLogoDragLeave($event)" (drop)="onLogoDrop($event)"
         (click)="logoInput.click()">
+        @if (logoPreview(); as logo) {
+        <div class="profile-logo-preview" (click)="$event.stopPropagation()">
+          <div class="profile-logo-preview__frame">
+            <img [src]="logo" [alt]="'profile.form.vendorLogo' | translate" class="profile-logo-preview__img" />
+          </div>
+          @if (logoFileName(); as name) {
+          <p class="profile-logo-preview__name">{{ name }}</p>
+          }
+          <div class="profile-image-preview__actions">
+            <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate"
+              class="p-button-sm" [disabled]="!logoFileName()" (click)="recropLogo()"></button>
+            <button type="button" pButton icon="pi pi-upload" [label]="'offerForm.upload.chooseImage' | translate"
+              class="p-button-sm" (click)="logoInput.click(); $event.stopPropagation()"></button>
+            <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
+              class="p-button-outlined p-button-danger p-button-sm" (click)="removeLogo()"></button>
+          </div>
+        </div>
+        } @else {
         <div class="profile-dropzone__body">
           <div class="profile-dropzone__icon"><i class="pi pi-cloud-upload"></i></div>
           <p class="profile-dropzone__title">{{ 'profile.form.vendorLogoDrop' | translate }}</p>
           <p class="profile-dropzone__help">{{ 'profile.form.vendorLogoBrowse' | translate }}</p>
-          @if (logoPreview()) {
-          <button type="button" pButton icon="pi pi-upload" [label]="'offerForm.upload.uploadNew' | translate"
-            class="p-button-outlined p-button-sm" (click)="logoInput.click(); $event.stopPropagation()"></button>
-          }
         </div>
+        }
         <input #logoInput type="file" accept="image/jpeg,image/png" class="profile-dropzone__input"
           (change)="onLogoFileSelected($event)" />
       </div>
       <p class="field-hint">{{ 'profile.form.vendorLogoHint' | translate }}</p>
-
-      @if (logoPreview(); as logo) {
-      <div class="profile-image-preview">
-        <div class="profile-image-preview__frame profile-image-preview__frame--logo">
-          <img [src]="logo" [alt]="'profile.form.vendorLogo' | translate" class="profile-image-preview__img" />
-        </div>
-        <div class="profile-image-preview__actions">
-          <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate"
-            class="p-button-outlined p-button-sm" (click)="recropLogo()"></button>
-          <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
-            class="p-button-outlined p-button-danger p-button-sm" (click)="removeLogo()"></button>
-        </div>
-      </div>
-      }
     </div>
 
     <!-- Cover images -->

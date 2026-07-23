@@ -74,6 +74,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
 
   // ── Branding image previews (blob/object URLs shown in the form + live preview) ──
   readonly logoPreview = signal<string | null>(null);
+  readonly logoFileName = signal<string | null>(null);
   readonly coverMobilePreview = signal<string | null>(null);
   readonly coverDesktopPreview = signal<string | null>(null);
   readonly isLogoDragging = signal(false);
@@ -279,12 +280,14 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     this.logoPreview.set(null);
     this.revoke(this.logoSource);
     this.logoSource = null;
+    this.logoFileName.set(null);
     this.setImage('logo', null);
   }
 
   private startLogoCrop(file: File): void {
     this.revoke(this.logoSource);
     this.logoSource = URL.createObjectURL(file);
+    this.logoFileName.set(file.name);
     this.pendingCropName = file.name.replace(/\.[^.]+$/, '') || 'logo';
     this.chainToDesktopCrop = false;
     this.openCropper('logo', this.logoSource);
