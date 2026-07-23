@@ -1,88 +1,86 @@
 <!-- mobile-style preview -->
-<aside [class.hidden]="!isDialog" [class.lg:block]="!isDialog" class="w-full lg:flex-none shrink-0"
+<aside class="vendor-preview" [class.vendor-preview--inline]="!isDialog"
     [attr.aria-label]="'profile.previewAriaLabel' | translate">
 
-    <div class="preview-wrapper" [class.relative]="isDialog">
+    <div class="preview-wrapper" [class.vendor-preview__wrapper--relative]="isDialog">
 
         <!-- Mobile Device Mockup Container -->
         <div class="phone-mockup">
 
             <!-- App Header / Status Bar -->
-            <div
-                class="w-full h-12 flex items-center justify-between px-8 pt-6 text-[0.65rem] font-bold text-gray-800 z-30 shrink-0">
+            <div class="vendor-preview__statusbar">
                 <span>9:41</span>
-                <div class="flex gap-1.5 items-center">
+                <div class="vendor-preview__statusbar-icons">
                     <i class="pi pi-wifi"></i>
-                    <i class="pi pi-battery-full rotate-90"></i>
+                    <i class="pi pi-battery-full vendor-preview__battery"></i>
                 </div>
             </div>
 
             <!-- Top Actions Bar -->
-            <div class="w-full flex items-center justify-between px-5 py-2 shrink-0 z-30">
-                <i class="pi pi-chevron-left text-lg text-gray-600"></i>
-                <div class="flex gap-4">
-                    <i class="pi pi-bell text-gray-600"></i>
-                    <i class="pi pi-map-marker text-gray-600"></i>
+            <div class="vendor-preview__topbar">
+                <i class="pi pi-chevron-left vendor-preview__topbar-icon vendor-preview__topbar-icon--lg"></i>
+                <div class="vendor-preview__topbar-actions">
+                    <i class="pi pi-bell vendor-preview__topbar-icon"></i>
+                    <i class="pi pi-map-marker vendor-preview__topbar-icon"></i>
                 </div>
             </div>
 
             <!-- Main Scrollable Content -->
-            <div class="flex-1 overflow-y-auto custom-scrollbar pb-20" [attr.dir]="language() === 'ar' ? 'rtl' : 'ltr'">
+            <div class="vendor-preview__screen custom-scrollbar" [attr.dir]="language() === 'ar' ? 'rtl' : 'ltr'">
 
                 <!-- Hero Section -->
-                <div class="relative w-full h-44 shrink-0 bg-gray-50 flex items-center justify-center">
+                <div class="vendor-preview__hero">
                     @if (getVendorBanner(); as banner) {
-                    <img [src]="banner" class="w-full h-full object-cover" alt="Banner"
+                    <img [src]="banner" class="vendor-preview__banner" alt="Banner"
                         (error)="markBannerImageFailed()" />
                     } @else {
-                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <i class="pi pi-image text-5xl text-gray-400 opacity-50"></i>
+                    <div class="vendor-preview__banner-fallback">
+                        <i class="pi pi-image vendor-preview__banner-fallback-icon"></i>
                     </div>
                     }
                     <!-- Overlapping Logo -->
-                    <div
-                        class="absolute -bottom-8 left-1/2 -translate-x-1/2 w-20 h-20 bg-white p-2 flex items-center justify-center border border-gray-50">
+                    <div class="vendor-preview__logo">
                         @if (getVendorLogo(); as logo) {
-                        <img [src]="logo" class="max-w-full max-h-full object-contain" alt="Logo"
+                        <img [src]="logo" class="vendor-preview__logo-img" alt="Logo"
                             (error)="markLogoImageFailed()" />
                         } @else {
-                        <div class="w-full h-full bg-gray-50 flex items-center justify-center">
-                            <i class="pi pi-image text-3xl text-gray-300"></i>
+                        <div class="vendor-preview__logo-fallback">
+                            <i class="pi pi-image vendor-preview__logo-fallback-icon"></i>
                         </div>
                         }
                     </div>
                 </div>
 
                 <!-- Vendor Identity -->
-                <div id="preview-section-identity" class="mt-12 px-6 flex flex-col items-center">
-                    <h1 class="text-[1.3rem] font-bold text-gray-800 text-center leading-tight mb-6">
+                <div id="preview-section-identity" class="vendor-preview__identity">
+                    <h1 class="vendor-preview__name">
                         {{ getVendorName() }}
                     </h1>
 
                     <!-- Contact Details -->
-                    <div class="w-full flex flex-col gap-3.5 text-[0.75rem] text-gray-500 font-medium">
-                        <div class="flex items-center gap-4">
-                            <i class="pi pi-phone text-xs"></i>
+                    <div class="vendor-preview__contact">
+                        <div class="vendor-preview__contact-row">
+                            <i class="pi pi-phone vendor-preview__contact-icon"></i>
                             <span class="vendor-preview__phone" dir="ltr">{{ formatPhone() }}</span>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <i class="pi pi-envelope text-xs"></i>
+                        <div class="vendor-preview__contact-row">
+                            <i class="pi pi-envelope vendor-preview__contact-icon"></i>
                             <span>{{ formatEmail() }}</span>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <i class="pi pi-globe text-xs"></i>
+                        <div class="vendor-preview__contact-row">
+                            <i class="pi pi-globe vendor-preview__contact-icon"></i>
                             <span>{{ formatWebsite() }}</span>
                         </div>
-                        <div class="flex items-start gap-4 mt-1 leading-relaxed">
-                            <i class="pi pi-info-circle text-xs mt-0.5"></i>
+                        <div class="vendor-preview__contact-row vendor-preview__contact-row--desc">
+                            <i class="pi pi-info-circle vendor-preview__contact-icon vendor-preview__contact-icon--top"></i>
                             <span>{{ getVendorDescription() }}</span>
                         </div>
                     </div>
 
                     <!-- Social Icons -->
                     @if (getSocialLinks().length > 0) {
-                    <div class="w-full mt-8 mb-6">
-                        <div class="vendor-preview__social-row text-gray-600">
+                    <div class="vendor-preview__social">
+                        <div class="vendor-preview__social-row">
                             @for (link of getSocialLinks(); track getSocialLinkHref(link)) {
                             <a [href]="getSocialLinkHref(link)" target="_blank" rel="noopener noreferrer"
                                 class="vendor-preview__social-link">
@@ -91,7 +89,7 @@
                                     [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
                                     [style.maskImage]="'url(' + socialIconPath + ')'"></span>
                                 } @else {
-                                <i class="pi pi-link text-sm"></i>
+                                <i class="pi pi-link vendor-preview__social-fallback-icon"></i>
                                 }
                             </a>
                             }
@@ -100,67 +98,66 @@
                     }
 
                     <!-- Action Buttons -->
-                    <div
-                        class="flex items-center justify-center gap-12 text-gray-400 mb-8 border-t border-gray-100 w-full pt-4">
-                        <div class="flex flex-col items-center gap-1 cursor-pointer hover:text-[#0033A0]">
-                            <i class="pi pi-heart text-lg font-light"></i>
-                            <span class="text-[0.6rem] font-medium">{{ language() === 'en' ? 'Favorite' : 'المفضلة'
+                    <div class="vendor-preview__actions">
+                        <div class="vendor-preview__action">
+                            <i class="pi pi-heart vendor-preview__action-icon"></i>
+                            <span class="vendor-preview__action-label">{{ language() === 'en' ? 'Favorite' : 'المفضلة'
                                 }}</span>
                         </div>
-                        <div class="flex flex-col items-center gap-1 cursor-pointer hover:text-[#0033A0]">
-                            <i class="pi pi-share-alt text-lg font-light"></i>
-                            <span class="text-[0.6rem] font-medium">{{ language() === 'en' ? 'Share' : 'مشاركة'
+                        <div class="vendor-preview__action">
+                            <i class="pi pi-share-alt vendor-preview__action-icon"></i>
+                            <span class="vendor-preview__action-label">{{ language() === 'en' ? 'Share' : 'مشاركة'
                                 }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Offers Section -->
-                <div class="px-5 py-4 bg-gray-50/50">
-                    <h3 class="text-base font-bold text-gray-800 mb-4">{{ language() === 'en' ? 'Offers' : 'العروض' }}
+                <div class="vendor-preview__offers">
+                    <h3 class="vendor-preview__section-title">{{ language() === 'en' ? 'Offers' : 'العروض' }}
                     </h3>
-                    <div class="flex flex-col gap-3">
+                    <div class="vendor-preview__offer-list">
                         @for (offer of getOffers(); track $index) {
-                        <div class="bg-white p-3 border border-gray-100 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gray-50 p-1 flex items-center justify-center">
+                        <div class="vendor-preview__offer-card">
+                            <div class="vendor-preview__offer-info">
+                                <div class="vendor-preview__offer-icon">
                                     @if (getVendorLogo(); as logo) {
-                                    <img [src]="logo" class="max-w-full max-h-full object-contain opacity-80"
+                                    <img [src]="logo" class="vendor-preview__offer-icon-img"
                                         alt="Icon" (error)="markLogoImageFailed()" />
                                     } @else {
-                                    <i class="pi pi-image text-gray-300"></i>
+                                    <i class="pi pi-image vendor-preview__offer-icon-placeholder"></i>
                                     }
                                 </div>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-gray-800">{{ language() === 'en' ? 'Special
+                                <div class="vendor-preview__offer-text">
+                                    <span class="vendor-preview__offer-name">{{ language() === 'en' ? 'Special
                                         Offer' : 'عرض خاص' }}</span>
                                 </div>
                             </div>
-                            <div class="flex flex-col items-end gap-2">
-                                <i class="pi pi-heart text-gray-300 text-sm"></i>
-                                <span class="text-[0.55rem] text-gray-400">{{ language() === 'en' ? 'In-Store' : 'في
+                            <div class="vendor-preview__offer-meta">
+                                <i class="pi pi-heart vendor-preview__offer-fav"></i>
+                                <span class="vendor-preview__offer-tag">{{ language() === 'en' ? 'In-Store' : 'في
                                     المتجر' }}</span>
                             </div>
                         </div>
                         } @empty {
-                        <div class="bg-white p-3 border border-gray-100 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gray-50 p-1 flex items-center justify-center">
+                        <div class="vendor-preview__offer-card">
+                            <div class="vendor-preview__offer-info">
+                                <div class="vendor-preview__offer-icon">
                                     @if (getVendorLogo(); as logo) {
-                                    <img [src]="logo" class="max-w-full max-h-full object-contain opacity-80"
+                                    <img [src]="logo" class="vendor-preview__offer-icon-img"
                                         alt="Icon" (error)="markLogoImageFailed()" />
                                     } @else {
-                                    <i class="pi pi-image text-gray-300"></i>
+                                    <i class="pi pi-image vendor-preview__offer-icon-placeholder"></i>
                                     }
                                 </div>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-gray-800">{{ language() === 'en' ? 'Special
+                                <div class="vendor-preview__offer-text">
+                                    <span class="vendor-preview__offer-name">{{ language() === 'en' ? 'Special
                                         Offer' : 'عرض خاص' }}</span>
                                 </div>
                             </div>
-                            <div class="flex flex-col items-end gap-2">
-                                <i class="pi pi-heart text-gray-300 text-sm"></i>
-                                <span class="text-[0.55rem] text-gray-400">{{ language() === 'en' ? 'In-Store' : 'في
+                            <div class="vendor-preview__offer-meta">
+                                <i class="pi pi-heart vendor-preview__offer-fav"></i>
+                                <span class="vendor-preview__offer-tag">{{ language() === 'en' ? 'In-Store' : 'في
                                     المتجر' }}</span>
                             </div>
                         </div>
@@ -169,19 +166,18 @@
                 </div>
 
                 <!-- Branches Section -->
-                <div id="preview-section-branches" class="px-5 py-6">
-                    <h3 class="text-base font-bold text-gray-800 mb-5">{{ language() === 'en' ? 'Branches' : 'الفروع' }}
+                <div id="preview-section-branches" class="vendor-preview__branches">
+                    <h3 class="vendor-preview__section-title vendor-preview__section-title--branches">{{ language() === 'en' ? 'Branches' : 'الفروع' }}
                     </h3>
-                    <div class="flex flex-col gap-6">
+                    <div class="vendor-preview__branch-list">
                         @for (loc of getLocations(); track $index) {
-                        <div
-                            class="flex items-start justify-between border-b border-gray-50 pb-5 last:border-0 last:pb-0">
-                            <div class="flex items-start gap-4">
-                                <i class="pi pi-home text-gray-300 text-lg mt-0.5"></i>
-                                <div class="flex flex-col">
-                                    <span class="text-xs font-bold text-gray-700 leading-tight">{{ getLocationName(loc)
+                        <div class="vendor-preview__branch">
+                            <div class="vendor-preview__branch-info">
+                                <i class="pi pi-home vendor-preview__branch-icon"></i>
+                                <div class="vendor-preview__branch-text">
+                                    <span class="vendor-preview__branch-name">{{ getLocationName(loc)
                                         }}</span>
-                                    <span class="text-[0.65rem] text-gray-400 font-medium">{{ getLocationCity(loc)
+                                    <span class="vendor-preview__branch-city">{{ getLocationCity(loc)
                                         }}</span>
                                 </div>
                             </div>
@@ -190,9 +186,8 @@
                         }
                     </div>
 
-                    <button
-                        class="w-full mt-10 flex justify-center items-center gap-2 text-[#4285F4] text-xs font-bold hover:opacity-80 transition-opacity">
-                        <i class="pi pi-map text-lg"></i> {{ language() === 'en' ? 'View all branches' : 'عرض جميع
+                    <button class="vendor-preview__branches-button">
+                        <i class="pi pi-map vendor-preview__branches-button-icon"></i> {{ language() === 'en' ? 'View all branches' : 'عرض جميع
                         الفروع' }}
                     </button>
                 </div>
@@ -200,23 +195,22 @@
             </div>
 
             <!-- Persistent Bottom Nav -->
-            <div
-                class="absolute bottom-0 w-full h-16 bg-white/95 backdrop-blur-md border-t border-gray-100 flex justify-around items-center text-[0.55rem] text-gray-400 pb-2 z-30 shrink-0">
-                <div class="flex flex-col items-center gap-1.5">
-                    <i class="pi pi-map-marker text-[1.1rem]"></i>
-                    <span class="scale-90 opacity-80">{{ language() === 'en' ? 'Near You' : 'بالقرب منك' }}</span>
+            <div class="vendor-preview__bottom-nav">
+                <div class="vendor-preview__nav-item">
+                    <i class="pi pi-map-marker vendor-preview__nav-icon"></i>
+                    <span class="vendor-preview__nav-label">{{ language() === 'en' ? 'Near You' : 'بالقرب منك' }}</span>
                 </div>
-                <div class="flex flex-col items-center gap-1.5">
-                    <i class="pi pi-home text-[1.1rem]"></i>
-                    <span class="scale-90 opacity-80">{{ language() === 'en' ? 'Home' : 'الرئيسية' }}</span>
+                <div class="vendor-preview__nav-item">
+                    <i class="pi pi-home vendor-preview__nav-icon"></i>
+                    <span class="vendor-preview__nav-label">{{ language() === 'en' ? 'Home' : 'الرئيسية' }}</span>
                 </div>
-                <div class="flex flex-col items-center gap-1.5">
-                    <i class="pi pi-search text-[1.1rem]"></i>
-                    <span class="scale-90 opacity-80">{{ language() === 'en' ? 'Search' : 'بحث' }}</span>
+                <div class="vendor-preview__nav-item">
+                    <i class="pi pi-search vendor-preview__nav-icon"></i>
+                    <span class="vendor-preview__nav-label">{{ language() === 'en' ? 'Search' : 'بحث' }}</span>
                 </div>
-                <div class="flex flex-col items-center gap-1.5">
-                    <i class="pi pi-user text-[1.1rem]"></i>
-                    <span class="scale-90 opacity-80 font-bold">{{ language() === 'en' ? 'Profile' : 'الملف الشخصي'
+                <div class="vendor-preview__nav-item">
+                    <i class="pi pi-user vendor-preview__nav-icon"></i>
+                    <span class="vendor-preview__nav-label vendor-preview__nav-label--active">{{ language() === 'en' ? 'Profile' : 'الملف الشخصي'
                         }}</span>
                 </div>
             </div>
