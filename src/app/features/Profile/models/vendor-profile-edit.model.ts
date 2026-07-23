@@ -25,4 +25,7 @@ export interface VendorProfileEditData {
   repEmail: string;
   socialLinks: string[];
   locations: VendorProfileEditLocation[];
+  logo?: string | File | null;
+  coverMobile?: string | File | null;
+  coverDesktop?: string | File | null;
 }

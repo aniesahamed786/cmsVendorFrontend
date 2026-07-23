@@ -145,7 +145,17 @@
       "placeholderCrNumber": "e.g. 1010456789",
       "placeholderDescriptionEn": "Briefly describe the vendor and their services",
       "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
-      "placeholderRepName": "e.g. John Doe"
+      "placeholderRepName": "e.g. John Doe",
+      "branding": "Branding",
+      "vendorLogo": "Vendor Logo",
+      "vendorLogoDrop": "Drag and drop vendor logo here",
+      "vendorLogoBrowse": "Or click to browse files from your computer (JPG, PNG, max 10MB)",
+      "vendorLogoHint": "Recommended: upload a high-quality logo and crop it to a square. Best results are around 512 x 512 px. JPG/PNG only, max 10MB.",
+      "coverImages": "Cover images",
+      "coverHint": "Recommended: upload one high-quality source image and crop it into both `2.39:1` and `16:2` versions.",
+      "businessLocations": "Business Locations",
+      "noLocations": "No locations added yet.",
+      "addNewLocation": "Add new location"
     },
     "confirm": {
       "title": "Confirm Changes",
