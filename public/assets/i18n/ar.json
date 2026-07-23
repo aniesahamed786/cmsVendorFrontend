@@ -145,7 +145,17 @@
       "placeholderCrNumber": "مثال: 1010456789",
       "placeholderDescriptionEn": "وصف مختصر للبائع وخدماته بالإنجليزية",
       "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
-      "placeholderRepName": "مثال: محمد أحمد"
+      "placeholderRepName": "مثال: محمد أحمد",
+      "branding": "العلامة التجارية",
+      "vendorLogo": "شعار البائع",
+      "vendorLogoDrop": "اسحب وأفلت شعار البائع هنا",
+      "vendorLogoBrowse": "أو انقر لتصفح الملفات من جهازك (JPG أو PNG، بحد أقصى 10 ميجابايت)",
+      "vendorLogoHint": "يُنصح برفع شعار عالي الجودة وقصّه ليكون مربعاً. أفضل النتائج عند مقاس 512 × 512 بكسل تقريباً. JPG/PNG فقط، بحد أقصى 10 ميجابايت.",
+      "coverImages": "صور الغلاف",
+      "coverHint": "يُنصح برفع صورة مصدر واحدة عالية الجودة وقصّها إلى نسختي `2.39:1` و`16:2`.",
+      "businessLocations": "مواقع النشاط التجاري",
+      "noLocations": "لم تتم إضافة أي مواقع بعد.",
+      "addNewLocation": "إضافة موقع جديد"
     },
     "confirm": {
       "title": "تأكيد التغييرات",

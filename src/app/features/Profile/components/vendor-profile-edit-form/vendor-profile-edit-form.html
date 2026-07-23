@@ -74,37 +74,193 @@
     </div>
   </div>
 
-  <!-- Disabled feature stub (savedLocations UI). De-Tailwinded to BEM so it stays
-       grep-clean and ready; keep commented until the locations feature is wired.
-       NOTE (out of styling scope): section title + Edit/Delete/Add labels are
-       hardcoded English and need i18n keys before this is enabled. -->
-  <!-- <div class="profile-form-section">
+  <!-- Branding -->
+  <div class="profile-form-section">
     <div class="profile-form-section__header">
-      <div class="profile-form-section__icon"><i class="pi pi-map-marker"></i></div>
-      <h2>Business Locations</h2>
+      <div class="profile-form-section__icon"><i class="pi pi-palette"></i></div>
+      <h2>{{ 'profile.form.branding' | translate }}</h2>
     </div>
-    @if (savedLocations().length > 0) {
-      <div class="profile-location-list">
-        @for (location of savedLocations(); track location.id) {
-          <div class="profile-location-item">
-            <span class="profile-location-item__title">{{ location.nameEn }}</span>
-            <div class="profile-location-item__actions">
-              <button type="button" data-preview-section="branches" class="profile-link-action" (click)="editLocation(location)">Edit</button>
-              <button type="button" class="profile-link-action profile-link-action--danger" (click)="removeLocation(location.id)">Delete</button>
-            </div>
+
+    <!-- Vendor Logo -->
+    <div class="profile-branding__field">
+      <label>{{ 'profile.form.vendorLogo' | translate }} <span class="required">*</span></label>
+      <div class="app-dropzone profile-dropzone" [class.app-dropzone--dragging]="isLogoDragging()"
+        (dragover)="onLogoDragOver($event)" (dragleave)="onLogoDragLeave($event)" (drop)="onLogoDrop($event)"
+        (click)="logoInput.click()">
+        <div class="profile-dropzone__body">
+          <div class="profile-dropzone__icon"><i class="pi pi-cloud-upload"></i></div>
+          <p class="profile-dropzone__title">{{ 'profile.form.vendorLogoDrop' | translate }}</p>
+          <p class="profile-dropzone__help">{{ 'profile.form.vendorLogoBrowse' | translate }}</p>
+          @if (logoPreview()) {
+          <button type="button" pButton icon="pi pi-upload" [label]="'offerForm.upload.uploadNew' | translate"
+            class="p-button-outlined p-button-sm" (click)="logoInput.click(); $event.stopPropagation()"></button>
+          }
+        </div>
+        <input #logoInput type="file" accept="image/jpeg,image/png" class="profile-dropzone__input"
+          (change)="onLogoFileSelected($event)" />
+      </div>
+      <p class="field-hint">{{ 'profile.form.vendorLogoHint' | translate }}</p>
+
+      @if (logoPreview(); as logo) {
+      <div class="profile-image-preview">
+        <div class="profile-image-preview__frame profile-image-preview__frame--logo">
+          <img [src]="logo" [alt]="'profile.form.vendorLogo' | translate" class="profile-image-preview__img" />
+        </div>
+        <div class="profile-image-preview__actions">
+          <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate"
+            class="p-button-outlined p-button-sm" (click)="recropLogo()"></button>
+          <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
+            class="p-button-outlined p-button-danger p-button-sm" (click)="removeLogo()"></button>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Cover images -->
+    <div class="profile-branding__field profile-branding__field--mt">
+      <label>{{ 'profile.form.coverImages' | translate }} <span class="required">*</span></label>
+      <div class="profile-cover-zone" [class.profile-cover-zone--dragging]="isCoverDragging()"
+        [class.profile-cover-zone--empty]="!(coverMobilePreview() || coverDesktopPreview())"
+        (dragover)="onCoverDragOver($event)" (dragleave)="onCoverDragLeave($event)" (drop)="onCoverDrop($event)"
+        (click)="coverInput.click()">
+        <div class="profile-dropzone__body">
+          <div class="profile-dropzone__icon"><i class="pi pi-cloud-upload"></i></div>
+          <p class="profile-dropzone__title">{{ 'offerForm.upload.title' | translate }}</p>
+          <p class="profile-dropzone__help">{{ 'offerForm.upload.help' | translate }}</p>
+          <button type="button" pButton icon="pi pi-upload"
+            [label]="((coverMobilePreview() || coverDesktopPreview()) ? 'offerForm.upload.uploadNew' : 'offerForm.upload.chooseImage') | translate"
+            class="p-button-outlined p-button-sm" (click)="coverInput.click(); $event.stopPropagation()"></button>
+        </div>
+        <input #coverInput type="file" accept="image/jpeg,image/png" class="profile-dropzone__input"
+          (change)="onCoverFileSelected($event)" />
+
+        @if (coverMobilePreview() || coverDesktopPreview()) {
+        <div class="profile-cover-grid" (click)="$event.stopPropagation()">
+        <div class="profile-cover-card">
+          <div class="profile-cover-card__head">
+            <span class="profile-cover-card__head-icon" aria-hidden="true"><i class="pi pi-mobile"></i></span>
+            <p class="profile-cover-card__title">{{ 'offerForm.upload.mobileBackground' | translate }}</p>
+            <span class="profile-cover-card__badge" dir="ltr">2.39:1</span>
           </div>
+          <div class="profile-cover-card__frame profile-cover-card__frame--mobile">
+            @if (coverMobilePreview(); as m) {
+            <img [src]="m" [alt]="'offerForm.upload.altMobilePreview' | translate" class="profile-cover-card__img" />
+            <span class="profile-cover-card__ratio" dir="ltr">2.39:1</span>
+            <span class="profile-cover-card__overlay" aria-hidden="true"></span>
+            } @else {
+            <span class="profile-cover-card__empty">{{ 'offerForm.upload.emptyMobile' | translate }}</span>
+            }
+          </div>
+          @if (coverMobilePreview()) {
+          <p class="profile-cover-card__safe"><i class="pi pi-info-circle" aria-hidden="true"></i>
+            {{ 'offerForm.highlight.safeArea' | translate }}</p>
+          }
+          <div class="profile-image-preview__actions">
+            <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate"
+              class="p-button-sm" (click)="recropCover('mobile')"></button>
+            <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
+              class="p-button-outlined p-button-danger p-button-sm" [disabled]="!coverMobilePreview()"
+              (click)="removeCover('mobile')"></button>
+          </div>
+        </div>
+
+        <div class="profile-cover-card">
+          <div class="profile-cover-card__head">
+            <span class="profile-cover-card__head-icon" aria-hidden="true"><i class="pi pi-desktop"></i></span>
+            <p class="profile-cover-card__title">{{ 'offerForm.upload.desktopBackground' | translate }}</p>
+            <span class="profile-cover-card__badge" dir="ltr">16:2</span>
+          </div>
+          <div class="profile-cover-card__frame profile-cover-card__frame--desktop">
+            @if (coverDesktopPreview(); as d) {
+            <img [src]="d" [alt]="'offerForm.upload.altDesktopPreview' | translate" class="profile-cover-card__img" />
+            <span class="profile-cover-card__ratio" dir="ltr">16:2</span>
+            <span class="profile-cover-card__overlay" aria-hidden="true"></span>
+            } @else {
+            <span class="profile-cover-card__empty">{{ 'offerForm.upload.emptyDesktop' | translate }}</span>
+            }
+          </div>
+          @if (coverDesktopPreview()) {
+          <p class="profile-cover-card__safe"><i class="pi pi-info-circle" aria-hidden="true"></i>
+            {{ 'offerForm.highlight.safeArea' | translate }}</p>
+          }
+          <div class="profile-image-preview__actions">
+            <button type="button" pButton icon="pi pi-pencil" [label]="'offerForm.upload.editCrop' | translate"
+              class="p-button-sm" (click)="recropCover('desktop')"></button>
+            <button type="button" pButton icon="pi pi-trash" [label]="'offerForm.upload.remove' | translate"
+              class="p-button-outlined p-button-danger p-button-sm" [disabled]="!coverDesktopPreview()"
+              (click)="removeCover('desktop')"></button>
+          </div>
+        </div>
+        </div>
         }
       </div>
+      <p class="field-hint">{{ 'profile.form.coverHint' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Business Locations -->
+  <div class="profile-form-section">
+    <div class="profile-form-section__header">
+      <div class="profile-form-section__icon"><i class="pi pi-map-marker"></i></div>
+      <h2>{{ 'profile.form.businessLocations' | translate }}</h2>
+    </div>
+    @if (savedLocations().length > 0) {
+    <div class="profile-location-list">
+      @for (location of savedLocations(); track location.id) {
+      <div class="profile-location-item">
+        <span class="profile-location-item__title">{{ location.nameEn }}</span>
+        <div class="profile-location-item__actions">
+          <button type="button" data-preview-section="branches" class="profile-link-action"
+            (click)="editLocation(location)">{{ 'common.edit' | translate }}</button>
+          <button type="button" class="profile-link-action profile-link-action--danger"
+            (click)="removeLocation(location.id)">{{ 'common.delete' | translate }}</button>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
+    <div class="profile-location-empty">{{ 'profile.form.noLocations' | translate }}</div>
     }
 
     <div class="profile-form-actions-row">
-      <button type="button" data-preview-section="branches" class="profile-link-action profile-link-action--add" (click)="openNewLocationDialog()">
-        <span>+</span> Add new location
+      <button type="button" data-preview-section="branches" class="profile-link-action profile-link-action--add"
+        (click)="openNewLocationDialog()">
+        <span>+</span> {{ 'profile.form.addNewLocation' | translate }}
       </button>
     </div>
-  </div> -->
+  </div>
 </form>
 
 <app-vendor-location-dialog [visible]="showLocationDialog()" [locationToEdit]="selectedLocationForEdit()"
   (visibleChange)="showLocationDialog.set($event)" (saveLocation)="onLocationSaved($event)">
 </app-vendor-location-dialog>
+
+<!-- Branding image cropper -->
+<p-dialog [visible]="cropperVisible()" (visibleChange)="cropperVisible.set($event)" [modal]="true" [draggable]="false"
+  [resizable]="false" [dismissableMask]="true" [header]="'offerForm.cropper.heading' | translate"
+  styleClass="profile-cropper-dialog" [style]="{ width: '92vw', maxWidth: '520px' }">
+  <div class="profile-cropper">
+    <div class="profile-cropper__stage">
+      @if (cropperMounted()) {
+      <image-cropper [imageURL]="cropperImageUrl()" [maintainAspectRatio]="true" [aspectRatio]="cropperAspectRatio"
+        [resizeToWidth]="cropperResizeWidth" [transform]="cropperTransform()" [canvasRotation]="0" format="png"
+        (imageCropped)="onImageCropped($event)" />
+      }
+    </div>
+    <div class="profile-cropper__zoom">
+      <button type="button" pButton icon="pi pi-search-minus" class="p-button-text p-button-sm"
+        (click)="zoomOut()"></button>
+      <span class="profile-cropper__zoom-label">{{ 'offerForm.cropper.zoom' | translate }}</span>
+      <button type="button" pButton icon="pi pi-search-plus" class="p-button-text p-button-sm"
+        (click)="zoomIn()"></button>
+    </div>
+
+    <div class="profile-cropper__footer">
+      <button type="button" pButton [label]="'offerForm.cropper.cancel' | translate" severity="secondary"
+        [outlined]="true" (click)="cancelCrop()"></button>
+      <button type="button" pButton
+        [label]="(cropperOnMobileStep ? 'offerForm.cropper.next' : 'offerForm.cropper.apply') | translate"
+        [icon]="cropperOnMobileStep ? '' : 'pi pi-check'" [disabled]="!canApplyCrop" (click)="applyCrop()"></button>
+    </div>
+  </div>
+</p-dialog>
