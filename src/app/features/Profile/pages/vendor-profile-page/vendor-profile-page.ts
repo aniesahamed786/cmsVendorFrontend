@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal,OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -10,6 +10,8 @@ import {
   RequestStatus,
   VendorProfile,
 } from '../../models/vendor-profile.model';
+import { VendorProfileService } from '../vendor-profile.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-vendor-profile-page',
@@ -18,11 +20,42 @@ import {
   templateUrl: './vendor-profile-page.html',
   styleUrl: './vendor-profile-page.css',
 })
-export class VendorProfilePage {
-  readonly profile = signal<VendorProfile>(MOCK_VENDOR_PROFILE);
+export class VendorProfilePage implements OnInit {
+  ngOnInit(): void {
+  this.loadVendorProfile();
+}
+readonly backendUrl = environment.backendUrl;
+getImageUrl(path: string): string {
+  if (!path) return '';
+  return this.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
+}
+  readonly profile = signal<any | null>(null);
+  constructor(private readonly router: Router,private readonly vendorProfileService: VendorProfileService) {}
+private loadVendorProfile(): void {
 
-  constructor(private readonly router: Router) {}
+  const vendorId = '6a5d039814db22e9a862746b';
 
+  this.vendorProfileService
+      .getVendorProfile(vendorId)
+      .subscribe({
+
+        next: (response) => {
+
+          console.log(response);
+
+          this.profile.set(response);
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+        }
+
+      });
+
+}
   onEditProfile(): void {
     this.router.navigate(['/profile/edit']);
   }

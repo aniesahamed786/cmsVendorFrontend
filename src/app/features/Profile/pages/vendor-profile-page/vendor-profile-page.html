@@ -6,15 +6,22 @@
       {{ 'profile.edit' | translate }}
     </button>
     <div class="vendor-profile-page__hero-content">
-      <div class="vendor-profile-page__hero-logo">
-        <i class="pi pi-image vendor-profile-page__hero-logo-icon"></i>
-      </div>
+     <div class="vendor-profile-page__hero-logo">
+  @if (vendor.vendorLogo) {
+    <img
+      [src]="getImageUrl(vendor.vendorLogo)"
+      [alt]="vendor.vendorName"
+      class="vendor-profile-page__hero-logo-image" />
+  } @else {
+    <i class="pi pi-image vendor-profile-page__hero-logo-icon"></i>
+  }
+</div>
       <div class="vendor-profile-page__hero-details">
-        <h1 class="vendor-profile-page__hero-title">LuMee</h1>
-        <h2 class="vendor-profile-page__hero-subtitle">LuMee</h2>
-        <span class="vendor-profile-page__status-badge">
+        <h1 class="vendor-profile-page__hero-title">{{ vendor.vendorName }}</h1>
+        <h2 class="vendor-profile-page__hero-subtitle">{{ vendor.vendorNameAr }}</h2>
+        <!-- <span class="vendor-profile-page__status-badge">
           {{ vendor.contractStatus === 'Active Contract' ? ('profile.statusActive' | translate) : vendor.contractStatus }}
-        </span>
+        </span> -->
       </div>
     </div>
   </div>
@@ -30,8 +37,7 @@
             {{ vendor.description }}
           </p>
           <p class="vendor-profile-page__description-text vendor-profile-page__description-text--rtl" dir="rtl">
-            تعني كلمة "لومي" (LUMEE) الليمون والليمون الأخضر (اللايم) في اللهجة المحلية، حيث كانت نضارة الليمون هي مصدر
-            الإلهام لهذا المفهوم في كل شيء، بدءاً من الطعام ووصولاً إلى...
+           {{ vendor.descriptionAr }}
           </p>
         </div>
       </div>
@@ -44,15 +50,15 @@
           <div class="vendor-profile-page__contact-list">
             <div class="vendor-profile-page__contact-item">
               <i class="pi pi-user"></i>
-              <span>{{ vendor.primaryContact.name }}</span>
+              <span>{{ vendor.representativeName}}</span>
             </div>
             <div class="vendor-profile-page__contact-item">
               <i class="pi pi-phone"></i>
-              <span dir="ltr">{{ vendor.primaryContact.phone }}</span>
+              <span dir="ltr">{{vendor.representativeContact }}</span>
             </div>
             <div class="vendor-profile-page__contact-item">
               <i class="pi pi-envelope"></i>
-              <span>{{ vendor.primaryContact.email }}</span>
+              <span>{{vendor.representativeEmail }}</span>
             </div>
           </div>
         </div>
@@ -64,11 +70,11 @@
           <div class="vendor-profile-page__contact-list">
             <div class="vendor-profile-page__contact-item">
               <i class="pi pi-phone"></i>
-              <span dir="ltr">05412345434</span>
+              <span dir="ltr">{{ vendor.businessContact.phone[0] }}</span>
             </div>
             <div class="vendor-profile-page__contact-item">
               <i class="pi pi-envelope"></i>
-              <span>contact@gmail.com</span>
+              <span>{{ vendor.businessContact.email[0] }}</span>
             </div>
           </div>
         </div>
@@ -77,7 +83,19 @@
           <div class="vendor-profile-page__card-header">
             <div class="vendor-profile-page__card-icon"><i class="pi pi-thumbs-up"></i></div> {{ 'profile.socialMedia' | translate }}
           </div>
-          <p class="vendor-profile-page__empty-text">{{ 'profile.noSocialLinks' | translate }}</p>
+          <p class="vendor-profile-page__empty-text">@if (vendor.socialLinks?.length) {
+  @for (link of vendor.socialLinks; track link.platform) {
+    <div class="vendor-profile-page__contact-item">
+      <span>{{ link.platform }}</span>
+      <span>{{ link.accountName }}</span>
+      <span>{{link.url}}</span>
+    </div>
+  }
+} @else {
+  <p class="vendor-profile-page__empty-text">
+    {{ 'profile.noSocialLinks' | translate }}
+  </p>
+}</p>
         </div>
       </div>
 
@@ -89,14 +107,28 @@
           <div class="vendor-profile-page__image-col">
             <span class="vendor-profile-page__image-label">{{ 'profile.imageMobile' | translate }} <span dir="ltr">7:16.1</span></span>
             <div class="vendor-profile-page__image-box vendor-profile-page__image-box--mobile">
-              <i class="pi pi-image vendor-profile-page__image-placeholder"></i>
-            </div>
+  @if (vendor.coverImage) {
+    <img
+      [src]="getImageUrl(vendor.coverImage)"
+      alt="Mobile Cover"
+      class="vendor-profile-page__image" />
+  } @else {
+    <i class="pi pi-image vendor-profile-page__image-placeholder"></i>
+  }
+</div>
           </div>
           <div class="vendor-profile-page__image-col">
             <span class="vendor-profile-page__image-label">{{ 'profile.imageDesktop' | translate }} <span dir="ltr">16:9</span></span>
-            <div class="vendor-profile-page__image-box vendor-profile-page__image-box--desktop">
-              <i class="pi pi-image vendor-profile-page__image-placeholder"></i>
-            </div>
+           <div class="vendor-profile-page__image-box vendor-profile-page__image-box--desktop">
+  @if (vendor.coverImageLandscape) {
+    <img
+      [src]="getImageUrl(vendor.coverImageLandscape)"
+      alt="Desktop Cover"
+      class="vendor-profile-page__image" />
+  } @else {
+    <i class="pi pi-image vendor-profile-page__image-placeholder"></i>
+  }
+</div>
           </div>
         </div>
       </div>
@@ -104,11 +136,20 @@
     </div>
 
     <div class="vendor-profile-page__preview-column">
-      <app-vendor-preview [isDialog]="false" [name]="'LuMee'" [nameAr]="'لومي'" [description]="vendor.description"
-        [descriptionAr]="'تعني كلمة لومي (LUMEE) الليمون والليمون الأخضر (اللايم) في اللهجة المحلية، حيث كانت نضارة الليمون هي مصدر الإلهام لهذا المفهوم في كل شيء، بدءاً من الطعام ووصولاً إلى...'"
-        [phone]="'05412345434'" [email]="'contact@gmail.com'" [website]="'www.lumee.com'" [offers]="vendor.offers"
-        [locations]="vendor.locations">
-      </app-vendor-preview>
+      <app-vendor-preview
+  [isDialog]="false"
+  [name]="vendor.vendorName"
+  [nameAr]="vendor.vendorNameAr"
+  [description]="vendor.description"
+  [descriptionAr]="vendor.descriptionAr"
+  [logo]="getImageUrl(vendor.vendorLogo)"
+  [cover]="getImageUrl(vendor.coverImage)"
+  [phone]="vendor.businessContact.phone[0]"
+  [email]="vendor.businessContact.email[0]"
+  [website]="'www.lumee.com'"
+  [offers]="vendor.offers"
+  [locations]="vendor.locations">
+</app-vendor-preview>
     </div>
 
   </div>
