@@ -102,4 +102,5 @@ export interface CreateTicketForm {
   ticketType: TicketCategory | null;
   linkedItem: string | null;
   description: string;
+  attachments?: File[];
 }

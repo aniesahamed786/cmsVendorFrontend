@@ -111,9 +111,13 @@
         <tr [routerLink]="[row.id]">
           <td>
             <div class="offers__title-cell">
+              @if (row.offerLogo) {
+              <img class="offers__logo" [src]="getImageUrl(row.offerLogo)" [alt]="row.title" />
+              } @else {
               <div class="offers__image-placeholder">
                 <i class="pi pi-image"></i>
               </div>
+              }
               <span class="offers__row-title">{{ row.title }}</span>
             </div>
           </td>

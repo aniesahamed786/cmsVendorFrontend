@@ -7,6 +7,8 @@ import { PreviewOfferDetails } from '../../Components/preview-offer-details/prev
 import { Button } from '../../../../shared/Components/button/button';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { OfferDetailService } from '../../services/offer-detail.service';
+import { environment } from '../../../../../environments/environment';
 
 type RedemptionTab = 'in-store' | 'online';
 
@@ -18,6 +20,7 @@ type RedemptionTab = 'in-store' | 'online';
 })
 export class OfferDetailsPage {
   private readonly i18n = inject(I18nService);
+  private readonly offerDetailService = inject(OfferDetailService);
   readonly offerDetailIconBasePath = 'assets/svg/Offers/offer-details';
 
   /**
@@ -27,32 +30,35 @@ export class OfferDetailsPage {
   readonly previewLanguage = linkedSignal<'en' | 'ar'>(() => this.i18n.lang());
 
   // Mock data for Vendor project
-  OfferBasicData = signal<any>({
-    title: 'Summer Sale 2026',
-    title_ar: 'تخفيضات الصيف 2026',
-    description: 'Enjoy a limited-time discount across all participating branches this summer.',
-    description_ar: 'استمتع بخصم لفترة محدودة في جميع الفروع المشاركة هذا الصيف.',
-    startDate: new Date(2026, 0, 10).toISOString(),
-    expiryDate: { $date: new Date(2026, 1, 10).toISOString() },
-    category: { name: 'Retail', icon: 'pi pi-shopping-bag' },
-    tags: ['Summer', 'Limited', 'Popular'],
-    targetAudience: ['employees', 'Families'],
-    discount_type: 'percentage',
-    discount_amount: '50',
-    discount_amount_ar: '٥٠',
-    offerMode: 'both',
-    howToAvail: 'Present your QR code or Aramco ID at the branch.',
-    howToAvail_ar: 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في المتجر.',
-    mobile: '+966 50 123 4567',
-    telephone: '+966 11 234 5678',
-    email: 'offers@vendor.com',
-    highlight_title: 'Best Seller',
-    highlight_title_ar: 'الأكثر مبيعاً',
-    highlight_description: 'Most redeemed offer of the season.',
-    highlight_description_ar: 'العرض الأكثر استرداداً لهذا الموسم.',
-    status: 'Active'
-  });
-  vendor = signal<any>({ name: 'Vendor Name', name_ar: 'اسم المتجر', logo: '' });
+  // OfferBasicData = signal<any>({
+  //   title: 'Summer Sale 2026',
+  //   title_ar: 'تخفيضات الصيف 2026',
+  //   description: 'Enjoy a limited-time discount across all participating branches this summer.',
+  //   description_ar: 'استمتع بخصم لفترة محدودة في جميع الفروع المشاركة هذا الصيف.',
+  //   startDate: new Date(2026, 0, 10).toISOString(),
+  //   expiryDate: { $date: new Date(2026, 1, 10).toISOString() },
+  //   category: { name: 'Retail', icon: 'pi pi-shopping-bag' },
+  //   tags: ['Summer', 'Limited', 'Popular'],
+  //   targetAudience: ['employees', 'Families'],
+  //   discount_type: 'percentage',
+  //   discount_amount: '50',
+  //   discount_amount_ar: '٥٠',
+  //   offerMode: 'both',
+  //   howToAvail: 'Present your QR code or Aramco ID at the branch.',
+  //   howToAvail_ar: 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في المتجر.',
+  //   mobile: '+966 50 123 4567',
+  //   telephone: '+966 11 234 5678',
+  //   email: 'offers@vendor.com',
+  //   highlight_title: 'Best Seller',
+  //   highlight_title_ar: 'الأكثر مبيعاً',
+  //   highlight_description: 'Most redeemed offer of the season.',
+  //   highlight_description_ar: 'العرض الأكثر استرداداً لهذا الموسم.',
+  //   status: 'Active'
+  // });
+
+  OfferBasicData = signal<any>({});
+  vendor = signal<any>({});
+  readonly backendUrl = environment.backendUrl;
   offerLocations = signal<any[]>([
     { branch_name: 'Main Branch', city: 'Dhahran', region: 'Eastern Province', country: 'Saudi Arabia', address: 'King Saud Rd' },
     { branch_name: 'City Center', city: 'Riyadh', region: 'Riyadh', country: 'Saudi Arabia', address: 'Olaya St' },
@@ -78,9 +84,13 @@ export class OfferDetailsPage {
       this.offerId.set(id);
     });
 
+    if(this.offerId()){
+      this.loadOfferDetail()
+    }
+
     // ponytail: dummy loading to test skeleton loader; remove once real fetch wires up isLoading
-    this.isLoading.set(true);
-    setTimeout(() => this.isLoading.set(false), 3000);
+    // this.isLoading.set(true);
+    // setTimeout(() => this.isLoading.set(false), 3000);
   }
 
   getOfferStatus(offer: any): 'Active' | 'Scheduled' | 'Expired' | 'Inactive' {
@@ -126,7 +136,7 @@ export class OfferDetailsPage {
 
   getVendorLogo(offer: any): string {
     if (this.vendorLogoFailed()) return '';
-    return this.vendor()?.logo || offer?.vendor?.logo || '';
+    return this.backendUrl + this.OfferBasicData()?.vendorLogo.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
 
   markVendorLogoError(): void {
@@ -134,7 +144,7 @@ export class OfferDetailsPage {
   }
 
   getVendorNameAr(offer: any): string {
-    return this.vendor()?.name_ar || offer?.vendor?.name_ar || '';
+    return this.OfferBasicData()?.vendorNameAr || offer?.vendorNameAr || '';
   }
 
   getOfferTitleAr(offer: any): string {
@@ -142,7 +152,7 @@ export class OfferDetailsPage {
   }
 
   getVendorName(offer: any): string {
-    return this.vendor()?.name || offer?.vendor?.name || 'Unknown vendor';
+    return this.OfferBasicData()?.vendorName || offer?.vendorName || 'Unknown vendor';
   }
 
   getOfferMode(offer: any): 'in store' | 'online' | 'both' {
@@ -197,5 +207,73 @@ export class OfferDetailsPage {
   isOtherDiscount(offer: any): boolean {
     const type = (offer?.discount_type || '').toLowerCase().trim();
     return type === 'other' || type === 'others';
+  }
+
+  private loadOfferDetail() {
+    this.isLoading.set(true);
+    this.offerDetailService
+      .getOfferDetail(this.offerId())
+      .subscribe({
+        next: (res: any) => {
+          console.log("Offer Detail", res)
+          this.OfferBasicData.set({
+            title: res.offerTitle,
+            title_ar: res.offerTitleAr,
+            description: res.description,
+            description_ar: '',
+            startDate: res.startDate.$date,
+            expiryDate: res.endDate,
+            category: res.categories?.length
+              ? {
+                name: res.categories[0].categoryName,
+                name_ar: res.categories[0].categoryNameAr,
+                icon: res.categories[0].categoryLogo
+              }
+              : null,
+            tags: res.tags ?? [],
+            targetAudience: res.audience ?? [],
+            discount_type: res.discountType,
+            discount_amount: res.discount,
+            discount_amount_ar: res.discount,
+            offerMode:
+              res.availability?.length > 1
+                ? 'both'
+                : res.availability?.[0] === 'online'
+                  ? 'online'
+                  : 'in store',
+            howToAvail:
+              res.redemptionInstructions?.instructions ?? '',
+            howToAvail_ar:
+              res.redemptionInstructions?.instructionsAr ?? '',
+            mobile:
+              res.contactDetails?.mobile?.join(', ') ?? '',
+            telephone:
+              res.contactDetails?.telephone?.join(', ') ?? '',
+            email:
+              res.contactDetails?.email?.join(', ') ?? '',
+            highlight_title: '',
+            highlight_title_ar: '',
+            highlight_description: '',
+            highlight_description_ar: '',
+            status: res.status,
+            offerLogo: res.offerLogo,
+            offerImages: res.offerImages,
+            vendorName: res.vendorName,
+            vendorNameAr: res.vendorNameAr,
+            vendorLogo: res.vendorLogo
+          });
+
+          this.vendor.set({
+            name: res.vendorName,
+            name_ar: res.vendorNameAr,
+            logo: res.vendorLogo
+          });
+          this.offerLocations.set([]);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        }
+      });
   }
 }

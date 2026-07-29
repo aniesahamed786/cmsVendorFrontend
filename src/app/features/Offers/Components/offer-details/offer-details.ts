@@ -4,6 +4,7 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 import { HotelDetailsComponent } from '../hotel-details/hotel-details';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
     selector: 'app-offer-details',
@@ -25,6 +26,7 @@ export class OfferDetails {
     highlightMobileImageFailed = signal(false);
     highlightDesktopImageFailed = signal(false);
     failedCategoryIcons = signal<Record<string, true>>({});
+    readonly backendUrl = environment.backendUrl;
 
     constructor() {
         effect(() => {
@@ -45,6 +47,7 @@ export class OfferDetails {
     });
 
     getCategories(offer: any): any[] {
+        console.log("Categories", offer)
         if (Array.isArray(offer?.categories)) {
             return offer.categories.filter((category: any) => category && typeof category === 'object');
         }
@@ -201,28 +204,32 @@ export class OfferDetails {
 
     getOfferMobileImage(offer: any): string | null {
         if (this.offerMobileImageFailed()) return null;
-        const img = offer?.image || offer?.coverImage || offer?.offer_image || offer?.offerImage || offer?.thumbnail;
-        if (typeof img === 'string' && img.trim()) return img;
-        if (img?.url && typeof img.url === 'string') return img.url;
-        if (Array.isArray(img) && img.length > 0) {
-            const first = img[0];
-            if (typeof first === 'string') return first;
-            if (first?.url) return first.url;
-        }
-        return null;
+        // const img = offer?.image || offer?.coverImage || offer?.offer_image || offer?.offerImage || offer?.thumbnail;
+        // if (typeof img === 'string' && img.trim()) return img;
+        // if (img?.url && typeof img.url === 'string') return img.url;
+        // if (Array.isArray(img) && img.length > 0) {
+            //     const first = img[0];
+            //     if (typeof first === 'string') return first;
+            //     if (first?.url) return first.url;
+            // }
+            // return null;
+        const img = offer?.offerImages?.image || '';
+        return this.backendUrl + img.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
     }
 
     getOfferDesktopImage(offer: any): string | null {
         if (this.offerDesktopImageFailed()) return null;
-        const img = offer?.image_landscape || offer?.coverImageLandscape || offer?.image || offer?.coverImage || offer?.offer_image || offer?.offerImage || offer?.thumbnail;
-        if (typeof img === 'string' && img.trim()) return img;
-        if (img?.url && typeof img.url === 'string') return img.url;
-        if (Array.isArray(img) && img.length > 0) {
-            const first = img[0];
-            if (typeof first === 'string') return first;
-            if (first?.url) return first.url;
-        }
-        return null;
+        // const img = offer?.image_landscape || offer?.coverImageLandscape || offer?.image || offer?.coverImage || offer?.offer_image || offer?.offerImage || offer?.thumbnail;
+        // if (typeof img === 'string' && img.trim()) return img;
+        // if (img?.url && typeof img.url === 'string') return img.url;
+        // if (Array.isArray(img) && img.length > 0) {
+        //     const first = img[0];
+        //     if (typeof first === 'string') return first;
+        //     if (first?.url) return first.url;
+        // }
+        // return null;
+        const img = offer?.offerImages?.imageLandscape || '';
+        return this.backendUrl + img.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
     }
 
     getHighlightMobileImage(offer: any): string | null {
@@ -308,5 +315,9 @@ export class OfferDetails {
 
     getOfferDetailIconPath(iconName: string): string {
         return `${this.offerDetailIconBasePath}/${iconName}`;
+    }
+
+    getCategoryIconImage(icon:string){
+        return this.backendUrl + icon.replace('/api/v1/media/', '/api/v1/cmsVendor/media/')
     }
 }
