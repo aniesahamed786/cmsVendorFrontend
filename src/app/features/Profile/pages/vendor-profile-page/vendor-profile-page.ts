@@ -12,6 +12,7 @@ import {
 } from '../../models/vendor-profile.model';
 import { VendorProfileService } from '../vendor-profile.service';
 import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-vendor-profile-page',
@@ -30,10 +31,15 @@ getImageUrl(path: string): string {
   return this.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
 }
   readonly profile = signal<any | null>(null);
-  constructor(private readonly router: Router,private readonly vendorProfileService: VendorProfileService) {}
+  constructor(private readonly router: Router,private readonly vendorProfileService: VendorProfileService, private readonly authService: AuthService) {}
 private loadVendorProfile(): void {
 
-  const vendorId = '6a5d039814db22e9a862746b';
+  const vendorId = this.authService.getVendorId();
+
+if (!vendorId) {
+  console.error('Vendor ID not found.');
+  return;
+}
 
   this.vendorProfileService
       .getVendorProfile(vendorId)

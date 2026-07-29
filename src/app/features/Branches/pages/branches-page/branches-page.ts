@@ -41,7 +41,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   searchQuery = signal<string>('');
   
   // Sort
-  sortField = signal<keyof BranchRow | null>('dateAdded');
+  sortField = signal<keyof BranchRow | null>('locationName');
   sortOrder = signal<1 | -1>(-1); // Newest first by default
 
   // Options — labels are translated, values stay the English data keys.
@@ -62,7 +62,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   // Manager names come from the data, so only the "all" entry is translated.
   readonly managerOptions = computed(() => [
     { label: this.i18n.t('branches.manager.all'), value: null as string | null },
-    ...Array.from(new Set(this.allBranches().map((b) => b.manager).filter(Boolean))).map((m) => ({
+    ...Array.from(new Set(this.allBranches().map((b) => b.representativeName).filter(Boolean))).map((m) => ({
       label: m,
       value: m as string | null,
     })),
@@ -97,17 +97,17 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     if (status) rows = rows.filter(r => r.status === status);
     
     const region = this.selectedRegion();
-    if (region) rows = rows.filter(r => r.region === region);
+   // if (region) rows = rows.filter(r => r.region === region);
 
     const manager = this.selectedManager();
-    if (manager) rows = rows.filter(r => r.manager === manager);
+    if (manager) rows = rows.filter(r => r.representativeName === manager);
 
     const search = this.searchQuery().toLowerCase().trim();
     if (search) {
       rows = rows.filter(r => 
-        r.name.toLowerCase().includes(search) || 
-        r.location.toLowerCase().includes(search) || 
-        r.manager.toLowerCase().includes(search)
+        r.locationName.toLowerCase().includes(search) || 
+        r.city.toLowerCase().includes(search) || 
+        r.representativeName.toLowerCase().includes(search)
       );
     }
 
@@ -116,8 +116,8 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     
     const order = this.sortOrder();
     return [...rows].sort((a, b) => {
-      const valA = a[field];
-      const valB = b[field];
+      const valA: unknown = a[field];
+const valB: unknown = b[field];
       
       if (valA === undefined || valB === undefined) return 0;
       if (typeof valA === 'number' && typeof valB === 'number') return (valA - valB) * order;
@@ -210,7 +210,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       this.i18n.t('branches.filter.status'),
     ];
     const csvContent = rows.map(r => [
-      `"${r.name}"`, r.totalOffers, `"${r.location}"`, `"${r.manager}"`, `"${r.status || ''}"`
+      `"${r.locationName}"`, r.totalOffers, `"${r.city}"`, `"${r.representativeName}"`, `"${r.status || ''}"`
     ].join(','));
     const csvStr = '\ufeff' + headers.join(',') + '\n' + csvContent.join('\n');
     const blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
@@ -354,7 +354,10 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
     const bounds = new google.maps.LatLngBounds();
     for (const loc of branches) {
-      const pos = { lat: loc.latitude!, lng: loc.longitude! };
+      const pos = {
+ lat: Number(loc.latitude),
+ lng: Number(loc.longitude)
+};
       bounds.extend(pos);
       const marker = this.createBranchMapMarker(pos, loc);
       this.markers.push(marker);
@@ -378,7 +381,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   private createBranchMapMarker(position: { lat: number; lng: number }, loc: BranchRow): any {
     const google = (window as any).google;
-    const markerTitle = loc.name;
+    const markerTitle = loc.locationName ?? loc.locationName ?? '';
     // Fallback here is a JS-level guard on a getComputedStyle() read, not a CSS
     // var() fallback — --app-primary always resolves from :root, but kept in
     // case this runs before global styles are attached. Left as-is (styling
