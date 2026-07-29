@@ -3,6 +3,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { resolveStoredImageUrl } from '../../../../shared/utils/resolve-stored-image-url';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-preview-offer-details',
@@ -17,6 +18,7 @@ export class PreviewOfferDetails implements OnChanges {
   @Input() locations: any[] = [];
   @Input() showVendorLogo = true;
   offerImageFailed = false;
+  readonly backendUrl = environment.backendUrl;
 
   @Input() language: 'en' | 'ar' = 'en';
   activeTab: 'avail' | 'contact' | 'feedback' = 'avail';
@@ -93,16 +95,19 @@ export class PreviewOfferDetails implements OnChanges {
   getActionText(): string { return this.language === 'en' ? 'Redeem' : 'استرداد'; }
 
   getOfferImage(offer: any): string | null {
-    const image = offer?.image || offer?.coverImage;
-    let path = null;
-    if (typeof image === 'string' && image.trim()) path = image;
-    else if (image?.url && typeof image.url === 'string') path = image.url;
-    return this.formatImageUrl(path);
+    // const image = offer?.image || offer?.coverImage;
+    // let path = null;
+    // if (typeof image === 'string' && image.trim()) path = image;
+    // else if (image?.url && typeof image.url === 'string') path = image.url;
+    // return this.formatImageUrl(path);
+    const img = offer?.offerImages?.image || '';
+        return this.backendUrl + img.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
 
   getVendorLogo(offer: any): string {
-    const logo = this.vendor?.logo || offer?.vendor?.logo;
-    return this.formatImageUrl(logo) || '';
+    // const logo = this.vendor?.logo || offer?.vendor?.logo;
+    // return this.formatImageUrl(logo) || '';
+    return this.backendUrl + this.offer?.vendorLogo.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
 
   formatImageUrl(path: string | null | undefined): string | null { return resolveStoredImageUrl(path); }

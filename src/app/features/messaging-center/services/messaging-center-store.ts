@@ -13,6 +13,9 @@ import {
   MOCK_MESSAGES,
   MOCK_TICKETS,
 } from '../data/mock-messaging-center';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 
 /**
  * In-memory store for the messaging center. Mirrors the admin app's
@@ -21,9 +24,10 @@ import {
  */
 @Injectable({ providedIn: 'root' })
 export class MessagingCenterStore {
-  private readonly ticketsSignal = signal<Ticket[]>(
-    MOCK_TICKETS.map((t) => ({ ...t })),
-  );
+  // private readonly ticketsSignal = signal<Ticket[]>(
+  //   MOCK_TICKETS.map((t) => ({ ...t })),
+  // );
+  private readonly ticketsSignal = signal<Ticket[]>([]);
   private readonly messagesRecord = signal<Record<string, TicketMessage[]>>(
     structuredClone(MOCK_MESSAGES),
   );
@@ -42,6 +46,13 @@ export class MessagingCenterStore {
 
   private nextReference = 11;
   private nextMessageId = 1;
+  
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
+
+  constructor() {
+  this.loadTickets();
+}
 
   readonly filteredTickets = computed<Ticket[]>(() => {
     const type = this.selectedType();
@@ -172,49 +183,95 @@ export class MessagingCenterStore {
     this.updateStatus(ticketId, 'Closed');
   }
 
-  createTicket(form: CreateTicketForm): string {
-    const seq = this.nextReference++;
-    const id = `tk-${String(seq).padStart(4, '0')}`;
-    const reference = `TK-2026-${String(seq).padStart(4, '0')}`;
-    const creatorName = form.sendTo ?? 'New Recipient';
-    const ticket: Ticket = {
-      id,
-      reference,
-      category: form.ticketType ?? 'General',
-      title: form.title || 'Untitled ticket',
-      status: 'New',
-      assignedTo: 'Unassigned',
-      createdByName: CURRENT_AGENT,
-      createdByRole: form.participantType ?? 'Vendor',
-      createdBy: { name: CURRENT_AGENT, role: form.participantType ?? 'Vendor' },
-      target: creatorName,
-      updatedBy: { name: CURRENT_AGENT, role: 'Admin' },
-      createdDate: this.formatDate(),
-      lastUpdated: this.formatDate(),
-      preview: form.description || '',
-      timeAgo: 'Just now',
-      unread: false,
-      order: seq,
-    };
+  // createTicket(form: CreateTicketForm): string {
+  //   const seq = this.nextReference++;
+  //   const id = `tk-${String(seq).padStart(4, '0')}`;
+  //   const reference = `TK-2026-${String(seq).padStart(4, '0')}`;
+  //   const creatorName = form.sendTo ?? 'New Recipient';
+  //   const ticket: Ticket = {
+  //     id,
+  //     reference,
+  //     category: form.ticketType ?? 'General',
+  //     title: form.title || 'Untitled ticket',
+  //     status: 'New',
+  //     assignedTo: 'Unassigned',
+  //     createdByName: CURRENT_AGENT,
+  //     createdByRole: form.participantType ?? 'Vendor',
+  //     createdBy: { name: CURRENT_AGENT, role: form.participantType ?? 'Vendor' },
+  //     target: creatorName,
+  //     updatedBy: { name: CURRENT_AGENT, role: 'Admin' },
+  //     createdDate: this.formatDate(),
+  //     lastUpdated: this.formatDate(),
+  //     preview: form.description || '',
+  //     timeAgo: 'Just now',
+  //     unread: false,
+  //     order: seq,
+  //   };
 
-    this.ticketsSignal.update((list) => [ticket, ...list]);
+  //   console.log("Create Ticket", ticket)
 
-    const initial: TicketMessage[] = form.description
-      ? [
-          {
-            id: `m-${this.nextMessageId++}`,
-            authorName: CURRENT_AGENT,
-            senderRole: 'Admin',
-            outgoing: true,
-            timestamp: this.formatNow(),
-            body: form.description,
-            isInternalNote: false,
-          },
-        ]
-      : [];
-    this.messagesRecord.update((records) => ({ ...records, [id]: initial }));
-    this.selectedTicketId.set(id);
-    return id;
+  //   this.ticketsSignal.update((list) => [ticket, ...list]);
+
+  //   const initial: TicketMessage[] = form.description
+  //     ? [
+  //         {
+  //           id: `m-${this.nextMessageId++}`,
+  //           authorName: CURRENT_AGENT,
+  //           senderRole: 'Admin',
+  //           outgoing: true,
+  //           timestamp: this.formatNow(),
+  //           body: form.description,
+  //           isInternalNote: false,
+  //         },
+  //       ]
+  //     : [];
+  //   this.messagesRecord.update((records) => ({ ...records, [id]: initial }));
+  //   this.selectedTicketId.set(id);
+  //   return id;
+  // }
+
+  createTicket(form: CreateTicketForm): void {
+
+    const headers = new HttpHeaders({
+      Accept: '*/*',
+      Authorization: 'Bearer YOUR_TOKEN' // Replace with your auth service/interceptor
+    });
+
+    const formData = new FormData();
+
+    formData.append('title', form.title);
+    formData.append('description', form.description);
+    formData.append('ticketType', form.ticketType ?? 'Technical');
+    formData.append('status', 'new');
+
+    // Optional attachments
+    if (form.attachments?.length) {
+      form.attachments.forEach(file => {
+        formData.append('attachment_file', file);
+      });
+    }
+
+    console.log(form)
+
+    // this.http.post<any>(
+    //   `${this.baseUrl}/cmsVendor/messaging-center/tickets`,
+    //   formData,
+    //   { headers }
+    // ).subscribe({
+    //   next: (response) => {
+    //     console.log('Ticket created successfully', response);
+
+    //     // Reload tickets
+    //     this.loadTickets();
+
+    //     // Optionally select the newly created ticket if API returns it
+    //     // this.selectedTicketId.set(response.data.id);
+    //   },
+    //   error: (error) => {
+    //     console.error('Failed to create ticket', error);
+    //   }
+    // });
+
   }
 
   // --- Helpers ---------------------------------------------------------------
@@ -241,5 +298,104 @@ export class MessagingCenterStore {
       day: '2-digit',
       year: 'numeric',
     });
+  }
+
+  private loadTickets(): void {
+  this.getTickets().subscribe({
+    next: (response) => {
+      const tickets = response.data.map((ticket: any, index: number) =>
+        this.mapTicket(ticket, index)
+      );
+
+      this.ticketsSignal.set(tickets);
+    },
+    error: (error) => {
+      console.error('Failed to load tickets', error);
+    },
+  });
+}
+
+  getTickets(pageSize: number = 20) {
+    const headers = new HttpHeaders({
+      Accept: '*/*',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YTY1ZTIyNzJkODQ3MjM4ZmFjMTNiNTAiLCJ2ZW5kb3JJZCI6IjZhNWQwMzk4MTRkYjIyZTlhODYyNzQ2YiIsInJvbGVJZCI6IjZhNjVkMjVhY2NjOGJiY2JmMzlmOGI4ZCIsInJvbGVOYW1lIjoiVkVORE9SX0FETUlOIiwibmFtZSI6IkphbmUgRG9lIiwiZW1haWwiOiJqYW5lLmRvZUB2ZW5kb3IuY29tIiwidHlwZSI6InZlbmRvci1hY2NvdW50IiwiaWF0IjoxNzg1MzA1OTk0LCJleHAiOjE3ODUzMTMxOTR9.wHpIUL6e7rOwTe49a21LwMI74Pey4Cui2ElUkLcJJnk'
+    });
+
+    const params = new HttpParams().set('pageSize', pageSize);
+
+    return this.http.get<any>(
+      `${this.baseUrl}/cmsVendor/messaging-center/tickets`,
+      {
+        headers,
+        params,
+      }
+    );
+  }
+
+  private mapTicket(ticket: any, index: number): Ticket {
+    return {
+      id: ticket.id,
+      reference: ticket.ticketId,
+      category: ticket.ticketType,
+      title: ticket.title,
+      preview: ticket.lastMessage ?? ticket.description,
+      status: this.mapStatus(ticket.status),
+      assignedTo: ticket.assignedToName ?? 'Unassigned',
+      createdByName: ticket.createdByUsername,
+      createdByRole: ticket.createdByType,
+      createdBy: {
+        name: ticket.createdByUsername,
+        role: ticket.createdByType,
+      },
+      target: ticket.target,
+      updatedBy: {
+        name: ticket.updatedBy,
+        role: 'Admin',
+      },
+      createdDate: this.formatApiDate(ticket.createdAt),
+      lastUpdated: this.formatApiDate(ticket.updatedAt),
+      timeAgo: this.getTimeAgo(ticket.lastMessageAt),
+      unread: ticket.unreadCount_admin > 0,
+      order: index + 1,
+    };
+  }
+
+  private mapStatus(status: string): TicketStatus {
+    switch (status?.toLowerCase()) {
+      case 'new':
+        return 'New';
+
+      case 'inprogress':
+        return 'In Progress';
+
+      case 'closed':
+        return 'Closed';
+
+      default:
+        return 'New';
+    }
+  }
+
+  private formatApiDate(date: string): string {
+    return new Date(date).toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    });
+  }
+
+  private getTimeAgo(date: string): string {
+    const diff = Date.now() - new Date(date).getTime();
+
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins} min ago`;
+    if (hours < 24) return `${hours} hr ago`;
+    if (days < 30) return `${days} day${days > 1 ? 's' : ''} ago`;
+
+    return new Date(date).toLocaleDateString();
   }
 }

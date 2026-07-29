@@ -17,6 +17,7 @@ interface Offer {
   startDate: Date;
   expirationDate: Date;
   status: OfferStatus;
+  offerLogo: string;
 }
 
 import { Router, ActivatedRoute } from '@angular/router';
@@ -25,6 +26,9 @@ import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { OfferListService } from '../../services/offer-list.service';
+import { OfferApi } from '../../models/offerList';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-offers',
@@ -37,9 +41,12 @@ export class Offers {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private readonly i18n = inject(I18nService);
+  private readonly offerListService = inject(OfferListService);
 
   // ponytail: in-memory dummy data; swap for a service feed when the API exists
-  private readonly offers: Offer[] = this.buildRows();
+  // private readonly offers: Offer[] = this.buildRows();
+  private readonly offers = signal<Offer[]>([]);
+  readonly backendUrl = environment.backendUrl;
 
   // ===========================================================================
   // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
@@ -58,12 +65,13 @@ export class Offers {
   private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER ABOVE
 
   constructor() {
+    this.loadOffers()
     // DELETE WHEN THE API IS WIRED — see the block above. Keep the revealStats()
     // call; move it into the service's subscribe alongside `loading.set(false)`.
-    setTimeout(() => {
-      this.loading.set(false);
-      this.revealStats();
-    }, Offers.FAKE_LOAD_MS);
+    // setTimeout(() => {
+    //   this.loading.set(false);
+    //   this.revealStats();
+    // }, Offers.FAKE_LOAD_MS);
   }
 
   // ---- Count-up stats (number_animation.md) --------------------------------
@@ -161,7 +169,7 @@ export class Offers {
       { label: this.i18n.t('offers.action.viewOffer'), icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
       { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-arrows-v', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
       { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-refresh' },
-      { label: this.i18n.t('offers.action.createTicket'), icon: 'pi pi-comment' },
+      // { label: this.i18n.t('offers.action.createTicket'), icon: 'pi pi-comment' },
       { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-file-excel', styleClass: 'p-menuitem-danger' },
     ];
   });
@@ -182,7 +190,7 @@ export class Offers {
   });
 
   readonly stats = computed(() => {
-    const all = this.offers;
+    const all = this.offers();
     const now = new Date();
     const in30 = new Date();
     in30.setDate(in30.getDate() + 30);
@@ -202,7 +210,7 @@ export class Offers {
     const [from, to] = this.window();
     const search = this.search().trim().toLowerCase();
 
-    const filtered = this.offers.filter((o) => {
+    const filtered = this.offers().filter((o) => {
       if (status && o.status !== status) return false;
       if (branch && o.branch !== branch) return false;
       if (availability && o.availability !== availability) return false;
@@ -253,20 +261,68 @@ export class Offers {
     }
   }
 
-  private buildRows(): Offer[] {
-    const seed: Omit<Offer, 'id' | 'startDate' | 'expirationDate'>[] = [
-      { title: 'Summer Sale 2026', discount: '50% Off', discountType: 'Percentage', availability: 'Online', branch: 'Main Branch', status: 'Active' },
-      { title: 'Black Friday Deal', discount: '$25 Fixed', discountType: 'Fixed Amount', availability: 'In-Store', branch: 'Downtown', status: 'Scheduled' },
-      { title: 'Weekend Special', discount: '30% Off', discountType: 'Percentage', availability: 'Hybrid', branch: 'Mall', status: 'Active' },
-      { title: 'Student Discount', discount: '15% Off', discountType: 'Percentage', availability: 'In-Store', branch: 'Downtown', status: 'Active' },
-      { title: 'Holiday Bundle', discount: '$100 Tiered', discountType: 'Fixed Amount', availability: 'Online', branch: 'Mall', status: 'Scheduled' },
-    ];
-    return seed.map((o, i) => {
-      const start = new Date(2026, i, 10 + i);
-      const expiration = new Date(start);
-      expiration.setMonth(expiration.getMonth() + 1);
-      return { ...o, id: String(i + 1), startDate: start, expirationDate: expiration };
-    });
+  // private buildRows(): Offer[] {
+  //   const seed: Omit<Offer, 'id' | 'startDate' | 'expirationDate'>[] = [
+  //     { title: 'Summer Sale 2026', discount: '50% Off', discountType: 'Percentage', availability: 'Online', branch: 'Main Branch', status: 'Active' },
+  //     { title: 'Black Friday Deal', discount: '$25 Fixed', discountType: 'Fixed Amount', availability: 'In-Store', branch: 'Downtown', status: 'Scheduled' },
+  //     { title: 'Weekend Special', discount: '30% Off', discountType: 'Percentage', availability: 'Hybrid', branch: 'Mall', status: 'Active' },
+  //     { title: 'Student Discount', discount: '15% Off', discountType: 'Percentage', availability: 'In-Store', branch: 'Downtown', status: 'Active' },
+  //     { title: 'Holiday Bundle', discount: '$100 Tiered', discountType: 'Fixed Amount', availability: 'Online', branch: 'Mall', status: 'Scheduled' },
+  //   ];
+  //   return seed.map((o, i) => {
+  //     const start = new Date(2026, i, 10 + i);
+  //     const expiration = new Date(start);
+  //     expiration.setMonth(expiration.getMonth() + 1);
+  //     return { ...o, id: String(i + 1), startDate: start, expirationDate: expiration };
+  //   });
+  // }
+
+  private loadOffers() {
+    this.loading.set(true);
+    this.offerListService
+      .getOffers('6a5d039814db22e9a862746b', 1, 10)
+      .subscribe({
+        next: (res) => {
+          console.log('Offer List', res)
+          this.offers.set(
+            res.data.map(this.mapOffer)
+          );
+          this.loading.set(false);
+          this.revealStats();
+        },
+        error: () => {
+          this.loading.set(false);
+        }
+      });
+  }
+
+  private mapOffer = (offer: OfferApi): Offer => ({
+    id: offer.offerId,
+    title: offer.offerTitle,
+    discount:
+      offer.discountType === 'percentage'
+        ? `${offer.discount}%`
+        : offer.discount,
+    discountType:
+      offer.discountType === 'percentage'
+        ? 'Percentage'
+        : 'Fixed Amount',
+    availability:
+      offer.availability[0] === 'online'
+        ? 'Online'
+        : offer.availability[0] === 'hybrid'
+          ? 'Hybrid'
+          : 'In-Store',
+    startDate: new Date(offer.startDate.$date),
+    expirationDate: new Date(offer.endDate.$date),
+    status: offer.status as OfferStatus,
+    branch: '',
+    offerLogo: offer.offerLogo
+  });
+
+  getImageUrl(path: string): string {
+    if (!path) return '';
+    return this.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
 }
 

@@ -37,7 +37,18 @@ export class MessagingCenterCreateTicket {
   readonly linkedItem = signal<string | null>(null);
   readonly description = signal<string>('');
 
+  // readonly attachmentNames = signal<string[]>([]);
+  readonly attachments = signal<File[]>([]);
   readonly attachmentNames = signal<string[]>([]);
+
+  // readonly form = computed<CreateTicketForm>(() => ({
+  //   participantType: this.participantType(),
+  //   sendTo: this.sendTo(),
+  //   title: this.title(),
+  //   ticketType: this.ticketType(),
+  //   linkedItem: this.linkedItem(),
+  //   description: this.description(),
+  // }));
 
   readonly form = computed<CreateTicketForm>(() => ({
     participantType: this.participantType(),
@@ -46,6 +57,7 @@ export class MessagingCenterCreateTicket {
     ticketType: this.ticketType(),
     linkedItem: this.linkedItem(),
     description: this.description(),
+    attachments: this.attachments(),
   }));
 
   onSubmit(): void {
@@ -60,9 +72,17 @@ export class MessagingCenterCreateTicket {
     this.back.emit();
   }
 
+  // onFilesSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   const files = input.files ? Array.from(input.files) : [];
+  //   this.attachmentNames.set(files.map((f) => f.name));
+  // }
+
   onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const files = input.files ? Array.from(input.files) : [];
-    this.attachmentNames.set(files.map((f) => f.name));
+
+    this.attachments.set(files);
+    this.attachmentNames.set(files.map(file => file.name));
   }
 }

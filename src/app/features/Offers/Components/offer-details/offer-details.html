@@ -103,7 +103,7 @@
           @if (isPrimeIcon(category?.icon)) {
           <i [class]="category.icon + ' offer-detail-tile__icon'"></i>
           } @else if (category?.icon && !hasCategoryIconError(category?.icon)) {
-          <img [src]="category.icon" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
+          <img [src]="getCategoryIconImage(category.icon)" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
             (error)="markCategoryIconError(category?.icon)" />
           } @else if (category?.icon) {
           <i class="pi pi-image offer-detail-tile__icon-placeholder"></i>
@@ -318,7 +318,7 @@
           </div>
         </div>
       </div>
-      <div class="offer-settings__group">
+      <!-- <div class="offer-settings__group">
         <span class="offer-settings__label">{{ 'offerDetails.highlight.images' | translate }}</span>
         <div class="offer-branding-grid">
           <div class="offer-branding-img-box">
@@ -344,7 +344,7 @@
             }
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 
@@ -377,7 +377,7 @@
   }
 
   <!-- Custom Highlight -->
-  <section class="offer-card">
+  <!-- <section class="offer-card">
     <header class="offer-card__header">
       <div class="offer-card__icon-wrap">
         <span class="offer-detail-svg-icon offer-card__icon"
@@ -415,6 +415,6 @@
       </div>
 
     </div>
-  </section>
+  </section> -->
 </div>
 }
