@@ -4,8 +4,8 @@ import { Observable, of } from 'rxjs';
 import { delay,map } from 'rxjs/operators';
 
 export interface BranchKPIs {
-  totalBranches: number;
-  activeBranches: number;
+  totalLocations: number;
+  activeLocations: number;
   totalRedemptions: number;
   pendingRequests: number;
 }
@@ -35,22 +35,20 @@ export interface BranchRow {
 })
 export class BranchesService {
   getKPIs(): Observable<BranchKPIs> {
-    return of({
-      totalBranches: 5,
-      activeBranches: 5,
-      totalRedemptions: 2847,
-      pendingRequests: 3
-    }).pipe(delay(500));
+    return this.http.get<BranchKPIs>('/api/v1/cmsVendor/location-stats');
   }
 
-  getTopPerformers(): Observable<TopPerformer[]> {
-    return of([
-      { id: '1', name: 'East Branch', redemptions: 20500 },
-      { id: '2', name: 'West Branch', redemptions: 15800 },
-      { id: '3', name: 'South Branch', redemptions: 10500 },
-      { id: '4', name: 'North Branch', redemptions: 7500 }
-    ]).pipe(delay(500));
-  }
+getTopPerformers(): Observable<TopPerformer[]> {
+  return this.getBranches().pipe(
+    map((branches) =>
+      branches.map((branch) => ({
+        id: branch.locationId,
+        name: branch.locationName,
+        redemptions: 0, // TODO: Replace when backend provides this field
+      }))
+    )
+  );
+}
 
   private http = inject(HttpClient);
 
