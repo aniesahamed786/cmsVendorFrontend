@@ -50,6 +50,18 @@
   color: var(--app-primary);
 }
 
+/* Destructive actions (e.g. Cancel Request) — --app-danger is accent-independent
+   on purpose, so it doesn't restyle itself when the brand accent changes. */
+.app-btn--danger {
+  background: var(--app-danger);
+  color: #fff;
+  border-color: var(--app-danger);
+}
+.app-btn--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--app-danger) 85%, black 15%);
+  border-color: color-mix(in srgb, var(--app-danger) 85%, black 15%);
+}
+
 /* Directional icons point the other way in RTL. Lives here, not in the caller,
    because the <i> is in this component's template. */
 :host-context(html[lang="ar"]) .pi-arrow-left,

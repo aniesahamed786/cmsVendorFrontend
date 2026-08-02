@@ -1,0 +1,151 @@
+<div class="request-center">
+  <header class="request-center__header">
+    <h1 class="request-center__title">{{ 'requestCenter.title' | translate }}</h1>
+    <p class="request-center__subtitle">{{ 'requestCenter.subtitle' | translate }}</p>
+  </header>
+
+  <section class="request-center__stats">
+    @if (statsLoading()) {
+    <!-- Blocks sit in the real __stat article so its padding, border and gaps are shared —
+         the card is the same height loading and loaded, matching the Offers stat skeleton. -->
+    @for (i of [1, 2, 3, 4]; track i) {
+    <article class="request-center__stat">
+      <span class="app-skeleton request-center__skeleton-stat-icon"></span>
+      <span class="app-skeleton request-center__skeleton-stat-value"></span>
+      <span class="app-skeleton request-center__skeleton-stat-label"></span>
+      <span class="app-skeleton request-center__skeleton-stat-hint"></span>
+    </article>
+    }
+    } @else {
+    <article class="request-center__stat">
+      <span class="request-center__stat-icon"><i class="pi pi-calendar-plus"></i></span>
+      <span class="request-center__stat-value">{{ animatedCount('pendingOffer') }}</span>
+      <span class="request-center__stat-label">{{ 'requestCenter.stats.pendingOffer.label' | translate }}</span>
+      <span class="request-center__stat-hint">{{ 'requestCenter.stats.pendingOffer.hint' | translate }}</span>
+    </article>
+    <article class="request-center__stat">
+      <span class="request-center__stat-icon"><i class="pi pi-building"></i></span>
+      <span class="request-center__stat-value">{{ animatedCount('pendingStore') }}</span>
+      <span class="request-center__stat-label">{{ 'requestCenter.stats.pendingStore.label' | translate }}</span>
+      <span class="request-center__stat-hint">{{ 'requestCenter.stats.pendingStore.hint' | translate }}</span>
+    </article>
+    <article class="request-center__stat">
+      <span class="request-center__stat-icon"><i class="pi pi-shopping-bag"></i></span>
+      <span class="request-center__stat-value">{{ animatedCount('pendingProfile') }}</span>
+      <span class="request-center__stat-label">{{ 'requestCenter.stats.pendingProfile.label' | translate }}</span>
+      <span class="request-center__stat-hint">{{ 'requestCenter.stats.pendingProfile.hint' | translate }}</span>
+    </article>
+    <article class="request-center__stat">
+      <span class="request-center__stat-icon request-center__stat-icon--danger"><i class="pi pi-file-excel"></i></span>
+      <span class="request-center__stat-value">{{ animatedCount('rejected') }}</span>
+      <span class="request-center__stat-label">{{ 'requestCenter.stats.rejected.label' | translate }}</span>
+      <span class="request-center__stat-hint">{{ 'requestCenter.stats.rejected.hint' | translate }}</span>
+    </article>
+    }
+  </section>
+
+  <section class="request-center__card">
+    <div class="request-center__toolbar">
+      <h2 class="request-center__card-title">{{ 'requestCenter.cardTitle' | translate }}</h2>
+
+      <div class="request-center__toolbar-row">
+        <div class="request-center__tabs">
+          <button type="button" class="request-center__tab"
+            [class.request-center__tab--active]="activeTab() === 'all'" (click)="activeTab.set('all')">
+            {{ 'requestCenter.tabs.all' | translate }}
+            <span class="request-center__tab-count">{{ tabCounts().all }}</span>
+          </button>
+          <button type="button" class="request-center__tab"
+            [class.request-center__tab--active]="activeTab() === 'completed'" (click)="activeTab.set('completed')">
+            {{ 'requestCenter.tabs.completed' | translate }}
+            <span class="request-center__tab-count">{{ tabCounts().completed }}</span>
+          </button>
+          <button type="button" class="request-center__tab"
+            [class.request-center__tab--active]="activeTab() === 'incomplete'" (click)="activeTab.set('incomplete')">
+            {{ 'requestCenter.tabs.incomplete' | translate }}
+            <span class="request-center__tab-count">{{ tabCounts().incomplete }}</span>
+          </button>
+        </div>
+
+        <div class="request-center__toolbar-controls">
+          <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+            optionLabel="label" optionValue="value" [placeholder]="'requestCenter.filter.status' | translate"
+            styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
+
+          <div class="request-center__sort">
+            <span class="request-center__sort-label">{{ 'requestCenter.sort.label' | translate }}</span>
+            <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)"
+              optionLabel="label" optionValue="value"
+              styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-table [value]="tableRows()" [paginator]="!tableLoading()" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+      paginatorDropdownAppendTo="body" styleClass="request-center__table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ 'requestCenter.column.requestId' | translate }}</th>
+          <th>{{ 'requestCenter.column.requestType' | translate }}</th>
+          <th pSortableColumn="actionType">{{ 'requestCenter.column.actionType' | translate }} <p-sortIcon field="actionType" /></th>
+          <th>{{ 'requestCenter.column.targetEntity' | translate }}</th>
+          <th pSortableColumn="date">{{ 'requestCenter.column.timestamp' | translate }} <p-sortIcon field="date" /></th>
+          <th>{{ 'requestCenter.column.status' | translate }}</th>
+          <th>{{ 'requestCenter.column.action' | translate }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row>
+        <tr [routerLink]="['/request-center', row.rowKey]">
+          <td>{{ row.id }}</td>
+          <td>{{ typeKey(row.type) | translate }}</td>
+          <td>{{ actionTypeKey(row.actionType) | translate }}</td>
+          <td>{{ row.targetEntity }}</td>
+          <td>{{ row.timestamp }}</td>
+          <td><span [class]="statusClass(row.status)">{{ statusKey(row.status) | translate }}</span></td>
+          <td>
+            <button type="button" class="request-center__row-action"
+              [attr.aria-label]="'requestCenter.rowActionsAria' | translate"
+              (click)="activeRow = row; menu.toggle($event); $event.stopPropagation()">
+              <i class="pi pi-ellipsis-h"></i>
+            </button>
+            <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- PrimeNG renders this for every falsy entry in [value] — the placeholder rows in
+           tableRows() while tableLoading() is true. -->
+      <ng-template pTemplate="loadingbody">
+        <tr class="request-center__row--skeleton">
+          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--id"></span></td>
+          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--text"></span></td>
+          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--text"></span></td>
+          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--wide"></span></td>
+          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--date"></span></td>
+          <td><span class="app-skeleton app-skeleton--pill request-center__skeleton-cell request-center__skeleton-cell--pill"></span></td>
+          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--action"></span></td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="request-center__empty">{{ 'requestCenter.empty' | translate }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+</div>
+
+<app-confirmation-pop-up [visible]="!!recallTarget()" [title]="'requestCenter.recallConfirm.title' | translate"
+  [message]="'requestCenter.recallConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.recallConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
+  [loading]="actionLoading()" (confirm)="onRecallConfirmed()" (cancel)="recallTarget.set(null)">
+</app-confirmation-pop-up>
+
+<app-confirmation-pop-up [visible]="!!deleteTarget()" [title]="'requestCenter.deleteConfirm.title' | translate"
+  [message]="'requestCenter.deleteConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.deleteConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
+  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onDeleteConfirmed()" (cancel)="deleteTarget.set(null)">
+</app-confirmation-pop-up>

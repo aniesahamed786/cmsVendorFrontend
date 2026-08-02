@@ -21,6 +21,8 @@ export class ConfirmationPopUp {
   /** When false, only the confirm button is shown (e.g. forced acknowledgement). */
   showCancel = input(true);
   dismissableMask = input(true);
+  /** 'danger' reddens the confirm button for destructive actions (delete, cancel). */
+  confirmVariant = input<'primary' | 'danger'>('primary');
 
   confirm = output<void>();
   cancel = output<void>();

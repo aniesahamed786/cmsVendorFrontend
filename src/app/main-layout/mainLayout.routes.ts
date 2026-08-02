@@ -37,7 +37,8 @@ export const routes: Route[] = [
       },
       {
         path: 'request-center',
-        component: Inprogress,
+        loadChildren: () =>
+          import('../features/request-center/request-center.routes').then((m) => m.routes),
         data: { title: 'Request Center' },
       },
       {

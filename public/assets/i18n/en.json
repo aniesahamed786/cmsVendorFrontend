@@ -238,6 +238,142 @@
       "deactivate": "Cancel Offer"
     }
   },
+  "requestCenter": {
+    "title": "Request Center",
+    "subtitle": "Manage and monitor all your request.",
+    "cardTitle": "Request List",
+    "rowActionsAria": "Row actions",
+    "empty": "No requests found.",
+    "stats": {
+      "pendingOffer": {
+        "label": "Pending Offer Request",
+        "hint": "Offers in pending state"
+      },
+      "pendingStore": {
+        "label": "Pending Store Request",
+        "hint": "Offers in draft stage"
+      },
+      "pendingProfile": {
+        "label": "Pending Profile Request",
+        "hint": "Offers which are not active"
+      },
+      "rejected": {
+        "label": "Rejected Request",
+        "hint": "Currently active"
+      }
+    },
+    "tabs": {
+      "all": "All",
+      "completed": "Completed Request",
+      "incomplete": "Incomplete Request"
+    },
+    "filter": {
+      "status": "Status",
+      "allStatuses": "All statuses"
+    },
+    "sort": {
+      "label": "Sort by:",
+      "newest": "Date (Newest)",
+      "oldest": "Date (Oldest)"
+    },
+    "column": {
+      "requestId": "Request ID",
+      "requestType": "Request Type",
+      "actionType": "Action Type",
+      "targetEntity": "Target Entity",
+      "timestamp": "Timestamp",
+      "status": "Status",
+      "action": "Action"
+    },
+    "value": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "returned": "Returned",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "recalled": "Recalled",
+      "cancelled": "Cancelled"
+    },
+    "type": {
+      "offer": "Offer",
+      "store": "Store",
+      "profile": "Profile",
+      "highlight": "Highlight"
+    },
+    "actionType": {
+      "created": "Created",
+      "updated": "Updated"
+    },
+    "action": {
+      "view": "View Request",
+      "recall": "Recall Request",
+      "delete": "Delete Request"
+    },
+    "recallConfirm": {
+      "title": "Recall Request",
+      "message": "Are you sure you want to recall this request? It will be withdrawn from the review queue.",
+      "confirm": "Recall Request"
+    },
+    "deleteConfirm": {
+      "title": "Delete Request",
+      "message": "Are you sure you want to delete this request? This action cannot be undone.",
+      "confirm": "Delete Request"
+    },
+    "detail": {
+      "backToRequestCenter": "Back to Request Center",
+      "viewOffers": "View Offers",
+      "viewStores": "View Stores",
+      "viewProfile": "View Profile",
+      "recallRequest": "Recall Request",
+      "cancelRequest": "Cancel Request",
+      "notFound": "Request not found.",
+      "noBasicInfo": "No additional details available for this request.",
+      "editedBadge": "Edited",
+      "section": {
+        "basicInformation": "Basic Information",
+        "discountDetails": "Discount Details"
+      },
+      "field": {
+        "offerTitle": "Offer Title",
+        "descriptionEn": "Offer Description (English)",
+        "descriptionAr": "Offer Description (Arabic)",
+        "startDate": "Start Date",
+        "expiryDate": "Expiry Date",
+        "category": "Category Selection",
+        "tags": "Tags",
+        "discountType": "Discount Type",
+        "discountValue": "Discount Value"
+      },
+      "timeline": {
+        "title": "Request Timeline",
+        "submitted": {
+          "title": "Submitted",
+          "description": "The request has been successfully submitted and is awaiting initial screening by the operations team."
+        },
+        "underReview": {
+          "title": "Under Review",
+          "badge": "Pending Review",
+          "description": "Once verified, the request will move to the internal approval workflow."
+        },
+        "approved": {
+          "title": "Approved",
+          "description": "Final step after management verification."
+        },
+        "rejected": {
+          "title": "Rejected",
+          "description": "The request was reviewed and rejected. Check the messaging center for details."
+        },
+        "recalled": {
+          "title": "Recalled",
+          "description": "This request was withdrawn before completing the review."
+        },
+        "cancelled": {
+          "title": "Cancelled",
+          "description": "This request was cancelled and permanently closed."
+        }
+      }
+    }
+  },
   "common": {
     "search": "Search",
     "cancel": "Cancel",

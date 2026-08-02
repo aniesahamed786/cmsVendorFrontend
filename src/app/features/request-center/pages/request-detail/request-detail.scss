@@ -1,0 +1,343 @@
+:host {
+  display: block;
+}
+
+.request-detail {
+  color: var(--app-text);
+
+  &__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  &__topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__meta-id {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__sidebar {
+    width: 22rem;
+    flex-shrink: 0;
+  }
+
+  &__card {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    padding: 1.5rem;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--app-primary-soft);
+    color: var(--app-primary);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  &__section-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--app-text);
+    flex: 1;
+  }
+
+  &__edited-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--app-muted);
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    padding: 0.2rem 0.6rem;
+  }
+
+  // ---- Read-only field display (mirrors the offer-form field recipe) ----
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem;
+    margin: 1.1rem 0;
+
+    .request-detail__field {
+      margin: 0;
+    }
+  }
+
+  &__field-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__field-value {
+    min-height: 2.75rem;
+    padding: 0.6rem 0.85rem;
+    display: flex;
+    align-items: center;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    font-size: 0.9rem;
+
+    &--multiline {
+      align-items: flex-start;
+      line-height: 1.5;
+      min-height: 4.5rem;
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: var(--app-primary-subtle);
+    color: var(--app-primary);
+  }
+
+  &__empty {
+    color: var(--app-muted);
+    margin: 0;
+  }
+
+  &__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    color: var(--app-muted);
+  }
+
+  // ---- Status pill — same recipe as the list page ----
+  &__status {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+
+    &--submitted,
+    &--approved {
+      background: rgba(34, 197, 94, 0.16);
+      color: #16a34a;
+    }
+
+    &--rejected,
+    &--cancelled {
+      background: rgba(239, 68, 68, 0.16);
+      color: #dc2626;
+    }
+
+    &--recalled {
+      background: var(--app-primary-soft);
+      color: var(--app-primary);
+    }
+
+    &--returned,
+    &--draft {
+      background: rgba(245, 158, 11, 0.16);
+      color: #d97706;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .request-detail__layout {
+    flex-direction: column;
+  }
+
+  .request-detail__sidebar {
+    width: 100%;
+  }
+
+  .request-detail__field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ---- Request Timeline (p-timeline) — forced flex layout + tokens ----
+::ng-deep .request-detail__timeline {
+  .p-timeline-event-opposite {
+    display: none;
+  }
+
+  .p-timeline-event {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .p-timeline-event-separator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-inline-end: 1rem;
+  }
+
+  .p-timeline-event-connector {
+    flex: 1;
+    width: 2px;
+    min-height: 2.25rem;
+    background: var(--app-border);
+    margin: 0.25rem 0;
+  }
+
+  .p-timeline-event-content {
+    flex: 1;
+    padding-bottom: 1.75rem;
+  }
+
+  .p-timeline-event:last-child .p-timeline-event-content {
+    padding-bottom: 0;
+  }
+}
+
+// Step marker — a small circle, one of the sanctioned rounded exceptions
+// (same class as the status pill: a state indicator, not a content container).
+.request-detail__timeline-marker {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  color: #fff;
+
+  &--upcoming {
+    background: var(--app-surface);
+    border: 2px solid var(--app-border);
+  }
+
+  &--active {
+    background: var(--app-primary);
+    box-shadow: 0 0 0 4px var(--app-primary-soft);
+  }
+
+  /* Sanctioned success-green literal, matching the status pill convention. */
+  &--done {
+    background: #16a34a;
+  }
+
+  /* Sanctioned danger-red literal, matching the status pill convention. */
+  &--danger {
+    background: #dc2626;
+  }
+
+  &--muted {
+    background: var(--app-muted);
+  }
+}
+
+.request-detail__timeline-item {
+  &-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &-date {
+    font-size: 0.72rem;
+    color: var(--app-muted);
+    white-space: nowrap;
+  }
+
+  &-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+    white-space: nowrap;
+  }
+
+  &-desc {
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--app-muted);
+  }
+
+  &--upcoming &-title {
+    color: var(--app-muted);
+  }
+}
+
+:host-context(html[lang="ar"]) {
+  .request-detail__section-title {
+    text-align: right;
+  }
+}

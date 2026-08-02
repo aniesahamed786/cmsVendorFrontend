@@ -238,6 +238,142 @@
       "deactivate": "إيقاف العرض"
     }
   },
+  "requestCenter": {
+    "title": "مركز الطلبات",
+    "subtitle": "إدارة ومتابعة جميع طلباتك.",
+    "cardTitle": "قائمة الطلبات",
+    "rowActionsAria": "إجراءات الصف",
+    "empty": "لا توجد طلبات.",
+    "stats": {
+      "pendingOffer": {
+        "label": "طلبات العروض المعلقة",
+        "hint": "عروض قيد الانتظار"
+      },
+      "pendingStore": {
+        "label": "طلبات المتجر المعلقة",
+        "hint": "عروض في مرحلة المسودة"
+      },
+      "pendingProfile": {
+        "label": "طلبات الملف الشخصي المعلقة",
+        "hint": "عروض غير نشطة"
+      },
+      "rejected": {
+        "label": "الطلبات المرفوضة",
+        "hint": "نشطة حاليًا"
+      }
+    },
+    "tabs": {
+      "all": "الكل",
+      "completed": "طلبات مكتملة",
+      "incomplete": "طلبات غير مكتملة"
+    },
+    "filter": {
+      "status": "الحالة",
+      "allStatuses": "جميع الحالات"
+    },
+    "sort": {
+      "label": "ترتيب حسب:",
+      "newest": "التاريخ (الأحدث)",
+      "oldest": "التاريخ (الأقدم)"
+    },
+    "column": {
+      "requestId": "رقم الطلب",
+      "requestType": "نوع الطلب",
+      "actionType": "نوع الإجراء",
+      "targetEntity": "الجهة المستهدفة",
+      "timestamp": "التوقيت",
+      "status": "الحالة",
+      "action": "إجراء"
+    },
+    "value": {
+      "draft": "مسودة",
+      "submitted": "تم الإرسال",
+      "returned": "معاد",
+      "approved": "تمت الموافقة",
+      "rejected": "مرفوض",
+      "recalled": "تم السحب",
+      "cancelled": "ملغى"
+    },
+    "type": {
+      "offer": "عرض",
+      "store": "متجر",
+      "profile": "الملف الشخصي",
+      "highlight": "أبرز"
+    },
+    "actionType": {
+      "created": "تم الإنشاء",
+      "updated": "تم التحديث"
+    },
+    "action": {
+      "view": "عرض الطلب",
+      "recall": "سحب الطلب",
+      "delete": "حذف الطلب"
+    },
+    "recallConfirm": {
+      "title": "سحب الطلب",
+      "message": "هل أنت متأكد من رغبتك في سحب هذا الطلب؟ سيتم سحبه من قائمة المراجعة.",
+      "confirm": "سحب الطلب"
+    },
+    "deleteConfirm": {
+      "title": "حذف الطلب",
+      "message": "هل أنت متأكد من رغبتك في حذف هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف الطلب"
+    },
+    "detail": {
+      "backToRequestCenter": "العودة إلى مركز الطلبات",
+      "viewOffers": "عرض العروض",
+      "viewStores": "عرض المتاجر",
+      "viewProfile": "عرض الملف الشخصي",
+      "recallRequest": "سحب الطلب",
+      "cancelRequest": "إلغاء الطلب",
+      "notFound": "الطلب غير موجود.",
+      "noBasicInfo": "لا تتوفر تفاصيل إضافية لهذا الطلب.",
+      "editedBadge": "تم التعديل",
+      "section": {
+        "basicInformation": "المعلومات الأساسية",
+        "discountDetails": "تفاصيل الخصم"
+      },
+      "field": {
+        "offerTitle": "عنوان العرض",
+        "descriptionEn": "وصف العرض (بالإنجليزية)",
+        "descriptionAr": "وصف العرض (بالعربية)",
+        "startDate": "تاريخ البدء",
+        "expiryDate": "تاريخ الانتهاء",
+        "category": "اختيار الفئة",
+        "tags": "الوسوم",
+        "discountType": "نوع الخصم",
+        "discountValue": "قيمة الخصم"
+      },
+      "timeline": {
+        "title": "الجدول الزمني للطلب",
+        "submitted": {
+          "title": "تم الإرسال",
+          "description": "تم إرسال الطلب بنجاح وهو في انتظار الفحص الأولي من قبل فريق العمليات."
+        },
+        "underReview": {
+          "title": "قيد المراجعة",
+          "badge": "قيد المراجعة",
+          "description": "بعد التحقق، سينتقل الطلب إلى مسار الموافقة الداخلي."
+        },
+        "approved": {
+          "title": "تمت الموافقة",
+          "description": "الخطوة الأخيرة بعد تحقق الإدارة."
+        },
+        "rejected": {
+          "title": "مرفوض",
+          "description": "تمت مراجعة الطلب ورفضه. راجع مركز الرسائل لمزيد من التفاصيل."
+        },
+        "recalled": {
+          "title": "تم السحب",
+          "description": "تم سحب هذا الطلب قبل إتمام المراجعة."
+        },
+        "cancelled": {
+          "title": "ملغى",
+          "description": "تم إلغاء هذا الطلب وإغلاقه نهائيًا."
+        }
+      }
+    }
+  },
   "common": {
     "search": "بحث",
     "cancel": "إلغاء",

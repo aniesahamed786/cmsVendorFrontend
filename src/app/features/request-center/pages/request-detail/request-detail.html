@@ -1,0 +1,154 @@
+@if (row(); as request) {
+<div class="request-detail">
+  <div class="request-detail__topbar">
+    <app-back-button label="requestCenter.detail.backToRequestCenter" (click)="goBack()" />
+
+    <div class="request-detail__topbar-actions">
+      <app-button variant="outline" [routerLink]="relatedListRoute()">
+        {{ relatedListLabelKey() | translate }}
+      </app-button>
+      <app-button variant="primary" [disabled]="!canRecall()" (click)="confirmRecall()">
+        {{ 'requestCenter.detail.recallRequest' | translate }}
+      </app-button>
+      <app-button variant="danger" [disabled]="!canCancel()" (click)="confirmCancel()">
+        {{ 'requestCenter.detail.cancelRequest' | translate }}
+      </app-button>
+    </div>
+  </div>
+
+  <div class="request-detail__meta">
+    <span class="request-detail__meta-id">{{ request.id }}</span>
+    <span [class]="statusClass(request.status)">{{ statusKey(request.status) | translate }}</span>
+  </div>
+
+  <div class="request-detail__layout">
+    <div class="request-detail__main">
+      <section class="request-detail__card">
+        <div class="request-detail__section-header">
+          <span class="request-detail__section-icon"><i class="pi pi-info-circle"></i></span>
+          <h3 class="request-detail__section-title">{{ 'requestCenter.detail.section.basicInformation' | translate }}</h3>
+        </div>
+
+        @if (request.basicInfo; as info) {
+        <div class="request-detail__fields">
+          <div class="request-detail__field">
+            <label class="request-detail__field-label">{{ 'requestCenter.detail.field.offerTitle' | translate }}</label>
+            <div class="request-detail__field-value">{{ info.titleEn }}</div>
+          </div>
+
+          <div class="request-detail__field">
+            <label class="request-detail__field-label">{{ 'requestCenter.detail.field.descriptionEn' | translate }}</label>
+            <div class="request-detail__field-value request-detail__field-value--multiline">{{ info.descriptionEn }}</div>
+          </div>
+
+          <div class="request-detail__field">
+            <label class="request-detail__field-label">{{ 'requestCenter.detail.field.descriptionAr' | translate }}</label>
+            <div class="request-detail__field-value request-detail__field-value--multiline" dir="rtl">{{ info.descriptionAr }}</div>
+          </div>
+
+          <div class="request-detail__field-row">
+            <div class="request-detail__field">
+              <label class="request-detail__field-label">{{ 'requestCenter.detail.field.startDate' | translate }}</label>
+              <div class="request-detail__field-value">{{ info.startDate }}</div>
+            </div>
+            <div class="request-detail__field">
+              <label class="request-detail__field-label">{{ 'requestCenter.detail.field.expiryDate' | translate }}</label>
+              <div class="request-detail__field-value">{{ info.expiryDate }}</div>
+            </div>
+          </div>
+
+          <div class="request-detail__field">
+            <label class="request-detail__field-label">{{ 'requestCenter.detail.field.category' | translate }}</label>
+            <div class="request-detail__field-value">{{ info.category }}</div>
+          </div>
+
+          <div class="request-detail__field">
+            <label class="request-detail__field-label">{{ 'requestCenter.detail.field.tags' | translate }}</label>
+            <div class="request-detail__tags">
+              @for (tag of info.tags; track tag) {
+              <span class="request-detail__tag">{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </div>
+        } @else {
+        <p class="request-detail__empty">{{ 'requestCenter.detail.noBasicInfo' | translate }}</p>
+        }
+      </section>
+
+      @if (request.basicInfo; as info) {
+      <section class="request-detail__card">
+        <div class="request-detail__section-header">
+          <span class="request-detail__section-icon"><i class="pi pi-tag"></i></span>
+          <h3 class="request-detail__section-title">{{ 'requestCenter.detail.section.discountDetails' | translate }}</h3>
+          <span class="request-detail__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span>
+        </div>
+
+        <div class="request-detail__field-row">
+          <div class="request-detail__field">
+            <label class="request-detail__field-label">{{ 'requestCenter.detail.field.discountType' | translate }}</label>
+            <div class="request-detail__field-value">{{ info.discountType }}</div>
+          </div>
+          <div class="request-detail__field">
+            <label class="request-detail__field-label">{{ 'requestCenter.detail.field.discountValue' | translate }}</label>
+            <div class="request-detail__field-value">{{ info.discountValue }}</div>
+          </div>
+        </div>
+      </section>
+      }
+    </div>
+
+    <aside class="request-detail__sidebar">
+      <section class="request-detail__card">
+        <div class="request-detail__section-header">
+          <span class="request-detail__section-icon"><i class="pi pi-list"></i></span>
+          <h3 class="request-detail__section-title">{{ 'requestCenter.detail.timeline.title' | translate }}</h3>
+        </div>
+
+        <p-timeline [value]="timeline()" styleClass="request-detail__timeline">
+          <ng-template pTemplate="marker" let-step>
+            <span [class]="'request-detail__timeline-marker request-detail__timeline-marker--' + markerModifier(step)">
+              @switch (markerModifier(step)) {
+                @case ('done') { <i class="pi pi-check"></i> }
+                @case ('danger') { <i class="pi pi-times"></i> }
+                @case ('muted') { <i class="pi pi-replay"></i> }
+              }
+            </span>
+          </ng-template>
+          <ng-template pTemplate="content" let-step>
+            <div class="request-detail__timeline-item" [class.request-detail__timeline-item--upcoming]="step.state === 'upcoming'">
+              <div class="request-detail__timeline-item-header">
+                <span class="request-detail__timeline-item-title">{{ step.title }}</span>
+                @if (step.date) {
+                <span class="request-detail__timeline-item-date">{{ step.date }}</span>
+                }
+                @if (step.badge) {
+                <span class="request-detail__timeline-item-badge">{{ step.badge }}</span>
+                }
+              </div>
+              <p class="request-detail__timeline-item-desc">{{ step.description }}</p>
+            </div>
+          </ng-template>
+        </p-timeline>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<app-confirmation-pop-up [visible]="showRecallConfirm" [title]="'requestCenter.recallConfirm.title' | translate"
+  [message]="'requestCenter.recallConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.recallConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
+  [loading]="actionLoading()" (confirm)="onRecallConfirmed()" (cancel)="showRecallConfirm = false">
+</app-confirmation-pop-up>
+
+<app-confirmation-pop-up [visible]="showCancelConfirm" [title]="'requestCenter.deleteConfirm.title' | translate"
+  [message]="'requestCenter.deleteConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.detail.cancelRequest' | translate" [cancelLabel]="'common.cancel' | translate"
+  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onCancelConfirmed()" (cancel)="showCancelConfirm = false">
+</app-confirmation-pop-up>
+} @else {
+<div class="request-detail__not-found">
+  <app-back-button label="requestCenter.detail.backToRequestCenter" (click)="goBack()" />
+  <p>{{ 'requestCenter.detail.notFound' | translate }}</p>
+</div>
+}
