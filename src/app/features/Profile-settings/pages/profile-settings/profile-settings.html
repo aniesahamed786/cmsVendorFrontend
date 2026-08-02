@@ -1,0 +1,145 @@
+<div class="settings-page">
+  <h1 class="settings-page__title">{{ 'settingsPage.title' | translate }}</h1>
+  <p class="settings-page__subtitle">{{ 'settingsPage.subtitle' | translate }}</p>
+
+  <div class="settings-page__layout">
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ 'settingsPage.security.title' | translate }}</h2>
+      <p class="settings-card__subtitle">{{ 'settingsPage.security.subtitle' | translate }}</p>
+
+      <form [formGroup]="securityForm" (ngSubmit)="saveSecurityChanges()">
+        <h3 class="settings-section__heading">{{ 'settingsPage.security.password' | translate }}</h3>
+
+        <div class="settings-field">
+          <label class="settings-field__label">
+            {{ 'settingsPage.security.currentPassword' | translate }}
+            <span class="settings-field__required">*</span>
+          </label>
+          <input pInputText type="password" formControlName="currentPassword" class="settings-field__input"
+            [placeholder]="'settingsPage.security.currentPasswordPlaceholder' | translate" />
+          @if (hasRequiredError('currentPassword')) {
+          <p class="settings-field__error">{{ 'settingsPage.error.currentPasswordRequired' | translate }}</p>
+          }
+        </div>
+
+        <div class="settings-field">
+          <label class="settings-field__label">
+            {{ 'settingsPage.security.newPassword' | translate }}
+            <span class="settings-field__required">*</span>
+          </label>
+          <input pInputText type="password" formControlName="newPassword" class="settings-field__input"
+            [placeholder]="'settingsPage.security.newPasswordPlaceholder' | translate" />
+          @if (hasRequiredError('newPassword')) {
+          <p class="settings-field__error">{{ 'settingsPage.error.newPasswordRequired' | translate }}</p>
+          }
+        </div>
+
+        <div class="settings-field">
+          <label class="settings-field__label">
+            {{ 'settingsPage.security.confirmPassword' | translate }}
+            <span class="settings-field__required">*</span>
+          </label>
+          <input pInputText type="password" formControlName="confirmPassword" class="settings-field__input"
+            [placeholder]="'settingsPage.security.confirmPasswordPlaceholder' | translate" />
+          @if (hasRequiredError('confirmPassword')) {
+          <p class="settings-field__error">{{ 'settingsPage.error.confirmPasswordRequired' | translate }}</p>
+          } @else if (hasPasswordMismatchError()) {
+          <p class="settings-field__error">{{ 'settingsPage.error.passwordMismatch' | translate }}</p>
+          }
+        </div>
+
+        <hr class="settings-divider" />
+
+        <h3 class="settings-section__heading">{{ 'settingsPage.security.passwordRequirements' | translate }}</h3>
+        <ul class="password-requirements">
+          <li class="password-requirements__item" [class.password-requirements__item--met]="passwordChecks().length">
+            <i class="pi" [class.pi-check-circle]="passwordChecks().length" [class.pi-circle]="!passwordChecks().length"></i>
+            <span>{{ 'settingsPage.security.reqLength' | translate }}</span>
+          </li>
+          <li class="password-requirements__item" [class.password-requirements__item--met]="passwordChecks().case">
+            <i class="pi" [class.pi-check-circle]="passwordChecks().case" [class.pi-circle]="!passwordChecks().case"></i>
+            <span>{{ 'settingsPage.security.reqCase' | translate }}</span>
+          </li>
+          <li class="password-requirements__item" [class.password-requirements__item--met]="passwordChecks().number">
+            <i class="pi" [class.pi-check-circle]="passwordChecks().number" [class.pi-circle]="!passwordChecks().number"></i>
+            <span>{{ 'settingsPage.security.reqNumber' | translate }}</span>
+          </li>
+          <li class="password-requirements__item" [class.password-requirements__item--met]="passwordChecks().special">
+            <i class="pi" [class.pi-check-circle]="passwordChecks().special" [class.pi-circle]="!passwordChecks().special"></i>
+            <span>{{ 'settingsPage.security.reqSpecial' | translate }}</span>
+          </li>
+        </ul>
+
+        <hr class="settings-divider" />
+
+        <h3 class="settings-section__heading">{{ 'settingsPage.security.twoFactor' | translate }}</h3>
+        <div class="two-factor-row">
+          <div class="two-factor-row__text">
+            <p class="two-factor-row__title">{{ 'settingsPage.security.twoFactorEnable' | translate }}</p>
+            <p class="two-factor-row__desc">{{ 'settingsPage.security.twoFactorDesc' | translate }}</p>
+          </div>
+          <p-toggleswitch [ngModel]="twoFactorEnabled" [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onTwoFactorToggle($event)"></p-toggleswitch>
+        </div>
+
+        <div class="settings-card__actions">
+          <app-button type="button" variant="outline" (click)="discardSecurityChanges()">
+            {{ 'settingsPage.footer.discard' | translate }}
+          </app-button>
+          <app-button type="submit" variant="primary" [disabled]="isSecuritySaveDisabled">
+            {{ 'settingsPage.footer.saveChanges' | translate }}
+          </app-button>
+        </div>
+      </form>
+    </section>
+
+    <div class="settings-page__side">
+      <section class="settings-card">
+        <h2 class="settings-card__title">{{ 'settingsPage.language.title' | translate }}</h2>
+        <p class="settings-card__subtitle">{{ 'settingsPage.language.subtitle' | translate }}</p>
+
+        <p class="settings-label">{{ 'settingsPage.language.selectLabel' | translate }}</p>
+        <div class="language-switch">
+          <button type="button" class="language-switch__option" [class.language-switch__option--active]="!isArabic()"
+            (click)="setLanguage('en')">
+            {{ 'settingsPage.language.english' | translate }}
+          </button>
+          <button type="button" class="language-switch__option" [class.language-switch__option--active]="isArabic()"
+            (click)="setLanguage('ar')">
+            {{ 'settingsPage.language.arabic' | translate }}
+          </button>
+        </div>
+      </section>
+
+      <section class="settings-card">
+        <h2 class="settings-card__title">{{ 'settingsPage.theme.title' | translate }}</h2>
+        <p class="settings-card__subtitle">{{ 'settingsPage.theme.subtitle' | translate }}</p>
+
+        <div class="theme-options">
+          @for (option of themeModes; track option.value) {
+          <button type="button" class="theme-option" [class.theme-option--active]="currentThemeMode() === option.value"
+            (click)="setThemeMode(option.value)">
+            <span>{{ themeLabel(option.value, option.label) }}</span>
+            <span class="theme-option__radio" [class.theme-option__radio--active]="currentThemeMode() === option.value"></span>
+          </button>
+          }
+        </div>
+      </section>
+
+      <button type="button" class="settings-link-card" (click)="openTerms()">
+        <h2 class="settings-link-card__title">{{ 'settingsPage.legal.terms' | translate }}</h2>
+        <i class="pi pi-external-link"></i>
+      </button>
+
+      <button type="button" class="settings-link-card" (click)="openPrivacyPolicy()">
+        <h2 class="settings-link-card__title">{{ 'settingsPage.legal.privacy' | translate }}</h2>
+        <i class="pi pi-external-link"></i>
+      </button>
+
+      <button type="button" class="settings-link-card" (click)="openDisclaimer()">
+        <h2 class="settings-link-card__title">{{ 'settingsPage.legal.disclaimer' | translate }}</h2>
+        <i class="pi pi-external-link"></i>
+      </button>
+    </div>
+  </div>
+</div>

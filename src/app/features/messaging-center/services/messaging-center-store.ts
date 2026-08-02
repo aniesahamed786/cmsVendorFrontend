@@ -1,21 +1,18 @@
 import { Injectable, computed, signal } from '@angular/core';
 import {
   CreateTicketForm,
-  MessageAttachment,
   SortOrder,
   Ticket,
   TicketMessage,
   TicketStatus,
   TicketTabKey,
 } from '../models/messaging-center.model';
-import {
-  CURRENT_AGENT,
-  MOCK_MESSAGES,
-  MOCK_TICKETS,
-} from '../data/mock-messaging-center';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
+
+// Socket
+import { MessagingSocketService } from '../services/messaging-socket.service';
 
 /**
  * In-memory store for the messaging center. Mirrors the admin app's
@@ -28,9 +25,7 @@ export class MessagingCenterStore {
   //   MOCK_TICKETS.map((t) => ({ ...t })),
   // );
   private readonly ticketsSignal = signal<Ticket[]>([]);
-  private readonly messagesRecord = signal<Record<string, TicketMessage[]>>(
-    structuredClone(MOCK_MESSAGES),
-  );
+  private readonly messagesRecord = signal<Record<string, TicketMessage[]>>({});
 
   readonly tickets = this.ticketsSignal.asReadonly();
   // No auto-select: the details pane shows its "select a ticket" empty state until
@@ -44,15 +39,32 @@ export class MessagingCenterStore {
   readonly selectedSort = signal<SortOrder | null>(null);
   readonly activeTab = signal<TicketTabKey>('all');
 
-  private nextReference = 11;
-  private nextMessageId = 1;
-  
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
+  // Socket Injection
+  private readonly socketService = inject(MessagingSocketService);
+
+  isLoadingTickets = signal(false);
+  isLoadingMessages = signal(false);
+
   constructor() {
-  this.loadTickets();
-}
+    this.socketService.connect();
+    this.socketService.ticketUpdated$
+      .subscribe(() => {
+        this.loadTickets();
+      });
+
+    this.socketService.messageCreated$
+      .subscribe((payload: any) => {
+        this.loadTickets();
+        const selected = this.selectedTicket();
+        if (selected?.reference === payload.ticketId) {
+          this.loadTicketMessages(payload.ticketId);
+        }
+      });
+    this.loadTickets();
+  }
 
   readonly filteredTickets = computed<Ticket[]>(() => {
     const type = this.selectedType();
@@ -119,47 +131,69 @@ export class MessagingCenterStore {
   }
 
   // --- Ticket actions --------------------------------------------------------
-
+  // After Socket Injection
   selectTicket(id: string): void {
+    const previous = this.selectedTicket();
+    if (previous) {
+      this.socketService.leaveTicketRoom(previous.reference);
+    }
+
     this.selectedTicketId.set(id);
     this.patchTicket(id, { unread: false });
+    const ticket = this.ticketsSignal().find(t => t.id === id);
+    if (!ticket) {
+      return;
+    }
+    this.socketService.joinTicketRoom(ticket.reference);
+    this.loadTicketMessages(ticket.reference);
+    // this.markTicketAsRead(ticket.reference).subscribe({
+    //   next: () => this.loadTickets(),
+    //   error: () => { }
+    // });
   }
 
-  sendMessage(
-    content: string,
-    isInternalNote: boolean,
-    attachments: MessageAttachment[] = [],
-  ): void {
-    const ticketId = this.selectedTicketId();
-    if (!ticketId) return;
-    const text = content.trim();
-    if (!text && attachments.length === 0) return;
+  refreshTickets(): void {
+    this.loadTickets();
+  }
 
-    const message: TicketMessage = {
-      id: `m-${this.nextMessageId++}`,
-      authorName: CURRENT_AGENT,
-      senderRole: isInternalNote ? 'System' : 'Admin',
-      outgoing: true,
-      timestamp: this.formatNow(),
-      body: text,
-      isInternalNote,
-      attachments: attachments.length ? attachments : undefined,
-    };
+  refreshMessages(ticketId: string): void {
+    this.loadTicketMessages(ticketId);
+  }
 
-    this.messagesRecord.update((records) => ({
-      ...records,
-      [ticketId]: [...(records[ticketId] ?? []), message],
-    }));
+  disconnectSocket(): void {
+    this.socketService.disconnect();
+  }
 
-    // Internal notes don't change the ticket's preview / ordering.
-    if (isInternalNote) return;
+  sendMessage(content: string, isInternalNote: boolean, attachments: File[] = []): void {
+    const ticket = this.selectedTicket();
 
-    this.patchTicket(ticketId, {
-      preview: text || 'Attachment',
-      timeAgo: 'Just now',
-      lastUpdated: this.formatDate(),
-      updatedBy: { name: CURRENT_AGENT, role: 'Admin' },
+    if (!ticket) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('text', content);
+    attachments.forEach(file => {
+      formData.append('attachment_file', file);
     });
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    this.http.post<any>(
+      `${this.baseUrl}/cmsVendor/messaging-center/tickets/${ticket.reference}/messages`,
+      formData,
+    ).subscribe({
+      next: response => {
+        // console.log('Message Sent', response);
+        // this.loadTicketMessages(ticket.reference);
+        // this.loadTickets();
+      },
+      error: error => {
+        console.error('Failed to send message', error);
+      }
+    });
+
   }
 
   assignTicket(ticketId: string, assignee: string): void {
@@ -183,62 +217,8 @@ export class MessagingCenterStore {
     this.updateStatus(ticketId, 'Closed');
   }
 
-  // createTicket(form: CreateTicketForm): string {
-  //   const seq = this.nextReference++;
-  //   const id = `tk-${String(seq).padStart(4, '0')}`;
-  //   const reference = `TK-2026-${String(seq).padStart(4, '0')}`;
-  //   const creatorName = form.sendTo ?? 'New Recipient';
-  //   const ticket: Ticket = {
-  //     id,
-  //     reference,
-  //     category: form.ticketType ?? 'General',
-  //     title: form.title || 'Untitled ticket',
-  //     status: 'New',
-  //     assignedTo: 'Unassigned',
-  //     createdByName: CURRENT_AGENT,
-  //     createdByRole: form.participantType ?? 'Vendor',
-  //     createdBy: { name: CURRENT_AGENT, role: form.participantType ?? 'Vendor' },
-  //     target: creatorName,
-  //     updatedBy: { name: CURRENT_AGENT, role: 'Admin' },
-  //     createdDate: this.formatDate(),
-  //     lastUpdated: this.formatDate(),
-  //     preview: form.description || '',
-  //     timeAgo: 'Just now',
-  //     unread: false,
-  //     order: seq,
-  //   };
-
-  //   console.log("Create Ticket", ticket)
-
-  //   this.ticketsSignal.update((list) => [ticket, ...list]);
-
-  //   const initial: TicketMessage[] = form.description
-  //     ? [
-  //         {
-  //           id: `m-${this.nextMessageId++}`,
-  //           authorName: CURRENT_AGENT,
-  //           senderRole: 'Admin',
-  //           outgoing: true,
-  //           timestamp: this.formatNow(),
-  //           body: form.description,
-  //           isInternalNote: false,
-  //         },
-  //       ]
-  //     : [];
-  //   this.messagesRecord.update((records) => ({ ...records, [id]: initial }));
-  //   this.selectedTicketId.set(id);
-  //   return id;
-  // }
-
   createTicket(form: CreateTicketForm): void {
-
-    const headers = new HttpHeaders({
-      Accept: '*/*',
-      Authorization: 'Bearer YOUR_TOKEN' // Replace with your auth service/interceptor
-    });
-
     const formData = new FormData();
-
     formData.append('title', form.title);
     formData.append('description', form.description);
     formData.append('ticketType', form.ticketType ?? 'Technical');
@@ -251,27 +231,27 @@ export class MessagingCenterStore {
       });
     }
 
-    console.log(form)
+    this.http.post<any>(
+      `${this.baseUrl}/cmsVendor/messaging-center/tickets`,
+      formData,
+    ).subscribe({
+      next: (response) => {
+        console.log('Ticket created successfully', response);
 
-    // this.http.post<any>(
-    //   `${this.baseUrl}/cmsVendor/messaging-center/tickets`,
-    //   formData,
-    //   { headers }
-    // ).subscribe({
-    //   next: (response) => {
-    //     console.log('Ticket created successfully', response);
+        // Reload tickets
+        // this.loadTickets();
 
-    //     // Reload tickets
-    //     this.loadTickets();
+        if (response?.data?.ticketId) {
+          this.socketService.joinTicketRoom(response.data.ticketId);
+        }
 
-    //     // Optionally select the newly created ticket if API returns it
-    //     // this.selectedTicketId.set(response.data.id);
-    //   },
-    //   error: (error) => {
-    //     console.error('Failed to create ticket', error);
-    //   }
-    // });
-
+        // Optionally select the newly created ticket if API returns it
+        this.selectedTicketId.set(response.data.id);
+      },
+      error: (error) => {
+        console.error('Failed to create ticket', error);
+      }
+    });
   }
 
   // --- Helpers ---------------------------------------------------------------
@@ -301,32 +281,28 @@ export class MessagingCenterStore {
   }
 
   private loadTickets(): void {
-  this.getTickets().subscribe({
-    next: (response) => {
-      const tickets = response.data.map((ticket: any, index: number) =>
-        this.mapTicket(ticket, index)
-      );
+    // this.isLoadingTickets.set(true);
+    this.getTickets().subscribe({
+      next: (response) => {
+        const tickets = response.data.map((ticket: any, index: number) =>
+          this.mapTicket(ticket, index)
+        );
 
-      this.ticketsSignal.set(tickets);
-    },
-    error: (error) => {
-      console.error('Failed to load tickets', error);
-    },
-  });
-}
+        this.ticketsSignal.set(tickets);
+      },
+      error: (error) => {
+        console.error('Failed to load tickets', error);
+      },
+      // complete: () => this.isLoadingTickets.set(false),
+    });
+  }
 
   getTickets(pageSize: number = 20) {
-    const headers = new HttpHeaders({
-      Accept: '*/*',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YTY1ZTIyNzJkODQ3MjM4ZmFjMTNiNTAiLCJ2ZW5kb3JJZCI6IjZhNWQwMzk4MTRkYjIyZTlhODYyNzQ2YiIsInJvbGVJZCI6IjZhNjVkMjVhY2NjOGJiY2JmMzlmOGI4ZCIsInJvbGVOYW1lIjoiVkVORE9SX0FETUlOIiwibmFtZSI6IkphbmUgRG9lIiwiZW1haWwiOiJqYW5lLmRvZUB2ZW5kb3IuY29tIiwidHlwZSI6InZlbmRvci1hY2NvdW50IiwiaWF0IjoxNzg1MzA1OTk0LCJleHAiOjE3ODUzMTMxOTR9.wHpIUL6e7rOwTe49a21LwMI74Pey4Cui2ElUkLcJJnk'
-    });
-
     const params = new HttpParams().set('pageSize', pageSize);
 
     return this.http.get<any>(
       `${this.baseUrl}/cmsVendor/messaging-center/tickets`,
       {
-        headers,
         params,
       }
     );
@@ -397,5 +373,74 @@ export class MessagingCenterStore {
     if (days < 30) return `${days} day${days > 1 ? 's' : ''} ago`;
 
     return new Date(date).toLocaleDateString();
+  }
+
+  getTicketMessages(ticketId: string, pageSize: number = 20) {
+    const params = new HttpParams().set('pageSize', pageSize);
+    return this.http.get<any>(
+      `${this.baseUrl}/cmsVendor/messaging-center/tickets/${ticketId}/messages`,
+      {
+        params
+      }
+    );
+  }
+
+  private loadTicketMessages(ticketId: string): void {
+    // this.isLoadingMessages.set(true);
+    this.getTicketMessages(ticketId).subscribe({
+      next: (response) => {
+        const selectedId = this.selectedTicketId();
+        if (!selectedId) return;
+        const messages = response.data.map((message: any) =>
+          this.mapTicketMessage(message)
+        );
+        this.messagesRecord.update(records => ({
+          ...records,
+          [selectedId]: messages
+        }));
+      },
+      error: error => {
+        console.error('Failed to load messages', error);
+      },
+      // complete: () => this.isLoadingMessages.set(false),
+    });
+  }
+
+  private mapTicketMessage(message: any): TicketMessage {
+    return {
+      id: message.id,
+      authorName: message.senderType === 'admin' ? 'Admin' : message.senderName,
+      senderRole: message.senderType,
+      outgoing: message.senderType !== 'admin',
+      timestamp: this.formatMessageDate(message.createdAt),
+      body: message.text,
+      isInternalNote: message.isInternalNote,
+      attachments: message.fileUrls?.map((url: string) => ({
+        name: url.split('/').pop() ?? '',
+        url: `${this.baseUrl}${url}`
+      }))
+    };
+
+  }
+
+  private formatMessageDate(date: string): string {
+    return new Date(date).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  }
+
+  markTicketAsRead(ticketId: string) {
+    return this.http.patch(
+      `${this.baseUrl}/cmsVendor/messaging-center/tickets/${ticketId}/read`,
+      {},
+    );
+  }
+
+  destroy(): void {
+    this.socketService.disconnect();
   }
 }

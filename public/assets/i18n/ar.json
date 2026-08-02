@@ -1015,5 +1015,103 @@
       "dropzoneHelp": "الصيغ المدعومة: JPG وPNG وPDF وDOC وDOCX (بحد أقصى 10 ميجابايت لكل ملف)",
       "submit": "إرسال التذكرة"
     }
+  },
+  "branchForm": {
+    "back": "رجوع",
+    "section": {
+      "businessLocations": "مواقع النشاط التجاري"
+    },
+    "label": {
+      "locationNameEn": "اسم الموقع (بالإنجليزية)",
+      "locationNameAr": "اسم الموقع (بالعربية)",
+      "country": "الدولة",
+      "region": "المنطقة",
+      "city": "المدينة",
+      "address": "العنوان",
+      "googleMapLink": "رابط خرائط جوجل",
+      "representativeName": "اسم ممثل الموقع",
+      "phoneNumber": "رقم هاتف الموقع"
+    },
+    "placeholder": {
+      "locationNameEn": "Khobar Branch",
+      "locationNameAr": "فرع الخبر",
+      "country": "المملكة العربية السعودية",
+      "region": "المنطقة الشرقية",
+      "city": "الخبر",
+      "address": "8628+CP الخبر",
+      "googleMapLink": "https://maps.app.goo.gl/BEET5KgTroMZt3UeA",
+      "representativeName": "عبدالله خالد",
+      "phoneNumber": "+966 13 123 4567"
+    },
+    "error": {
+      "locationNameEnRequired": "اسم الموقع بالإنجليزية مطلوب.",
+      "locationNameArRequired": "اسم الموقع بالعربية مطلوب.",
+      "countryRequired": "الدولة مطلوبة.",
+      "regionRequired": "المنطقة مطلوبة.",
+      "cityRequired": "المدينة مطلوبة.",
+      "addressRequired": "العنوان مطلوب.",
+      "googleMapLinkRequired": "رابط خرائط جوجل مطلوب.",
+      "googleMapLinkInvalid": "أدخل رابطًا صحيحًا.",
+      "representativeNameRequired": "اسم الممثل مطلوب.",
+      "phoneNumberRequired": "رقم الهاتف مطلوب.",
+      "phoneNumberInvalid": "أدخل رقم هاتف صحيح."
+    },
+    "footer": {
+      "saveDraft": "حفظ كمسودة",
+      "addStore": "إضافة متجر",
+      "updateStore": "تحديث المتجر"
+    }
+  },
+  "settingsPage": {
+    "title": "الإعدادات",
+    "subtitle": "إدارة ملف مؤسستك والإعدادات العامة، مع متابعة الرؤى التي تدعم اتخاذ قرارات أفضل.",
+    "security": {
+      "title": "الأمان",
+      "subtitle": "إدارة حماية حسابك وطرق التحقق من الهوية.",
+      "password": "كلمة المرور",
+      "currentPassword": "كلمة المرور الحالية",
+      "currentPasswordPlaceholder": "أدخل كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+      "confirmPassword": "إعادة إدخال كلمة المرور",
+      "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة",
+      "passwordRequirements": "متطلبات كلمة المرور",
+      "reqLength": "8 أحرف على الأقل",
+      "reqCase": "أحرف كبيرة وصغيرة",
+      "reqNumber": "تحتوي على رقم واحد على الأقل",
+      "reqSpecial": "تحتوي على رمز خاص واحد",
+      "twoFactor": "المصادقة الثنائية",
+      "twoFactorEnable": "تفعيل المصادقة الثنائية",
+      "twoFactorDesc": "طلب رمز تحقق إضافي إلى جانب كلمة المرور عند تسجيل الدخول من أجهزة غير معروفة."
+    },
+    "error": {
+      "currentPasswordRequired": "كلمة المرور الحالية مطلوبة.",
+      "newPasswordRequired": "كلمة المرور الجديدة مطلوبة.",
+      "confirmPasswordRequired": "يرجى إعادة إدخال كلمة المرور الجديدة.",
+      "passwordMismatch": "كلمتا المرور غير متطابقتين."
+    },
+    "footer": {
+      "discard": "تجاهل",
+      "saveChanges": "حفظ التغييرات"
+    },
+    "language": {
+      "title": "اللغة",
+      "subtitle": "قم بتهيئة تجربتك المحلية",
+      "selectLabel": "اختر اللغة",
+      "english": "English (US)",
+      "arabic": "العربية"
+    },
+    "theme": {
+      "title": "تفضيلات المظهر",
+      "subtitle": "اختر الشكل الذي تظهر به بوابة المؤسسة.",
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "نظام"
+    },
+    "legal": {
+      "terms": "الشروط والأحكام",
+      "privacy": "الخصوصية والسياسة",
+      "disclaimer": "إخلاء المسؤولية"
+    }
   }
 }

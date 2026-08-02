@@ -1,0 +1,254 @@
+.settings-page {
+  padding: 1rem 1rem;
+  color: var(--app-text);
+}
+
+.settings-page__title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.settings-page__subtitle {
+  margin: 0.5rem 0 0;
+  color: var(--app-muted);
+  font-size: 1rem;
+}
+
+.settings-page__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .settings-page__layout {
+    grid-template-columns: 1.15fr 1.15fr;
+  }
+}
+
+.settings-page__side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.settings-card {
+  padding: 1.5rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+}
+
+.settings-card__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.settings-card__subtitle {
+  margin: 0.35rem 0 1rem 0;
+  font-size: 0.875rem;
+  color: var(--app-muted);
+}
+
+.settings-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+}
+
+.settings-section__heading {
+  margin: 1.5rem 0 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.settings-field__required {
+  color: #dc2626;
+}
+
+.settings-field__input {
+  width: 100%;
+  font-weight: 400;
+}
+
+.settings-field__error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin: 0;
+}
+
+.settings-divider {
+  border: none;
+  border-top: 1px solid var(--app-border);
+  margin: 1.5rem 0;
+}
+
+.password-requirements {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.password-requirements__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--app-muted);
+}
+
+.password-requirements__item i {
+  font-size: 1rem;
+  color: var(--app-border);
+}
+
+.password-requirements__item--met {
+  color: var(--app-text);
+}
+
+.password-requirements__item--met i {
+  color: #16a34a;
+}
+
+.two-factor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--app-primary-soft);
+}
+
+.two-factor-row__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.two-factor-row__desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+
+.two-factor-row__text{
+    width: 80%;
+}
+
+.settings-label {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.language-switch {
+  display: flex;
+  border: 1px solid var(--app-border);
+  overflow: hidden;
+}
+
+.language-switch__option {
+  flex: 1 1 0%;
+  padding: 0.85rem 1rem;
+  border: none;
+  background: var(--app-primary-soft);
+  color: var(--app-text);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.language-switch__option--active {
+  background: var(--app-primary);
+  color: #fff;
+}
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--app-text);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-option--active {
+  background: var(--app-primary-soft);
+  border-color: var(--app-primary);
+}
+
+.theme-option__radio {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--app-border);
+  flex-shrink: 0;
+}
+
+.theme-option__radio--active {
+  border-color: var(--app-primary);
+  border-width: 4px;
+}
+
+.settings-link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.5rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  cursor: pointer;
+  color: var(--app-text);
+  text-align: start;
+  transition: border-color 0.2s ease;
+}
+
+.settings-link-card:hover {
+  border-color: var(--app-primary);
+}
+
+.settings-link-card__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.settings-link-card i {
+  color: var(--app-text);
+  font-size: 1.1rem;
+}

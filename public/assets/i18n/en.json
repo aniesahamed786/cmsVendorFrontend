@@ -1013,5 +1013,103 @@
       "dropzoneHelp": "Supported formats: JPG, PNG, PDF, DOC, DOCX (Max 10MB each)",
       "submit": "Submit Ticket"
     }
+  },
+  "branchForm": {
+    "back": "Back",
+    "section": {
+      "businessLocations": "Business Locations"
+    },
+    "label": {
+      "locationNameEn": "Location Name (English)",
+      "locationNameAr": "Location Name (Arabic)",
+      "country": "Country",
+      "region": "Region",
+      "city": "City",
+      "address": "Address",
+      "googleMapLink": "Google Map Link",
+      "representativeName": "Location Representative Name",
+      "phoneNumber": "Location Phone Number"
+    },
+    "placeholder": {
+      "locationNameEn": "Khobar Branch",
+      "locationNameAr": "فرع الخبر",
+      "country": "Saudi Arabia",
+      "region": "Eastern Region",
+      "city": "Khobar",
+      "address": "8628+CP Al Khobar",
+      "googleMapLink": "https://maps.app.goo.gl/BEET5KgTroMZt3UeA",
+      "representativeName": "Abdullah Khaled",
+      "phoneNumber": "+966 13 123 4567"
+    },
+    "error": {
+      "locationNameEnRequired": "Location name (English) is required.",
+      "locationNameArRequired": "Location name (Arabic) is required.",
+      "countryRequired": "Country is required.",
+      "regionRequired": "Region is required.",
+      "cityRequired": "City is required.",
+      "addressRequired": "Address is required.",
+      "googleMapLinkRequired": "Google Map link is required.",
+      "googleMapLinkInvalid": "Enter a valid URL.",
+      "representativeNameRequired": "Representative name is required.",
+      "phoneNumberRequired": "Phone number is required.",
+      "phoneNumberInvalid": "Enter a valid phone number."
+    },
+    "footer": {
+      "saveDraft": "Save As Draft",
+      "addStore": "Add Store",
+      "updateStore": "Update Store"
+    }
+  },
+  "settingsPage": {
+    "title": "Settings",
+    "subtitle": "Manage your organization's profile and global configurations. while tracking the insights that drive better decisions.",
+    "security": {
+      "title": "Security",
+      "subtitle": "Manage your account protection and authentication methods.",
+      "password": "Password",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter your Current Password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter your New Password",
+      "confirmPassword": "Re Enter Password",
+      "confirmPasswordPlaceholder": "Re enter your New Password",
+      "passwordRequirements": "Password Requirements",
+      "reqLength": "At least 8 characters long",
+      "reqCase": "Uppercase and lowercase",
+      "reqNumber": "Contains at least one number",
+      "reqSpecial": "Contains one special character",
+      "twoFactor": "Two Factor Authentication",
+      "twoFactorEnable": "Enable Two-Factor Authentication",
+      "twoFactorDesc": "Require a verification code in addition to your password when signing in from unrecognized devices."
+    },
+    "error": {
+      "currentPasswordRequired": "Current password is required.",
+      "newPasswordRequired": "New password is required.",
+      "confirmPasswordRequired": "Please re-enter your new password.",
+      "passwordMismatch": "Passwords do not match."
+    },
+    "footer": {
+      "discard": "Discard",
+      "saveChanges": "Save Changes"
+    },
+    "language": {
+      "title": "Language",
+      "subtitle": "Configure your Localized experience",
+      "selectLabel": "Select Language",
+      "english": "English (US)",
+      "arabic": "Arabic (العربية)"
+    },
+    "theme": {
+      "title": "Theme Preferences",
+      "subtitle": "Choose how the Enterprise Portal looks to you.",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "legal": {
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy & Policy",
+      "disclaimer": "Disclaimer"
+    }
   }
 }

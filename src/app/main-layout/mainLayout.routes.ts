@@ -59,8 +59,9 @@ export const routes: Route[] = [
       },
       {
         path: 'settings',
-        component: Inprogress,
-        data: { title: 'Settings' },
+        // component: Inprogress,
+        loadChildren: () => import('../features/Profile-settings/profile-settings.routes').then((m) => m.routes),
+        // data: { title: 'Settings' },
       },
     ],
   },

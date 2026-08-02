@@ -1,0 +1,163 @@
+@if (!isLoading()) {
+<form class="branch-form" [formGroup]="branchForm" (ngSubmit)="submit()">
+  <div class="branch-form__topbar">
+    <a [routerLink]="backNavRouteLink()" class="branch-back-btn">
+      <i class="pi pi-arrow-left"></i>
+      <span>{{ 'branchForm.back' | translate }}</span>
+    </a>
+
+    <div class="branch-form__topbar-actions">
+      <app-button type="button" variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
+        {{ 'branchForm.footer.saveDraft' | translate }}
+      </app-button>
+      <app-button type="submit" variant="primary" icon="pi pi-plus" [disabled]="isSubmitDisabled()">
+        {{ buttonName() }}
+      </app-button>
+    </div>
+  </div>
+
+  <div class="branch-form__section">
+    <div class="branch-form__section-head">
+      <div class="branch-form__section-icon">
+        <i class="pi pi-map-marker branch-form__section-glyph"></i>
+      </div>
+      <h2 class="branch-form__section-title">
+        {{ 'branchForm.section.businessLocations' | translate }}
+      </h2>
+    </div>
+
+    <div class="branch-form__grid">
+      <div class="branch-form__field">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.locationNameEn' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="locationNameEn" class="branch-form__input"
+          [placeholder]="'branchForm.placeholder.locationNameEn' | translate" />
+        @if (hasRequiredError('locationNameEn')) {
+        <p class="branch-form__error">{{ 'branchForm.error.locationNameEnRequired' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.locationNameAr' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="locationNameAr" dir="rtl"
+          class="branch-form__input branch-form__input--right"
+          [placeholder]="'branchForm.placeholder.locationNameAr' | translate" />
+        @if (hasRequiredError('locationNameAr')) {
+        <p class="branch-form__error">{{ 'branchForm.error.locationNameArRequired' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field branch-form__col-2">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.country' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="country" class="branch-form__input"
+          [placeholder]="'branchForm.placeholder.country' | translate" />
+        @if (hasRequiredError('country')) {
+        <p class="branch-form__error">{{ 'branchForm.error.countryRequired' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.region' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="region" class="branch-form__input"
+          [placeholder]="'branchForm.placeholder.region' | translate" />
+        @if (hasRequiredError('region')) {
+        <p class="branch-form__error">{{ 'branchForm.error.regionRequired' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.city' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="city" class="branch-form__input"
+          [placeholder]="'branchForm.placeholder.city' | translate" />
+        @if (hasRequiredError('city')) {
+        <p class="branch-form__error">{{ 'branchForm.error.cityRequired' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field branch-form__col-2">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.address' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <textarea pInputTextarea formControlName="address" rows="3" class="branch-form__textarea"
+          [placeholder]="'branchForm.placeholder.address' | translate"></textarea>
+        @if (hasRequiredError('address')) {
+        <p class="branch-form__error">{{ 'branchForm.error.addressRequired' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field branch-form__col-2">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.googleMapLink' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="googleMapLink" class="branch-form__input"
+          [placeholder]="'branchForm.placeholder.googleMapLink' | translate" />
+        @if (hasRequiredError('googleMapLink')) {
+        <p class="branch-form__error">{{ 'branchForm.error.googleMapLinkRequired' | translate }}</p>
+        } @else if (hasFieldError('googleMapLink', 'pattern')) {
+        <p class="branch-form__error">{{ 'branchForm.error.googleMapLinkInvalid' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field branch-form__col-2">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.representativeName' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="representativeName" class="branch-form__input"
+          [placeholder]="'branchForm.placeholder.representativeName' | translate" />
+        @if (hasRequiredError('representativeName')) {
+        <p class="branch-form__error">{{ 'branchForm.error.representativeNameRequired' | translate }}</p>
+        }
+      </div>
+
+      <div class="branch-form__field branch-form__col-2">
+        <label class="branch-form__label">
+          {{ 'branchForm.label.phoneNumber' | translate }}
+          <span class="branch-form__required">*</span>
+        </label>
+        <input pInputText formControlName="phoneNumber" class="branch-form__input"
+          [placeholder]="'branchForm.placeholder.phoneNumber' | translate" />
+        @if (hasRequiredError('phoneNumber')) {
+        <p class="branch-form__error">{{ 'branchForm.error.phoneNumberRequired' | translate }}</p>
+        } @else if (hasFieldError('phoneNumber', 'pattern')) {
+        <p class="branch-form__error">{{ 'branchForm.error.phoneNumberInvalid' | translate }}</p>
+        }
+      </div>
+    </div>
+  </div>
+</form>
+} @else {
+<div class="branch-form__skeleton">
+  <div class="branch-form__skeleton-topbar">
+    <p-skeleton width="6rem" height="2.25rem" borderRadius="0"></p-skeleton>
+    <div class="branch-form__row branch-form__row--gap2">
+      <p-skeleton width="8rem" height="2.25rem" borderRadius="0"></p-skeleton>
+      <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
+    </div>
+  </div>
+  <div class="branch-form__skeleton-card">
+    @for (field of [1,2,3,4,5,6]; track field) {
+    <div>
+      <p-skeleton width="8rem" height="1rem" class="branch-form__mb-2"></p-skeleton>
+      <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+    </div>
+    }
+  </div>
+</div>
+}
