@@ -12,7 +12,7 @@ export class OfferListService {
 
   getOffers(vendorId: string, page: number, pageSize: number) {
     return this.http.get<OffersResponse>(
-      `${this.baseUrl}/cmsVendor/offers/${vendorId}`,
+      `${this.baseUrl}/offers/${vendorId}`,
       {
         params: {
           page,

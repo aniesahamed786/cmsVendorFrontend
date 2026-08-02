@@ -12,7 +12,7 @@ export class OfferDetailService {
 
   getOfferDetail(offerId: string) {
     return this.http.get<OffersResponse>(
-      `${this.baseUrl}/cmsVendor/offer/${offerId}`
+      `${this.baseUrl}/offer/${offerId}`
     );
   }
 }
