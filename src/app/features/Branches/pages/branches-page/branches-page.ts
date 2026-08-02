@@ -151,8 +151,8 @@ const valB: unknown = b[field];
   ngOnInit() {
     this.branchesService.getKPIs().subscribe(data => {
       this.kpis.set(data);
-      this.animateTo('totalBranches', data.totalBranches);
-      this.animateTo('activeBranches', data.activeBranches);
+      this.animateTo('totalBranches', data.totalLocations);
+      this.animateTo('activeBranches', data.activeLocations);
       this.animateTo('totalRedemptions', data.totalRedemptions);
       this.animateTo('pendingRequests', data.pendingRequests);
     });

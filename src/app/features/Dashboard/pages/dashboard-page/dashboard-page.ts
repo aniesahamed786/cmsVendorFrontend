@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorQuickActions } from '../../components/vendor-quick-actions/vendor-quick-actions';
+import { DashboardService } from '../../services/dashboard.service';
+import { OnInit, inject } from '@angular/core';
 
 interface RecentActivityItem {
   icon: string;
@@ -18,11 +20,17 @@ interface RecentActivityItem {
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
   vendorName = signal('Lumee Street');
   vendorDescription = signal(
     'Lumee Street is a modern casual dining brand offering fresh, flavorful meals in a vibrant and welcoming atmosphere.',
   );
+  dashboardStats = signal({
+  totalRedemptions: 0,
+  activeOffers: 0,
+  pendingRequests: 0,
+  expiringSoonOffers: 0
+});
 
   // ponytail: fixtures, so the whole row is translated copy — including the
   // descriptions and the "2 mins ago" times, which is the only way the Arabic
@@ -56,8 +64,21 @@ export class DashboardPage {
     },
   ]);
 
-  constructor(private readonly router: Router) {}
+ private readonly dashboardService = inject(DashboardService);
 
+constructor(
+  private readonly router: Router
+) {}
+ngOnInit(): void {
+  this.dashboardService.getDashboardStats().subscribe({
+    next: (stats) => {
+      this.dashboardStats.set(stats);
+    },
+    error: (err) => {
+      console.error('Failed to load dashboard stats', err);
+    }
+  });
+}
   goToOffers(): void {
     this.router.navigate(['/offers']);
   }

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { OffersService, OfferStats } from '../../services/offers.service';
+import { OnInit } from '@angular/core';
 
 type Availability = 'Online' | 'In-Store' | 'Hybrid';
 type OfferStatus = 'Active' | 'Scheduled' | 'Expired';
@@ -37,14 +39,21 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './offers.html',
   styleUrl: './offers.scss',
 })
-export class Offers {
+export class Offers implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private readonly i18n = inject(I18nService);
+  private readonly offersService = inject(OffersService);
   private readonly offerListService = inject(OfferListService);
 
   // ponytail: in-memory dummy data; swap for a service feed when the API exists
   // private readonly offers: Offer[] = this.buildRows();
+  readonly offerStats = signal<OfferStats>({
+  totalOffers: 0,
+  activeOffers: 0,
+  scheduledOffers: 0,
+  expiringSoonOffers: 0
+});
   private readonly offers = signal<Offer[]>([]);
   readonly backendUrl = environment.backendUrl;
 
@@ -68,12 +77,32 @@ export class Offers {
     this.loadOffers()
     // DELETE WHEN THE API IS WIRED — see the block above. Keep the revealStats()
     // call; move it into the service's subscribe alongside `loading.set(false)`.
+   this.offersService.getOfferStats().subscribe({
+  next: (stats) => {
+    this.offerStats.set(stats);
+    this.loading.set(false);
+    this.revealStats();
+  },
+  error: () => {
+    this.loading.set(false);
+  }
+});
     // setTimeout(() => {
     //   this.loading.set(false);
     //   this.revealStats();
     // }, Offers.FAKE_LOAD_MS);
   }
 
+  ngOnInit(): void {
+  this.offersService.getOfferStats().subscribe({
+    next: (stats) => {
+      this.offerStats.set(stats);
+    },
+    error: (err) => {
+      console.error('Failed to load offer stats', err);
+    }
+  });
+}
   // ---- Count-up stats (number_animation.md) --------------------------------
   // One signal holds every animated value, keyed by stat name; one rAF loop per
   // key eases to the target. The cards skeleton while the data is absent, then
@@ -87,13 +116,16 @@ export class Offers {
   }
 
   /** Kick off every stat's count-up. Call this when the data lands. */
-  private revealStats(): void {
-    const s = this.stats();
-    this.animateTo('active', s.active);
-    this.animateTo('scheduled', s.scheduled);
-    this.animateTo('expiringSoon', s.expiringSoon);
-    this.animateTo('total', s.total);
-  }
+ private revealStats(): void {
+
+  const s = this.offerStats();
+
+  this.animateTo('active', s.activeOffers);
+  this.animateTo('scheduled', s.scheduledOffers);
+  this.animateTo('expiringSoon', s.expiringSoonOffers);
+  this.animateTo('total', s.totalOffers);
+
+}
 
   /** easeOutCubic count-up from the current value to target. */
   private animateTo(key: string, target: number, duration = 900): void {
