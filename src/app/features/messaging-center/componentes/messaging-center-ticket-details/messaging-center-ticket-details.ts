@@ -33,14 +33,15 @@ import { Button } from '../../../../shared/Components/button/button';
   styleUrl: './messaging-center-ticket-details.scss',
 })
 export class MessagingCenterTicketDetails {
-  private readonly store = inject(MessagingCenterStore);
+  readonly store = inject(MessagingCenterStore);
 
   readonly ticket = this.store.selectedTicket;
   readonly messages = this.store.selectedMessages;
 
   readonly draft = signal<string>('');
 
-  readonly attachments = signal<{ name: string; url: string }[]>([]);
+  // readonly attachments = signal<{ name: string; url: string }[]>([]);
+  readonly attachments = signal<File[]>([]);
 
   displayFilePopup = false;
   readonly selectedFileUrl = signal<string | null>(null);
@@ -66,20 +67,22 @@ export class MessagingCenterTicketDetails {
     return TICKET_CATEGORY_KEYS[category];
   }
 
-  roleKey(role: ParticipantType): string {
-    return SENDER_ROLE_KEYS[role];
+  roleKey(role: string): string {
+    const key = (role.charAt(0).toUpperCase() + role.slice(1)) as keyof typeof SENDER_ROLE_KEYS;
+    return SENDER_ROLE_KEYS[key];
   }
 
   onSend(): void {
     const text = this.draft().trim();
-    const files: MessageAttachment[] = this.attachments().map((a) => ({
-      name: a.name,
-      url: a.url,
-    }));
+    const files = this.attachments();
     if (!text && files.length === 0) {
       return;
     }
+
     this.store.sendMessage(text, false, files);
+
+    this.draft.set('');
+    this.clearAttachments();
     this.draft.set('');
     this.clearAttachments();
   }
@@ -102,33 +105,42 @@ export class MessagingCenterTicketDetails {
     fileInput.click();
   }
 
+  // onFilesSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   const files = input.files ? Array.from(input.files) : [];
+  //   for (const file of files) {
+  //     if (this.attachments().length >= 5) {
+  //       break;
+  //     }
+  //     this.attachments.update((list) => [
+  //       ...list,
+  //       { name: file.name, url: URL.createObjectURL(file) },
+  //     ]);
+  //   }
+  //   input.value = '';
+  // }
+
   onFilesSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const files = input.files ? Array.from(input.files) : [];
-    for (const file of files) {
-      if (this.attachments().length >= 5) {
-        break;
-      }
-      this.attachments.update((list) => [
-        ...list,
-        { name: file.name, url: URL.createObjectURL(file) },
-      ]);
-    }
-    input.value = '';
-  }
+  const input = event.target as HTMLInputElement;
+  const files = input.files ? Array.from(input.files) : [];
 
-  removeAttachment(index: number): void {
-    const removed = this.attachments()[index];
-    if (removed) {
-      URL.revokeObjectURL(removed.url);
-    }
-    this.attachments.update((list) => list.filter((_, i) => i !== index));
-  }
+  this.attachments.update(existing => {
+    const remaining = 5 - existing.length;
+    return [...existing, ...files.slice(0, remaining)];
+  });
 
-  private clearAttachments(): void {
-    this.attachments().forEach((a) => URL.revokeObjectURL(a.url));
-    this.attachments.set([]);
-  }
+  input.value = '';
+}
+
+ removeAttachment(index: number): void {
+  this.attachments.update(list =>
+    list.filter((_, i) => i !== index)
+  );
+}
+
+ private clearAttachments(): void {
+  this.attachments.set([]);
+}
 
   openPreview(url: string | undefined): void {
     if (!url) return;

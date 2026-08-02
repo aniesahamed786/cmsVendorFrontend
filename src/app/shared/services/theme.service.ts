@@ -7,7 +7,7 @@ import {
   getAccentTheme,
 } from '../theme/accent-themes';
 
-export type AppearanceMode = 'light' | 'dark' | 'national-day';
+export type AppearanceMode = 'light' | 'dark' | 'system';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class ThemeService {
   readonly appearanceModes: { value: AppearanceMode; label: string }[] = [
     { value: 'light', label: 'Light' },
     { value: 'dark', label: 'Dark' },
-    { value: 'national-day', label: 'National Day' },
+    { value: 'system', label: 'System' },
   ];
   readonly accentThemes = ACCENT_THEMES;
 
@@ -60,7 +60,7 @@ export class ThemeService {
   private applyAppearanceMode(mode: AppearanceMode): void {
     const root = document.documentElement;
     root.classList.toggle('dark-mode', mode === 'dark');
-    root.classList.toggle('national-day-mode', mode === 'national-day');
+    root.classList.toggle('system-mode', mode === 'system');
   }
 
   private applyAccentTheme(theme: AccentTheme, mode: AppearanceMode): void {

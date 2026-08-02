@@ -40,7 +40,7 @@
 
   <!-- Ticket list -->
   <div class="mc-list__cards">
-    @if (loading()) {
+    @if (store.isLoadingTickets()) {
     <!-- Reuses the real __card geometry; --skeleton kills its interactive state. -->
     @for (i of [1,2,3,4,5]; track i) {
     <div class="mc-list__card mc-list__card--skeleton">

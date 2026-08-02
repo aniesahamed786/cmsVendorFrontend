@@ -29,26 +29,11 @@ import { AppSearch } from '../../../../shared/Components/app-search/app-search';
   styleUrl: './messaging-center-list.scss',
 })
 export class MessagingCenterList {
-  private readonly store = inject(MessagingCenterStore);
+  readonly store = inject(MessagingCenterStore);
   private readonly i18n = inject(I18nService);
-
   createTicket = output<void>();
 
-  // ===========================================================================
-  // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
-  // ---------------------------------------------------------------------------
-  // The store is a synchronous in-memory array, so there is no real load to wait
-  // for. This timer fakes one purely so the ticket-list skeleton is reachable and
-  // reviewable. When the real fetch lands: delete the setTimeout below, and flip
-  // `loading` to false in the store's subscribe instead. Keep `loading` and the
-  // skeleton markup — only the timer and the initial `true` are throwaway.
-  // ===========================================================================
-  readonly loading = signal(true);
-  private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER BELOW
-
   constructor() {
-    // DELETE WHEN THE API IS WIRED — see the block above.
-    setTimeout(() => this.loading.set(false), MessagingCenterList.FAKE_LOAD_MS);
   }
 
   // p-select renders plain strings, so the labels have to be recomputed on a

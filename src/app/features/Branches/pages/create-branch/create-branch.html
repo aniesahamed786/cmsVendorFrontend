@@ -1,0 +1,7 @@
+<app-branch-form
+  [actionType]="'create'"
+  [buttonName]="'branchForm.footer.addStore' | translate"
+  [backNavRouteLink]="'/branches'"
+  (submitBranchFormEvent)="save($event)"
+  (saveDraftEvent)="saveDraft($event)"
+></app-branch-form>

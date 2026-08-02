@@ -418,3 +418,16 @@
 .mc-details__file-chip {
   cursor: pointer;
 }
+
+:host ::ng-deep{
+  .messages-loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  color: var(--app-muted, #6b7280);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+}
