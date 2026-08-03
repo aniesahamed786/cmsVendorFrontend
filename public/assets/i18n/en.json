@@ -671,7 +671,12 @@
       "requestFailedSummary": "Could not save changes",
       "requestFailedDetail": "Something went wrong while raising the request. Please try again.",
       "requestConflictSummary": "Request already in progress",
-      "requestConflictDetail": "An update request for this offer is already open. Wait for it to be reviewed before creating a new one."
+      "requestConflictDetail": "An update request for this offer is already open. Wait for it to be reviewed before creating a new one.",
+      "requestCreateSubmittedDetail": "Your new offer was sent for admin review.",
+      "requestCreateDraftedDetail": "Your new offer was saved as a draft request."
+    },
+    "request": {
+      "untitledOffer": "New offer"
     },
     "highlight": {
       "imagesLabel": "Highlight Images",
@@ -1145,6 +1150,13 @@
   "settingsPage": {
     "title": "Settings",
     "subtitle": "Manage your organization's profile and global configurations. while tracking the insights that drive better decisions.",
+    "toast": {
+      "savedSummary": "Settings saved",
+      "savedDetail": "Your language and theme preferences were updated.",
+      "savedWithPasswordDetail": "Your password and preferences were updated.",
+      "saveFailedSummary": "Could not save settings",
+      "saveFailedDetail": "Something went wrong while saving. Please try again."
+    },
     "security": {
       "title": "Security",
       "subtitle": "Manage your account protection and authentication methods.",

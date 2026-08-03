@@ -671,7 +671,12 @@
       "requestFailedSummary": "تعذر حفظ التغييرات",
       "requestFailedDetail": "حدث خطأ أثناء إنشاء الطلب. يرجى المحاولة مرة أخرى.",
       "requestConflictSummary": "يوجد طلب قيد المعالجة بالفعل",
-      "requestConflictDetail": "هناك طلب تحديث مفتوح لهذا العرض بالفعل. يرجى انتظار مراجعته قبل إنشاء طلب جديد."
+      "requestConflictDetail": "هناك طلب تحديث مفتوح لهذا العرض بالفعل. يرجى انتظار مراجعته قبل إنشاء طلب جديد.",
+      "requestCreateSubmittedDetail": "تم إرسال عرضك الجديد لمراجعة المسؤول.",
+      "requestCreateDraftedDetail": "تم حفظ عرضك الجديد كطلب مسودة."
+    },
+    "request": {
+      "untitledOffer": "عرض جديد"
     },
     "highlight": {
       "imagesLabel": "صور الميزة",
@@ -1147,6 +1152,13 @@
   "settingsPage": {
     "title": "الإعدادات",
     "subtitle": "إدارة ملف مؤسستك والإعدادات العامة، مع متابعة الرؤى التي تدعم اتخاذ قرارات أفضل.",
+    "toast": {
+      "savedSummary": "تم حفظ الإعدادات",
+      "savedDetail": "تم تحديث تفضيلات اللغة والمظهر.",
+      "savedWithPasswordDetail": "تم تحديث كلمة المرور والتفضيلات.",
+      "saveFailedSummary": "تعذر حفظ الإعدادات",
+      "saveFailedDetail": "حدث خطأ أثناء الحفظ. يرجى المحاولة مرة أخرى."
+    },
     "security": {
       "title": "الأمان",
       "subtitle": "إدارة حماية حسابك وطرق التحقق من الهوية.",

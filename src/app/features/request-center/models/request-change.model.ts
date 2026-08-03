@@ -218,6 +218,10 @@ export function buildRequestView(details: RequestDetailsResponse | null): Reques
 
   const current = (details.current ?? {}) as Record<string, unknown>;
   const changes = details.changes ?? [];
+  // What the request itself proposes. For a CREATE request this is the *only* source of data:
+  // `current` is null (the entity does not exist yet) and `changes` is empty (the backend only
+  // diffs UPDATE requests), so reading those alone renders a blank form.
+  const requestData = (details.requestData ?? {}) as Record<string, unknown>;
 
   // Index the diff by every name a field might arrive under.
   const changeByField = new Map<string, RequestChangeResponse>();
@@ -226,6 +230,7 @@ export function buildRequestView(details: RequestDetailsResponse | null): Reques
   }
 
   const consumed = new Set<string>();
+  const consumedData = new Set<string>();
 
   const sections = sectionsFor(details.entityType).map((section) => {
     const fields: RequestViewField[] = section.fields.map((def) => {
@@ -233,7 +238,17 @@ export function buildRequestView(details: RequestDetailsResponse | null): Reques
       const change = names.map((n) => changeByField.get(n.toLowerCase())).find(Boolean);
       if (change) consumed.add(change.field.toLowerCase());
 
-      const rawValue = change ? change.newValue : current[def.key];
+      // Proposed value, in priority order: this request's diff → what the request submitted →
+      // the live entity. requestData is checked under every alias because it is keyed by the
+      // payload's field names, which don't always match the stored document's.
+      const proposedName = names.find((name) => requestData[name] !== undefined);
+      if (proposedName) consumedData.add(proposedName);
+
+      const rawValue = change
+        ? change.newValue
+        : proposedName !== undefined
+          ? requestData[proposedName]
+          : current[def.key];
 
       return {
         key: def.key,
@@ -254,23 +269,38 @@ export function buildRequestView(details: RequestDetailsResponse | null): Reques
     };
   });
 
-  // Anything the diff reported that no section claims still has to surface — a new backend
-  // field must never be silently dropped from the review.
-  const unmapped = changes.filter((change) => !consumed.has(change.field?.toLowerCase() ?? ''));
-  if (unmapped.length) {
+  // Anything the request carries that no section claims still has to surface — a field the UI
+  // doesn't know about must never be silently dropped from the review.
+  const extraFields: RequestViewField[] = changes
+    .filter((change) => !consumed.has(change.field?.toLowerCase() ?? ''))
+    .map((change) => ({
+      key: change.field,
+      labelKey: change.field,
+      value: formatChangeValue(change.newValue, change.field),
+      edited: true,
+      rtl: false,
+      multiline: false,
+    }));
+
+  for (const [key, value] of Object.entries(requestData)) {
+    if (consumedData.has(key) || changeByField.has(key.toLowerCase())) continue;
+    extraFields.push({
+      key,
+      labelKey: key,
+      value: formatChangeValue(value, key),
+      edited: false,
+      rtl: false,
+      multiline: false,
+    });
+  }
+
+  if (extraFields.length) {
     sections.push({
       key: 'other',
       titleKey: 'requestCenter.detail.section.otherChanges',
       icon: 'pi pi-pencil',
-      fields: unmapped.map((change) => ({
-        key: change.field,
-        labelKey: change.field,
-        value: formatChangeValue(change.newValue, change.field),
-        edited: true,
-        rtl: false,
-        multiline: false,
-      })),
-      edited: true,
+      fields: extraFields,
+      edited: extraFields.some((field) => field.edited),
     });
   }
 

@@ -548,13 +548,19 @@
 
           @if (!offerForm.get('selectedVendor')?.value) {
           <p class="offer-form__muted-sm">{{ 'offerForm.location.noVendor' | translate }}</p>
-          } @else if (locationsLoading()) {
+          <!-- Skeleton only on the FIRST load. A background refresh (e.g. after adding a
+               branch) must not swap the control out, or an open dropdown is destroyed
+               mid-selection and looks like it closed by itself. -->
+          } @else if (locationsLoading() && !vendorLocations().length) {
           <p-skeleton width="100%" height="2.5rem"></p-skeleton>
           } @else {
+          <!-- appendTo="body" keeps the overlay outside this @if block, so re-rendering the
+               block can never tear down the open panel. -->
           <p-multiselect [options]="vendorLocations()" formControlName="locationIds" optionLabel="label"
             optionValue="id" [placeholder]="'offerForm.placeholder.locations' | translate"
             styleClass="offer-form__field offer-form__multiselect offer-form__input"
             panelStyleClass="offer-form__overlay-panel offer-form__multiselect-panel"
+            appendTo="body"
             [disabled]="isBranchSelectionDisabled()">
             <ng-template pTemplate="item" let-option>
               <div class="offer-form__col">
@@ -575,14 +581,6 @@
           <p class="offer-form__warning-message">{{ 'offerForm.location.selectRequired' | translate }}</p>
           }
         </div>
-      </div>
-      }
-      @if (offerForm.get('mode')?.value !== 'Digital') {
-      <div class="offer-form__row-end">
-        <button type="button" class="offer-form__add-link offer-form__add-link--muted"
-          (click)="openLocationDialog()">
-          {{ 'offerForm.location.add' | translate }}
-        </button>
       </div>
       }
     </div>

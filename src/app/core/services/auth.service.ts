@@ -17,6 +17,9 @@ export interface LoginResponse {
     name: string;
     email: string;
     accountStatus: string;
+    /** Saved UI preferences (vendor_accounts.language / .theme). Absent on older tokens. */
+    language?: 'ENGLISH' | 'ARABIC';
+    theme?: 'LIGHT' | 'DARK' | 'SYSTEM';
   };
 }
 
@@ -47,6 +50,27 @@ getVendorId(): string | null {
 
 getAccessToken(): string | null {
   return localStorage.getItem('accessToken');
+}
+
+/**
+ * Keep the stored account in step after the settings page saves new preferences, so a reload
+ * doesn't fall back to the values captured at login.
+ */
+updateVendorAccountPreferences(
+  language?: LoginResponse['vendorAccount']['language'],
+  theme?: LoginResponse['vendorAccount']['theme'],
+): void {
+  const account = this.getVendorAccount();
+  if (!account) return;
+
+  localStorage.setItem(
+    'vendorAccount',
+    JSON.stringify({
+      ...account,
+      ...(language ? { language } : {}),
+      ...(theme ? { theme } : {}),
+    }),
+  );
 }
 
 }
