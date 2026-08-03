@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { OfferForm } from '../../../../shared/Components/offer-form/offer-form';
+import { OfferForm, OfferFormSubmit } from '../../../../shared/Components/offer-form/offer-form';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
 @Component({
@@ -14,12 +14,12 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 export class CreateOffer {
   constructor(private readonly router: Router) {}
 
-  save(event: any): void {
+  save(event: OfferFormSubmit): void {
     // ponytail: no persistence layer yet; navigate back once it exists
     this.router.navigate(['/offers']);
   }
 
-  saveDraft(event: any): void {
+  saveDraft(event: OfferFormSubmit): void {
     // Navigate back for now
     this.router.navigate(['/offers']);
   }

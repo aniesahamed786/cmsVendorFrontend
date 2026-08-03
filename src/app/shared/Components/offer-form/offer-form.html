@@ -26,20 +26,10 @@
             <span class="offer-form__required">*</span>
           </label>
 
-          <div class="offer-form__row offer-form__row--center">
-            <p-select [options]="vendorOptions()" formControlName="selectedVendor" optionLabel="label"
-              optionValue="value" optionDisabled="disabled" [filter]="true" filterBy="label"
-              [filterPlaceholder]="'offerForm.placeholder.vendorSearch' | translate" [loading]="vendorsLoading()"
-              (onFilter)="onVendorSearch($event)" (onShow)="onVendorDropdownShow()" (onHide)="onVendorDropdownHide()"
-              panelStyleClass="offer-form-vendor-select-panel" [placeholder]="'offerForm.placeholder.vendor' | translate"
-              class="offer-form__select">
-            </p-select>
+          <div class="offer-form__input-wrap">
+            <input pInputText [value]="vendorDisplayName()" readonly
+              class="offer-form__input offer-form__input--pl5" />
           </div>
-          @if (hasRequiredError('selectedVendor')) {
-          <p class="offer-form__error">{{ 'offerForm.error.vendorRequired' | translate }}</p>
-          } @else {
-          <p class="offer-form__hint">{{ 'offerForm.hint.vendorSearch' | translate }}</p>
-          }
         </div>
 
         <div class="offer-form__col-2">

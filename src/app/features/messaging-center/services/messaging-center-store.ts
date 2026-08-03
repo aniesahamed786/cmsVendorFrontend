@@ -181,7 +181,7 @@ export class MessagingCenterStore {
     });
 
     this.http.post<any>(
-      `${this.baseUrl}/cmsVendor/messaging-center/tickets/${ticket.reference}/messages`,
+      `${this.baseUrl}/messaging-center/tickets/${ticket.reference}/messages`,
       formData,
     ).subscribe({
       next: response => {
@@ -232,7 +232,7 @@ export class MessagingCenterStore {
     }
 
     this.http.post<any>(
-      `${this.baseUrl}/cmsVendor/messaging-center/tickets`,
+      `${this.baseUrl}/messaging-center/tickets`,
       formData,
     ).subscribe({
       next: (response) => {
@@ -301,7 +301,7 @@ export class MessagingCenterStore {
     const params = new HttpParams().set('pageSize', pageSize);
 
     return this.http.get<any>(
-      `${this.baseUrl}/cmsVendor/messaging-center/tickets`,
+      `${this.baseUrl}/messaging-center/tickets`,
       {
         params,
       }
@@ -378,7 +378,7 @@ export class MessagingCenterStore {
   getTicketMessages(ticketId: string, pageSize: number = 20) {
     const params = new HttpParams().set('pageSize', pageSize);
     return this.http.get<any>(
-      `${this.baseUrl}/cmsVendor/messaging-center/tickets/${ticketId}/messages`,
+      `${this.baseUrl}/messaging-center/tickets/${ticketId}/messages`,
       {
         params
       }
@@ -435,7 +435,7 @@ export class MessagingCenterStore {
 
   markTicketAsRead(ticketId: string) {
     return this.http.patch(
-      `${this.baseUrl}/cmsVendor/messaging-center/tickets/${ticketId}/read`,
+      `${this.baseUrl}/messaging-center/tickets/${ticketId}/read`,
       {},
     );
   }

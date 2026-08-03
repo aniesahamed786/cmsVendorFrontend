@@ -2,6 +2,8 @@
   [actionType]="'edit'"
   [buttonName]="'offerForm.footer.updateOffer' | translate"
   [backNavRouteLink]="'/offers'"
+  [editableFormData]="editableFormData()"
+  [isLoading]="loading()"
   (submitOfferFormEvent)="save($event)"
   (saveDraftEvent)="saveDraft($event)"
 ></app-offer-form>

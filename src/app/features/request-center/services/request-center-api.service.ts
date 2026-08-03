@@ -7,6 +7,7 @@ import {
   ListRequestsQuery,
   PaginatedRequestsResponse,
   RequestChangeResponse,
+  RequestDetailsResponse,
   RequestEntityResponse,
   RequestMetricsResponse,
   RequestRemarksPayload,
@@ -22,7 +23,9 @@ import {
 @Injectable({ providedIn: 'root' })
 export class RequestCenterApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.backendUrl}${environment.apiBaseUrl}/cmsVendor/requests`;
+  // apiBaseUrl already ends in `/cmsVendor` — appending it again produced
+  // `/api/v1/cmsVendor/cmsVendor/requests`, which 404s.
+  private readonly baseUrl = `${environment.backendUrl}${environment.apiBaseUrl}/requests`;
 
   /** GET /cmsVendor/requests/metrics — KPI card counts for the authenticated vendor. */
   getMetrics(): Observable<RequestMetricsResponse> {
@@ -36,6 +39,14 @@ export class RequestCenterApiService {
       if (value !== undefined && value !== null) params = params.set(key, String(value));
     }
     return this.http.get<PaginatedRequestsResponse>(this.baseUrl, { params });
+  }
+
+  /**
+   * GET /cmsVendor/requests/{id} — the request plus the live entity and the field diff.
+   * Backs the detail page, which needs no other call (and works on a deep link).
+   */
+  getDetails(requestId: string): Observable<RequestDetailsResponse> {
+    return this.http.get<RequestDetailsResponse>(`${this.baseUrl}/${requestId}`);
   }
 
   /** POST /cmsVendor/requests — create a DRAFT request. */

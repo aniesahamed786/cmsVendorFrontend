@@ -53,7 +53,16 @@ export interface CreateRequestPayload {
   entityId?: string | null;
   requestType: ApiRequestType;
   title: string;
+  /**
+   * For UPDATE requests the backend stores only the *changed* fields here, so send a diff
+   * against the loaded entity rather than the whole form.
+   */
   requestData: Record<string, unknown>;
+  /**
+   * `DRAFT` (default) saves without submitting; `SUBMIT` creates and submits in one call,
+   * so no follow-up submit() is needed.
+   */
+  actionType?: 'DRAFT' | 'SUBMIT';
 }
 
 /** PUT /cmsVendor/requests/{id} body — every field optional. */
@@ -86,6 +95,16 @@ export interface RequestEntityResponse {
   createdOn: string;
   updatedOn: string;
   submittedOn: string | null;
+}
+
+/**
+ * GET /cmsVendor/requests/{id} — the full request document plus `current` (the live entity,
+ * null for CREATE requests) and `changes` (the field-level diff). Lets the detail page render
+ * the entity in full and flag what this request edits, without a second lookup.
+ */
+export interface RequestDetailsResponse extends RequestEntityResponse {
+  current: Record<string, unknown> | null;
+  changes: RequestChangeResponse[];
 }
 
 /** One row from GET /cmsVendor/requests/{id}/changes. */

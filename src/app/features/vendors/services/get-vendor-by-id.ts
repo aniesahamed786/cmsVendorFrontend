@@ -17,10 +17,25 @@ export class GetVendorById {
   }
 
    getVendorById(id:string): Observable<VendorDetails>{
-      return this.http.get<VendorDetails>(this.base_url + `/vendor/${id}`).pipe(
-        map(normalizeVendorResponse),
-        catchError(handleApiError)
-      );
+      // Backend route: GET /cmsVendor/vendorProfile?vendorId=... . The CMS profile
+      // DTO (vendorName / vendorNameAr / vendorLogo) is mapped onto the VendorDetails
+      // shape the offer-form preview reads (name / name_ar / logo).
+      return this.http
+        .get<any>(this.base_url + `/vendorProfile`, { params: { vendorId: id } })
+        .pipe(
+          map((p: any) =>
+            normalizeVendorResponse({
+              ...p,
+              _id: { $oid: p?.vendorId ?? id },
+              name: p?.vendorName ?? '',
+              name_ar: p?.vendorNameAr ?? '',
+              description: p?.description ?? '',
+              description_ar: p?.descriptionAr ?? '',
+              logo: p?.vendorLogo ?? '',
+            } as VendorDetails),
+          ),
+          catchError(handleApiError),
+        );
     }
   
 }

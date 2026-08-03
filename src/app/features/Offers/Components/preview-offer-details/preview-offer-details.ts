@@ -105,9 +105,9 @@ export class PreviewOfferDetails implements OnChanges {
   }
 
   getVendorLogo(offer: any): string {
-    // const logo = this.vendor?.logo || offer?.vendor?.logo;
-    // return this.formatImageUrl(logo) || '';
-    return this.backendUrl + this.offer?.vendorLogo.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
+    const logo = this.offer?.vendorLogo || this.vendor?.logo || offer?.vendor?.logo || '';
+    if (!logo) return '';
+    return this.backendUrl + logo.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
 
   formatImageUrl(path: string | null | undefined): string | null { return resolveStoredImageUrl(path); }

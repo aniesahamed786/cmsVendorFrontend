@@ -10,6 +10,7 @@ import {
   linkedSignal,
   output,
   signal,
+  untracked,
   ViewChild,
   HostListener,
 } from "@angular/core";
@@ -27,7 +28,6 @@ import {
   CreateOfferPayload,
   mapFormModeToOfferMode,
   mapOfferModeToFormMode,
-  OfferFormModel,
 } from "../../../features/Offers/models/createOffer";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { GetVendorList } from "../../../features/vendors/services/get-vendor-list";
@@ -80,6 +80,18 @@ import {
 import { Button } from "../button/button";
 import { I18nService } from "../../i18n/i18n.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
+import { AuthService } from "../../../core/services/auth.service";
+import { getChangedOfferFields } from "../../../features/Offers/models/offer-payload.diff";
+
+/**
+ * What the form emits on save. `payload` is the complete offer; `changedFields` is the diff
+ * against the offer as it was loaded — empty in create mode, and what an UPDATE request must
+ * send as `requestData`.
+ */
+export interface OfferFormSubmit {
+  payload: CreateOfferPayload;
+  changedFields: Record<string, unknown>;
+}
 
 @Component({
   selector: "app-offer-form",
@@ -120,12 +132,17 @@ export class OfferForm {
 
   private readonly document = inject(DOCUMENT);
   private readonly i18n = inject(I18nService);
+  private readonly authService = inject(AuthService);
+  /** The vendor is always the authenticated caller — no picker, just their own name. */
+  readonly vendorDisplayName = computed(() => this.authService.getVendorAccount()?.name ?? "");
   readonly addOfferIconBasePath = "assets/svg/Offers/add-offer";
-  submitOfferFormEvent = output<any>();
-  saveDraftEvent = output<any>();
+  submitOfferFormEvent = output<OfferFormSubmit>();
+  saveDraftEvent = output<OfferFormSubmit>();
   actionType = input<string>("");
   buttonName = input<string>("Save");
-  editableFormData = input<OfferFormModel | null>(null);
+  // Raw offer-document-shaped data (see mapOfferToForm) — not OfferFormModel, which is the
+  // create-payload shape and doesn't match what this input is actually populated with.
+  editableFormData = input<Record<string, unknown> | null>(null);
   backNavRouteLink = input<string>("");
   isLoading = input<boolean>(false);
   minDate = (() => {
@@ -278,6 +295,8 @@ export class OfferForm {
         validators: [Validators.required],
       }),
     });
+    // No vendor picker — always the authenticated caller's own vendor.
+    this.offerForm.get("selectedVendor")?.setValue(this.authService.getVendorId() ?? "");
   }
   vendors = signal<VendorDetails[]>([]);
   selectedVendorDetails = signal<VendorDetails | null>(null);
@@ -327,6 +346,23 @@ export class OfferForm {
    */
   readonly previewLanguage = linkedSignal<"en" | "ar">(() => this.i18n.lang());
   isSubmitting = signal(false);
+  /**
+   * Signal-backed mirror of `offerForm.dirty` for edit mode. This app runs zoneless (no
+   * zone.js), so mutating `FormGroup.dirty` alone never triggers a re-render — the
+   * Save/Update buttons' `[disabled]` binding only re-evaluates when a signal it reads
+   * changes. `hasEditChanges()` reads this signal instead of `offerForm.dirty` directly.
+   */
+  private readonly hasUnsavedEditChanges = signal(false);
+  /**
+   * Set while the component patches the form itself, so those value changes are not
+   * mistaken for user edits. Use `patchWithoutDirty()` rather than setting it directly.
+   */
+  private suppressDirtyTracking = false;
+  /**
+   * The offer payload as it was loaded, captured once the form is populated and pristine.
+   * Save-time diffs are taken against this so an UPDATE request carries only real edits.
+   */
+  private editBaselinePayload: CreateOfferPayload | null = null;
   /** Tracks which offer was last patched into the form (edit mode). */
   private lastPatchedOfferId: string | null = null;
   private cropperSourceObjectUrl: string | null = null;
@@ -350,12 +386,39 @@ export class OfferForm {
     desktop: 1,
   };
 
+  /**
+   * Run a programmatic form update without it counting as a user edit. Nestable, and
+   * restores the previous state even if `fn` throws.
+   */
+  private patchWithoutDirty(fn: () => void): void {
+    const previous = this.suppressDirtyTracking;
+    this.suppressDirtyTracking = true;
+    try {
+      fn();
+    } finally {
+      this.suppressDirtyTracking = previous;
+      this.refreshEditBaselineIfPristine();
+    }
+  }
+
+  /**
+   * Re-snapshot the baseline after a programmatic patch, but only while the user has made no
+   * edits. Some values land asynchronously (vendor locations resolve after the offer is
+   * mapped), and without this they would show up in the save diff as user changes.
+   */
+  private refreshEditBaselineIfPristine(): void {
+    if (this.actionType() !== "edit" || this.hasUnsavedEditChanges()) {
+      return;
+    }
+    this.editBaselinePayload = this.mapFormToPayload(this.offerForm.value);
+  }
+
   /** True when edit mode has user changes (including new image files). */
   hasEditChanges(): boolean {
     if (this.actionType() !== "edit") {
       return true;
     }
-    if (this.offerForm.dirty) {
+    if (this.hasUnsavedEditChanges()) {
       return true;
     }
     const offerImage = this.offerForm.get("offerImage")?.value;
@@ -530,11 +593,21 @@ export class OfferForm {
       this.minExpiryDate.set(d);
     }
 
-    // In edit mode, any value change (including category, tags, etc.) should enable Save
+    // In edit mode, any value change (including category, tags, etc.) should enable Save.
+    // markAsDirty() alone is invisible to zoneless change detection, so also flip the signal
+    // hasEditChanges()/the Save-Draft & Update buttons actually read.
     if (isEdit) {
       this.offerForm.valueChanges
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.offerForm.markAsDirty());
+        .subscribe(() => {
+          // Ignore our own programmatic patches (initial load, async location fetch),
+          // otherwise the form looks edited before the user has touched anything.
+          if (this.suppressDirtyTracking) {
+            return;
+          }
+          this.offerForm.markAsDirty();
+          this.hasUnsavedEditChanges.set(true);
+        });
     }
 
     this.offerForm.valueChanges
@@ -567,10 +640,17 @@ export class OfferForm {
               ? (data as any)._id.$oid
               : null;
         const sameOffer = id != null && id === this.lastPatchedOfferId;
-        if (sameOffer && this.hasEditChanges()) {
-          return;
-        }
-        this.mapOfferToForm(data);
+        // Read the dirty state and patch the form untracked: `hasEditChanges()` reads
+        // `hasUnsavedEditChanges`, which `mapOfferToForm` writes (directly, and via the
+        // `valueChanges` subscription that `patchValue` fires). Tracking it here would
+        // make this effect re-trigger itself on every run — an infinite loop that pegs
+        // the main thread. This effect should only ever react to `editableFormData`.
+        untracked(() => {
+          if (sameOffer && this.hasEditChanges()) {
+            return;
+          }
+          this.mapOfferToForm(data);
+        });
       },
       { injector: this.injector },
     );
@@ -817,7 +897,7 @@ export class OfferForm {
 
   onVendorChange(vendorId: string | null) {
     this.vendorLocations.set([]);
-    this.offerForm.patchValue({ locationIds: [] });
+    this.patchWithoutDirty(() => this.offerForm.patchValue({ locationIds: [] }));
 
     if (!vendorId) {
       return;
@@ -850,7 +930,9 @@ export class OfferForm {
           const nextSelectedIds = Array.isArray(current)
             ? current.filter((id) => options.some((option) => option.id === id))
             : [];
-          this.offerForm.patchValue({ locationIds: nextSelectedIds });
+          this.patchWithoutDirty(() =>
+            this.offerForm.patchValue({ locationIds: nextSelectedIds }),
+          );
 
           this.locationsLoading.set(false);
         },
@@ -1229,15 +1311,27 @@ export class OfferForm {
     );
   }
 
+  /**
+   * Package the current form for the parent: the full payload, plus the diff against the
+   * loaded offer. In create mode there is no baseline, so every field counts as changed.
+   */
+  private buildSubmitEvent(): OfferFormSubmit {
+    const payload = this.mapFormToPayload(this.offerForm.value);
+    return {
+      payload,
+      changedFields:
+        this.actionType() === "edit"
+          ? getChangedOfferFields(this.editBaselinePayload, payload)
+          : { ...(payload as unknown as Record<string, unknown>) },
+    };
+  }
+
   onSaveDraft() {
     if (this.isSubmitting()) return;
     
     this.isSubmitting.set(true);
-    const payload = this.mapFormToPayload(this.offerForm.value);
-    // You can optionally mutate the payload here to explicitly mark it as a draft
-    // if the backend expects a specific status field, e.g. payload.status = 'Draft';
-    this.saveDraftEvent.emit(payload);
-    
+    this.saveDraftEvent.emit(this.buildSubmitEvent());
+
     // Safety timeout in case parent doesn't navigate away
     setTimeout(() => this.isSubmitting.set(false), 1000);
   }
@@ -1248,8 +1342,7 @@ export class OfferForm {
     this.showConfirmationDialog.set(false);
     this.isSubmitting.set(true);
 
-    const payload = this.mapFormToPayload(this.offerForm.value);
-    this.submitOfferFormEvent.emit(payload);
+    this.submitOfferFormEvent.emit(this.buildSubmitEvent());
 
     // Reset isSubmitting after a delay or on event completion if managed by parent
     // For now, we'll let the parent navigation or error handling reset it if needed,
@@ -1723,6 +1816,10 @@ export class OfferForm {
       this.offerForm.get("highlightImageLandscape")?.value instanceof File;
     if (!hasPendingImageUpload) {
       this.offerForm.markAsPristine();
+      this.hasUnsavedEditChanges.set(false);
+      // Snapshot the loaded offer while the form is still pristine — this is what save-time
+      // diffs compare against.
+      this.editBaselinePayload = this.mapFormToPayload(this.offerForm.value);
     }
     this.formPreviewValue.set(this.offerForm.getRawValue());
 

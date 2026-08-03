@@ -172,8 +172,11 @@ export class GetVendorList {
   }
 
    /**
-    * Get locations for a specific vendor.
-    * Uses backend route GET /vendor/:id/locations (proxied under /api/v1).
+    * Get locations for the authenticated vendor.
+    * Backend route: GET /cmsVendor/locations — the vendor is resolved from the
+    * vendor-account JWT, so the `vendorId` arg only gates the call (there is one
+    * vendor per logged-in account). The CMS DTO fields are mapped back to the
+    * legacy location shape the offer form + location dialog consume.
     */
   getVendorLocationsById(vendorId: string): Observable<any[]> {
      if (!vendorId) {
@@ -183,8 +186,20 @@ export class GetVendorList {
        });
      }
      return this.http
-       .get<any[]>(`${this.base_url}/vendor/${vendorId}/locations`)
-     .pipe(catchError(handleApiError));
+       .get<any[]>(`${this.base_url}/locations`)
+       .pipe(
+         map((rows) =>
+           (rows ?? []).map((loc: any) => ({
+             id: loc?.locationId ?? '',
+             __id__: { $oid: loc?.locationId ?? '' },
+             branch_name: loc?.locationName ?? '',
+             branch_name_ar: loc?.locationNameAr ?? '',
+             city: loc?.city ?? '',
+             city_ar: loc?.cityAr ?? '',
+           })),
+         ),
+         catchError(handleApiError),
+       );
    }
 
   searchVendors(

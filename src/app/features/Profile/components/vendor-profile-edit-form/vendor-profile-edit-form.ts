@@ -21,6 +21,8 @@ import {
   VendorProfileEditLocation,
 } from '../../models/vendor-profile-edit.model';
 import { VendorLocationDialog } from '../../../../shared/Components/vendor-location-dialog/vendor-location-dialog';
+import { toVendorSchemaPayload } from '../../models/vendor-profile-request.mapper';
+import { getChangedFields } from '../../../../shared/utils/object-diff';
 
 export interface VendorProfilePreviewData {
   nameEn: string;
@@ -124,15 +126,83 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     coverDesktop: [null as string | File | null, Validators.required],
   });
 
+  /**
+   * The profile as it was loaded. Save-time diffs and the "anything changed yet?" check both
+   * compare against this, so the action buttons stay disabled until there is something to save.
+   */
+  private readonly baselineData = signal<VendorProfileEditData | null>(null);
+
+  /**
+   * Live mirror of the reactive form. This app runs zoneless, so `profileForm.dirty` alone
+   * would never re-render the buttons — the value has to live in a signal for `hasChanges()`
+   * to re-evaluate.
+   */
+  private readonly formValue = signal(this.profileForm.getRawValue());
+
+  /** The form's current state in the shape the parent is handed on save. */
+  readonly currentData = computed<VendorProfileEditData>(() => {
+    const value = this.formValue();
+    return {
+      nameEn: value.nameEn ?? '',
+      nameAr: value.nameAr ?? '',
+      crNumber: value.crNumber ?? '',
+      descriptionEn: value.descriptionEn ?? '',
+      descriptionAr: value.descriptionAr ?? '',
+      businessPhone: value.businessPhone ?? '',
+      businessEmail: value.businessEmail ?? '',
+      businessWebsite: value.businessWebsite ?? '',
+      repFullName: value.repFullName ?? '',
+      repPhone: value.repPhone ?? '',
+      repEmail: value.repEmail ?? '',
+      socialLinks: this.previewSocialLinks(),
+      locations: this.savedLocations(),
+      logo: value.logo ?? null,
+      coverMobile: value.coverMobile ?? null,
+      coverDesktop: value.coverDesktop ?? null,
+    };
+  });
+
+  /** Only the vendor-schema fields that differ from the loaded profile. */
+  readonly changedFields = computed<Record<string, unknown>>(() => {
+    const baseline = this.baselineData();
+    if (!baseline) return {};
+    return getChangedFields(
+      toVendorSchemaPayload(baseline),
+      toVendorSchemaPayload(this.currentData()),
+    );
+  });
+
+  /** Drives the parent's Save-as-draft / Update-changes buttons. */
+  readonly hasChanges = computed(() => Object.keys(this.changedFields()).length > 0);
+
   ngOnInit(): void {
     this.patchForm(this.initialData());
     this.savedLocations.set([...this.initialData().locations]);
     this.previewSocialLinks.set([...this.initialData().socialLinks]);
+    this.formValue.set(this.profileForm.getRawValue());
+    this.baselineData.set(this.currentData());
     this.syncPreview();
 
     this.profileForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.syncPreview());
+      .subscribe(() => {
+        this.formValue.set(this.profileForm.getRawValue());
+        this.syncPreview();
+      });
+  }
+
+  /**
+   * Re-seed the form when the profile arrives from the API after first render, and reset the
+   * baseline so freshly-loaded values don't count as edits.
+   */
+  reset(data: VendorProfileEditData): void {
+    this.patchForm(data);
+    this.savedLocations.set([...data.locations]);
+    this.previewSocialLinks.set([...data.socialLinks]);
+    this.formValue.set(this.profileForm.getRawValue());
+    this.baselineData.set(this.currentData());
+    this.profileForm.markAsPristine();
+    this.syncPreview();
   }
 
   private patchForm(data: VendorProfileEditData): void {
@@ -175,25 +245,9 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   }
 
   private buildPayload(): VendorProfileEditData {
-    const value = this.profileForm.getRawValue();
-    return {
-      nameEn: value.nameEn ?? '',
-      nameAr: value.nameAr ?? '',
-      crNumber: value.crNumber ?? '',
-      descriptionEn: value.descriptionEn ?? '',
-      descriptionAr: value.descriptionAr ?? '',
-      businessPhone: value.businessPhone ?? '',
-      businessEmail: value.businessEmail ?? '',
-      businessWebsite: value.businessWebsite ?? '',
-      repFullName: value.repFullName ?? '',
-      repPhone: value.repPhone ?? '',
-      repEmail: value.repEmail ?? '',
-      socialLinks: this.previewSocialLinks(),
-      locations: this.savedLocations(),
-      logo: value.logo ?? null,
-      coverMobile: value.coverMobile ?? null,
-      coverDesktop: value.coverDesktop ?? null,
-    };
+    // Keep the emitted value and the change detection reading the exact same source.
+    this.formValue.set(this.profileForm.getRawValue());
+    return this.currentData();
   }
 
   onSaveDraft(): void {

@@ -11,6 +11,9 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import { RequestStatus, RequestTimelineStep } from '../../models/request.model';
+import { buildRequestView, RequestViewSection } from '../../models/request-change.model';
+import { RequestDetailsResponse } from '../../models/request-api.model';
+import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 
 @Component({
   selector: 'app-request-detail',
@@ -29,9 +32,77 @@ export class RequestDetail {
   private readonly rowKey = this.route.snapshot.paramMap.get('id') ?? '';
   readonly row = this.requestCenterService.getRow(this.rowKey);
 
+  /**
+   * The requestId from the URL. The summary row lives only in the session store, so on a
+   * deep link/refresh `row()` is null — but the changes below still load, since the changes
+   * endpoint keys on this id alone.
+   */
+  readonly requestIdParam = this.rowKey;
+
+  // ---- Request details (GET /cmsVendor/requests/{id}) -----------------------
+  /** The request plus its live entity and diff — everything this page renders. */
+  readonly details = signal<RequestDetailsResponse | null>(null);
+  readonly changesLoading = signal(true);
+  readonly changesError = signal<string | null>(null);
+
+  /** The entity rendered in full, with this request's edits applied and flagged. */
+  readonly changeSections = computed<RequestViewSection[]>(() => buildRequestView(this.details()));
+
+  /** True once loading finished and there is nothing to render. */
+  readonly hasNoChanges = computed(
+    () => !this.changesLoading() && !this.changesError() && this.changeSections().length === 0,
+  );
+
+  /**
+   * Status comes from the API when available, falling back to the list row. This is what lets
+   * the page work on a deep link, where the session store is empty.
+   */
+  readonly status = computed<RequestStatus | null>(
+    () => (this.details()?.status as RequestStatus | undefined) ?? this.row()?.status ?? null,
+  );
+
+  readonly requestTitle = computed(() => this.details()?.title ?? this.row()?.targetEntity ?? '');
+
+  constructor() {
+    this.loadDetails();
+  }
+
+  private loadDetails(): void {
+    // The route param is the requestId every workflow endpoint keys on.
+    if (!this.rowKey) {
+      this.changesLoading.set(false);
+      return;
+    }
+
+    this.changesLoading.set(true);
+    this.changesError.set(null);
+    this.api
+      .getDetails(this.rowKey)
+      .pipe(finalize(() => this.changesLoading.set(false)))
+      .subscribe({
+        next: (details) => this.details.set(details),
+        error: (err) => {
+          console.error('Failed to load request details', err);
+          this.details.set(null);
+          this.changesError.set(
+            extractApiErrorMessage(err) ?? this.i18n.t('requestCenter.detail.changesFailed'),
+          );
+        },
+      });
+  }
+
   /** Route the "View <Type>" button to the section the request belongs to. */
+  /** Prefer the API's entityType; the list row's `type` is the session-store fallback. */
+  private readonly entityKind = computed(() => {
+    const entityType = this.details()?.entityType;
+    if (entityType === 'STORE') return 'Store';
+    if (entityType === 'PROFILE') return 'Profile';
+    if (entityType === 'OFFER') return 'Offer';
+    return this.row()?.type;
+  });
+
   readonly relatedListRoute = computed(() => {
-    switch (this.row()?.type) {
+    switch (this.entityKind()) {
       case 'Store':
         return '/branches';
       case 'Profile':
@@ -42,7 +113,7 @@ export class RequestDetail {
   });
 
   readonly relatedListLabelKey = computed(() => {
-    switch (this.row()?.type) {
+    switch (this.entityKind()) {
       case 'Store':
         return 'requestCenter.detail.viewStores';
       case 'Profile':
@@ -54,13 +125,17 @@ export class RequestDetail {
 
   // A SUBMITTED request can be recalled; a RETURNED one can be cancelled (mirrors the
   // backend transition rules — see request.service.ts ALLOWED_TRANSITIONS).
-  readonly canRecall = computed(() => this.row()?.status === 'SUBMITTED');
-  readonly canCancel = computed(() => this.row()?.status === 'RETURNED');
+  readonly canRecall = computed(() => this.status() === 'SUBMITTED');
+  readonly canCancel = computed(() => this.status() === 'RETURNED');
 
   readonly timeline = computed<RequestTimelineStep[]>(() => {
     this.i18n.loadSeq();
-    const row = this.row();
-    return row ? this.buildTimeline(row.status, row.timestamp) : [];
+    const status = this.status();
+    if (!status) return [];
+    // submittedOn is the real submission stamp; fall back to the row's timestamp, then createdOn.
+    const details = this.details();
+    const submittedAt = details?.submittedOn ?? this.row()?.timestamp ?? details?.createdOn ?? '';
+    return this.buildTimeline(status, submittedAt);
   });
 
   private buildTimeline(status: RequestStatus, submittedAt: string): RequestTimelineStep[] {
@@ -131,7 +206,8 @@ export class RequestDetail {
 
   /** The persisted requestId every workflow endpoint keys on. */
   private get requestId(): string {
-    return this.row()?.id ?? '';
+    // The route param is itself the requestId, so recall/cancel work on a deep link too.
+    return this.details()?.requestId ?? this.row()?.id ?? this.rowKey;
   }
 
   // The confirm button spins while its endpoint is in flight.
@@ -150,16 +226,23 @@ export class RequestDetail {
       .recall(this.requestId)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => {
-          this.requestCenterService.recall(this.rowKey);
-          this.showRecallConfirm = false;
-        },
+        next: () => this.afterRecall(),
         error: (err) => {
           console.error('Recall request failed', err);
-          this.requestCenterService.recall(this.rowKey);
-          this.showRecallConfirm = false;
+          this.afterRecall();
         },
       });
+  }
+
+  /**
+   * Reflect the recall locally. The list row only exists in the session store (empty after a
+   * refresh), so the loaded details are updated too — otherwise a deep-linked page would keep
+   * showing the Recall button after a successful recall.
+   */
+  private afterRecall(): void {
+    this.requestCenterService.recall(this.rowKey);
+    this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
+    this.showRecallConfirm = false;
   }
 
   // ---- Cancel confirmation (POST /cmsVendor/requests/{id}/cancel) -----------
