@@ -1,0 +1,116 @@
+@if (!loading()) {
+<div class="branch-view">
+  <div class="branch-view__topbar">
+    <a [routerLink]="'/branches'" class="branch-back-btn">
+      <i class="pi pi-arrow-left"></i>
+      <span>{{ 'branchForm.back' | translate }}</span>
+    </a>
+  </div>
+
+  @if (branch(); as data) {
+  <div class="branch-view__section">
+    <div class="branch-view__section-head">
+      <div class="branch-view__section-icon">
+        <i class="pi pi-map-marker branch-view__section-glyph"></i>
+      </div>
+      <h2 class="branch-view__section-title">
+        {{ 'branchForm.section.businessLocations' | translate }}
+      </h2>
+    </div>
+
+    <div class="branch-view__grid">
+      <div class="branch-view__field">
+        <span class="branch-view__label">{{ 'branchForm.label.locationNameEn' | translate }}</span>
+        <p class="branch-view__value">{{ data.branch_name || '—' }}</p>
+      </div>
+
+      <div class="branch-view__field">
+        <span class="branch-view__label">{{ 'branchForm.label.locationNameAr' | translate }}</span>
+        <p class="branch-view__value branch-view__value--right" dir="rtl">{{ data.branch_name_ar || '—' }}</p>
+      </div>
+
+      <div class="branch-view__field branch-view__col-2">
+        <span class="branch-view__label">{{ 'branchForm.label.country' | translate }}</span>
+        <p class="branch-view__value">
+          {{ data.country || '—' }}
+          @if (data.country_ar) {
+          <span class="branch-view__value-ar" dir="rtl">({{ data.country_ar }})</span>
+          }
+        </p>
+      </div>
+
+      <div class="branch-view__field">
+        <span class="branch-view__label">{{ 'branchForm.label.region' | translate }}</span>
+        <p class="branch-view__value">
+          {{ data.region || '—' }}
+          @if (data.region_ar) {
+          <span class="branch-view__value-ar" dir="rtl">({{ data.region_ar }})</span>
+          }
+        </p>
+      </div>
+
+      <div class="branch-view__field">
+        <span class="branch-view__label">{{ 'branchForm.label.city' | translate }}</span>
+        <p class="branch-view__value">
+          {{ data.city || '—' }}
+          @if (data.city_ar) {
+          <span class="branch-view__value-ar" dir="rtl">({{ data.city_ar }})</span>
+          }
+        </p>
+      </div>
+
+      <div class="branch-view__field branch-view__col-2">
+        <span class="branch-view__label">{{ 'branchForm.label.address' | translate }}</span>
+        <p class="branch-view__value branch-view__value--multiline">{{ data.address || '—' }}</p>
+      </div>
+
+      <div class="branch-view__field branch-view__col-2">
+        <span class="branch-view__label">{{ 'branchForm.label.googleMapLink' | translate }}</span>
+        @if (data.link) {
+        <a [href]="data.link" target="_blank" rel="noopener" class="branch-view__link">
+          <i class="pi pi-external-link"></i>
+          <span>{{ data.link }}</span>
+        </a>
+        } @else {
+        <p class="branch-view__value">—</p>
+        }
+        @if (hasCoordinates()) {
+        <p class="branch-view__coords">
+          {{ data.geoPoint.coordinates[1] }}, {{ data.geoPoint.coordinates[0] }}
+        </p>
+        }
+      </div>
+
+      <div class="branch-view__field branch-view__col-2">
+        <span class="branch-view__label">{{ 'branchForm.label.representativeName' | translate }}</span>
+        <p class="branch-view__value">{{ data.branchRepresentativeName || '—' }}</p>
+      </div>
+
+      <div class="branch-view__field branch-view__col-2">
+        <span class="branch-view__label">{{ 'branchForm.label.phoneNumber' | translate }}</span>
+        <p class="branch-view__value">{{ data.branchPhoneNumber || '—' }}</p>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div class="branch-view__section branch-view__empty">
+    <p>{{ 'branchForm.view.notFound' | translate }}</p>
+  </div>
+  }
+</div>
+} @else {
+<div class="branch-view__skeleton">
+  <div class="branch-view__skeleton-topbar">
+    <p-skeleton width="6rem" height="2.25rem" borderRadius="0"></p-skeleton>
+    <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
+  </div>
+  <div class="branch-view__skeleton-card">
+    @for (field of [1,2,3,4,5,6]; track field) {
+    <div>
+      <p-skeleton width="8rem" height="1rem" class="branch-view__mb-2"></p-skeleton>
+      <p-skeleton width="100%" height="1.5rem" borderRadius="0"></p-skeleton>
+    </div>
+    }
+  </div>
+</div>
+}

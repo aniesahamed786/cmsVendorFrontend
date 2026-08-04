@@ -10,11 +10,12 @@ import { environment } from '../../../../../environments/environment';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-branches-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, TranslatePipe, RouterLink],
   templateUrl: './branches-page.html',
   styleUrl: './branches-page.scss'
 })

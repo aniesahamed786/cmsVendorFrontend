@@ -1,0 +1,9 @@
+<app-branch-form
+  [actionType]="'edit'"
+  [buttonName]="'branchForm.footer.updateStore' | translate"
+  [backNavRouteLink]="'/branches'"
+  [editableFormData]="editableFormData()"
+  [isLoading]="loading()"
+  (submitBranchFormEvent)="save($event)"
+  (saveDraftEvent)="saveDraft($event)"
+></app-branch-form>
