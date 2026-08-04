@@ -20,9 +20,25 @@ import {
   toProfileRequestView,
 } from '../../models/request-entity-view.mapper';
 import { OfferDetails } from '../../../Offers/Components/offer-details/offer-details';
+import { BranchesService } from '../../../Branches/services/branches.service';
 import { environment } from '../../../../../environments/environment';
 import { RequestAdminAction, RequestDetailsResponse } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
+
+/**
+ * Location ids as stored on an offer, which vary by source: plain strings in a request
+ * payload, `{ $oid }` wrappers straight off a Mongo document.
+ */
+function toIdList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((entry) => {
+      if (typeof entry === 'string') return entry;
+      const record = (entry ?? {}) as Record<string, unknown>;
+      return String(record['$oid'] ?? record['id'] ?? record['_id'] ?? '');
+    })
+    .filter(Boolean);
+}
 
 @Component({
   selector: 'app-request-detail',
@@ -37,6 +53,7 @@ export class RequestDetail {
   private readonly i18n = inject(I18nService);
   private readonly requestCenterService = inject(RequestCenterService);
   private readonly api = inject(RequestCenterApiService);
+  private readonly branchesService = inject(BranchesService);
 
   private readonly rowKey = this.route.snapshot.paramMap.get('id') ?? '';
   readonly row = this.requestCenterService.getRow(this.rowKey);
@@ -65,6 +82,24 @@ export class RequestDetail {
 
   readonly entityType = computed(() => this.details()?.entityType ?? null);
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
+
+  // ---- Offer locations ------------------------------------------------------
+  // An offer payload stores `locationIds` only, so the branch names have to be resolved
+  // against the vendor's own locations (GET /cmsVendor/locations) before they can be shown.
+  readonly vendorLocations = signal<Record<string, unknown>[]>([]);
+
+  /** The vendor's branches this offer is available at, in the order the payload lists them. */
+  readonly offerLocations = computed(() => {
+    const ids = toIdList(this.proposedEntity()['locationIds']);
+    if (ids.length === 0) return [];
+
+    const byId = new Map(
+      this.vendorLocations().map((location) => [String(location['id']), location] as const),
+    );
+    return ids
+      .map((id) => byId.get(id))
+      .filter((location): location is Record<string, unknown> => !!location);
+  });
   readonly profileView = computed(() => toProfileRequestView(this.proposedEntity()));
   readonly branchView = computed(() => toBranchView(this.proposedEntity()));
 
@@ -118,7 +153,11 @@ export class RequestDetail {
       .getDetails(this.rowKey)
       .pipe(finalize(() => this.changesLoading.set(false)))
       .subscribe({
-        next: (details) => this.details.set(details),
+        next: (details) => {
+          this.details.set(details);
+          // Only offers reference branches; every other entity type would waste the call.
+          if (details?.entityType === 'OFFER') this.loadVendorLocations();
+        },
         error: (err) => {
           console.error('Failed to load request details', err);
           this.details.set(null);
@@ -127,6 +166,29 @@ export class RequestDetail {
           );
         },
       });
+  }
+
+  /**
+   * The vendor's branches, mapped to the field names <app-offer-details> reads. Failing here
+   * only costs the locations card — the rest of the request still renders — so it degrades to
+   * an empty list rather than an error state.
+   */
+  private loadVendorLocations(): void {
+    this.branchesService.getBranches().subscribe({
+      next: (rows) =>
+        this.vendorLocations.set(
+          (rows ?? []).map((row) => ({
+            id: row?.locationId ?? '',
+            branch_name: row?.locationName ?? '',
+            branch_name_ar: row?.locationNameAr ?? '',
+            city: row?.city ?? '',
+          })),
+        ),
+      error: (err) => {
+        console.error('Failed to load vendor locations', err);
+        this.vendorLocations.set([]);
+      },
+    });
   }
 
   /** Route the "View <Type>" button to the section the request belongs to. */

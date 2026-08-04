@@ -649,7 +649,7 @@
               {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="offerForm.get('offerImage')?.value" [alt]="'offerForm.upload.altMobile' | translate"
+                  <img [src]="imageSrc(offerForm.get('offerImage')?.value)" [alt]="'offerForm.upload.altMobile' | translate"
                     class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
@@ -689,7 +689,7 @@
               offerForm.get('offerImageLandscape')?.value === 'string') {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="offerForm.get('offerImageLandscape')?.value" [alt]="'offerForm.upload.altDesktop' | translate"
+                  <img [src]="imageSrc(offerForm.get('offerImageLandscape')?.value)" [alt]="'offerForm.upload.altDesktop' | translate"
                     class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
@@ -791,7 +791,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
                   <span class="offer-form__crop-ratio-pill">9:16</span>
-                  <img [src]="offerForm.get('highlightImage')?.value" [alt]="'offerForm.highlight.altMobile' | translate"
+                  <img [src]="imageSrc(offerForm.get('highlightImage')?.value)" [alt]="'offerForm.highlight.altMobile' | translate"
                     class="offer-form__crop-image offer-form__crop-image--mobile"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
@@ -901,7 +901,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
                   <span class="offer-form__crop-ratio-pill">16:9</span>
-                  <img [src]="offerForm.get('highlightImageLandscape')?.value" [alt]="'offerForm.highlight.altDesktop' | translate"
+                  <img [src]="imageSrc(offerForm.get('highlightImageLandscape')?.value)" [alt]="'offerForm.highlight.altDesktop' | translate"
                     class="offer-form__crop-image offer-form__crop-image--desktop"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">

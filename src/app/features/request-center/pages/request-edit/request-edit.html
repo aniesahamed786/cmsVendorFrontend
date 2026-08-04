@@ -25,8 +25,12 @@
        page they filled in originally — only the save target differs. -->
   @switch (entityType()) {
   @case ('OFFER') {
+  <!-- actionType stays 'edit' — that is what prefills the form from the request and drives the
+       change diff. validationMode forces the create-time required fields on top, so a request
+       can only be saved complete enough for an admin to approve. -->
   <app-offer-form
     [actionType]="'edit'"
+    validationMode="create"
     [buttonName]="'requestCenter.edit.saveChanges' | translate"
     [editableFormData]="offerFormData()"
     [isLoading]="saving()"

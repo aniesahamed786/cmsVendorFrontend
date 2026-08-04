@@ -267,7 +267,9 @@
         </div>
       </div>
       <div class="offer-settings__group">
-        <span class="offer-settings__label">{{ 'offerDetails.label.locations' | translate }}</span>
+        <span class="offer-settings__label">{{ 'offerDetails.label.locations' | translate }}
+          @if (isEdited('locationIds','locations')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
+        </span>
         <div class="offer-settings__locations">
           @for (loc of locations(); track loc._id || $index) {
           <div class="offer-settings__location">

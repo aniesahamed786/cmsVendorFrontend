@@ -84,7 +84,7 @@
            Edited fields keep their natural position and are simply marked in place. -->
       @switch (entityType()) {
         @case ('OFFER') {
-        <app-offer-details [offer]="offerView()" [locations]="[]"
+        <app-offer-details [offer]="offerView()" [locations]="offerLocations()"
           [editedFields]="editedFieldSet()"></app-offer-details>
         }
         @case ('PROFILE') {

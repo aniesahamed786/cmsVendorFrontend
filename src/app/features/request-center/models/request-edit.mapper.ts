@@ -1,5 +1,6 @@
 import { BranchFormModel } from '../../Branches/pages/branch-form/branch-form';
 import { VendorProfileEditData } from '../../Profile/models/vendor-profile-edit.model';
+import { toVendorMediaUrl } from '../../../shared/utils/media-url';
 
 /**
  * Adapters between a pending request's proposed entity (see buildProposedEntity) and the
@@ -84,9 +85,13 @@ export function toProfileEditData(proposed: Record<string, unknown>): VendorProf
     socialLinks,
     // Branches are their own STORE entity, never part of a PROFILE request.
     locations: [],
-    logo: asText(proposed['logo']) || null,
-    coverMobile: asText(proposed['coverImage']) || null,
-    coverDesktop: asText(proposed['coverImageLandscape']) || null,
+    // The profile form renders these straight into <img src>, so they are resolved here.
+    // Safe for the save path: this same object is the diff baseline, so an untouched image
+    // compares equal to itself and never reaches requestData — only a newly cropped `File`
+    // does.
+    logo: toVendorMediaUrl(proposed['logo']) || null,
+    coverMobile: toVendorMediaUrl(proposed['coverImage']) || null,
+    coverDesktop: toVendorMediaUrl(proposed['coverImageLandscape']) || null,
   };
 }
 
