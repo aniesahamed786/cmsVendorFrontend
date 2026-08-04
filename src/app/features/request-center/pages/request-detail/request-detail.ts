@@ -12,7 +12,7 @@ import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import { RequestStatus, RequestTimelineStep } from '../../models/request.model';
 import { buildRequestView, RequestViewSection } from '../../models/request-change.model';
-import { RequestDetailsResponse } from '../../models/request-api.model';
+import { RequestAdminAction, RequestDetailsResponse } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 
 @Component({
@@ -125,8 +125,11 @@ export class RequestDetail {
 
   // A SUBMITTED request can be recalled; a RETURNED one can be cancelled (mirrors the
   // backend transition rules — see request.service.ts ALLOWED_TRANSITIONS).
+  // Mirrors the backend's ALLOWED_TRANSITIONS: recall only from SUBMITTED; a RETURNED request
+  // can either be fixed and resubmitted (SUBMIT accepts DRAFT/RETURNED) or closed for good.
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
   readonly canCancel = computed(() => this.status() === 'RETURNED');
+  readonly canResubmit = computed(() => this.status() === 'RETURNED');
 
   readonly timeline = computed<RequestTimelineStep[]>(() => {
     this.i18n.loadSeq();
@@ -135,11 +138,19 @@ export class RequestDetail {
     // submittedOn is the real submission stamp; fall back to the row's timestamp, then createdOn.
     const details = this.details();
     const submittedAt = details?.submittedOn ?? this.row()?.timestamp ?? details?.createdOn ?? '';
-    return this.buildTimeline(status, submittedAt);
+    return this.buildTimeline(status, submittedAt, details?.adminAction ?? null);
   });
 
-  private buildTimeline(status: RequestStatus, submittedAt: string): RequestTimelineStep[] {
+  private buildTimeline(
+    status: RequestStatus,
+    submittedAt: string,
+    adminAction: RequestAdminAction | null = null,
+  ): RequestTimelineStep[] {
     const t = (key: string) => this.i18n.t(key);
+    // The admin's reason is the whole point of a RETURNED/REJECTED decision — surface it.
+    const reason = adminAction?.reason ?? undefined;
+    const decidedOn = adminAction?.actionOn ?? undefined;
+
     const submitted: RequestTimelineStep = {
       key: 'submitted',
       title: t('requestCenter.detail.timeline.submitted.title'),
@@ -157,10 +168,13 @@ export class RequestDetail {
     // Terminal outcomes render a resolved third step; anything still in flight shows the
     // active "Under Review" + upcoming "Approved" steps.
     const finalStep: Partial<Record<RequestStatus, RequestTimelineStep>> = {
-      APPROVED: { key: 'final', title: t('requestCenter.detail.timeline.approved.title'), state: 'done', description: t('requestCenter.detail.timeline.approved.description') },
-      REJECTED: { key: 'final', title: t('requestCenter.detail.timeline.rejected.title'), state: 'done', tone: 'danger', description: t('requestCenter.detail.timeline.rejected.description') },
-      RECALLED: { key: 'final', title: t('requestCenter.detail.timeline.recalled.title'), state: 'done', tone: 'muted', description: t('requestCenter.detail.timeline.recalled.description') },
-      CANCELLED: { key: 'final', title: t('requestCenter.detail.timeline.cancelled.title'), state: 'done', tone: 'muted', description: t('requestCenter.detail.timeline.cancelled.description') },
+      APPROVED: { key: 'final', title: t('requestCenter.detail.timeline.approved.title'), state: 'done', date: decidedOn, description: t('requestCenter.detail.timeline.approved.description') },
+      REJECTED: { key: 'final', title: t('requestCenter.detail.timeline.rejected.title'), state: 'done', tone: 'danger', date: decidedOn, reason, description: t('requestCenter.detail.timeline.rejected.description') },
+      RECALLED: { key: 'final', title: t('requestCenter.detail.timeline.recalled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.recalled.description') },
+      CANCELLED: { key: 'final', title: t('requestCenter.detail.timeline.cancelled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.cancelled.description') },
+      // RETURNED is not "still under review" — the admin has acted and handed it back, so it
+      // gets its own resolved step carrying the reason the vendor must address.
+      RETURNED: { key: 'final', title: t('requestCenter.detail.timeline.returned.title'), state: 'done', tone: 'warning', date: decidedOn, reason, description: t('requestCenter.detail.timeline.returned.description') },
     };
 
     if (finalStep[status]) {
@@ -186,8 +200,9 @@ export class RequestDetail {
     ];
   }
 
-  markerModifier(step: RequestTimelineStep): 'done' | 'active' | 'upcoming' | 'danger' | 'muted' {
+  markerModifier(step: RequestTimelineStep): 'done' | 'active' | 'upcoming' | 'danger' | 'muted' | 'warning' {
     if (step.state === 'done' && step.tone === 'danger') return 'danger';
+    if (step.state === 'done' && step.tone === 'warning') return 'warning';
     if (step.state === 'done' && step.tone === 'muted') return 'muted';
     return step.state;
   }
@@ -243,6 +258,33 @@ export class RequestDetail {
     this.requestCenterService.recall(this.rowKey);
     this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
     this.showRecallConfirm = false;
+  }
+
+  // ---- Resubmit confirmation (POST /cmsVendor/requests/{id}/submit) --------
+  // A returned request goes back to SUBMITTED via the same submit endpoint a draft uses.
+  showResubmitConfirm = false;
+
+  confirmResubmit(): void {
+    this.showResubmitConfirm = true;
+  }
+
+  onResubmitConfirmed(): void {
+    this.actionLoading.set(true);
+    this.api
+      .submit(this.requestId)
+      .pipe(finalize(() => this.actionLoading.set(false)))
+      .subscribe({
+        next: (updated) => {
+          this.showResubmitConfirm = false;
+          // Reload so the timeline and buttons reflect the new status (and the admin action
+          // is cleared server-side) rather than guessing at the new state locally.
+          this.details.set({ ...this.details()!, ...updated });
+        },
+        error: (err) => {
+          console.error('Resubmit request failed', err);
+          this.showResubmitConfirm = false;
+        },
+      });
   }
 
   // ---- Cancel confirmation (POST /cmsVendor/requests/{id}/cancel) -----------

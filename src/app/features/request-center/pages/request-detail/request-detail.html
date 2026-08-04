@@ -14,6 +14,11 @@
         {{ 'requestCenter.detail.recallRequest' | translate }}
       </app-button>
       }
+      @if (canResubmit()) {
+      <app-button variant="primary" (click)="confirmResubmit()">
+        {{ 'requestCenter.detail.resubmitRequest' | translate }}
+      </app-button>
+      }
       @if (canCancel()) {
       <app-button variant="danger" (click)="confirmCancel()">
         {{ 'requestCenter.detail.cancelRequest' | translate }}
@@ -148,6 +153,16 @@
                 }
               </div>
               <p class="request-detail__timeline-item-desc">{{ step.description }}</p>
+              <!-- The admin's reason for returning/rejecting: the only guidance the vendor
+                   gets on what to fix, so it is called out rather than buried. -->
+              @if (step.reason) {
+              <div class="request-detail__timeline-reason">
+                <span class="request-detail__timeline-reason-label">
+                  {{ 'requestCenter.detail.timeline.reasonLabel' | translate }}
+                </span>
+                <p class="request-detail__timeline-reason-text">{{ step.reason }}</p>
+              </div>
+              }
             </div>
           </ng-template>
         </p-timeline>
@@ -161,6 +176,12 @@
   [message]="'requestCenter.recallConfirm.message' | translate"
   [confirmLabel]="'requestCenter.recallConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
   [loading]="actionLoading()" (confirm)="onRecallConfirmed()" (cancel)="showRecallConfirm = false">
+</app-confirmation-pop-up>
+
+<app-confirmation-pop-up [visible]="showResubmitConfirm" [title]="'requestCenter.resubmitConfirm.title' | translate"
+  [message]="'requestCenter.resubmitConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.detail.resubmitRequest' | translate" [cancelLabel]="'common.cancel' | translate"
+  [loading]="actionLoading()" (confirm)="onResubmitConfirmed()" (cancel)="showResubmitConfirm = false">
 </app-confirmation-pop-up>
 
 <app-confirmation-pop-up [visible]="showCancelConfirm" [title]="'requestCenter.deleteConfirm.title' | translate"

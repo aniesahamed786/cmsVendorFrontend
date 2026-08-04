@@ -357,9 +357,46 @@
     background: #dc2626;
   }
 
+  /* Sanctioned warning-amber literal — a returned request is actionable, not a failure,
+     so it reads distinctly from the red of a rejection. */
+  &--warning {
+    background: #d97706;
+  }
+
   &--muted {
     background: var(--app-muted);
   }
+}
+
+/* The admin's reason for returning/rejecting, called out under its timeline step. */
+.request-detail__timeline-reason {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-left: 3px solid #d97706;
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+
+  &-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+  }
+
+  &-text {
+    margin: 0.2rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--app-text);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+}
+
+:host-context(html[lang="ar"]) .request-detail__timeline-reason {
+  border-left: none;
+  border-right: 3px solid #d97706;
 }
 
 .request-detail__timeline-item {

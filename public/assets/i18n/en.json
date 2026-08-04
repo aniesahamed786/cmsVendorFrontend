@@ -328,6 +328,10 @@
       "message": "Are you sure you want to recall this request? It will be withdrawn from the review queue.",
       "confirm": "Recall Request"
     },
+    "resubmitConfirm": {
+      "title": "Resubmit Request",
+      "message": "Send this request back for review? Make sure you have addressed the reviewer's note first."
+    },
     "deleteConfirm": {
       "title": "Delete Request",
       "message": "Are you sure you want to delete this request? This action cannot be undone.",
@@ -339,6 +343,7 @@
       "viewStores": "View Stores",
       "viewProfile": "View Profile",
       "recallRequest": "Recall Request",
+      "resubmitRequest": "Resubmit",
       "cancelRequest": "Cancel Request",
       "notFound": "Request not found.",
       "noBasicInfo": "No additional details available for this request.",
@@ -442,7 +447,12 @@
         "cancelled": {
           "title": "Cancelled",
           "description": "This request was cancelled and permanently closed."
-        }
+        },
+        "returned": {
+          "title": "Returned for Changes",
+          "description": "The reviewer sent this request back. Update the details and resubmit."
+        },
+        "reasonLabel": "Reviewer's note"
       }
     }
   },
