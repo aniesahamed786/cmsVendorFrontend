@@ -185,6 +185,10 @@ export function toOfferDetailsView(proposed: Record<string, unknown>): Record<st
     highlight_description: asString(proposed['highlight_description']),
     highlight_description_ar: asString(proposed['highlight_description_ar']),
     isHighlightEnabled: !!proposed['isHighlightEnabled'],
+    // <app-offer-details> reads these two directly; without them the highlight card renders
+    // its text but no artwork.
+    highlight_image: asString(proposed['highlight_image']),
+    highlight_image_landscape: asString(proposed['highlight_image_landscape']),
     hotel_details: proposed['hotel_details'] ?? null,
     status: asString(proposed['status']),
     offerImages: {

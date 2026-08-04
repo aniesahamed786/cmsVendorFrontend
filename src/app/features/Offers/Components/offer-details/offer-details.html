@@ -326,8 +326,10 @@
           </div>
         </div>
       </div>
-      <!-- <div class="offer-settings__group">
-        <span class="offer-settings__label">{{ 'offerDetails.highlight.images' | translate }}</span>
+      <div class="offer-settings__group">
+        <span class="offer-settings__label">{{ 'offerDetails.highlight.images' | translate }}
+          @if (isEdited('highlight_image','highlight_image_landscape')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
+        </span>
         <div class="offer-branding-grid">
           <div class="offer-branding-img-box">
             <span class="offer-branding-img-box__label">{{ 'offerDetails.highlight.ratioMobile' | translate }}</span>
@@ -352,7 +354,7 @@
             }
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </section>
 
@@ -384,15 +386,19 @@
   </section>
   }
 
-  <!-- Custom Highlight -->
-  <!-- <section class="offer-card">
+  <!-- Custom Highlight — only when the offer actually carries highlight content, so an offer
+       with highlighting switched off doesn't render a card full of "N/A". -->
+  @if (hasHighlightContent(offer())) {
+  <section class="offer-card">
     <header class="offer-card__header">
       <div class="offer-card__icon-wrap">
         <span class="offer-detail-svg-icon offer-card__icon"
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-custom-highlights.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-custom-highlights.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">{{ 'offerDetails.highlight.section' | translate }}</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.highlight.section' | translate }}
+        @if (isEdited('highlight_title','highlight_title_ar','highlight_description','highlight_description_ar','isHighlightEnabled')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
+      </h3>
     </header>
     <div class="offer-custom-highlight">
       <div class="offer-custom-highlight__info">
@@ -423,6 +429,7 @@
       </div>
 
     </div>
-  </section> -->
+  </section>
+  }
 </div>
 }
