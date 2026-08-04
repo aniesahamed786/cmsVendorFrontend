@@ -1,0 +1,74 @@
+<div class="request-edit">
+  <div class="request-edit__topbar">
+    <app-back-button label="requestCenter.edit.backToRequest" (click)="goBack()" />
+    <!-- <div class="request-edit__heading">
+      <h1 class="request-edit__title">{{ 'requestCenter.edit.title' | translate }}</h1>
+      <span class="request-edit__request-id">{{ requestId }}</span>
+    </div> -->
+  </div>
+
+  @if (loading()) {
+  <section class="request-edit__card">
+    @for (line of [1, 2, 3, 4, 5, 6]; track line) {
+    <div class="request-edit__skeleton-field">
+      <span class="app-skeleton request-edit__skeleton-label"></span>
+      <span class="app-skeleton request-edit__skeleton-value"></span>
+    </div>
+    }
+  </section>
+  } @else if (loadError(); as error) {
+  <section class="request-edit__card">
+    <p class="request-edit__error">{{ error }}</p>
+  </section>
+  } @else {
+  <!-- The request is edited through the entity's own form, so the vendor sees exactly the
+       page they filled in originally — only the save target differs. -->
+  @switch (entityType()) {
+  @case ('OFFER') {
+  <app-offer-form
+    [actionType]="'edit'"
+    [buttonName]="'requestCenter.edit.saveChanges' | translate"
+    [editableFormData]="offerFormData()"
+    [isLoading]="saving()"
+    [showBackNav]="false"
+    secondaryAction="cancel"
+    (submitOfferFormEvent)="onOfferSave($event)"
+  ></app-offer-form>
+  }
+  @case ('STORE') {
+  <app-branch-form
+    [actionType]="'edit'"
+    [buttonName]="'requestCenter.edit.saveChanges' | translate"
+    [editableFormData]="branchFormData()"
+    [isLoading]="saving()"
+    [showBackNav]="false"
+    secondaryAction="cancel"
+    (cancelEvent)="goBack()"
+    (submitBranchFormEvent)="onBranchSave($event)"
+  ></app-branch-form>
+  }
+  @case ('PROFILE') {
+  <div class="request-edit__profile">
+    <app-vendor-profile-edit-form
+      #profileFormRef
+      [initialData]="profileData()"
+      [isLoading]="saving()"
+      (saveDraft)="onProfileSave($event)"
+      (updateChanges)="onProfileSave($event)"
+    />
+    <div class="request-edit__actions">
+      <!-- <app-cancel-button [disabled]="saving()" (click)="goBack()" /> -->
+      <app-button variant="primary" icon="pi pi-check" [disabled]="saving()" (click)="triggerProfileSave()">
+        {{ 'requestCenter.edit.saveChanges' | translate }}
+      </app-button>
+    </div>
+  </div>
+  }
+  @default {
+  <section class="request-edit__card">
+    <p class="request-edit__error">{{ 'requestCenter.edit.unsupported' | translate }}</p>
+  </section>
+  }
+  }
+  }
+</div>

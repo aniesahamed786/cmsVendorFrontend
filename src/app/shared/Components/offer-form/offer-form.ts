@@ -78,6 +78,7 @@ import {
   finalize,
 } from "rxjs/operators";
 import { Button } from "../button/button";
+import { CancelButton } from "../cancel-button/cancel-button";
 import { I18nService } from "../../i18n/i18n.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
 import { AuthService } from "../../../core/services/auth.service";
@@ -110,6 +111,7 @@ export interface OfferFormSubmit {
     ImageCropperComponent,
     RouterLink,
     Button,
+    CancelButton,
     TranslatePipe,
   ],
   templateUrl: "./offer-form.html",
@@ -145,6 +147,14 @@ export class OfferForm {
   editableFormData = input<Record<string, unknown> | null>(null);
   backNavRouteLink = input<string>("");
   isLoading = input<boolean>(false);
+  /** Hosts that already render their own back button turn this off to avoid a second one. */
+  showBackNav = input<boolean>(true);
+  /**
+   * What the footer's secondary button does. `draft` saves a draft (the offer pages);
+   * `cancel` just leaves (the request-edit page, where there is no separate draft to save).
+   */
+  secondaryAction = input<"draft" | "cancel">("draft");
+  cancelEvent = output<void>();
   minDate = (() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);

@@ -345,6 +345,7 @@
       "recallRequest": "سحب الطلب",
       "resubmitRequest": "إعادة الإرسال",
       "cancelRequest": "إلغاء الطلب",
+      "editRequest": "تعديل الطلب",
       "notFound": "الطلب غير موجود.",
       "noBasicInfo": "لا تتوفر تفاصيل إضافية لهذا الطلب.",
       "editedBadge": "تم التعديل",
@@ -362,7 +363,9 @@
         "branding": "الهوية البصرية",
         "contactInformation": "معلومات التواصل",
         "requestedChanges": "التغييرات المطلوبة",
-        "otherChanges": "تغييرات أخرى"
+        "otherChanges": "تغييرات أخرى",
+        "whatChanged": "التغييرات",
+        "branchDetails": "تفاصيل الفرع"
       },
       "field": {
         "offerTitle": "عنوان العرض",
@@ -419,7 +422,15 @@
         "logo": "شعار البائع",
         "coverImage": "صورة الغلاف",
         "coverImageLandscape": "صورة الغلاف (أفقية)",
-        "socialLinks": "روابط التواصل الاجتماعي"
+        "socialLinks": "روابط التواصل الاجتماعي",
+        "branchName": "اسم الفرع (بالإنجليزية)",
+        "branchNameAr": "اسم الفرع (بالعربية)",
+        "country": "الدولة",
+        "region": "المنطقة",
+        "city": "المدينة",
+        "address": "العنوان",
+        "mapLink": "رابط الخريطة",
+        "coordinates": "الإحداثيات (خط العرض، خط الطول)"
       },
       "timeline": {
         "title": "الجدول الزمني للطلب",
@@ -454,6 +465,18 @@
         },
         "reasonLabel": "ملاحظة المراجع"
       }
+    },
+    "edit": {
+      "title": "تعديل الطلب",
+      "backToRequest": "العودة إلى الطلب",
+      "saveChanges": "حفظ التغييرات",
+      "savedSummary": "تم تحديث الطلب",
+      "savedDetail": "تم حفظ التغييرات على هذا الطلب.",
+      "noChangesSummary": "لا يوجد ما يتم حفظه",
+      "noChangesDetail": "قم بتغيير حقل واحد على الأقل قبل الحفظ.",
+      "failedSummary": "تعذر تحديث الطلب",
+      "failedDetail": "حدث خطأ أثناء حفظ هذا الطلب. يرجى المحاولة مرة أخرى.",
+      "unsupported": "لا يمكن تعديل هذا النوع من الطلبات حالياً."
     }
   },
   "common": {

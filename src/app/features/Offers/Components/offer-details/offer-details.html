@@ -52,6 +52,7 @@
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-describtion.svg') + ')'"></span>
       </div>
       <h3 class="offer-card__title">{{ 'offerDetails.section.description' | translate }}</h3>
+        @if (isEdited('title','title_ar','description','description_ar')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
     <div class="offer-card__grid-2">
       <p class="offer-detail-text-wrap offer-card__text">{{offer().description}}</p>
@@ -74,6 +75,7 @@
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-publishing.svg') + ')'"></span>
         </div>
         <h3 class="offer-card__title">{{ 'offerDetails.section.duration' | translate }}</h3>
+        @if (isEdited('startDate','expiryDate')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
       </header>
       <div class="offer-card__list">
         <div class="offer-card__list-item">
@@ -96,6 +98,7 @@
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-category.svg') + ')'"></span>
         </div>
         <h3 class="offer-card__title">{{ 'offerDetails.section.category' | translate }}</h3>
+        @if (isEdited('categories','categoryIds')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
       </header>
       <div class="offer-card__tags">
         @for (category of getCategories(offer()); track category?._id?.$oid || category?._id || category?.id || $index) {
@@ -135,6 +138,7 @@
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-tags.svg') + ')'"></span>
         </div>
         <h3 class="offer-card__title">{{ 'offerDetails.section.tags' | translate }}</h3>
+        @if (isEdited('tags')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
       </header>
       <div class="offer-card__tags">
         @for (tag of getTags(offer()); track tag) {
@@ -162,6 +166,7 @@
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-discount-details.svg') + ')'"></span>
       </div>
       <h3 class="offer-card__title">{{ 'offerDetails.section.discountDetails' | translate }}</h3>
+        @if (isEdited('discountType','Discount_amount','Discount_amount_ar','discountCode','howToAvail','howToAvail_ar')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
 
     <div class="offer-discount">
@@ -232,6 +237,7 @@
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-Audience.svg') + ')'"></span>
       </div>
       <h3 class="offer-card__title">{{ 'offerDetails.section.audience' | translate }}</h3>
+        @if (isEdited('targetAudience')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
     <div class="offer-card__stacked-list">
       @for (aud of getTargetAudience(offer()); track aud) {

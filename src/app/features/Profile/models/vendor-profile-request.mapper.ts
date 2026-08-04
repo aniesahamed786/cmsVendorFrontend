@@ -80,9 +80,9 @@ export function toVendorSchemaPayload(data: VendorProfileEditData): Record<strin
   if (data.crNumber) payload['crn_no'] = data.crNumber;
   if (data.businessWebsite) payload['website'] = [data.businessWebsite];
 
-  // Images arrive as either a stored URL (unchanged) or a File (freshly cropped). Only the URL
-  // form can travel in JSON; File values are dropped by the diff (`dropFiles`), since there is
-  // no vendor-facing upload endpoint to turn them into URLs yet.
+  // Images arrive as either a stored URL (unchanged) or a File (freshly cropped). Both are
+  // kept: the request is posted as multipart/form-data, so a File is lifted out of
+  // `requestData` into its own part (see toRequestFormData) instead of being dropped.
   payload['logo'] = data.logo ?? '';
   payload['coverImage'] = data.coverMobile ?? '';
   payload['coverImageLandscape'] = data.coverDesktop ?? '';

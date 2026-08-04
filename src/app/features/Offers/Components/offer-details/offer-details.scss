@@ -509,3 +509,19 @@
     }
   }
 }
+
+/* Marks a section an in-flight change request edits. Only rendered when the Request Center
+   passes editedFields — the offer details page itself never shows it. */
+.offer-card__edited-badge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  background: var(--app-primary-subtle);
+  color: var(--app-primary);
+}
+
+:host-context(html[lang="ar"]) .offer-card__edited-badge {
+  margin-left: 0;
+  margin-right: auto;
+}

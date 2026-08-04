@@ -11,14 +11,23 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import { RequestStatus, RequestTimelineStep } from '../../models/request.model';
-import { buildRequestView, RequestViewSection } from '../../models/request-change.model';
+import { buildRequestView, RequestViewField, RequestViewSection } from '../../models/request-change.model';
+import {
+  buildEditedFieldSet,
+  buildProposedEntity,
+  toBranchView,
+  toOfferDetailsView,
+  toProfileRequestView,
+} from '../../models/request-entity-view.mapper';
+import { OfferDetails } from '../../../Offers/Components/offer-details/offer-details';
+import { environment } from '../../../../../environments/environment';
 import { RequestAdminAction, RequestDetailsResponse } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 
 @Component({
   selector: 'app-request-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, PrimeUIModules, TranslatePipe, BackButton, Button, ConfirmationPopUp],
+  imports: [CommonModule, RouterLink, PrimeUIModules, TranslatePipe, BackButton, Button, ConfirmationPopUp, OfferDetails],
   templateUrl: './request-detail.html',
   styleUrl: './request-detail.scss',
 })
@@ -47,6 +56,35 @@ export class RequestDetail {
 
   /** The entity rendered in full, with this request's edits applied and flagged. */
   readonly changeSections = computed<RequestViewSection[]>(() => buildRequestView(this.details()));
+
+  // ---- Entity-shaped preview ------------------------------------------------
+  // A request is reviewed by looking at the thing itself, so it renders in that entity's own
+  // detail design: offers via <app-offer-details>, profiles via <app-vendor-preview>, stores
+  // as a branch card. The generic field list stays as the fallback for anything else.
+  private readonly proposedEntity = computed(() => buildProposedEntity(this.details()));
+
+  readonly entityType = computed(() => this.details()?.entityType ?? null);
+  readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
+  readonly profileView = computed(() => toProfileRequestView(this.proposedEntity()));
+  readonly branchView = computed(() => toBranchView(this.proposedEntity()));
+
+  /** Same media-path rewrite the vendor profile page uses. */
+  imageUrl(path: string): string {
+    if (!path) return '';
+    return environment.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
+  }
+
+  /**
+   * Field names this request edits. Fields stay in the entity's natural order and are simply
+   * marked in place — no separate "what changed" list, which pulled edits out of context.
+   */
+  readonly editedFieldSet = computed(() => buildEditedFieldSet(this.details()));
+  private readonly editedFields = this.editedFieldSet;
+
+  isEdited(...keys: string[]): boolean {
+    const edited = this.editedFields();
+    return keys.some((key) => edited.has(key));
+  }
 
   /** True once loading finished and there is nothing to render. */
   readonly hasNoChanges = computed(
@@ -130,6 +168,20 @@ export class RequestDetail {
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
   readonly canCancel = computed(() => this.status() === 'RETURNED');
   readonly canResubmit = computed(() => this.status() === 'RETURNED');
+
+  /**
+   * A request can be edited until an admin decision sticks — mirrors the backend's
+   * EDITABLE_STATUSES. APPROVED / REJECTED / RECALLED / CANCELLED are final, so the button
+   * is hidden rather than shown-and-rejected.
+   */
+  readonly canEdit = computed(() => {
+    const status = this.status();
+    return status === 'DRAFT' || status === 'SUBMITTED' || status === 'RETURNED';
+  });
+
+  goToEdit(): void {
+    this.router.navigate(['/request-center', this.requestIdParam, 'edit']);
+  }
 
   readonly timeline = computed<RequestTimelineStep[]>(() => {
     this.i18n.loadSeq();

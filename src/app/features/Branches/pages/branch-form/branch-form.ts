@@ -12,6 +12,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
+import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { noWhitespaceValidator } from '../../../../shared/utils/form-validators';
 
@@ -38,6 +39,7 @@ export interface BranchFormModel {
     PrimeUIModules,
     RouterLink,
     Button,
+    CancelButton,
     TranslatePipe,
   ],
   templateUrl: './branch-form.html',
@@ -55,9 +57,17 @@ export class BranchForm {
   backNavRouteLink = input<string>('');
   editableFormData = input<BranchFormModel | null>(null);
   isLoading = input<boolean>(false);
+  /** Hosts that already render their own back button turn this off to avoid a second one. */
+  showBackNav = input<boolean>(true);
+  /**
+   * What the topbar's secondary button does. `draft` saves a draft (the branch pages);
+   * `cancel` just leaves (the request-edit page, where there is no separate draft to save).
+   */
+  secondaryAction = input<'draft' | 'cancel'>('draft');
 
   submitBranchFormEvent = output<BranchFormModel>();
   saveDraftEvent = output<Partial<BranchFormModel>>();
+  cancelEvent = output<void>();
 
   branchForm: FormGroup;
 

@@ -19,6 +19,18 @@ export class OfferDetails {
     offer = input.required<any>();
     locations = input<any[]>([]);
     loading = input<boolean>(false);
+    /**
+     * Field names an in-flight change request edits. Empty by default, so the offer details
+     * page renders exactly as before; the Request Center passes a set to mark which sections
+     * a request is changing.
+     */
+    editedFields = input<Set<string>>(new Set<string>());
+
+    /** True when any of the given field names is being edited by the request being reviewed. */
+    isEdited(...keys: string[]): boolean {
+        const edited = this.editedFields();
+        return edited.size > 0 && keys.some((key) => edited.has(key));
+    }
     /** Placeholder cards rendered while loading; count only, values unused. */
     readonly skeletonCards = [0, 1, 2];
     offerMobileImageFailed = signal(false);

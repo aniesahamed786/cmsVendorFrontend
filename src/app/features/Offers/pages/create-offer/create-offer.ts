@@ -51,12 +51,10 @@ export class CreateOffer {
     const offer = event?.payload;
     if (!offer) return;
 
-    // requestData is JSON, so binary uploads cannot ride along — `dropFiles` strips them and
-    // empty values are omitted to keep the stored payload small. With no baseline every
-    // populated field is included, which is what a CREATE request needs.
-    const requestData = getChangedFields(null, offer as unknown as Record<string, unknown>, {
-      dropFiles: true,
-    });
+    // Empty values are omitted to keep the stored payload small; with no baseline every
+    // populated field is included, which is what a CREATE request needs. Image `File`s are
+    // kept — the request is posted as multipart, so they travel as their own parts.
+    const requestData = getChangedFields(null, offer as unknown as Record<string, unknown>);
 
     const payload: CreateRequestPayload = {
       entityType: 'OFFER',
