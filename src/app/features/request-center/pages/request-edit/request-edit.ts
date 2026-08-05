@@ -14,30 +14,30 @@ import { ApiRequestStatus, RequestDetailsResponse } from '../../models/request-a
 import { buildProposedEntity } from '../../models/request-entity-view.mapper';
 import {
   fromBranchFormModel,
+  fromBranchFormSubmit,
   mergeRequestData,
   toBranchFormModel,
   toProfileEditData,
 } from '../../models/request-edit.mapper';
 import { OfferForm, OfferFormSubmit } from '../../../../shared/Components/offer-form/offer-form';
-import { BranchForm, BranchFormSubmit } from '../../../Branches/pages/branch-form/branch-form';
+import { BranchForm, BranchFormModel, BranchFormSubmit } from '../../../Branches/pages/branch-form/branch-form';
 import { VendorProfileEditForm } from '../../../Profile/components/vendor-profile-edit-form/vendor-profile-edit-form';
 import { VendorProfileEditData } from '../../../Profile/models/vendor-profile-edit.model';
-import { PROFILE_REQUEST_TITLE } from '../../../Profile/pages/edit-vendor-profile-page/edit-vendor-profile-page';
 import { toVendorSchemaPayload } from '../../../Profile/models/vendor-profile-request.mapper';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
-
+ 
 /** Mirrors the backend's EDITABLE_STATUSES — once the admin's decision sticks, it's read-only. */
 export const EDITABLE_REQUEST_STATUSES: ApiRequestStatus[] = ['DRAFT', 'SUBMITTED', 'RETURNED'];
-
+ 
 /**
- * Edit a pending request.
- *
- * The vendor edits the *request*, not the entity, so this page reuses the real offer / profile
- * / branch forms — seeded with the request's proposed entity (live values overlaid with what
- * the request already changes) — and saves through PUT /cmsVendor/requests/{id} instead of
- * raising a new request.
- */
+* Edit a pending request.
+*
+* The vendor edits the *request*, not the entity, so this page reuses the real offer / profile
+* / branch forms — seeded with the request's proposed entity (live values overlaid with what
+* the request already changes) — and saves through PUT /cmsVendor/requests/{id} instead of
+* raising a new request.
+*/
 @Component({
   selector: 'app-request-edit',
   standalone: true,
@@ -60,31 +60,31 @@ export class RequestEdit {
   private readonly api = inject(RequestCenterApiService);
   private readonly i18n = inject(I18nService);
   private readonly messageService = inject(MessageService);
-
+ 
   readonly requestId = this.route.snapshot.paramMap.get('id') ?? '';
-
+ 
   /** Ref name differs from the property so the template variable doesn't shadow the query. */
   private readonly profileForm = viewChild<VendorProfileEditForm>('profileFormRef');
-
+ 
   readonly details = signal<RequestDetailsResponse | null>(null);
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly loadError = signal<string | null>(null);
-
+ 
   readonly entityType = computed(() => this.details()?.entityType ?? null);
   readonly requestType = computed(() => this.details()?.requestType ?? 'UPDATE');
-
+ 
   /** Live entity overlaid with this request's edits — what the vendor should see in the form. */
   private readonly proposed = computed(() => buildProposedEntity(this.details()));
-
+ 
   /** OfferForm.mapOfferToForm reads the raw offer-document shape, which `proposed` already is. */
   readonly offerFormData = computed(() => (this.details() ? this.proposed() : null));
   readonly branchFormData = computed(() => (this.details() ? toBranchFormModel(this.proposed()) : null));
   readonly profileData = computed(() => toProfileEditData(this.proposed()));
-
+ 
   constructor() {
     this.loadRequest();
-
+ 
     // The profile form renders before the request arrives, so re-seed it (and its
     // change-detection baseline) once the data lands. Seeding is untracked: reset() reads the
     // form's own value signals, and tracking them here would patch the vendor's typing straight
@@ -98,13 +98,13 @@ export class RequestEdit {
       });
     });
   }
-
+ 
   private loadRequest(): void {
     if (!this.requestId) {
       this.loading.set(false);
       return;
     }
-
+ 
     this.loading.set(true);
     this.api
       .getDetails(this.requestId)
@@ -128,13 +128,13 @@ export class RequestEdit {
         },
       });
   }
-
+ 
   goBack(): void {
     this.router.navigate(['/request-center', this.requestId]);
   }
-
+ 
   // ---- Saves ---------------------------------------------------------------
-
+ 
   onOfferSave(event: OfferFormSubmit): void {
     // An UPDATE request stores the diff and a CREATE request the whole payload — exactly the
     // split create-offer/edit-offer already make when raising one.
@@ -143,27 +143,24 @@ export class RequestEdit {
       this.requestType() === 'CREATE'
         ? getChangedFields(null, payload)
         : event.changedFields ?? {};
-
-    this.persist(data, event.requestSummary);
+ 
+    this.persist(data, String(payload?.['title'] ?? ''));
   }
-
-  onBranchSave(event: BranchFormSubmit): void {
-    const full = fromBranchFormModel(event.payload);
-    const data =
-      this.requestType() === 'CREATE'
-        ? full
-        : getChangedFields(fromBranchFormModel(this.branchFormData() ?? {}), full);
-
-    this.persist(data, event.requestSummary);
-  }
-
+ 
+onBranchSave(event: BranchFormSubmit): void {
+  const full = fromBranchFormSubmit(event);
+  const data =
+    this.requestType() === 'CREATE'
+      ? full
+      : getChangedFields(fromBranchFormModel(this.branchFormData() ?? {}), full);
+  this.persist(data, event.payload.branch_name ?? '');
+}
+ 
   /** The profile form has no footer of its own — the hosting page owns the save button. */
   triggerProfileSave(): void {
     this.profileForm()?.onUpdateChanges();
   }
-
-  // The profile form has no Request Summary box, so its title stays the fixed one every
-  // PROFILE request uses.
+ 
   onProfileSave(payload: VendorProfileEditData): void {
     const full = toVendorSchemaPayload(payload);
     // Newly cropped images stay in as `File`s — the request is posted as multipart, so the
@@ -172,10 +169,10 @@ export class RequestEdit {
       this.requestType() === 'CREATE'
         ? getChangedFields(null, full)
         : getChangedFields(toVendorSchemaPayload(this.profileData()), full);
-
-    this.persist(data, PROFILE_REQUEST_TITLE);
+ 
+    this.persist(data, payload.nameEn ?? '');
   }
-
+ 
   /**
    * PUT /cmsVendor/requests/{id}. Only `title` and `requestData` are sent — entityType,
    * entityId and requestType are the request's identity and must not change, and the endpoint
@@ -184,21 +181,21 @@ export class RequestEdit {
    */
   private persist(formData: Record<string, unknown>, title: string): void {
     if (this.saving()) return;
-
+ 
     const details = this.details();
     if (!details) return;
-
+ 
     const requestData = mergeRequestData(
       details.requestType,
       details.requestData ?? {},
       formData,
     );
-
+ 
     if (Object.keys(requestData).length === 0) {
       this.toast('info', 'requestCenter.edit.noChangesSummary', 'requestCenter.edit.noChangesDetail');
       return;
     }
-
+ 
     this.saving.set(true);
     this.api
       .update(this.requestId, { title: title || details.title, requestData })
@@ -220,7 +217,7 @@ export class RequestEdit {
         },
       });
   }
-
+ 
   private toast(severity: 'success' | 'error' | 'info', summaryKey: string, detailKey: string): void {
     this.messageService.add({
       severity,
@@ -230,3 +227,5 @@ export class RequestEdit {
     });
   }
 }
+ 
+ 

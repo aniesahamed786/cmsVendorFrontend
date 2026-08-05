@@ -6,7 +6,7 @@
       <h1 class="branches-page__title">{{ 'branches.title' | translate }}</h1>
       <p class="branches-page__subtitle">{{ 'branches.subtitle' | translate }}</p>
     </div>
-    <app-button variant="primary" icon="pi pi-plus">{{ 'branches.addBranch' | translate }}</app-button>
+    <app-button variant="primary" icon="pi pi-plus" [routerLink]="'/branches/create'">{{ 'branches.addBranch' | translate }}</app-button>
   </div>
 
   <!-- KPI Cards -->
@@ -177,10 +177,10 @@
 
         <ng-template pTemplate="body" let-branch>
           <tr>
-            <td><span class="branches-page__row-title">{{ branch.locationName }}</span></td>
-            <td>{{ branch.totalOffers }}</td>
-            <td>{{ branch.city }}</td>
-            <td>{{ branch.representativeName }}</td>
+            <td><span class="branches-page__row-title" (click)="navigateBranchDetail(branch.locationId)">{{ branch.locationName }}</span></td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.totalOffers }}</td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.city }}</td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.representativeName }}</td>
             <td class="branches-page__td-center">
               <button class="branches-page__action-btn" type="button">
                 <i class="pi pi-ellipsis-h"></i>

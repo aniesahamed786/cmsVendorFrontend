@@ -1185,20 +1185,43 @@
     "error": {
       "locationNameEnRequired": "اسم الموقع بالإنجليزية مطلوب.",
       "locationNameArRequired": "اسم الموقع بالعربية مطلوب.",
+      "locationNameArArabicOnly": "اسم الفرع يجب أن يكون باللغة العربية فقط.",
       "countryRequired": "الدولة مطلوبة.",
-      "regionRequired": "المنطقة مطلوبة.",
       "cityRequired": "المدينة مطلوبة.",
       "addressRequired": "العنوان مطلوب.",
       "googleMapLinkRequired": "رابط خرائط جوجل مطلوب.",
       "googleMapLinkInvalid": "أدخل رابطًا صحيحًا.",
-      "representativeNameRequired": "اسم الممثل مطلوب.",
-      "phoneNumberRequired": "رقم الهاتف مطلوب.",
-      "phoneNumberInvalid": "أدخل رقم هاتف صحيح."
+      "phoneNumberEnglishOnly": "استخدم الأرقام الإنجليزية.",
+      "phoneNumberInvalid": "يمكن أن يحتوي رقم الهاتف على أرقام و + و ( ) ومسافات فقط.",
+      "phoneNumberMaxLength": "لا يمكن أن يتجاوز رقم الهاتف 20 حرفًا."
     },
     "footer": {
       "saveDraft": "حفظ كمسودة",
       "addStore": "إضافة متجر",
-      "updateStore": "تحديث المتجر"
+      "updateStore": "تحديث المتجر",
+      "edit": "تعديل"
+    },
+    "view": {
+      "notFound": "تعذر العثور على تفاصيل هذا الفرع."
+    },
+    "request": {
+      "untitledBranch": "فرع بدون عنوان"
+    },
+    "toast": {
+      "requestSubmittedSummary": "تم إرسال الطلب",
+      "requestSubmittedDetail": "تم إرسال تعديلات الفرع للمراجعة الإدارية.",
+      "requestCreateSubmittedDetail": "تم إرسال طلب الفرع للمراجعة الإدارية.",
+      "requestDraftedSummary": "تم حفظ المسودة",
+      "requestDraftedDetail": "تم حفظ تعديلات الفرع كمسودة. يمكنك إرسالها لاحقًا.",
+      "requestCreateDraftedDetail": "تم حفظ مسودة الفرع. يمكنك إرسالها لاحقًا.",
+      "requestConflictSummary": "الطلب موجود مسبقًا",
+      "requestConflictDetail": "يوجد طلب معلق بالفعل لهذا الفرع.",
+      "requestFailedSummary": "فشل الطلب",
+      "requestFailedDetail": "حدث خطأ أثناء إرسال هذا الطلب. يرجى المحاولة مرة أخرى.",
+      "loadFailed": "فشل تحميل الفرع",
+      "loadFailedDetail": "تعذر تحميل بيانات هذا الفرع. يرجى المحاولة مرة أخرى.",
+      "noChangesSummary": "لا توجد تغييرات لحفظها",
+      "noChangesDetail": "لم تقم بإجراء أي تغييرات على هذا الفرع بعد."
     }
   },
   "settingsPage": {

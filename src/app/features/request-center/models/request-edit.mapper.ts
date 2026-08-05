@@ -1,4 +1,4 @@
-import { BranchFormModel } from '../../Branches/pages/branch-form/branch-form';
+import { BranchFormModel, BranchFormSubmit, GeoPoint } from '../../Branches/pages/branch-form/branch-form';
 import { VendorProfileEditData } from '../../Profile/models/vendor-profile-edit.model';
 import { toVendorMediaUrl } from '../../../shared/utils/media-url';
 
@@ -29,31 +29,109 @@ const firstOf = (value: unknown): string =>
 /** Proposed branch document → the branch form's model. */
 export function toBranchFormModel(proposed: Record<string, unknown>): BranchFormModel {
   return {
-    id: asText(proposed['_id'] ?? proposed['locationId']) || undefined,
-    locationNameEn: asText(proposed['branch_name']),
-    locationNameAr: asText(proposed['branch_name_ar']),
-    country: asText(proposed['country']),
-    region: asText(proposed['region']),
-    city: asText(proposed['city']),
-    address: asText(proposed['address']),
-    googleMapLink: asText(proposed['link']),
-    representativeName: asText(proposed['branchRepresentativeName']),
-    phoneNumber: asText(proposed['branchPhoneNumber']),
+    // id: asText(proposed['_id'] ?? proposed['locationId']) || undefined,
+    // locationNameEn: asText(proposed['branch_name']),
+    // locationNameAr: asText(proposed['branch_name_ar']),
+    // country: asText(proposed['country']),
+    // region: asText(proposed['region']),
+    // city: asText(proposed['city']),
+    // address: asText(proposed['address']),
+    // googleMapLink: asText(proposed['link']),
+    // representativeName: asText(proposed['branchRepresentativeName']),
+    // phoneNumber: asText(proposed['branchPhoneNumber']),
+
+    branch_name: asText(proposed['branch_name']),
+      branch_name_ar: asText(proposed['branch_name_ar']),
+      country: asText(proposed['country']),
+      country_ar: asText(proposed['country_ar']),
+      region: asText(proposed['region']),
+      region_ar: asText(proposed['region_ar']),
+      city: asText(proposed['city']),
+      city_ar: asText(proposed['city_ar']),
+      address: asText(proposed['address']),
+      link: asText(proposed['link']),
+      branchRepresentativeName: asText(proposed['branchRepresentativeName']),
+      branchPhoneNumber: asText(proposed['branchPhoneNumber']),
+      settingsLocationId: asText(proposed['settingsLocationId']),
+      geoPoint: asGeoPoint(proposed['geoPoint']) ?? DEFAULT_GEOPOINT,
   };
 }
 
+const DEFAULT_GEOPOINT: GeoPoint = { type: 'Point', coordinates: [0, 0] };
+
+function asGeoPoint(value: unknown): GeoPoint | undefined {
+  if (!value) return undefined;
+
+  // Already GeoJSON
+  if (
+    typeof value === 'object' &&
+    (value as any).type === 'Point' &&
+    Array.isArray((value as any).coordinates)
+  ) {
+    const [lng, lat] = (value as any).coordinates;
+    if (typeof lng === 'number' && typeof lat === 'number') {
+      return { type: 'Point', coordinates: [lng, lat] };
+    }
+  }
+
+  // { lat, lng } object
+  if (typeof value === 'object' && 'lat' in (value as any) && 'lng' in (value as any)) {
+    const lat = Number((value as any).lat);
+    const lng = Number((value as any).lng);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      return { type: 'Point', coordinates: [lng, lat] };
+    }
+  }
+
+  // "lat,lng" string
+  if (typeof value === 'string') {
+    const parts = value.split(',').map((s) => Number(s.trim()));
+    if (parts.length === 2 && parts.every((n) => !isNaN(n))) {
+      const [lat, lng] = parts;
+      return { type: 'Point', coordinates: [lng, lat] };
+    }
+  }
+
+  return undefined;
+}
+
 /** Branch form model → the vendor-location document's own field names, which requestData uses. */
-export function fromBranchFormModel(model: Partial<BranchFormModel>): Record<string, unknown> {
+export function fromBranchFormModel(model: BranchFormModel | Partial<BranchFormModel>): Record<string, unknown> {
   return {
-    branch_name: model.locationNameEn ?? '',
-    branch_name_ar: model.locationNameAr ?? '',
-    country: model.country ?? '',
-    region: model.region ?? '',
-    city: model.city ?? '',
-    address: model.address ?? '',
-    link: model.googleMapLink ?? '',
-    branchRepresentativeName: model.representativeName ?? '',
-    branchPhoneNumber: model.phoneNumber ?? '',
+    branch_name: asText(model.branch_name),
+    branch_name_ar: asText(model.branch_name_ar),
+    country: asText(model.country),
+    country_ar: asText(model.country_ar),
+    region: asText(model.region),
+    region_ar: asText(model.region_ar),
+    city: asText(model.city),
+    city_ar: asText(model.city_ar),
+    address: asText(model.address),
+    link: asText(model.link),
+    branchRepresentativeName: asText(model.branchRepresentativeName),
+    branchPhoneNumber: asText(model.branchPhoneNumber),
+    settingsLocationId: asText(model.settingsLocationId),
+    geoPoint: model.geoPoint ?? DEFAULT_GEOPOINT,
+  };
+}
+
+export function fromBranchFormSubmit(submit: BranchFormSubmit): Record<string, unknown> {
+  const changed = submit.payload;
+  return {
+    branch_name: asText(changed['branch_name']),
+    branch_name_ar: asText(changed['branch_name_ar']), // was reading 'country' — bug from earlier version
+    country: asText(changed['country']),
+    country_ar: asText(changed['country_ar']),
+    region: asText(changed['region']),
+    region_ar: asText(changed['region_ar']),
+    city: asText(changed['city']),
+    city_ar: asText(changed['city_ar']),
+    address: asText(changed['address']),
+    link: asText(changed['link']),
+    branchRepresentativeName: asText(changed['branchRepresentativeName']),
+    branchPhoneNumber: asText(changed['branchPhoneNumber']),
+    settingsLocationId: asText(changed['settingsLocationId']),
+    geoPoint: asGeoPoint(changed['geoPoint']) ?? DEFAULT_GEOPOINT,
   };
 }
 

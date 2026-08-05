@@ -1147,7 +1147,7 @@
       "submit": "Submit Ticket"
     }
   },
-  "branchForm": {
+ "branchForm": {
     "back": "Back",
     "section": {
       "businessLocations": "Business Locations"
@@ -1183,20 +1183,43 @@
     "error": {
       "locationNameEnRequired": "Location name (English) is required.",
       "locationNameArRequired": "Location name (Arabic) is required.",
+      "locationNameArArabicOnly": "Branch name must be in Arabic only.",
       "countryRequired": "Country is required.",
-      "regionRequired": "Region is required.",
       "cityRequired": "City is required.",
       "addressRequired": "Address is required.",
       "googleMapLinkRequired": "Google Map link is required.",
       "googleMapLinkInvalid": "Enter a valid URL.",
-      "representativeNameRequired": "Representative name is required.",
-      "phoneNumberRequired": "Phone number is required.",
-      "phoneNumberInvalid": "Enter a valid phone number."
+      "phoneNumberEnglishOnly": "Use English numbers.",
+      "phoneNumberInvalid": "Phone number can only contain numbers, +, (), and spaces.",
+      "phoneNumberMaxLength": "Phone number cannot exceed 20 characters."
     },
     "footer": {
       "saveDraft": "Save As Draft",
       "addStore": "Add Store",
-      "updateStore": "Update Store"
+      "updateStore": "Update Store",
+      "edit": "Edit"
+    },
+    "view": {
+      "notFound": "This branch's details couldn't be found."
+    },
+    "request": {
+      "untitledBranch": "Untitled Branch"
+    },
+    "toast": {
+      "requestSubmittedSummary": "Request Submitted",
+      "requestSubmittedDetail": "Your branch changes have been submitted for admin review.",
+      "requestCreateSubmittedDetail": "Your branch has been submitted for admin review.",
+      "requestDraftedSummary": "Draft Saved",
+      "requestDraftedDetail": "Your branch update has been saved as a draft. You can submit it later.",
+      "requestCreateDraftedDetail": "Your branch draft has been saved. You can submit it later.",
+      "requestConflictSummary": "Request Already Exists",
+      "requestConflictDetail": "A pending request for this branch already exists.",
+      "requestFailedSummary": "Request Failed",
+      "requestFailedDetail": "Something went wrong while raising this request. Please try again.",
+      "loadFailed": "Failed to Load Branch",
+      "loadFailedDetail": "Could not load this branch's details. Please try again.",
+      "noChangesSummary": "No Changes to Save",
+      "noChangesDetail": "You haven't changed anything on this branch yet."
     }
   },
   "settingsPage": {

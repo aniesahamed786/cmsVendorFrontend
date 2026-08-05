@@ -10,11 +10,12 @@ import { environment } from '../../../../../environments/environment';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-branches-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, TranslatePipe, RouterLink],
   templateUrl: './branches-page.html',
   styleUrl: './branches-page.scss'
 })
@@ -133,7 +134,7 @@ const valB: unknown = b[field];
     this.branchesLoading() ? new Array(5).fill(null) : this.filteredBranches()
   );
 
-  constructor() {
+  constructor(private router: Router) {
     effect(() => {
       const dark = this.themeService.isDarkMode();
       if (!this.map) return;
@@ -510,5 +511,9 @@ const valB: unknown = b[field];
       { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#1c2c54' }] },
       { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#070f29' }] },
     ];
+  }
+
+  navigateBranchDetail(id:any){
+    this.router.navigate(['/branches/view/', id]);
   }
 }
