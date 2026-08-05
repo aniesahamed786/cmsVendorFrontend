@@ -786,15 +786,7 @@
       "email": "البريد الإلكتروني",
       "locations": "المواقع المحددة",
       "offerImageMobile": "صورة العرض (للجوال)",
-      "offerImageDesktop": "صورة العرض (لسطح المكتب)",
-      "requestSummary": "ملخص الطلب"
-    },
-    "requestSummary": {
-      "section": "ملخص الطلب",
-      "label": "ملخص هذا الطلب",
-      "placeholder": "صف باختصار ما تضيفه أو تغيّره، والسبب.",
-      "hint": "هذا ما يراه المراجع في مركز الطلبات، لذا اجعله محدداً.",
-      "required": "ملخص الطلب مطلوب."
+      "offerImageDesktop": "صورة العرض (لسطح المكتب)"
     }
   },
   "roomDialog": {
@@ -1154,12 +1146,6 @@
     "back": "رجوع",
     "section": {
       "businessLocations": "مواقع النشاط التجاري"
-    },
-    "requestSummary": {
-      "section": "ملخص الطلب",
-      "label": "ملخص هذا الطلب",
-      "placeholder": "صف باختصار ما تضيفه أو تغيّره، والسبب.",
-      "required": "ملخص الطلب مطلوب."
     },
     "label": {
       "locationNameEn": "اسم الموقع (بالإنجليزية)",

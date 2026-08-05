@@ -280,13 +280,12 @@ export class RequestDetail {
     }
   });
 
-  // A SUBMITTED request can be recalled; a RETURNED one can be cancelled (mirrors the
-  // backend transition rules — see request.service.ts ALLOWED_TRANSITIONS).
-  // Mirrors the backend's ALLOWED_TRANSITIONS: recall only from SUBMITTED; a RETURNED request
-  // can either be fixed and resubmitted (SUBMIT accepts DRAFT/RETURNED) or closed for good.
+  // Mirrors the backend's ALLOWED_TRANSITIONS: recall only from SUBMITTED.
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
+  // A RETURNED request offers Edit and Cancel only. There is no Resubmit button by design —
+  // a returned request goes back for changes, so it is re-sent by editing it, not by pushing
+  // the same content through again unchanged.
   readonly canCancel = computed(() => this.status() === 'RETURNED');
-  readonly canResubmit = computed(() => this.status() === 'RETURNED');
 
   /**
    * A request can be edited until an admin decision sticks — mirrors the backend's
@@ -498,33 +497,6 @@ export class RequestDetail {
     this.requestCenterService.recall(this.rowKey);
     this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
     this.showRecallConfirm = false;
-  }
-
-  // ---- Resubmit confirmation (POST /cmsVendor/requests/{id}/submit) --------
-  // A returned request goes back to SUBMITTED via the same submit endpoint a draft uses.
-  showResubmitConfirm = false;
-
-  confirmResubmit(): void {
-    this.showResubmitConfirm = true;
-  }
-
-  onResubmitConfirmed(): void {
-    this.actionLoading.set(true);
-    this.api
-      .submit(this.requestId)
-      .pipe(finalize(() => this.actionLoading.set(false)))
-      .subscribe({
-        next: (updated) => {
-          this.showResubmitConfirm = false;
-          // Reload so the timeline and buttons reflect the new status (and the admin action
-          // is cleared server-side) rather than guessing at the new state locally.
-          this.details.set({ ...this.details()!, ...updated });
-        },
-        error: (err) => {
-          console.error('Resubmit request failed', err);
-          this.showResubmitConfirm = false;
-        },
-      });
   }
 
   // ---- Cancel confirmation (POST /cmsVendor/requests/{id}/cancel) -----------

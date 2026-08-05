@@ -786,15 +786,7 @@
       "email": "Email address",
       "locations": "Selected locations",
       "offerImageMobile": "Offer image (mobile)",
-      "offerImageDesktop": "Offer image (desktop)",
-      "requestSummary": "Request summary"
-    },
-    "requestSummary": {
-      "section": "Request Summary",
-      "label": "Summary of this request",
-      "placeholder": "Briefly describe what you are adding or changing, and why.",
-      "hint": "This is what the reviewer sees in the Request Center, so make it specific.",
-      "required": "A request summary is required."
+      "offerImageDesktop": "Offer image (desktop)"
     }
   },
   "roomDialog": {
@@ -1152,12 +1144,6 @@
     "back": "Back",
     "section": {
       "businessLocations": "Business Locations"
-    },
-    "requestSummary": {
-      "section": "Request Summary",
-      "label": "Summary of this request",
-      "placeholder": "Briefly describe what you are adding or changing, and why.",
-      "required": "A request summary is required."
     },
     "label": {
       "locationNameEn": "Location Name (English)",

@@ -60,9 +60,7 @@ export class CreateOffer {
       entityType: 'OFFER',
       // entityId is omitted deliberately: the backend rejects CREATE requests that carry one.
       requestType: 'CREATE',
-      // The vendor's own summary of the request — what the admin reads in the Request Center
-      // list. The offer's name is only the fallback.
-      title: event.requestSummary || offer.title || this.i18n.t('offerForm.request.untitledOffer'),
+      title: offer.title || this.i18n.t('offerForm.request.untitledOffer'),
       requestData,
       actionType,
     };

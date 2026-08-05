@@ -155,31 +155,6 @@
     </div>
   </div>
 
-  <!-- Request Summary — not part of the branch itself; it becomes the request's title, so the
-       reviewing admin reads what this change is for instead of the branch's name. -->
-  <div class="branch-form__section">
-    <div class="branch-form__section-head">
-      <div class="branch-form__section-icon">
-        <i class="pi pi-comment branch-form__section-glyph"></i>
-      </div>
-      <h2 class="branch-form__section-title">
-        {{ 'branchForm.requestSummary.section' | translate }}
-      </h2>
-    </div>
-    <div class="branch-form__grid">
-      <div class="branch-form__field branch-form__col-2">
-        <label class="branch-form__label">
-          {{ 'branchForm.requestSummary.label' | translate }}
-          <span class="branch-form__required">*</span>
-        </label>
-        <textarea pInputTextarea formControlName="requestSummary" rows="3" class="branch-form__textarea"
-          [placeholder]="'branchForm.requestSummary.placeholder' | translate"></textarea>
-        @if (hasRequiredError('requestSummary')) {
-        <p class="branch-form__error">{{ 'branchForm.requestSummary.required' | translate }}</p>
-        }
-      </div>
-    </div>
-  </div>
 </form>
 } @else {
 <div class="branch-form__skeleton">

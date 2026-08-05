@@ -21,11 +21,6 @@
         {{ 'requestCenter.detail.recallRequest' | translate }}
       </app-button>
       }
-      @if (canResubmit()) {
-      <app-button variant="primary" (click)="confirmResubmit()">
-        {{ 'requestCenter.detail.resubmitRequest' | translate }}
-      </app-button>
-      }
       @if (canCancel()) {
       <app-button variant="danger" (click)="confirmCancel()">
         {{ 'requestCenter.detail.cancelRequest' | translate }}
@@ -334,12 +329,6 @@
   [message]="'requestCenter.recallConfirm.message' | translate"
   [confirmLabel]="'requestCenter.recallConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
   [loading]="actionLoading()" (confirm)="onRecallConfirmed()" (cancel)="showRecallConfirm = false">
-</app-confirmation-pop-up>
-
-<app-confirmation-pop-up [visible]="showResubmitConfirm" [title]="'requestCenter.resubmitConfirm.title' | translate"
-  [message]="'requestCenter.resubmitConfirm.message' | translate"
-  [confirmLabel]="'requestCenter.detail.resubmitRequest' | translate" [cancelLabel]="'common.cancel' | translate"
-  [loading]="actionLoading()" (confirm)="onResubmitConfirmed()" (cancel)="showResubmitConfirm = false">
 </app-confirmation-pop-up>
 
 <app-confirmation-pop-up [visible]="showCancelConfirm" [title]="'requestCenter.deleteConfirm.title' | translate"

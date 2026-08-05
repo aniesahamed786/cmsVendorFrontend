@@ -27,10 +27,12 @@ import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 
 /**
- * Title every PROFILE request carries. Unlike offers and branches, the profile form has no
- * Request Summary box — there is only one profile and only one kind of change to it, so the
- * title is fixed rather than asked for. Kept here so the request-edit page reuses the exact
- * same string.
+ * Title every PROFILE request carries.
+ *
+ * Fixed rather than derived from the vendor's name: a vendor has exactly one profile, so the
+ * name identifies nothing the request row doesn't already say, and it would change under the
+ * admin's feet the moment the request itself renames the vendor. Exported so the request-edit
+ * page keeps the title identical when it saves.
  */
 export const PROFILE_REQUEST_TITLE = 'Profile Edit';
 
@@ -160,8 +162,6 @@ export class EditVendorProfilePage {
       entityType: 'PROFILE',
       // No entityId — the backend resolves PROFILE from the caller's vendorId.
       requestType: 'UPDATE',
-      // Fixed title, no Request Summary box on this form: a vendor has exactly one profile
-      // and one kind of edit to make to it, so asking them to describe it every time is noise.
       title: PROFILE_REQUEST_TITLE,
       requestData: changedFields,
       actionType,

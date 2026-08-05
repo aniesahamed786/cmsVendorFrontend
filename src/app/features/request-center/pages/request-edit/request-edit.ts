@@ -23,6 +23,7 @@ import { OfferForm, OfferFormSubmit } from '../../../../shared/Components/offer-
 import { BranchForm, BranchFormModel, BranchFormSubmit } from '../../../Branches/pages/branch-form/branch-form';
 import { VendorProfileEditForm } from '../../../Profile/components/vendor-profile-edit-form/vendor-profile-edit-form';
 import { VendorProfileEditData } from '../../../Profile/models/vendor-profile-edit.model';
+import { PROFILE_REQUEST_TITLE } from '../../../Profile/pages/edit-vendor-profile-page/edit-vendor-profile-page';
 import { toVendorSchemaPayload } from '../../../Profile/models/vendor-profile-request.mapper';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
@@ -170,7 +171,8 @@ onBranchSave(event: BranchFormSubmit): void {
         ? getChangedFields(null, full)
         : getChangedFields(toVendorSchemaPayload(this.profileData()), full);
  
-    this.persist(data, payload.nameEn ?? '');
+    // Same fixed title the profile page sends, so editing a request never renames it.
+    this.persist(data, PROFILE_REQUEST_TITLE);
   }
  
   /**
