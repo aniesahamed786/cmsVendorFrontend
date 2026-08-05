@@ -48,7 +48,8 @@ export interface RequestStats {
 }
 
 export interface RequestTimelineStep {
-  key: 'submitted' | 'underReview' | 'final';
+  /** Not an identity — a request can collect several entries of the same kind over its life. */
+  key: string;
   title: string;
   state: 'done' | 'active' | 'upcoming';
   date?: string;
@@ -57,4 +58,6 @@ export interface RequestTimelineStep {
   tone?: 'default' | 'danger' | 'muted' | 'warning';
   /** The admin's reason for returning/rejecting — the vendor's only guidance on what to fix. */
   reason?: string;
+  /** Who took the action, e.g. "Admin" — only set for steps built from the audit trail. */
+  actor?: string;
 }

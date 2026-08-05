@@ -107,6 +107,23 @@ export interface RequestDetailsResponse extends RequestEntityResponse {
   changes: RequestChangeResponse[];
 }
 
+/**
+ * One entry of GET /cmsVendor/requests/getHistory/{id} — the RequestLog audit trail, oldest
+ * first. A request can collect several admin actions over its life (returned, resubmitted,
+ * approved), which is exactly what `adminAction` on the request document cannot express: it
+ * only ever holds the most recent one.
+ */
+export interface RequestHistoryResponse {
+  _id: string;
+  requestId: string;
+  /** SUBMITTED | APPROVED | REJECTED | RETURNED | RECALLED | CANCELLED. */
+  action: string;
+  performedBy: string | null;
+  performedRole: string | null;
+  remarks: string | null;
+  createdOn: string;
+}
+
 /** One row from GET /cmsVendor/requests/{id}/changes. */
 export interface RequestChangeResponse {
   requestId: string;

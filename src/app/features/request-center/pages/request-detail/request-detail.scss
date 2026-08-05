@@ -559,6 +559,15 @@
     color: var(--app-muted);
   }
 
+  // Who took the action. Sits directly under the title, quieter than the description.
+  &-actor {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--app-primary);
+  }
+
   &--upcoming &-title {
     color: var(--app-muted);
   }

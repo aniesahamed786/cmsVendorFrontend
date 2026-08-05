@@ -9,6 +9,7 @@ import {
   RequestChangeResponse,
   RequestDetailsResponse,
   RequestEntityResponse,
+  RequestHistoryResponse,
   RequestMetricsResponse,
   RequestRemarksPayload,
   UpdateRequestPayload,
@@ -122,6 +123,14 @@ export class RequestCenterApiService {
     return this.http.get<{ requestId?: string }>(
       `${environment.backendUrl}${environment.apiBaseUrl}/checkRequest/${entityId}`,
     );
+  }
+
+  /**
+   * GET /cmsVendor/requests/getHistory/{id} — the chronological RequestLog audit trail
+   * (submit / approve / reject / return / recall / cancel), oldest first.
+   */
+  getHistory(requestId: string): Observable<RequestHistoryResponse[]> {
+    return this.http.get<RequestHistoryResponse[]>(`${this.baseUrl}/getHistory/${requestId}`);
   }
 
   /** GET /cmsVendor/requests/{id}/changes — field-level diff for an UPDATE request. */

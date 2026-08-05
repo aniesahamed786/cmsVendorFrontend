@@ -463,7 +463,8 @@
           "title": "Returned for Changes",
           "description": "The reviewer sent this request back. Update the details and resubmit."
         },
-        "reasonLabel": "Reviewer's note"
+        "reasonLabel": "Reviewer's note",
+        "performedBy": "by"
       }
     },
     "pending": {
