@@ -10,7 +10,7 @@ import { environment } from '../../../../../environments/environment';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-branches-page',
@@ -25,6 +25,8 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly themeService = inject(ThemeService);
   private readonly zone = inject(NgZone);
   private readonly i18n = inject(I18nService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   kpis = signal<BranchKPIs | null>(null);
   topPerformers = signal<TopPerformer[]>([]);
@@ -40,7 +42,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   selectedRegion = signal<string | null>(null);
   selectedManager = signal<string | null>(null);
   searchQuery = signal<string>('');
-  
+
   // Sort
   sortField = signal<keyof BranchRow | null>('locationName');
   sortOrder = signal<1 | -1>(-1); // Newest first by default
@@ -82,6 +84,29 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   debug = { scriptLoaded: false, mapsAvailable: false, mapCreated: false };
 
+  readonly selectedRow = signal<{ locationId: string } | null>(null);
+
+  readonly rowActions = computed(() => {
+    this.i18n.loadSeq();
+    const row = this.selectedRow();
+    return [
+      {
+        label: this.i18n.t('branchActions.action.viewBranch'),
+        icon: 'pi pi-eye',
+        command: () => {
+          if (row) this.router.navigate(['view', row.locationId], { relativeTo: this.route });
+        },
+      },
+      {
+        label: this.i18n.t('branchActions.action.requestChanges'),
+        icon: 'pi pi-arrows-v',
+        command: () => {
+          if (row) this.router.navigate(['edit', row.locationId], { relativeTo: this.route });
+        },
+      },
+    ];
+  });
+
   @ViewChild('mapContainer')
   set mapContainerRef(ref: ElementRef<HTMLElement> | undefined) {
     this.mapContainer = ref;
@@ -93,12 +118,12 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   readonly filteredBranches = computed(() => {
     let rows = this.allBranches();
-    
+
     const status = this.selectedStatus();
     if (status) rows = rows.filter(r => r.status === status);
-    
+
     const region = this.selectedRegion();
-   // if (region) rows = rows.filter(r => r.region === region);
+    // if (region) rows = rows.filter(r => r.region === region);
 
     const manager = this.selectedManager();
     if (manager) rows = rows.filter(r => r.representativeName === manager);
@@ -106,20 +131,20 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     const search = this.searchQuery().toLowerCase().trim();
     if (search) {
       rows = rows.filter(r => 
-        r.locationName.toLowerCase().includes(search) || 
-        r.city.toLowerCase().includes(search) || 
+          r.locationName.toLowerCase().includes(search) ||
+          r.city.toLowerCase().includes(search) ||
         r.representativeName.toLowerCase().includes(search)
       );
     }
 
     const field = this.sortField();
     if (!field) return rows;
-    
+
     const order = this.sortOrder();
     return [...rows].sort((a, b) => {
       const valA: unknown = a[field];
-const valB: unknown = b[field];
-      
+      const valB: unknown = b[field];
+
       if (valA === undefined || valB === undefined) return 0;
       if (typeof valA === 'number' && typeof valB === 'number') return (valA - valB) * order;
       if (valA instanceof Date && valB instanceof Date) return (valA.getTime() - valB.getTime()) * order;
@@ -134,7 +159,7 @@ const valB: unknown = b[field];
     this.branchesLoading() ? new Array(5).fill(null) : this.filteredBranches()
   );
 
-  constructor(private router: Router) {
+  constructor() {
     effect(() => {
       const dark = this.themeService.isDarkMode();
       if (!this.map) return;
@@ -356,9 +381,9 @@ const valB: unknown = b[field];
     const bounds = new google.maps.LatLngBounds();
     for (const loc of branches) {
       const pos = {
- lat: Number(loc.latitude),
+        lat: Number(loc.latitude),
  lng: Number(loc.longitude)
-};
+      };
       bounds.extend(pos);
       const marker = this.createBranchMapMarker(pos, loc);
       this.markers.push(marker);
@@ -434,14 +459,14 @@ const valB: unknown = b[field];
 
         const text = document.createElement('div');
         text.textContent = this.title;
-        
+
         wrapper.appendChild(text);
         wrapper.appendChild(pointer);
-        
+
         this.div = wrapper;
         this.textDiv = text;
         this.applyCompactState();
-        
+
         (this as any).getPanes()?.overlayMouseTarget.appendChild(wrapper);
       }
 
