@@ -190,6 +190,7 @@ cancelEvent = output<void>();
       phoneNumber: ['', [Validators.maxLength(20), Validators.pattern(this.phonePattern)]],
       latitude: [null as number | null],
       longitude: [null as number | null],
+      // requestSummary: ['', [Validators.required, noWhitespaceValidator()]],
     });
  
     this.locationSettingsService.list().subscribe({

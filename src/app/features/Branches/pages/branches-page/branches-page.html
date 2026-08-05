@@ -182,9 +182,10 @@
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.city }}</td>
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.representativeName }}</td>
             <td class="branches-page__td-center">
-              <button class="branches-page__action-btn" type="button">
+              <button class="branches-page__action-btn" type="button" (click)="selectedRow.set(branch); menu.toggle($event)">
                 <i class="pi pi-ellipsis-h"></i>
               </button>
+              <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
             </td>
           </tr>
         </ng-template>

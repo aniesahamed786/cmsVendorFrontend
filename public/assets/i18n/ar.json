@@ -1269,5 +1269,11 @@
       "privacy": "الخصوصية والسياسة",
       "disclaimer": "إخلاء المسؤولية"
     }
+  },
+  "branchActions": {
+    "action": {
+      "viewBranch": "عرض الفرع",
+      "requestChanges": "طلب تغييرات"
+    }
   }
 }

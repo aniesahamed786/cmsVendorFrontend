@@ -1267,5 +1267,11 @@
       "privacy": "Privacy & Policy",
       "disclaimer": "Disclaimer"
     }
+  },
+  "branchActions": {
+    "action": {
+      "viewBranch": "View Branch",
+      "requestChanges": "Request Changes"
+    }
   }
 }
