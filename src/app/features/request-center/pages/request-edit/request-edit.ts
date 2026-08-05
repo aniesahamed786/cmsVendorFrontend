@@ -153,7 +153,6 @@ export class RequestEdit {
     this.requestType() === 'CREATE'
       ? full
       : getChangedFields(fromBranchFormModel(this.branchFormData() ?? {}), full);
-
   this.persist(data, event.payload.branch_name ?? '');
 }
 

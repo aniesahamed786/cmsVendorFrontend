@@ -23,7 +23,7 @@ export class ViewBranch {
   private readonly messageService = inject(MessageService);
   private readonly i18n = inject(I18nService);
 
-  private readonly requestsBaseUrl = '/api/v1/cmsVendor/requests';
+  private readonly requestsBaseUrl = '/api/v1/cmsVendor/getStoreDetails';
 
   readonly id = this.route.snapshot.paramMap.get('id');
 
@@ -46,10 +46,26 @@ export class ViewBranch {
   private loadBranch(requestId: string): void {
     this.loading.set(true);
     this.http
-      .get<RequestCenterRequestRecord<BranchApiPayload>>(`${this.requestsBaseUrl}/${requestId}`)
+      .get<any>(`${this.requestsBaseUrl}/${requestId}`)
       .subscribe({
         next: (request:any) => {
-          this.branch.set(toEditableBranchData(request?.requestData));
+          let formattedRequest = {
+          branch_name: request.locationName,
+          branch_name_ar: request.locationNameAr,
+          country: request.country,
+          country_ar: request.countryAr,
+          region: request.region,
+          region_ar: request.regionAr,
+          city: request.city,
+          city_ar: request.cityAr,
+          address: request.address,
+          link: request.googleMapLink,
+          branchRepresentativeName: request.representativeName,
+          branchPhoneNumber: request.representativePhoneNumber,
+          // settingsLocationId: asText(model.settingsLocationId),
+          // geoPoint: model.geoPoint ?? DEFAULT_GEOPOINT,
+        };
+          this.branch.set(toEditableBranchData(formattedRequest));
           this.loading.set(false);
         },
         error: (err) => {

@@ -41,7 +41,7 @@ export function toBranchFormModel(proposed: Record<string, unknown>): BranchForm
     // phoneNumber: asText(proposed['branchPhoneNumber']),
 
     branch_name: asText(proposed['branch_name']),
-      branch_name_ar: asText(proposed['country']),
+      branch_name_ar: asText(proposed['branch_name_ar']),
       country: asText(proposed['country']),
       country_ar: asText(proposed['country_ar']),
       region: asText(proposed['region']),
@@ -116,7 +116,7 @@ export function fromBranchFormModel(model: BranchFormModel | Partial<BranchFormM
 }
 
 export function fromBranchFormSubmit(submit: BranchFormSubmit): Record<string, unknown> {
-  const changed = submit.changedFields;
+  const changed = submit.payload;
   return {
     branch_name: asText(changed['branch_name']),
     branch_name_ar: asText(changed['branch_name_ar']), // was reading 'country' — bug from earlier version

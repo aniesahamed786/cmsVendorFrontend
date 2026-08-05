@@ -55,7 +55,7 @@ export class EditBranch {
     this.http.get<any>(`${this.requestsBaseUrl}/${requestId}`).subscribe({
       next: (request: any) => {
         this.branchTitle = request?.locationName ?? '';
-        this.entityId = null;
+        this.entityId = request?.locationId;
         this.entityType = 'STORE';
         let formattedRequest = {
           branch_name: request.locationName,
@@ -103,27 +103,27 @@ export class EditBranch {
 
     if (!payload) return; // buildUpdatePayload already toasted "no changes"
 
-    // this.saving.set(true);
-    // this.requestApi.create(payload).subscribe({
-    //   next: () => {
-    //     this.saving.set(false);
-    //     this.toast(
-    //       'success',
-    //       actionType === 'SUBMIT'
-    //         ? 'branchForm.toast.requestSubmittedSummary'
-    //         : 'branchForm.toast.requestDraftedSummary',
-    //       actionType === 'SUBMIT'
-    //         ? 'branchForm.toast.requestSubmittedDetail'
-    //         : 'branchForm.toast.requestDraftedDetail',
-    //     );
-    //     this.router.navigate(['/request-center']);
-    //   },
-    //   error: (err: HttpErrorResponse) => {
-    //     this.saving.set(false);
-    //     console.error('Failed to raise branch request', err);
-    //     this.showRequestError(err);
-    //   },
-    // });
+    this.saving.set(true);
+    this.requestApi.create(payload).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.toast(
+          'success',
+          actionType === 'SUBMIT'
+            ? 'branchForm.toast.requestSubmittedSummary'
+            : 'branchForm.toast.requestDraftedSummary',
+          actionType === 'SUBMIT'
+            ? 'branchForm.toast.requestSubmittedDetail'
+            : 'branchForm.toast.requestDraftedDetail',
+        );
+        this.router.navigate(['/request-center']);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.saving.set(false);
+        console.error('Failed to raise branch request', err);
+        this.showRequestError(err);
+      },
+    });
   }
 
   private buildUpdatePayload(

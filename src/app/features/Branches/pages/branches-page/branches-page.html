@@ -177,10 +177,10 @@
 
         <ng-template pTemplate="body" let-branch>
           <tr>
-            <td><span class="branches-page__row-title">{{ branch.locationName }}</span></td>
-            <td>{{ branch.totalOffers }}</td>
-            <td>{{ branch.city }}</td>
-            <td>{{ branch.representativeName }}</td>
+            <td><span class="branches-page__row-title" (click)="navigateBranchDetail(branch.locationId)">{{ branch.locationName }}</span></td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.totalOffers }}</td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.city }}</td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.representativeName }}</td>
             <td class="branches-page__td-center">
               <button class="branches-page__action-btn" type="button">
                 <i class="pi pi-ellipsis-h"></i>
