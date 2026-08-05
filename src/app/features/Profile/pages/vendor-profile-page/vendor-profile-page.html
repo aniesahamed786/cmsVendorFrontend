@@ -1,7 +1,7 @@
 <div class="vendor-profile-page">
   @if (profile(); as vendor) {
   <div class="vendor-profile-page__hero">
-    <button class="vendor-profile-page__edit-btn" (click)="onEditProfile()">
+    <button class="vendor-profile-page__edit-btn" [disabled]="pendingRequest.checking()" (click)="onEditProfile()">
       <i class="pi pi-pencil"></i>
       {{ 'profile.edit' | translate }}
     </button>
@@ -155,3 +155,11 @@
   </div>
   }
 </div>
+<!-- Editing is blocked while a profile change request is still awaiting review. -->
+<app-confirmation-pop-up [visible]="!!pendingRequest.blockedBy()"
+  [title]="'requestCenter.pending.title' | translate"
+  [message]="pendingRequestMessage()"
+  [confirmLabel]="'requestCenter.pending.viewRequest' | translate"
+  [cancelLabel]="'common.cancel' | translate"
+  (confirm)="pendingRequest.viewBlockingRequest()"
+  (cancel)="pendingRequest.dismiss()" />

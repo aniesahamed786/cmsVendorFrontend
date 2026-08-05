@@ -1105,6 +1105,31 @@
       </div>
     </div>
 
+    <!-- Request Summary — not part of the offer itself; it becomes the request's title, so
+         the reviewing admin reads what this change is for instead of the offer's name. -->
+    <div class="offer-form__section">
+      <div class="offer-form__section-head">
+        <div class="offer-form__section-icon">
+          <i class="pi pi-comment offer-form__section-glyph-icon"></i>
+        </div>
+        <h2 class="offer-form__section-title">
+          {{ 'offerForm.requestSummary.section' | translate }}
+        </h2>
+      </div>
+      <div class="offer-form__request-summary">
+        <label class="offer-form__label" for="offer-request-summary">
+          {{ 'offerForm.requestSummary.label' | translate }} <span class="text-red-500">*</span>
+        </label>
+        <textarea id="offer-request-summary" rows="3" formControlName="requestSummary"
+          class="offer-form__request-summary-input"
+          [placeholder]="'offerForm.requestSummary.placeholder' | translate"></textarea>
+        <p class="offer-form__request-summary-hint">{{ 'offerForm.requestSummary.hint' | translate }}</p>
+        @if (hasRequiredError('requestSummary')) {
+        <p class="text-red-500">{{ 'offerForm.requestSummary.required' | translate }}</p>
+        }
+      </div>
+    </div>
+
     <div class="offer-form__footer">
       <div class="offer-form__footer-actions">
         @if (secondaryAction() === 'cancel') {

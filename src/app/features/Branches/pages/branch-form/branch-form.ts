@@ -29,6 +29,16 @@ export interface BranchFormModel {
   phoneNumber: string;
 }
 
+/**
+ * What the form emits. `requestSummary` is kept out of `payload` deliberately: it describes
+ * the request, not the branch, and becomes the request's title — putting it in the model
+ * would leak it into `requestData` and onto the stored location.
+ */
+export interface BranchFormSubmit {
+  payload: BranchFormModel;
+  requestSummary: string;
+}
+
 @Component({
   selector: 'app-branch-form',
   standalone: true,
@@ -64,11 +74,15 @@ export class BranchForm {
    * `cancel` just leaves (the request-edit page, where there is no separate draft to save).
    */
   secondaryAction = input<'draft' | 'cancel'>('draft');
+  /**
+   * Seeds the Request Summary box. The request-edit page passes the request's current title
+   * so the vendor amends what they wrote rather than retyping it.
+   */
+  initialRequestSummary = input<string>('');
 
-  submitBranchFormEvent = output<BranchFormModel>();
-  saveDraftEvent = output<Partial<BranchFormModel>>();
+  submitBranchFormEvent = output<BranchFormSubmit>();
+  saveDraftEvent = output<BranchFormSubmit>();
   cancelEvent = output<void>();
-
   branchForm: FormGroup;
 
   constructor(private readonly fb: FormBuilder) {
@@ -92,6 +106,9 @@ export class BranchForm {
           Validators.pattern(this.phonePattern),
         ],
       ],
+      // Not part of the branch payload — this becomes the request's title. Required on every
+      // path, draft included: a request is listed by its title the moment it exists.
+      requestSummary: ['', [Validators.required, noWhitespaceValidator()]],
     });
 
     // Populate the form whenever edit data arrives (e.g. after the branch
@@ -101,6 +118,14 @@ export class BranchForm {
       if (data) {
         this.branchForm.patchValue(data, { emitEvent: false });
       }
+    });
+
+    // Seed the summary once the request loads. Left alone after the vendor has typed.
+    effect(() => {
+      const summary = this.initialRequestSummary();
+      const control = this.branchForm.get('requestSummary');
+      if (!control || control.dirty || !summary || control.value) return;
+      control.setValue(summary, { emitEvent: false });
     });
   }
 
@@ -127,11 +152,27 @@ export class BranchForm {
       this.branchForm.markAllAsTouched();
       return;
     }
-    this.submitBranchFormEvent.emit(this.buildPayload());
+    this.submitBranchFormEvent.emit({
+      payload: this.buildPayload(),
+      requestSummary: this.requestSummaryValue(),
+    });
   }
 
+  /** A draft is still listed by its title, so the summary is required here too. */
   onSaveDraft(): void {
-    this.saveDraftEvent.emit(this.branchForm.value);
+    const summary = this.branchForm.get('requestSummary');
+    if (summary?.invalid) {
+      summary.markAsTouched();
+      return;
+    }
+    this.saveDraftEvent.emit({
+      payload: this.buildPayload(),
+      requestSummary: this.requestSummaryValue(),
+    });
+  }
+
+  private requestSummaryValue(): string {
+    return String(this.branchForm.get('requestSummary')?.value ?? '').trim();
   }
 
   private buildPayload(): BranchFormModel {

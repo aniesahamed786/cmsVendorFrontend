@@ -88,7 +88,9 @@ export class EditOffer {
       entityType: 'OFFER',
       entityId: this.id,
       requestType: 'UPDATE',
-      title: this.offerTitle || (event.payload?.title ?? ''),
+      // The vendor's own summary of the change — what the admin sees in the Request Center
+      // list. The offer's name is the fallback only if the form somehow emits nothing.
+      title: event.requestSummary || this.offerTitle || (event.payload?.title ?? ''),
       // Only the edited fields — the backend stores requestData as the diff.
       requestData: changedFields,
       actionType,

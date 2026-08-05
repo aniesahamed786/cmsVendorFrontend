@@ -27,6 +27,14 @@ import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 
 /**
+ * Title every PROFILE request carries. Unlike offers and branches, the profile form has no
+ * Request Summary box — there is only one profile and only one kind of change to it, so the
+ * title is fixed rather than asked for. Kept here so the request-edit page reuses the exact
+ * same string.
+ */
+export const PROFILE_REQUEST_TITLE = 'Profile Edit';
+
+/**
  * Edit the vendor's own profile.
  *
  * As with offers, the vendor cannot write to the profile directly — saving raises a
@@ -87,15 +95,9 @@ export class EditVendorProfilePage {
   }
 
   private loadProfile(): void {
-    const vendorId = this.auth.getVendorId();
-    if (!vendorId) {
-      this.loadingProfile.set(false);
-      return;
-    }
-
     this.loadingProfile.set(true);
     this.profileService
-      .getVendorProfile(vendorId)
+      .getVendorProfile()
       .pipe(finalize(() => this.loadingProfile.set(false)))
       .subscribe({
         next: (profile) => this.initialData.set(toVendorProfileEditData(profile)),
@@ -158,7 +160,9 @@ export class EditVendorProfilePage {
       entityType: 'PROFILE',
       // No entityId — the backend resolves PROFILE from the caller's vendorId.
       requestType: 'UPDATE',
-      title: payload.nameEn || this.i18n.t('profile.requestTitleFallback'),
+      // Fixed title, no Request Summary box on this form: a vendor has exactly one profile
+      // and one kind of edit to make to it, so asking them to describe it every time is noise.
+      title: PROFILE_REQUEST_TITLE,
       requestData: changedFields,
       actionType,
     };

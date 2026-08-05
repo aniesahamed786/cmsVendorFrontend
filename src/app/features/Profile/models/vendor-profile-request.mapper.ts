@@ -1,6 +1,6 @@
 import { VendorProfileEditData } from './vendor-profile-edit.model';
 
-/** Shape of GET /cmsVendor/vendorProfile?vendorId= (VendorCmsProfileResponseDto). */
+/** Shape of GET /cmsVendor/vendorProfile (VendorCmsProfileResponseDto). */
 export interface VendorProfileApi {
   vendorId: string;
   vendorName: string;

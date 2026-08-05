@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
-import { BranchForm, BranchFormModel } from '../branch-form/branch-form';
+import { BranchForm, BranchFormSubmit } from '../branch-form/branch-form';
 
 @Component({
   selector: 'app-create-branch',
@@ -17,15 +17,16 @@ import { BranchForm, BranchFormModel } from '../branch-form/branch-form';
 export class CreateBranch {
 constructor(private readonly router: Router) {}
  
-  save(event: BranchFormModel): void {
+  save(event: BranchFormSubmit): void {
     console.log('[CreateBranch] Add Store submit values:', event);
-    // TODO: wire up to the branches create API once it's available.
+    // TODO: raise a STORE/CREATE request (POST /cmsVendor/requests) the way create-offer
+    // does, sending event.requestSummary as the request title.
     this.router.navigate(['/branches']);
   }
- 
-  saveDraft(event: Partial<BranchFormModel>): void {
+
+  saveDraft(event: BranchFormSubmit): void {
     console.log('[CreateBranch] Save As Draft values:', event);
-    // TODO: wire up to the branches draft API once it's available.
+    // TODO: same as save(), with actionType 'DRAFT'.
     this.router.navigate(['/branches']);
   }
 }

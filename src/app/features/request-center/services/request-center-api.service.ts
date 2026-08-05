@@ -113,6 +113,17 @@ export class RequestCenterApiService {
     return this.http.post<RequestEntityResponse>(`${this.baseUrl}/${requestId}/cancel`, payload);
   }
 
+  /**
+   * GET /cmsVendor/checkRequest/{entityId} — `{ requestId }` when an in-flight UPDATE request
+   * already targets this entity, `{}` otherwise. Note the path is mounted at bare
+   * `/cmsVendor`, not under `/requests`.
+   */
+  checkActiveRequest(entityId: string): Observable<{ requestId?: string }> {
+    return this.http.get<{ requestId?: string }>(
+      `${environment.backendUrl}${environment.apiBaseUrl}/checkRequest/${entityId}`,
+    );
+  }
+
   /** GET /cmsVendor/requests/{id}/changes — field-level diff for an UPDATE request. */
   getChanges(requestId: string): Observable<RequestChangeResponse[]> {
     return this.http.get<RequestChangeResponse[]>(`${this.baseUrl}/${requestId}/changes`);

@@ -9,18 +9,23 @@ import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { OfferDetailService } from '../../services/offer-detail.service';
 import { environment } from '../../../../../environments/environment';
+import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
 
 type RedemptionTab = 'in-store' | 'online';
 
 @Component({
   selector: 'app-offer-details-page',
-  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button, TranslatePipe],
+  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button, TranslatePipe, ConfirmationPopUp],
   templateUrl: './offer-details.html',
   styleUrl: './offer-details.scss',
+  // Component-scoped so this page's "already pending" state is its own.
+  providers: [PendingRequestCheck],
 })
 export class OfferDetailsPage {
   private readonly i18n = inject(I18nService);
   private readonly offerDetailService = inject(OfferDetailService);
+  readonly pendingRequest = inject(PendingRequestCheck);
   readonly offerDetailIconBasePath = 'assets/svg/Offers/offer-details';
 
   /**
@@ -123,10 +128,22 @@ export class OfferDetailsPage {
     this.router.navigate(['/offers']);
   }
 
+  /**
+   * Editing an offer raises an UPDATE request, and only one may be open per offer. Check for
+   * an existing one before opening the form, so the vendor is told up front rather than after
+   * filling it in and hitting a 409 on save.
+   */
   navigateToEditOffer() {
     const offerID = this.offerId();
     if (!offerID) return;
-    this.router.navigate(['/offers/edit', offerID]);
+    this.pendingRequest.guardEdit(offerID, ['/offers/edit', offerID]);
+  }
+
+  /** Message for the "already pending" dialog, naming the request that is holding the offer. */
+  pendingRequestMessage(): string {
+    return this.i18n.t('requestCenter.pending.message', {
+      requestId: this.pendingRequest.blockedBy() ?? '',
+    });
   }
 
   raiseTicket() {

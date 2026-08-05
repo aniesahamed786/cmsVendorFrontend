@@ -19,9 +19,10 @@ import {
   toProfileEditData,
 } from '../../models/request-edit.mapper';
 import { OfferForm, OfferFormSubmit } from '../../../../shared/Components/offer-form/offer-form';
-import { BranchForm, BranchFormModel } from '../../../Branches/pages/branch-form/branch-form';
+import { BranchForm, BranchFormSubmit } from '../../../Branches/pages/branch-form/branch-form';
 import { VendorProfileEditForm } from '../../../Profile/components/vendor-profile-edit-form/vendor-profile-edit-form';
 import { VendorProfileEditData } from '../../../Profile/models/vendor-profile-edit.model';
+import { PROFILE_REQUEST_TITLE } from '../../../Profile/pages/edit-vendor-profile-page/edit-vendor-profile-page';
 import { toVendorSchemaPayload } from '../../../Profile/models/vendor-profile-request.mapper';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
@@ -143,17 +144,17 @@ export class RequestEdit {
         ? getChangedFields(null, payload)
         : event.changedFields ?? {};
 
-    this.persist(data, String(payload?.['title'] ?? ''));
+    this.persist(data, event.requestSummary);
   }
 
-  onBranchSave(event: BranchFormModel | Partial<BranchFormModel>): void {
-    const full = fromBranchFormModel(event);
+  onBranchSave(event: BranchFormSubmit): void {
+    const full = fromBranchFormModel(event.payload);
     const data =
       this.requestType() === 'CREATE'
         ? full
         : getChangedFields(fromBranchFormModel(this.branchFormData() ?? {}), full);
 
-    this.persist(data, event.locationNameEn ?? '');
+    this.persist(data, event.requestSummary);
   }
 
   /** The profile form has no footer of its own — the hosting page owns the save button. */
@@ -161,6 +162,8 @@ export class RequestEdit {
     this.profileForm()?.onUpdateChanges();
   }
 
+  // The profile form has no Request Summary box, so its title stays the fixed one every
+  // PROFILE request uses.
   onProfileSave(payload: VendorProfileEditData): void {
     const full = toVendorSchemaPayload(payload);
     // Newly cropped images stay in as `File`s — the request is posted as multipart, so the
@@ -170,7 +173,7 @@ export class RequestEdit {
         ? getChangedFields(null, full)
         : getChangedFields(toVendorSchemaPayload(this.profileData()), full);
 
-    this.persist(data, payload.nameEn ?? '');
+    this.persist(data, PROFILE_REQUEST_TITLE);
   }
 
   /**

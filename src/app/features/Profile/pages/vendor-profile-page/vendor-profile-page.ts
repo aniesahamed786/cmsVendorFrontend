@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal,OnInit} from '@angular/core';
+import { Component, inject, signal,OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -13,13 +13,18 @@ import {
 import { VendorProfileService } from '../vendor-profile.service';
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../../core/services/auth.service';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
 
 @Component({
   selector: 'app-vendor-profile-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, VendorPreview, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, VendorPreview, TranslatePipe, ConfirmationPopUp],
   templateUrl: './vendor-profile-page.html',
   styleUrl: './vendor-profile-page.css',
+  // Component-scoped so this page's "already pending" state is its own.
+  providers: [PendingRequestCheck],
 })
 export class VendorProfilePage implements OnInit {
   ngOnInit(): void {
@@ -34,15 +39,8 @@ getImageUrl(path: string): string {
   constructor(private readonly router: Router,private readonly vendorProfileService: VendorProfileService, private readonly authService: AuthService) {}
 private loadVendorProfile(): void {
 
-  const vendorId = this.authService.getVendorId();
-
-if (!vendorId) {
-  console.error('Vendor ID not found.');
-  return;
-}
-
   this.vendorProfileService
-      .getVendorProfile(vendorId)
+      .getVendorProfile()
       .subscribe({
 
         next: (response) => {
@@ -62,8 +60,22 @@ if (!vendorId) {
       });
 
 }
+  readonly pendingRequest = inject(PendingRequestCheck);
+  private readonly i18n = inject(I18nService);
+
+  /**
+   * Editing the profile raises a PROFILE/UPDATE request, and only one may be open at a time.
+   * Check first so the vendor is told up front instead of hitting a 409 on save.
+   */
   onEditProfile(): void {
-    this.router.navigate(['/profile/edit']);
+    this.pendingRequest.guardEdit(this.authService.getVendorId(), ['/profile/edit']);
+  }
+
+  /** Message for the "already pending" dialog, naming the request that is holding the profile. */
+  pendingRequestMessage(): string {
+    return this.i18n.t('requestCenter.pending.message', {
+      requestId: this.pendingRequest.blockedBy() ?? '',
+    });
   }
 
   onViewAllOffers(): void {

@@ -93,6 +93,12 @@ import { getChangedOfferFields } from "../../../features/Offers/models/offer-pay
 export interface OfferFormSubmit {
   payload: CreateOfferPayload;
   changedFields: Record<string, unknown>;
+  /**
+   * The vendor's own one-line summary of what this request is for. Sent as the request
+   * `title`, so it is what the reviewing admin sees in the Request Center list — not the
+   * offer's name, which says nothing about what changed.
+   */
+  requestSummary: string;
 }
 
 @Component({
@@ -158,6 +164,11 @@ export class OfferForm {
 
   /** Hosts that already render their own back button turn this off to avoid a second one. */
   showBackNav = input<boolean>(true);
+  /**
+   * Seeds the Request Summary box. The request-edit page passes the request's current title
+   * so the vendor amends what they wrote rather than retyping it from scratch.
+   */
+  initialRequestSummary = input<string>("");
   /**
    * Which required-field profile to apply, independent of `actionType`.
    *
@@ -266,6 +277,9 @@ export class OfferForm {
       selectedTags: this.fb.array<FormControl>([]),
       instructionsEn: ["", [Validators.required, noWhitespaceValidator()]],
       instructionsAr: ["", [Validators.required, noWhitespaceValidator()]],
+      // Not part of the offer payload — this becomes the request's title. Required on every
+      // path, draft included: a request is listed by its title the moment it exists.
+      requestSummary: ["", [Validators.required, noWhitespaceValidator()]],
       offerImage: [null],
       offerImageLandscape: [null],
       urlLink: [
@@ -661,6 +675,21 @@ export class OfferForm {
         this.updateTagDuplicateState(tagName);
       });
 
+    // Seed the Request Summary once its value arrives (the request loads after first render).
+    // Patched untracked: writing a control fires valueChanges, which feeds signals this effect
+    // would otherwise track — the read/write loop that has bitten this form before.
+    effect(
+      () => {
+        const summary = this.initialRequestSummary();
+        untracked(() => {
+          const control = this.offerForm.get("requestSummary");
+          if (!control || control.dirty || !summary || control.value) return;
+          control.setValue(summary, { emitEvent: false });
+        });
+      },
+      { injector: this.injector },
+    );
+
     effect(
       () => {
         const action = this.actionType();
@@ -1014,6 +1043,7 @@ export class OfferForm {
       { path: "locationIds", label: "offerForm.field.locations" },
       { path: "offerImage", label: "offerForm.field.offerImageMobile" },
       { path: "offerImageLandscape", label: "offerForm.field.offerImageDesktop" },
+      { path: "requestSummary", label: "offerForm.field.requestSummary" },
     ];
     if (this.highlightEnabled()) {
       order.push(
@@ -1358,12 +1388,30 @@ export class OfferForm {
         this.actionType() === "edit"
           ? getChangedOfferFields(this.editBaselinePayload, payload)
           : { ...(payload as unknown as Record<string, unknown>) },
+      requestSummary: String(this.offerForm.get("requestSummary")?.value ?? "").trim(),
     };
   }
 
   onSaveDraft() {
     if (this.isSubmitting()) return;
-    
+
+    // A draft is still listed by its title, so the summary is required here too — and the
+    // draft path skips the form-wide validity check that submit() runs.
+    const summary = this.offerForm.get("requestSummary");
+    if (summary?.invalid) {
+      summary.markAsTouched();
+      summary.markAsDirty();
+      this.messageService.add({
+        severity: "warn",
+        summary: this.i18n.t("offerForm.toast.missingFieldSummary"),
+        detail: this.i18n.t("offerForm.toast.missingFieldDetail", {
+          field: this.i18n.t("offerForm.field.requestSummary"),
+        }),
+        life: 4000,
+      });
+      return;
+    }
+
     this.isSubmitting.set(true);
     this.saveDraftEvent.emit(this.buildSubmitEvent());
 

@@ -19,7 +19,7 @@
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-raise-ticket.svg') + ')'"></span>
       <span>{{ 'offerDetails.raiseTicket' | translate }}</span>
     </app-button>
-    <app-button variant="primary" (click)="navigateToEditOffer()">
+    <app-button variant="primary" [disabled]="pendingRequest.checking()" (click)="navigateToEditOffer()">
       <span class="offer-details-page-svg-icon invert-white"
         [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"></span>
@@ -177,3 +177,12 @@
 </div>
 }
 }
+<!-- Editing is blocked while a change request for this offer is still awaiting review — only
+     one open UPDATE request is allowed per entity. -->
+<app-confirmation-pop-up [visible]="!!pendingRequest.blockedBy()"
+  [title]="'requestCenter.pending.title' | translate"
+  [message]="pendingRequestMessage()"
+  [confirmLabel]="'requestCenter.pending.viewRequest' | translate"
+  [cancelLabel]="'common.cancel' | translate"
+  (confirm)="pendingRequest.viewBlockingRequest()"
+  (cancel)="pendingRequest.dismiss()" />
