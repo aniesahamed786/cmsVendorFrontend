@@ -328,6 +328,10 @@
       "message": "Are you sure you want to recall this request? It will be withdrawn from the review queue.",
       "confirm": "Recall Request"
     },
+    "resubmitConfirm": {
+      "title": "Resubmit Request",
+      "message": "Send this request back for review? Make sure you have addressed the reviewer's note first."
+    },
     "deleteConfirm": {
       "title": "Delete Request",
       "message": "Are you sure you want to delete this request? This action cannot be undone.",
@@ -339,7 +343,9 @@
       "viewStores": "View Stores",
       "viewProfile": "View Profile",
       "recallRequest": "Recall Request",
+      "resubmitRequest": "Resubmit",
       "cancelRequest": "Cancel Request",
+      "editRequest": "Edit Request",
       "notFound": "Request not found.",
       "noBasicInfo": "No additional details available for this request.",
       "editedBadge": "Edited",
@@ -357,7 +363,9 @@
         "branding": "Branding",
         "contactInformation": "Contact Information",
         "requestedChanges": "Requested Changes",
-        "otherChanges": "Other Changes"
+        "otherChanges": "Other Changes",
+        "whatChanged": "What Changed",
+        "branchDetails": "Branch Details"
       },
       "field": {
         "offerTitle": "Offer Title",
@@ -414,7 +422,15 @@
         "logo": "Vendor Logo",
         "coverImage": "Cover Image",
         "coverImageLandscape": "Cover Image (Landscape)",
-        "socialLinks": "Social Links"
+        "socialLinks": "Social Links",
+        "branchName": "Branch Name (English)",
+        "branchNameAr": "Branch Name (Arabic)",
+        "country": "Country",
+        "region": "Region",
+        "city": "City",
+        "address": "Address",
+        "mapLink": "Map Link",
+        "coordinates": "Coordinates (lat, lng)"
       },
       "timeline": {
         "title": "Request Timeline",
@@ -442,8 +458,25 @@
         "cancelled": {
           "title": "Cancelled",
           "description": "This request was cancelled and permanently closed."
-        }
+        },
+        "returned": {
+          "title": "Returned for Changes",
+          "description": "The reviewer sent this request back. Update the details and resubmit."
+        },
+        "reasonLabel": "Reviewer's note"
       }
+    },
+    "edit": {
+      "title": "Edit Request",
+      "backToRequest": "Back to Request",
+      "saveChanges": "Save Changes",
+      "savedSummary": "Request updated",
+      "savedDetail": "Your changes have been saved to this request.",
+      "noChangesSummary": "Nothing to save",
+      "noChangesDetail": "Change at least one field before saving.",
+      "failedSummary": "Could not update request",
+      "failedDetail": "Something went wrong while saving this request. Please try again.",
+      "unsupported": "This request type cannot be edited yet."
     }
   },
   "common": {

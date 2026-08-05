@@ -1,17 +1,23 @@
 @if (!isLoading()) {
 <form class="branch-form" [formGroup]="branchForm" (ngSubmit)="submit()">
   <div class="branch-form__topbar">
+    <!-- Suppressed where the hosting page already owns the back navigation. -->
+    @if (showBackNav()) {
     <a [routerLink]="backNavRouteLink()" class="branch-back-btn">
       <i class="pi pi-arrow-left"></i>
       <span>{{ 'branchForm.back' | translate }}</span>
     </a>
+    }
 
     <div class="branch-form__topbar-actions">
+      @if (secondaryAction() === 'cancel') {
+      <app-cancel-button [disabled]="isSubmitDisabled()" (click)="cancelEvent.emit()" />
+      } @else {
       <app-button type="button" variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
         {{ 'branchForm.footer.saveDraft' | translate }}
       </app-button>
-      <app-button type="submit" variant="primary" icon="pi pi-plus" [disabled]="isSubmitDisabled()"
-        [loading]="isSubmitDisabled()">
+      }
+      <app-button type="submit" variant="primary" icon="pi pi-plus" [disabled]="isSubmitDisabled()" [loading]="isSubmitDisabled()">
         {{ buttonName() }}
       </app-button>
     </div>

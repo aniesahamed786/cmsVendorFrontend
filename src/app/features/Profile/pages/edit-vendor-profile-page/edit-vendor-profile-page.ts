@@ -136,12 +136,11 @@ export class EditVendorProfilePage {
     if (this.isLoading()) return;
 
     // Diff against the loaded profile in vendor-schema terms — requestData stores only the
-    // changed fields. Files are dropped: requestData is JSON and there is no vendor-facing
-    // image upload endpoint yet, so a File would serialize to {} and blank the stored image.
+    // changed fields. Newly cropped images stay in as `File`s; the request is posted as
+    // multipart, so they are lifted out into their own parts by the API service.
     const changedFields = getChangedFields(
       toVendorSchemaPayload(this.initialData()),
       toVendorSchemaPayload(payload),
-      { dropFiles: true },
     );
 
     if (Object.keys(changedFields).length === 0) {

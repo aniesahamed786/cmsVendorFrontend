@@ -20,7 +20,6 @@ import {
   VendorProfileEditData,
   VendorProfileEditLocation,
 } from '../../models/vendor-profile-edit.model';
-import { VendorLocationDialog } from '../../../../shared/Components/vendor-location-dialog/vendor-location-dialog';
 import { toVendorSchemaPayload } from '../../models/vendor-profile-request.mapper';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 
@@ -42,7 +41,7 @@ type CropTarget = 'logo' | 'coverMobile' | 'coverDesktop';
 
 @Component({
   selector: 'app-vendor-profile-edit-form',
-  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, VendorLocationDialog, TranslatePipe, ImageCropperComponent],
+  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, TranslatePipe, ImageCropperComponent],
   templateUrl: './vendor-profile-edit-form.html',
   styleUrl: './vendor-profile-edit-form.css',
 })
@@ -70,8 +69,11 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     cover: null,
   });
   readonly previewSocialLinks = signal<string[]>([]);
-  readonly showLocationDialog = signal(false);
-  readonly selectedLocationForEdit = signal<VendorProfileEditLocation | null>(null);
+  /**
+   * Locations are not editable here — branches are their own STORE entity and a PROFILE
+   * request cannot carry them. The signal stays so the loaded profile's branches can still
+   * feed the live preview read-only; nothing in this form writes to it.
+   */
   readonly savedLocations = signal<VendorProfileEditLocation[]>([]);
 
   // ── Branding image previews (blob/object URLs shown in the form + live preview) ──
@@ -256,41 +258,6 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
 
   onUpdateChanges(): void {
     this.updateChanges.emit(this.buildPayload());
-  }
-
-  onLocationSaved(newLoc: VendorProfileEditLocation): void {
-    this.savedLocations.update(locs => {
-      const idx = locs.findIndex(l => l.id === newLoc.id);
-      if (idx !== -1) {
-        const copy = [...locs];
-        copy[idx] = newLoc;
-        return copy;
-      }
-      return [...locs, newLoc];
-    });
-    this.syncLocationForm();
-    this.syncPreview();
-  }
-
-  removeLocation(id: string): void {
-    this.savedLocations.update(items => items.filter(item => item.id !== id));
-    this.syncLocationForm();
-    this.syncPreview();
-  }
-  
-  private syncLocationForm(): void {
-    // If the form required standard validation we would sync with a hidden control,
-    // but the payload is built using this.savedLocations() anyway.
-  }
-
-  editLocation(loc: VendorProfileEditLocation): void {
-    this.selectedLocationForEdit.set(loc);
-    this.showLocationDialog.set(true);
-  }
-
-  openNewLocationDialog(): void {
-    this.selectedLocationForEdit.set(null);
-    this.showLocationDialog.set(true);
   }
 
   onFocusLanguage(lang: 'en' | 'ar'): void {

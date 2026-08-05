@@ -14,6 +14,42 @@ import {
   UpdateRequestPayload,
 } from '../models/request-api.model';
 
+/** Top-level request fields, sent as their own form parts rather than inside `requestData`. */
+const SCALAR_FIELDS = ['entityType', 'entityId', 'requestType', 'title', 'actionType'] as const;
+
+/**
+ * Serializes a request payload as `multipart/form-data`.
+ *
+ * The scalar fields go in as plain parts and `requestData` as a JSON string, since multipart
+ * has no notion of nested objects. Any `File` inside `requestData` is lifted out into a part
+ * of its own, named after the field it came from (`image`, `logo`, …) — a File cannot be
+ * JSON-serialized, and inlining one would write `{}` over the stored value.
+ *
+ * The `Content-Type` header is deliberately not set: the browser has to add it itself so the
+ * multipart boundary matches the body it generated.
+ */
+function toRequestFormData(payload: Partial<CreateRequestPayload>): FormData {
+  const form = new FormData();
+
+  for (const field of SCALAR_FIELDS) {
+    const value = payload[field];
+    // `entityId` is omitted rather than blanked on CREATE requests — the backend rejects a
+    // present-but-empty value.
+    if (value === undefined || value === null || value === '') continue;
+    form.append(field, String(value));
+  }
+
+  const requestData: Record<string, unknown> = { ...(payload.requestData ?? {}) };
+  for (const [key, value] of Object.entries(requestData)) {
+    if (!(value instanceof File)) continue;
+    form.append(key, value, value.name);
+    delete requestData[key];
+  }
+
+  form.append('requestData', JSON.stringify(requestData));
+  return form;
+}
+
 /**
  * HTTP client for the request-cms-vendor workflow endpoints
  * (OfferAppBackend/src/app/request/controller/request-cms-vendor.controller.ts). The vendor
@@ -51,12 +87,15 @@ export class RequestCenterApiService {
 
   /** POST /cmsVendor/requests — create a DRAFT request. */
   create(payload: CreateRequestPayload): Observable<RequestEntityResponse> {
-    return this.http.post<RequestEntityResponse>(this.baseUrl, payload);
+    return this.http.post<RequestEntityResponse>(this.baseUrl, toRequestFormData(payload));
   }
 
   /** PUT /cmsVendor/requests/{id} — update a DRAFT or SUBMITTED request. */
   update(requestId: string, payload: UpdateRequestPayload): Observable<RequestEntityResponse> {
-    return this.http.put<RequestEntityResponse>(`${this.baseUrl}/${requestId}`, payload);
+    return this.http.put<RequestEntityResponse>(
+      `${this.baseUrl}/${requestId}`,
+      toRequestFormData(payload),
+    );
   }
 
   /** POST /cmsVendor/requests/{id}/submit — transition DRAFT → SUBMITTED. */

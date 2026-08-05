@@ -5,6 +5,7 @@ import { HotelDetailsComponent } from '../hotel-details/hotel-details';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { environment } from '../../../../../environments/environment';
+import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
 
 @Component({
     selector: 'app-offer-details',
@@ -19,6 +20,18 @@ export class OfferDetails {
     offer = input.required<any>();
     locations = input<any[]>([]);
     loading = input<boolean>(false);
+    /**
+     * Field names an in-flight change request edits. Empty by default, so the offer details
+     * page renders exactly as before; the Request Center passes a set to mark which sections
+     * a request is changing.
+     */
+    editedFields = input<Set<string>>(new Set<string>());
+
+    /** True when any of the given field names is being edited by the request being reviewed. */
+    isEdited(...keys: string[]): boolean {
+        const edited = this.editedFields();
+        return edited.size > 0 && keys.some((key) => edited.has(key));
+    }
     /** Placeholder cards rendered while loading; count only, values unused. */
     readonly skeletonCards = [0, 1, 2];
     offerMobileImageFailed = signal(false);
@@ -213,8 +226,7 @@ export class OfferDetails {
             //     if (first?.url) return first.url;
             // }
             // return null;
-        const img = offer?.offerImages?.image || '';
-        return this.backendUrl + img.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
+        return this.resolveImage(offer?.offerImages?.image);
     }
 
     getOfferDesktopImage(offer: any): string | null {
@@ -228,24 +240,42 @@ export class OfferDetails {
         //     if (first?.url) return first.url;
         // }
         // return null;
-        const img = offer?.offerImages?.imageLandscape || '';
-        return this.backendUrl + img.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
+        return this.resolveImage(offer?.offerImages?.imageLandscape);
+    }
+
+    /**
+     * True when the offer carries anything worth showing in the Custom Highlight card.
+     * `isHighlightEnabled` alone isn't enough: the offer form requires the highlight images
+     * even when the toggle is off, so an offer can hold artwork with the flag false.
+     */
+    hasHighlightContent(offer: any): boolean {
+        return !!(
+            offer?.isHighlightEnabled ||
+            offer?.highlight_title ||
+            offer?.highlight_title_ar ||
+            offer?.highlight_description ||
+            offer?.highlight_description_ar
+        );
     }
 
     getHighlightMobileImage(offer: any): string | null {
         if (this.highlightMobileImageFailed()) return null;
-        const img = offer?.highlight_image;
-        if (typeof img === 'string' && img.trim()) return img;
-        if (img?.url && typeof img.url === 'string') return img.url;
-        return null;
+        return this.resolveImage(offer?.highlight_image);
     }
 
     getHighlightDesktopImage(offer: any): string | null {
         if (this.highlightDesktopImageFailed()) return null;
-        const img = offer?.highlight_image_landscape || offer?.highlight_image;
-        if (typeof img === 'string' && img.trim()) return img;
-        if (img?.url && typeof img.url === 'string') return img.url;
-        return null;
+        return this.resolveImage(offer?.highlight_image_landscape || offer?.highlight_image);
+    }
+
+    /**
+     * Stored image paths are relative and unscoped, so they have to be rewritten onto the
+     * vendor media proxy before they can be rendered — the same treatment the offer images
+     * get. Also tolerates the `{ url }` shape some payloads use.
+     */
+    private resolveImage(value: unknown): string | null {
+        const raw = typeof value === 'string' ? value : (value as { url?: string })?.url;
+        return toVendorMediaUrl(raw) || null;
     }
 
     markOfferMobileImageError(): void {

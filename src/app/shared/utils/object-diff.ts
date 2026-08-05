@@ -42,8 +42,9 @@ export interface ChangedFieldsOptions {
   /** Keys that must never appear in the diff (server-owned or non-editable). */
   ignore?: Iterable<string>;
   /**
-   * Drop fields whose value is a `File`. Request payloads are JSON, so a binary upload cannot
-   * ride along in `requestData` — it would serialize to `{}` and wipe the stored value.
+   * Drop fields whose value is a `File`. Only for callers that serialize the diff as JSON —
+   * a File would become `{}` and wipe the stored value. The request endpoints take
+   * multipart/form-data and keep their Files, so they leave this off.
    */
   dropFiles?: boolean;
 }

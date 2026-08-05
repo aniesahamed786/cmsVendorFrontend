@@ -52,6 +52,7 @@
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-describtion.svg') + ')'"></span>
       </div>
       <h3 class="offer-card__title">{{ 'offerDetails.section.description' | translate }}</h3>
+        @if (isEdited('title','title_ar','description','description_ar')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
     <div class="offer-card__grid-2">
       <p class="offer-detail-text-wrap offer-card__text">{{offer().description}}</p>
@@ -74,6 +75,7 @@
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-publishing.svg') + ')'"></span>
         </div>
         <h3 class="offer-card__title">{{ 'offerDetails.section.duration' | translate }}</h3>
+        @if (isEdited('startDate','expiryDate')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
       </header>
       <div class="offer-card__list">
         <div class="offer-card__list-item">
@@ -96,6 +98,7 @@
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-category.svg') + ')'"></span>
         </div>
         <h3 class="offer-card__title">{{ 'offerDetails.section.category' | translate }}</h3>
+        @if (isEdited('categories','categoryIds')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
       </header>
       <div class="offer-card__tags">
         @for (category of getCategories(offer()); track category?._id?.$oid || category?._id || category?.id || $index) {
@@ -135,6 +138,7 @@
             [style.maskImage]="'url(' + getOfferDetailIconPath('ic-tags.svg') + ')'"></span>
         </div>
         <h3 class="offer-card__title">{{ 'offerDetails.section.tags' | translate }}</h3>
+        @if (isEdited('tags')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
       </header>
       <div class="offer-card__tags">
         @for (tag of getTags(offer()); track tag) {
@@ -162,6 +166,7 @@
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-discount-details.svg') + ')'"></span>
       </div>
       <h3 class="offer-card__title">{{ 'offerDetails.section.discountDetails' | translate }}</h3>
+        @if (isEdited('discountType','Discount_amount','Discount_amount_ar','discountCode','howToAvail','howToAvail_ar')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
 
     <div class="offer-discount">
@@ -232,6 +237,7 @@
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-Audience.svg') + ')'"></span>
       </div>
       <h3 class="offer-card__title">{{ 'offerDetails.section.audience' | translate }}</h3>
+        @if (isEdited('targetAudience')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
     <div class="offer-card__stacked-list">
       @for (aud of getTargetAudience(offer()); track aud) {
@@ -261,7 +267,9 @@
         </div>
       </div>
       <div class="offer-settings__group">
-        <span class="offer-settings__label">{{ 'offerDetails.label.locations' | translate }}</span>
+        <span class="offer-settings__label">{{ 'offerDetails.label.locations' | translate }}
+          @if (isEdited('locationIds','locations')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
+        </span>
         <div class="offer-settings__locations">
           @for (loc of locations(); track loc._id || $index) {
           <div class="offer-settings__location">
@@ -318,8 +326,10 @@
           </div>
         </div>
       </div>
-      <!-- <div class="offer-settings__group">
-        <span class="offer-settings__label">{{ 'offerDetails.highlight.images' | translate }}</span>
+      <div class="offer-settings__group">
+        <span class="offer-settings__label">{{ 'offerDetails.highlight.images' | translate }}
+          @if (isEdited('highlight_image','highlight_image_landscape')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
+        </span>
         <div class="offer-branding-grid">
           <div class="offer-branding-img-box">
             <span class="offer-branding-img-box__label">{{ 'offerDetails.highlight.ratioMobile' | translate }}</span>
@@ -344,7 +354,7 @@
             }
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </section>
 
@@ -376,15 +386,19 @@
   </section>
   }
 
-  <!-- Custom Highlight -->
-  <!-- <section class="offer-card">
+  <!-- Custom Highlight — only when the offer actually carries highlight content, so an offer
+       with highlighting switched off doesn't render a card full of "N/A". -->
+  @if (hasHighlightContent(offer())) {
+  <section class="offer-card">
     <header class="offer-card__header">
       <div class="offer-card__icon-wrap">
         <span class="offer-detail-svg-icon offer-card__icon"
           [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-custom-highlights.svg') + ')'"
           [style.maskImage]="'url(' + getOfferDetailIconPath('ic-custom-highlights.svg') + ')'"></span>
       </div>
-      <h3 class="offer-card__title">{{ 'offerDetails.highlight.section' | translate }}</h3>
+      <h3 class="offer-card__title">{{ 'offerDetails.highlight.section' | translate }}
+        @if (isEdited('highlight_title','highlight_title_ar','highlight_description','highlight_description_ar','isHighlightEnabled')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
+      </h3>
     </header>
     <div class="offer-custom-highlight">
       <div class="offer-custom-highlight__info">
@@ -415,6 +429,7 @@
       </div>
 
     </div>
-  </section> -->
+  </section>
+  }
 </div>
 }

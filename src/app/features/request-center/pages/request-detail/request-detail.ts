@@ -11,14 +11,39 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import { RequestStatus, RequestTimelineStep } from '../../models/request.model';
-import { buildRequestView, RequestViewSection } from '../../models/request-change.model';
-import { RequestDetailsResponse } from '../../models/request-api.model';
+import { buildRequestView, RequestViewField, RequestViewSection } from '../../models/request-change.model';
+import {
+  buildEditedFieldSet,
+  buildProposedEntity,
+  toBranchView,
+  toOfferDetailsView,
+  toProfileRequestView,
+} from '../../models/request-entity-view.mapper';
+import { OfferDetails } from '../../../Offers/Components/offer-details/offer-details';
+import { BranchesService } from '../../../Branches/services/branches.service';
+import { environment } from '../../../../../environments/environment';
+import { RequestAdminAction, RequestDetailsResponse } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
+
+/**
+ * Location ids as stored on an offer, which vary by source: plain strings in a request
+ * payload, `{ $oid }` wrappers straight off a Mongo document.
+ */
+function toIdList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((entry) => {
+      if (typeof entry === 'string') return entry;
+      const record = (entry ?? {}) as Record<string, unknown>;
+      return String(record['$oid'] ?? record['id'] ?? record['_id'] ?? '');
+    })
+    .filter(Boolean);
+}
 
 @Component({
   selector: 'app-request-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, PrimeUIModules, TranslatePipe, BackButton, Button, ConfirmationPopUp],
+  imports: [CommonModule, RouterLink, PrimeUIModules, TranslatePipe, BackButton, Button, ConfirmationPopUp, OfferDetails],
   templateUrl: './request-detail.html',
   styleUrl: './request-detail.scss',
 })
@@ -28,6 +53,7 @@ export class RequestDetail {
   private readonly i18n = inject(I18nService);
   private readonly requestCenterService = inject(RequestCenterService);
   private readonly api = inject(RequestCenterApiService);
+  private readonly branchesService = inject(BranchesService);
 
   private readonly rowKey = this.route.snapshot.paramMap.get('id') ?? '';
   readonly row = this.requestCenterService.getRow(this.rowKey);
@@ -47,6 +73,53 @@ export class RequestDetail {
 
   /** The entity rendered in full, with this request's edits applied and flagged. */
   readonly changeSections = computed<RequestViewSection[]>(() => buildRequestView(this.details()));
+
+  // ---- Entity-shaped preview ------------------------------------------------
+  // A request is reviewed by looking at the thing itself, so it renders in that entity's own
+  // detail design: offers via <app-offer-details>, profiles via <app-vendor-preview>, stores
+  // as a branch card. The generic field list stays as the fallback for anything else.
+  private readonly proposedEntity = computed(() => buildProposedEntity(this.details()));
+
+  readonly entityType = computed(() => this.details()?.entityType ?? null);
+  readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
+
+  // ---- Offer locations ------------------------------------------------------
+  // An offer payload stores `locationIds` only, so the branch names have to be resolved
+  // against the vendor's own locations (GET /cmsVendor/locations) before they can be shown.
+  readonly vendorLocations = signal<Record<string, unknown>[]>([]);
+
+  /** The vendor's branches this offer is available at, in the order the payload lists them. */
+  readonly offerLocations = computed(() => {
+    const ids = toIdList(this.proposedEntity()['locationIds']);
+    if (ids.length === 0) return [];
+
+    const byId = new Map(
+      this.vendorLocations().map((location) => [String(location['id']), location] as const),
+    );
+    return ids
+      .map((id) => byId.get(id))
+      .filter((location): location is Record<string, unknown> => !!location);
+  });
+  readonly profileView = computed(() => toProfileRequestView(this.proposedEntity()));
+  readonly branchView = computed(() => toBranchView(this.proposedEntity()));
+
+  /** Same media-path rewrite the vendor profile page uses. */
+  imageUrl(path: string): string {
+    if (!path) return '';
+    return environment.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
+  }
+
+  /**
+   * Field names this request edits. Fields stay in the entity's natural order and are simply
+   * marked in place — no separate "what changed" list, which pulled edits out of context.
+   */
+  readonly editedFieldSet = computed(() => buildEditedFieldSet(this.details()));
+  private readonly editedFields = this.editedFieldSet;
+
+  isEdited(...keys: string[]): boolean {
+    const edited = this.editedFields();
+    return keys.some((key) => edited.has(key));
+  }
 
   /** True once loading finished and there is nothing to render. */
   readonly hasNoChanges = computed(
@@ -80,7 +153,11 @@ export class RequestDetail {
       .getDetails(this.rowKey)
       .pipe(finalize(() => this.changesLoading.set(false)))
       .subscribe({
-        next: (details) => this.details.set(details),
+        next: (details) => {
+          this.details.set(details);
+          // Only offers reference branches; every other entity type would waste the call.
+          if (details?.entityType === 'OFFER') this.loadVendorLocations();
+        },
         error: (err) => {
           console.error('Failed to load request details', err);
           this.details.set(null);
@@ -89,6 +166,29 @@ export class RequestDetail {
           );
         },
       });
+  }
+
+  /**
+   * The vendor's branches, mapped to the field names <app-offer-details> reads. Failing here
+   * only costs the locations card — the rest of the request still renders — so it degrades to
+   * an empty list rather than an error state.
+   */
+  private loadVendorLocations(): void {
+    this.branchesService.getBranches().subscribe({
+      next: (rows) =>
+        this.vendorLocations.set(
+          (rows ?? []).map((row) => ({
+            id: row?.locationId ?? '',
+            branch_name: row?.locationName ?? '',
+            branch_name_ar: row?.locationNameAr ?? '',
+            city: row?.city ?? '',
+          })),
+        ),
+      error: (err) => {
+        console.error('Failed to load vendor locations', err);
+        this.vendorLocations.set([]);
+      },
+    });
   }
 
   /** Route the "View <Type>" button to the section the request belongs to. */
@@ -125,8 +225,25 @@ export class RequestDetail {
 
   // A SUBMITTED request can be recalled; a RETURNED one can be cancelled (mirrors the
   // backend transition rules — see request.service.ts ALLOWED_TRANSITIONS).
+  // Mirrors the backend's ALLOWED_TRANSITIONS: recall only from SUBMITTED; a RETURNED request
+  // can either be fixed and resubmitted (SUBMIT accepts DRAFT/RETURNED) or closed for good.
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
   readonly canCancel = computed(() => this.status() === 'RETURNED');
+  readonly canResubmit = computed(() => this.status() === 'RETURNED');
+
+  /**
+   * A request can be edited until an admin decision sticks — mirrors the backend's
+   * EDITABLE_STATUSES. APPROVED / REJECTED / RECALLED / CANCELLED are final, so the button
+   * is hidden rather than shown-and-rejected.
+   */
+  readonly canEdit = computed(() => {
+    const status = this.status();
+    return status === 'DRAFT' || status === 'SUBMITTED' || status === 'RETURNED';
+  });
+
+  goToEdit(): void {
+    this.router.navigate(['/request-center', this.requestIdParam, 'edit']);
+  }
 
   readonly timeline = computed<RequestTimelineStep[]>(() => {
     this.i18n.loadSeq();
@@ -135,11 +252,19 @@ export class RequestDetail {
     // submittedOn is the real submission stamp; fall back to the row's timestamp, then createdOn.
     const details = this.details();
     const submittedAt = details?.submittedOn ?? this.row()?.timestamp ?? details?.createdOn ?? '';
-    return this.buildTimeline(status, submittedAt);
+    return this.buildTimeline(status, submittedAt, details?.adminAction ?? null);
   });
 
-  private buildTimeline(status: RequestStatus, submittedAt: string): RequestTimelineStep[] {
+  private buildTimeline(
+    status: RequestStatus,
+    submittedAt: string,
+    adminAction: RequestAdminAction | null = null,
+  ): RequestTimelineStep[] {
     const t = (key: string) => this.i18n.t(key);
+    // The admin's reason is the whole point of a RETURNED/REJECTED decision — surface it.
+    const reason = adminAction?.reason ?? undefined;
+    const decidedOn = adminAction?.actionOn ?? undefined;
+
     const submitted: RequestTimelineStep = {
       key: 'submitted',
       title: t('requestCenter.detail.timeline.submitted.title'),
@@ -157,10 +282,13 @@ export class RequestDetail {
     // Terminal outcomes render a resolved third step; anything still in flight shows the
     // active "Under Review" + upcoming "Approved" steps.
     const finalStep: Partial<Record<RequestStatus, RequestTimelineStep>> = {
-      APPROVED: { key: 'final', title: t('requestCenter.detail.timeline.approved.title'), state: 'done', description: t('requestCenter.detail.timeline.approved.description') },
-      REJECTED: { key: 'final', title: t('requestCenter.detail.timeline.rejected.title'), state: 'done', tone: 'danger', description: t('requestCenter.detail.timeline.rejected.description') },
-      RECALLED: { key: 'final', title: t('requestCenter.detail.timeline.recalled.title'), state: 'done', tone: 'muted', description: t('requestCenter.detail.timeline.recalled.description') },
-      CANCELLED: { key: 'final', title: t('requestCenter.detail.timeline.cancelled.title'), state: 'done', tone: 'muted', description: t('requestCenter.detail.timeline.cancelled.description') },
+      APPROVED: { key: 'final', title: t('requestCenter.detail.timeline.approved.title'), state: 'done', date: decidedOn, description: t('requestCenter.detail.timeline.approved.description') },
+      REJECTED: { key: 'final', title: t('requestCenter.detail.timeline.rejected.title'), state: 'done', tone: 'danger', date: decidedOn, reason, description: t('requestCenter.detail.timeline.rejected.description') },
+      RECALLED: { key: 'final', title: t('requestCenter.detail.timeline.recalled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.recalled.description') },
+      CANCELLED: { key: 'final', title: t('requestCenter.detail.timeline.cancelled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.cancelled.description') },
+      // RETURNED is not "still under review" — the admin has acted and handed it back, so it
+      // gets its own resolved step carrying the reason the vendor must address.
+      RETURNED: { key: 'final', title: t('requestCenter.detail.timeline.returned.title'), state: 'done', tone: 'warning', date: decidedOn, reason, description: t('requestCenter.detail.timeline.returned.description') },
     };
 
     if (finalStep[status]) {
@@ -186,8 +314,9 @@ export class RequestDetail {
     ];
   }
 
-  markerModifier(step: RequestTimelineStep): 'done' | 'active' | 'upcoming' | 'danger' | 'muted' {
+  markerModifier(step: RequestTimelineStep): 'done' | 'active' | 'upcoming' | 'danger' | 'muted' | 'warning' {
     if (step.state === 'done' && step.tone === 'danger') return 'danger';
+    if (step.state === 'done' && step.tone === 'warning') return 'warning';
     if (step.state === 'done' && step.tone === 'muted') return 'muted';
     return step.state;
   }
@@ -243,6 +372,33 @@ export class RequestDetail {
     this.requestCenterService.recall(this.rowKey);
     this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
     this.showRecallConfirm = false;
+  }
+
+  // ---- Resubmit confirmation (POST /cmsVendor/requests/{id}/submit) --------
+  // A returned request goes back to SUBMITTED via the same submit endpoint a draft uses.
+  showResubmitConfirm = false;
+
+  confirmResubmit(): void {
+    this.showResubmitConfirm = true;
+  }
+
+  onResubmitConfirmed(): void {
+    this.actionLoading.set(true);
+    this.api
+      .submit(this.requestId)
+      .pipe(finalize(() => this.actionLoading.set(false)))
+      .subscribe({
+        next: (updated) => {
+          this.showResubmitConfirm = false;
+          // Reload so the timeline and buttons reflect the new status (and the admin action
+          // is cleared server-side) rather than guessing at the new state locally.
+          this.details.set({ ...this.details()!, ...updated });
+        },
+        error: (err) => {
+          console.error('Resubmit request failed', err);
+          this.showResubmitConfirm = false;
+        },
+      });
   }
 
   // ---- Cancel confirmation (POST /cmsVendor/requests/{id}/cancel) -----------

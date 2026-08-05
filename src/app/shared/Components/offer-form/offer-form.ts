@@ -78,6 +78,8 @@ import {
   finalize,
 } from "rxjs/operators";
 import { Button } from "../button/button";
+import { CancelButton } from "../cancel-button/cancel-button";
+import { toVendorMediaUrl } from "../../utils/media-url";
 import { I18nService } from "../../i18n/i18n.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
 import { AuthService } from "../../../core/services/auth.service";
@@ -110,6 +112,7 @@ export interface OfferFormSubmit {
     ImageCropperComponent,
     RouterLink,
     Button,
+    CancelButton,
     TranslatePipe,
   ],
   templateUrl: "./offer-form.html",
@@ -145,6 +148,38 @@ export class OfferForm {
   editableFormData = input<Record<string, unknown> | null>(null);
   backNavRouteLink = input<string>("");
   isLoading = input<boolean>(false);
+  /**
+   * Display URL for an already-stored image. The control keeps the API's own relative path,
+   * since that is what goes back in the payload; only the `<img src>` is resolved.
+   */
+  imageSrc(value: unknown): string {
+    return toVendorMediaUrl(value);
+  }
+
+  /** Hosts that already render their own back button turn this off to avoid a second one. */
+  showBackNav = input<boolean>(true);
+  /**
+   * Which required-field profile to apply, independent of `actionType`.
+   *
+   * Edit mode normally relaxes the create-only requirements, because an existing offer is
+   * already complete and the vendor may be touching one field. A pending request is not: it
+   * has to stand on its own as the thing an admin approves, so the request-edit page prefills
+   * like an edit (which is what drives `editableFormData`) but validates like a create.
+   *
+   * Empty means "follow `actionType`", so the create and edit pages behave exactly as before.
+   */
+  validationMode = input<"create" | "edit" | "">("");
+
+  /** True when every create-time required field must be filled before the form can submit. */
+  private requiresFullValidation(): boolean {
+    return (this.validationMode() || this.actionType()) !== "edit";
+  }
+  /**
+   * What the footer's secondary button does. `draft` saves a draft (the offer pages);
+   * `cancel` just leaves (the request-edit page, where there is no separate draft to save).
+   */
+  secondaryAction = input<"draft" | "cancel">("draft");
+  cancelEvent = output<void>();
   minDate = (() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -467,8 +502,8 @@ export class OfferForm {
       }
     }
 
-    // Mandatory-only for create
-    if (!isEdit) {
+    // Mandatory-only for create — and for anything that opted into create-level validation.
+    if (this.requiresFullValidation()) {
       this.offerForm.get("titleAr")?.addValidators(Validators.required);
       this.offerForm.get("descriptionEn")?.addValidators(Validators.required);
       this.offerForm.get("descriptionAr")?.addValidators(Validators.required);

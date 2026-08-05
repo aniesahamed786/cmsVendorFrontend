@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 import { catchError, debounceTime, firstValueFrom, of, switchMap } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
+import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { noWhitespaceValidator } from '../../../../shared/utils/form-validators';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
@@ -31,6 +32,23 @@ export interface GeoPoint {
 }
 
 export interface BranchApiPayload {
+  branch_name: string;
+  branch_name_ar: string;
+  country: string;
+  country_ar: string;
+  region: string;
+  region_ar: string;
+  city: string;
+  city_ar: string;
+  address: string;
+  link: string;
+  branchRepresentativeName: string;
+  branchPhoneNumber: string;
+  settingsLocationId?: string;
+  geoPoint: GeoPoint;
+}
+
+export interface BranchFormModel {
   branch_name: string;
   branch_name_ar: string;
   country: string;
@@ -83,6 +101,7 @@ function arabicOnlyValidator(): ValidatorFn {
     PrimeUIModules,
     RouterLink,
     Button,
+    CancelButton,
     TranslatePipe,
   ],
   templateUrl: './branch-form.html',
@@ -103,10 +122,17 @@ export class BranchForm {
   backNavRouteLink = input<string>('');
   editableFormData = input<BranchApiPayload | null>(null);
   isLoading = input<boolean>(false);
+  /** Hosts that already render their own back button turn this off to avoid a second one. */
+  showBackNav = input<boolean>(true);
+  /**
+   * What the topbar's secondary button does. `draft` saves a draft (the branch pages);
+   * `cancel` just leaves (the request-edit page, where there is no separate draft to save).
+   */
+  secondaryAction = input<'draft' | 'cancel'>('draft');
 
   submitBranchFormEvent = output<BranchFormSubmit>();
   saveDraftEvent = output<BranchFormSubmit>();
-
+ cancelEvent = output<void>();
   branchForm: FormGroup;
 
   private readonly resolvingCoordinates = signal(false);

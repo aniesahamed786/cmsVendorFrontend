@@ -200,42 +200,11 @@
     </div>
   </div>
 
-  <!-- Business Locations -->
-  <div class="profile-form-section">
-    <div class="profile-form-section__header">
-      <div class="profile-form-section__icon"><i class="pi pi-map-marker"></i></div>
-      <h2>{{ 'profile.form.businessLocations' | translate }}</h2>
-    </div>
-    @if (savedLocations().length > 0) {
-    <div class="profile-location-list">
-      @for (location of savedLocations(); track location.id) {
-      <div class="profile-location-item">
-        <span class="profile-location-item__title">{{ location.nameEn }}</span>
-        <div class="profile-location-item__actions">
-          <button type="button" data-preview-section="branches" class="profile-link-action"
-            (click)="editLocation(location)">{{ 'common.edit' | translate }}</button>
-          <button type="button" class="profile-link-action profile-link-action--danger"
-            (click)="removeLocation(location.id)">{{ 'common.delete' | translate }}</button>
-        </div>
-      </div>
-      }
-    </div>
-    } @else {
-    <div class="profile-location-empty">{{ 'profile.form.noLocations' | translate }}</div>
-    }
-
-    <div class="profile-form-actions-row">
-      <button type="button" data-preview-section="branches" class="profile-link-action profile-link-action--add"
-        (click)="openNewLocationDialog()">
-        <span>+</span> {{ 'profile.form.addNewLocation' | translate }}
-      </button>
-    </div>
-  </div>
+  <!-- Business Locations intentionally absent: branches are their own STORE entity with their
+       own endpoints and request type, so nothing edited here could ever be saved on a PROFILE
+       request (see toVendorSchemaPayload, which omits `locations`). They are managed under
+       Branches instead. -->
 </form>
-
-<app-vendor-location-dialog [visible]="showLocationDialog()" [locationToEdit]="selectedLocationForEdit()"
-  (visibleChange)="showLocationDialog.set($event)" (saveLocation)="onLocationSaved($event)">
-</app-vendor-location-dialog>
 
 <!-- Branding image cropper -->
 <p-dialog [visible]="cropperVisible()" (visibleChange)="cropperVisible.set($event)" [modal]="true" [draggable]="false"

@@ -54,5 +54,7 @@ export interface RequestTimelineStep {
   date?: string;
   badge?: string;
   description: string;
-  tone?: 'default' | 'danger' | 'muted';
+  tone?: 'default' | 'danger' | 'muted' | 'warning';
+  /** The admin's reason for returning/rejecting — the vendor's only guidance on what to fix. */
+  reason?: string;
 }

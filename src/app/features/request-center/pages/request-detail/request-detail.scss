@@ -194,6 +194,129 @@
     overflow-wrap: anywhere;
   }
 
+  // ---- PROFILE request view — mirrors the vendor profile detail page ----
+  &__profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  &__profile-logo {
+    width: 4.5rem;
+    height: 4.5rem;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    color: var(--app-muted);
+    overflow: hidden;
+  }
+
+  &__profile-logo-image,
+  &__profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__profile-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__profile-subtitle {
+    margin: 0.15rem 0 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--app-muted);
+  }
+
+  &__profile-descriptions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__profile-text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--app-text);
+    white-space: pre-line;
+  }
+
+  &__profile-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+
+    @media (max-width: 1100px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__profile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  &__profile-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--app-text);
+    overflow-wrap: anywhere;
+
+    i {
+      color: var(--app-muted);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+  }
+
+  &__profile-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__profile-image-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  &__profile-image-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__profile-image-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 9rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    color: var(--app-muted);
+    overflow: hidden;
+  }
+
   &__meta-title {
     color: var(--app-muted);
     font-size: 0.9rem;
@@ -357,9 +480,46 @@
     background: #dc2626;
   }
 
+  /* Sanctioned warning-amber literal — a returned request is actionable, not a failure,
+     so it reads distinctly from the red of a rejection. */
+  &--warning {
+    background: #d97706;
+  }
+
   &--muted {
     background: var(--app-muted);
   }
+}
+
+/* The admin's reason for returning/rejecting, called out under its timeline step. */
+.request-detail__timeline-reason {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-left: 3px solid #d97706;
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+
+  &-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+  }
+
+  &-text {
+    margin: 0.2rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--app-text);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+}
+
+:host-context(html[lang="ar"]) .request-detail__timeline-reason {
+  border-left: none;
+  border-right: 3px solid #d97706;
 }
 
 .request-detail__timeline-item {

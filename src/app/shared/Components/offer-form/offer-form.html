@@ -1,4 +1,6 @@
 @if (!isLoading() && !initialLoading()) {
+<!-- Suppressed where the hosting page already owns the back navigation. -->
+@if (showBackNav()) {
 <div class="offer-form__back-bar">
   <div class="offer-form__row">
     <a [routerLink]="backNavRouteLink()" class="offer-back-btn">
@@ -7,6 +9,7 @@
     </a>
   </div>
 </div>
+}
 <div class="offer-form__layout">
   <form class="offer-form" [formGroup]="offerForm" (ngSubmit)="submit()">
     <div class="offer-form__section">
@@ -20,7 +23,7 @@
         </h2>
       </div>
       <div class="offer-form__grid">
-        <div class="offer-form__col-2">
+        <!-- <div class="offer-form__col-2">
           <label class="offer-form__label">
             {{ 'offerForm.label.vendor' | translate }}
             <span class="offer-form__required">*</span>
@@ -30,7 +33,7 @@
             <input pInputText [value]="vendorDisplayName()" readonly
               class="offer-form__input offer-form__input--pl5" />
           </div>
-        </div>
+        </div> -->
 
         <div class="offer-form__col-2">
           <label class="offer-form__label">
@@ -646,7 +649,7 @@
               {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="offerForm.get('offerImage')?.value" [alt]="'offerForm.upload.altMobile' | translate"
+                  <img [src]="imageSrc(offerForm.get('offerImage')?.value)" [alt]="'offerForm.upload.altMobile' | translate"
                     class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
@@ -686,7 +689,7 @@
               offerForm.get('offerImageLandscape')?.value === 'string') {
               <div class="offer-form__center-col">
                 <div class="offer-form__preview-img-wrap">
-                  <img [src]="offerForm.get('offerImageLandscape')?.value" [alt]="'offerForm.upload.altDesktop' | translate"
+                  <img [src]="imageSrc(offerForm.get('offerImageLandscape')?.value)" [alt]="'offerForm.upload.altDesktop' | translate"
                     class="offer-form__preview-img"
                     (error)="$any($event.target).style.display='none'" />
                 </div>
@@ -788,7 +791,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--mobile-highlight">
                   <span class="offer-form__crop-ratio-pill">9:16</span>
-                  <img [src]="offerForm.get('highlightImage')?.value" [alt]="'offerForm.highlight.altMobile' | translate"
+                  <img [src]="imageSrc(offerForm.get('highlightImage')?.value)" [alt]="'offerForm.highlight.altMobile' | translate"
                     class="offer-form__crop-image offer-form__crop-image--mobile"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
@@ -898,7 +901,7 @@
               <div class="offer-form__crop-preview-content offer-form__crop-preview-content--highlight">
                 <div class="offer-form__crop-image-wrap offer-form__crop-image-wrap--desktop-highlight">
                   <span class="offer-form__crop-ratio-pill">16:9</span>
-                  <img [src]="offerForm.get('highlightImageLandscape')?.value" [alt]="'offerForm.highlight.altDesktop' | translate"
+                  <img [src]="imageSrc(offerForm.get('highlightImageLandscape')?.value)" [alt]="'offerForm.highlight.altDesktop' | translate"
                     class="offer-form__crop-image offer-form__crop-image--desktop"
                     (error)="$any($event.target).style.display='none'" />
                   <div class="offer-form__crop-overlay" aria-hidden="true">
@@ -1104,9 +1107,13 @@
 
     <div class="offer-form__footer">
       <div class="offer-form__footer-actions">
+        @if (secondaryAction() === 'cancel') {
+        <app-cancel-button [disabled]="isSubmitDisabled()" (click)="cancelEvent.emit()" />
+        } @else {
         <app-button variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
           {{ 'offerForm.footer.saveDraft' | translate }}
         </app-button>
+        }
         <app-button variant="primary" type="submit" icon="pi pi-check" [disabled]="isSubmitDisabled()">
           {{ buttonName() }}
         </app-button>
