@@ -22,7 +22,7 @@ import {
 import { OfferDetails } from '../../../Offers/Components/offer-details/offer-details';
 import { BranchesService } from '../../../Branches/services/branches.service';
 import { environment } from '../../../../../environments/environment';
-import { RequestAdminAction, RequestDetailsResponse } from '../../models/request-api.model';
+import { RequestAdminAction, RequestDetailsResponse, RequestHistoryResponse } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 
 /**
@@ -38,6 +38,29 @@ function toIdList(value: unknown): string[] {
       return String(record['$oid'] ?? record['id'] ?? record['_id'] ?? '');
     })
     .filter(Boolean);
+}
+
+/**
+ * How each logged action renders. The audit trail speaks in verbs (`RETURNED`), the timeline
+ * in outcomes ("Returned for Changes") — this is the one place that translation lives.
+ */
+const ACTION_META: Record<string, { titleKey: string; descriptionKey: string; tone?: 'danger' | 'muted' | 'warning' }> = {
+  SUBMITTED: { titleKey: 'submitted.title', descriptionKey: 'submitted.description' },
+  APPROVED: { titleKey: 'approved.title', descriptionKey: 'approved.description' },
+  REJECTED: { titleKey: 'rejected.title', descriptionKey: 'rejected.description', tone: 'danger' },
+  RETURNED: { titleKey: 'returned.title', descriptionKey: 'returned.description', tone: 'warning' },
+  RECALLED: { titleKey: 'recalled.title', descriptionKey: 'recalled.description', tone: 'muted' },
+  CANCELLED: { titleKey: 'cancelled.title', descriptionKey: 'cancelled.description', tone: 'muted' },
+};
+
+/** `VENDOR_ADMIN` → `Vendor Admin`. Roles are stored as enum-ish constants, not labels. */
+function prettyRole(role: string | null | undefined): string {
+  if (!role) return '';
+  return role
+    .split(/[_\s]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 }
 
 @Component({
@@ -70,6 +93,15 @@ export class RequestDetail {
   readonly details = signal<RequestDetailsResponse | null>(null);
   readonly changesLoading = signal(true);
   readonly changesError = signal<string | null>(null);
+
+  // ---- Audit trail (GET /cmsVendor/requests/getHistory/{id}) -----------------
+  /**
+   * Every action taken on this request, oldest first. This is what drives the timeline: a
+   * request can be returned, resubmitted and approved, and only the log holds all of it —
+   * `adminAction` on the request document keeps just the most recent decision.
+   */
+  readonly history = signal<RequestHistoryResponse[]>([]);
+  readonly historyLoading = signal(true);
 
   /** The entity rendered in full, with this request's edits applied and flagged. */
   readonly changeSections = computed<RequestViewSection[]>(() => buildRequestView(this.details()));
@@ -138,6 +170,31 @@ export class RequestDetail {
 
   constructor() {
     this.loadDetails();
+    this.loadHistory();
+  }
+
+  /**
+   * Keyed on the requestId alone, so it works on a deep link. A failure leaves the log empty
+   * and the timeline falls back to the status-derived one — losing the audit trail should not
+   * cost the vendor the whole sidebar.
+   */
+  private loadHistory(): void {
+    if (!this.rowKey) {
+      this.historyLoading.set(false);
+      return;
+    }
+
+    this.historyLoading.set(true);
+    this.api
+      .getHistory(this.rowKey)
+      .pipe(finalize(() => this.historyLoading.set(false)))
+      .subscribe({
+        next: (entries) => this.history.set(entries ?? []),
+        error: (err) => {
+          console.error('Failed to load request history', err);
+          this.history.set([]);
+        },
+      });
   }
 
   private loadDetails(): void {
@@ -249,11 +306,79 @@ export class RequestDetail {
     this.i18n.loadSeq();
     const status = this.status();
     if (!status) return [];
-    // submittedOn is the real submission stamp; fall back to the row's timestamp, then createdOn.
+
+    // The audit trail is the real record — use it whenever there is one. The status-derived
+    // timeline below stays as the fallback for a request with no logged action yet (a DRAFT
+    // that was never submitted) or if the history call failed.
+    const log = this.history();
+    if (log.length) return this.buildTimelineFromHistory(log, status);
+
     const details = this.details();
+    // submittedOn is the real submission stamp; fall back to the row's timestamp, then createdOn.
     const submittedAt = details?.submittedOn ?? this.row()?.timestamp ?? details?.createdOn ?? '';
     return this.buildTimeline(status, submittedAt, details?.adminAction ?? null);
   });
+
+  /**
+   * The logged actions in order, each its own step, followed by an "Under Review" step while
+   * the request is still sitting with the admin.
+   *
+   * Every entry is rendered, not just the latest: a request that was returned, fixed and
+   * approved should read as that whole story, which is the difference between this and the
+   * three-step timeline it replaces.
+   */
+  private buildTimelineFromHistory(
+    log: RequestHistoryResponse[],
+    status: RequestStatus,
+  ): RequestTimelineStep[] {
+    const t = (key: string) => this.i18n.t(`requestCenter.detail.timeline.${key}`);
+
+    const steps: RequestTimelineStep[] = [...log]
+      .sort((a, b) => new Date(a.createdOn).getTime() - new Date(b.createdOn).getTime())
+      .map((entry, index) => {
+        const meta = ACTION_META[String(entry.action ?? '').toUpperCase()];
+        return {
+          key: `${entry.action}-${index}`,
+          title: meta ? t(meta.titleKey) : prettyRole(entry.action),
+          description: meta ? t(meta.descriptionKey) : '',
+          state: 'done' as const,
+          tone: meta?.tone,
+          date: this.formatTimestamp(entry.createdOn),
+          // The admin's note is the vendor's only guidance on a rejection or return.
+          reason: entry.remarks ?? undefined,
+          actor: prettyRole(entry.performedRole),
+        };
+      });
+
+    // Awaiting a decision — say so, rather than ending on "Submitted" with no sense of what
+    // happens next.
+    if (status === 'SUBMITTED') {
+      steps.push({
+        key: 'underReview',
+        title: t('underReview.title'),
+        state: 'active',
+        badge: t('underReview.badge'),
+        description: t('underReview.description'),
+      });
+    }
+
+    return steps;
+  }
+
+  /** Timestamps arrive as ISO strings; the timeline is read by people. */
+  private formatTimestamp(value: string | null | undefined): string {
+    if (!value) return '';
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+      ? String(value)
+      : date.toLocaleString(this.i18n.lang() === 'ar' ? 'ar' : 'en', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+  }
 
   private buildTimeline(
     status: RequestStatus,
@@ -263,7 +388,8 @@ export class RequestDetail {
     const t = (key: string) => this.i18n.t(key);
     // The admin's reason is the whole point of a RETURNED/REJECTED decision — surface it.
     const reason = adminAction?.reason ?? undefined;
-    const decidedOn = adminAction?.actionOn ?? undefined;
+    const decidedOn = this.formatTimestamp(adminAction?.actionOn) || undefined;
+    submittedAt = this.formatTimestamp(submittedAt);
 
     const submitted: RequestTimelineStep = {
       key: 'submitted',

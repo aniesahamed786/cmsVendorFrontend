@@ -272,7 +272,7 @@
 
         <!-- Built from the request's own status, so it works on a deep link/refresh — it must
              not depend on the session-only list row. -->
-        @if (changesLoading()) {
+        @if (changesLoading() || historyLoading()) {
         @for (line of [1, 2, 3]; track line) {
         <div class="request-detail__field">
           <span class="app-skeleton request-detail__skeleton-label"></span>
@@ -303,7 +303,14 @@
                 <span class="request-detail__timeline-item-badge">{{ step.badge }}</span>
                 }
               </div>
+              @if (step.actor) {
+              <span class="request-detail__timeline-item-actor">
+                {{ 'requestCenter.detail.timeline.performedBy' | translate }} {{ step.actor }}
+              </span>
+              }
+              @if (step.description) {
               <p class="request-detail__timeline-item-desc">{{ step.description }}</p>
+              }
               <!-- The admin's reason for returning/rejecting: the only guidance the vendor
                    gets on what to fix, so it is called out rather than buried. -->
               @if (step.reason) {
