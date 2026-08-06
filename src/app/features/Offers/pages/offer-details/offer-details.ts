@@ -10,13 +10,14 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { OfferDetailService } from '../../services/offer-detail.service';
 import { environment } from '../../../../../environments/environment';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { OfferHeroCard, OfferHeroVendor } from '../../Components/offer-hero-card/offer-hero-card';
 import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
 
 type RedemptionTab = 'in-store' | 'online';
 
 @Component({
   selector: 'app-offer-details-page',
-  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button, TranslatePipe, ConfirmationPopUp],
+  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button, TranslatePipe, ConfirmationPopUp, OfferHeroCard],
   templateUrl: './offer-details.html',
   styleUrl: './offer-details.scss',
   // Component-scoped so this page's "already pending" state is its own.
@@ -151,13 +152,14 @@ export class OfferDetailsPage {
     console.log('Navigate to messaging center to raise ticket');
   }
 
-  getVendorLogo(offer: any): string {
-    if (this.vendorLogoFailed()) return '';
-    return this.backendUrl + this.OfferBasicData()?.vendorLogo.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
-  }
-
-  markVendorLogoError(): void {
-    this.vendorLogoFailed.set(true);
+  /** Vendor identity for the hero banner — the offer detail response carries it inline. */
+  heroVendor(): OfferHeroVendor {
+    const offer = this.OfferBasicData();
+    return {
+      name: offer?.vendorName ?? '',
+      nameAr: offer?.vendorNameAr ?? '',
+      logo: offer?.vendorLogo ?? '',
+    };
   }
 
   getVendorNameAr(offer: any): string {

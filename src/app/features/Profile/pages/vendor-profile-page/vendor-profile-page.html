@@ -1,30 +1,12 @@
 <div class="vendor-profile-page">
   @if (profile(); as vendor) {
-  <div class="vendor-profile-page__hero">
-    <button class="vendor-profile-page__edit-btn" [disabled]="pendingRequest.checking()" (click)="onEditProfile()">
+  <app-vendor-hero-card [name]="vendor.vendorName" [nameAr]="vendor.vendorNameAr" [logo]="vendor.vendorLogo">
+    <button hero-action class="vendor-profile-page__edit-btn" [disabled]="pendingRequest.checking()"
+      (click)="onEditProfile()">
       <i class="pi pi-pencil"></i>
       {{ 'profile.edit' | translate }}
     </button>
-    <div class="vendor-profile-page__hero-content">
-     <div class="vendor-profile-page__hero-logo">
-  @if (vendor.vendorLogo) {
-    <img
-      [src]="getImageUrl(vendor.vendorLogo)"
-      [alt]="vendor.vendorName"
-      class="vendor-profile-page__hero-logo-image" />
-  } @else {
-    <i class="pi pi-image vendor-profile-page__hero-logo-icon"></i>
-  }
-</div>
-      <div class="vendor-profile-page__hero-details">
-        <h1 class="vendor-profile-page__hero-title">{{ vendor.vendorName }}</h1>
-        <h2 class="vendor-profile-page__hero-subtitle">{{ vendor.vendorNameAr }}</h2>
-        <!-- <span class="vendor-profile-page__status-badge">
-          {{ vendor.contractStatus === 'Active Contract' ? ('profile.statusActive' | translate) : vendor.contractStatus }}
-        </span> -->
-      </div>
-    </div>
-  </div>
+  </app-vendor-hero-card>
 
   <div class="vendor-profile-page__layout">
     <div class="vendor-profile-page__main">

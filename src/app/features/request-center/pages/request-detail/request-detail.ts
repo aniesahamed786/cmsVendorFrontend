@@ -20,7 +20,10 @@ import {
   toProfileRequestView,
 } from '../../models/request-entity-view.mapper';
 import { OfferDetails } from '../../../Offers/Components/offer-details/offer-details';
+import { OfferHeroCard, OfferHeroVendor } from '../../../Offers/Components/offer-hero-card/offer-hero-card';
 import { BranchesService } from '../../../Branches/services/branches.service';
+import { VendorHeroCard } from '../../../Profile/components/vendor-hero-card/vendor-hero-card';
+import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
 import { environment } from '../../../../../environments/environment';
 import { RequestAdminAction, RequestDetailsResponse, RequestHistoryResponse } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
@@ -66,7 +69,7 @@ function prettyRole(role: string | null | undefined): string {
 @Component({
   selector: 'app-request-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, PrimeUIModules, TranslatePipe, BackButton, Button, ConfirmationPopUp, OfferDetails],
+  imports: [CommonModule, RouterLink, PrimeUIModules, TranslatePipe, BackButton, Button, ConfirmationPopUp, OfferDetails, OfferHeroCard, VendorHeroCard],
   templateUrl: './request-detail.html',
   styleUrl: './request-detail.scss',
 })
@@ -77,6 +80,7 @@ export class RequestDetail {
   private readonly requestCenterService = inject(RequestCenterService);
   private readonly api = inject(RequestCenterApiService);
   private readonly branchesService = inject(BranchesService);
+  private readonly vendorProfileService = inject(VendorProfileService);
 
   private readonly rowKey = this.route.snapshot.paramMap.get('id') ?? '';
   readonly row = this.requestCenterService.getRow(this.rowKey);
@@ -114,6 +118,14 @@ export class RequestDetail {
 
   readonly entityType = computed(() => this.details()?.entityType ?? null);
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
+
+  // ---- Offer hero banner ----------------------------------------------------
+  /**
+   * Vendor identity for the hero. A request payload only carries `vendorId`, so the name and
+   * logo come from the caller's own profile — which is always the right vendor here, since a
+   * vendor can only ever see their own requests.
+   */
+  readonly heroVendor = signal<OfferHeroVendor>({ name: '', nameAr: '', logo: '' });
 
   // ---- Offer locations ------------------------------------------------------
   // An offer payload stores `locationIds` only, so the branch names have to be resolved
@@ -212,8 +224,12 @@ export class RequestDetail {
       .subscribe({
         next: (details) => {
           this.details.set(details);
-          // Only offers reference branches; every other entity type would waste the call.
-          if (details?.entityType === 'OFFER') this.loadVendorLocations();
+          // Only offers reference branches or render the vendor hero; every other entity
+          // type would waste both calls.
+          if (details?.entityType === 'OFFER') {
+            this.loadVendorLocations();
+            this.loadHeroVendor();
+          }
         },
         error: (err) => {
           console.error('Failed to load request details', err);
@@ -230,6 +246,22 @@ export class RequestDetail {
    * only costs the locations card — the rest of the request still renders — so it degrades to
    * an empty list rather than an error state.
    */
+  /**
+   * The vendor's own name and logo for the hero banner. Degrades to the placeholder logo and
+   * "Unknown vendor" on failure — the request itself still renders.
+   */
+  private loadHeroVendor(): void {
+    this.vendorProfileService.getVendorProfile().subscribe({
+      next: (profile) =>
+        this.heroVendor.set({
+          name: profile?.vendorName ?? '',
+          nameAr: profile?.vendorNameAr ?? '',
+          logo: profile?.vendorLogo ?? '',
+        }),
+      error: (err) => console.error('Failed to load vendor for request hero', err),
+    });
+  }
+
   private loadVendorLocations(): void {
     this.branchesService.getBranches().subscribe({
       next: (rows) =>

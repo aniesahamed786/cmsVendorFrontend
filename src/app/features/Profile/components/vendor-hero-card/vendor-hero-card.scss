@@ -1,0 +1,79 @@
+/* A custom element is `display: inline` by default, which would shrink-wrap the banner
+   instead of letting it span the full row. */
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Moved verbatim from vendor-profile-page.css when this was extracted, so the profile page
+   and the Request Center render the identical banner. */
+.vendor-hero-card {
+  position: relative;
+  width: 100%;
+  height: 10rem;
+  background: var(--app-primary);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+
+  @media (min-width: 768px) {
+    height: 12rem;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__logo {
+    width: 8rem;
+    height: 8rem;
+    /* on-fill contrast: white logo plate sitting on the brand hero */
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border: 1px solid var(--app-border);
+    flex-shrink: 0;
+  }
+
+  &__logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  &__logo-icon {
+    font-size: 4rem;
+    color: var(--app-muted);
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 2.25rem;
+    /* on-primary contrast: white text over the brand hero fill */
+    color: #ffffff;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  &__subtitle {
+    font-size: 1.875rem;
+    /* on-primary contrast: white text over the brand hero fill */
+    color: #ffffff;
+    font-weight: 300;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.2;
+  }
+}

@@ -1,0 +1,18 @@
+<div class="vendor-hero-card">
+  <ng-content select="[hero-action]"></ng-content>
+
+  <div class="vendor-hero-card__content">
+    <div class="vendor-hero-card__logo">
+      @if (logoUrl()) {
+      <img [src]="logoUrl()" [alt]="name()" class="vendor-hero-card__logo-image" />
+      } @else {
+      <i class="pi pi-image vendor-hero-card__logo-icon"></i>
+      }
+    </div>
+
+    <div class="vendor-hero-card__details">
+      <h1 class="vendor-hero-card__title">{{ name() }}</h1>
+      <h2 class="vendor-hero-card__subtitle" dir="rtl">{{ nameAr() }}</h2>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
+import { VendorHeroCard } from '../../components/vendor-hero-card/vendor-hero-card';
 import { MOCK_VENDOR_PROFILE } from '../../data/mock-vendor-profile';
 import {
   OfferStatus,
@@ -20,7 +21,7 @@ import { PendingRequestCheck } from '../../../request-center/services/pending-re
 @Component({
   selector: 'app-vendor-profile-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, VendorPreview, TranslatePipe, ConfirmationPopUp],
+  imports: [CommonModule, PrimeUIModules, VendorPreview, TranslatePipe, ConfirmationPopUp, VendorHeroCard],
   templateUrl: './vendor-profile-page.html',
   styleUrl: './vendor-profile-page.css',
   // Component-scoped so this page's "already pending" state is its own.

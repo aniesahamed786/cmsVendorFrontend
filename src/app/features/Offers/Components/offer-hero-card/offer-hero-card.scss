@@ -1,0 +1,202 @@
+/* A custom element is `display: inline` by default, which would shrink-wrap the banner and
+   pull the Arabic column in beside the English one instead of to the opposite edge. The
+   markup relies on the card filling its row for `justify-content: space-between` to mean
+   anything. */
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Hero section — moved verbatim from offer-details.scss when this was extracted, so the
+   offer page and the Request Center render the identical header. */
+.offer-hero-card,
+:host ::ng-deep .offer-hero-card .p-card,
+:host ::ng-deep .offer-hero-card.p-card {
+  border-radius: 0 !important;
+  background: var(--app-primary-gradient, linear-gradient(91.48deg, var(--app-primary) 10%, var(--app-primary-700) 90%)) !important;
+  color: #ffffff; /* on-primary contrast — hero sits on the primary gradient in both themes */
+}
+
+/* The card's inner wrappers must pass the full width through, otherwise the flex row inside
+   shrink-wraps and the two language columns end up adjacent. */
+:host ::ng-deep .offer-hero-card .p-card-body,
+:host ::ng-deep .offer-hero-card .p-card-content,
+:host ::ng-deep .offer-hero-card.p-card .p-card-body,
+:host ::ng-deep .offer-hero-card.p-card .p-card-content {
+  width: 100%;
+  display: block;
+}
+
+.offer-hero-card {
+  display: block;
+  width: 100%;
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    // Explicit, because `space-between` only spreads the columns if this row actually owns
+    // the full width — relying on the PrimeNG card body to hand it down left the Arabic
+    // column sitting beside the English one instead of at the opposite edge.
+    width: 100%;
+
+    @media (min-width: 768px) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      // Each language takes half the row, so the two headlines sit at opposite edges no
+      // matter how long either one is.
+      flex: 1 1 0;
+      width: auto;
+    }
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    // The column is `dir="rtl"`, so flex-start is its right edge.
+    align-items: flex-start;
+    text-align: right;
+    min-width: 0;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      flex: 1 1 0;
+      width: auto;
+    }
+  }
+
+  &__vendor-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__vendor-logo {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    background-color: var(--app-surface);
+    flex-shrink: 0;
+  }
+
+  &__vendor-logo-placeholder {
+    width: 3rem;
+    height: 3rem;
+    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--app-muted);
+    border: 1px solid var(--app-border);
+    flex-shrink: 0;
+
+    i {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__vendor-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff; /* on-primary contrast */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #ffffff; /* on-primary contrast */
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    @media (min-width: 768px) {
+      font-size: 2.25rem;
+    }
+  }
+
+  &__discount {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__currency-icon {
+    width: 1.875rem;
+    height: 1.875rem;
+    object-fit: contain;
+
+    @media (min-width: 768px) {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+
+  &__mode-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 0.375rem 0.75rem;
+    width: fit-content;
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 500;
+      /* Fixed-contrast literal — the mode badge is always white (it sits on the primary
+         gradient), so a theme token like --app-text would invert to light in dark mode
+         and vanish. Slate-600 stays put. */
+      color: #4B5563;
+      text-transform: capitalize;
+    }
+  }
+}
+
+/* Status Tag — PrimeNG 21 applies .p-tag to the <p-tag> host element itself */
+:host ::ng-deep p-tag.offer-status-tag {
+  border: 0 !important;
+  border-radius: 9999px !important;
+  padding: 0.35rem 1rem !important;
+  color: #ffffff !important; /* on-fill contrast — label sits on a saturated status colour */
+}
+
+:host ::ng-deep p-tag.offer-status-tag .p-tag-label {
+  color: #ffffff !important;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* No --app-success / --app-info / --app-warning tokens exist yet, so the four status hues
+   stay literals. #DC2626 is the app's sanctioned danger red. */
+:host ::ng-deep p-tag.offer-status-tag--active {
+  background: #16A34A !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--scheduled {
+  background: #0EA5E9 !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--expired {
+  background: #DC2626 !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--inactive {
+  background: #F97316 !important;
+}
