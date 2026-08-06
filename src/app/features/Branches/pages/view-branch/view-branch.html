@@ -5,6 +5,14 @@
       <i class="pi pi-arrow-left"></i>
       <span>{{ 'branchForm.back' | translate }}</span>
     </a>
+
+    @if (branch()) {
+    <div class="branch-view__topbar-actions">
+      <app-button variant="primary" icon="pi pi-pencil" [disabled]="pendingRequest.checking()" (click)="navigateToEditBranch()">
+        {{ 'common.edit' | translate }}
+      </app-button>
+    </div>
+    }
   </div>
 
   @if (branch(); as data) {
@@ -114,3 +122,13 @@
   </div>
 </div>
 }
+
+<!-- Editing is blocked while a change request for this branch is still awaiting review — only
+     one open UPDATE request is allowed per entity. -->
+<app-confirmation-pop-up [visible]="!!pendingRequest.blockedBy()"
+  [title]="'requestCenter.pending.title' | translate"
+  [message]="pendingRequestMessage()"
+  [confirmLabel]="'requestCenter.pending.viewRequest' | translate"
+  [cancelLabel]="'common.cancel' | translate"
+  (confirm)="pendingRequest.viewBlockingRequest()"
+  (cancel)="pendingRequest.dismiss()" />
