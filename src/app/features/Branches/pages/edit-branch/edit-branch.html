@@ -4,6 +4,7 @@
   [backNavRouteLink]="'/branches'"
   [editableFormData]="editableFormData()"
   [isLoading]="loading()"
+  [saving]="saving()"
   (submitBranchFormEvent)="save($event)"
   (saveDraftEvent)="saveDraft($event)"
 ></app-branch-form>

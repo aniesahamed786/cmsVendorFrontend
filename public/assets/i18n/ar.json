@@ -310,7 +310,7 @@
     },
     "type": {
       "offer": "عرض",
-      "store": "متجر",
+      "store": "فرع",
       "profile": "الملف الشخصي",
       "highlight": "أبرز"
     },
@@ -1184,8 +1184,8 @@
     },
     "footer": {
       "saveDraft": "حفظ كمسودة",
-      "addStore": "إضافة متجر",
-      "updateStore": "تحديث المتجر",
+      "addStore": "إضافة فرع",
+      "updateStore": "تعديل الفرع",
       "edit": "تعديل"
     },
     "view": {
@@ -1208,7 +1208,9 @@
       "loadFailed": "فشل تحميل الفرع",
       "loadFailedDetail": "تعذر تحميل بيانات هذا الفرع. يرجى المحاولة مرة أخرى.",
       "noChangesSummary": "لا توجد تغييرات لحفظها",
-      "noChangesDetail": "لم تقم بإجراء أي تغييرات على هذا الفرع بعد."
+      "noChangesDetail": "لم تقم بإجراء أي تغييرات على هذا الفرع بعد.",
+      "missingFieldsSummary": "حقول مطلوبة ناقصة",
+      "missingFieldsDetail": "يرجى تعبئة جميع الحقول المطلوبة قبل المتابعة."
     }
   },
   "settingsPage": {

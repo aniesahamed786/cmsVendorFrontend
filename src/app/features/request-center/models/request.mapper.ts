@@ -1,13 +1,10 @@
-import {
-  ApiRequestEntityType,
-  ApiRequestType,
-  RequestSummaryResponse,
-} from './request-api.model';
+import { ApiRequestType, RequestSummaryResponse } from './request-api.model';
 import { RequestActionType, RequestRow, RequestStatus, RequestType, TERMINAL_STATUSES } from './request.model';
 
-const ENTITY_TO_TYPE: Record<ApiRequestEntityType, RequestType> = {
+const ENTITY_TO_TYPE: Record<string, RequestType> = {
   OFFER: 'Offer',
   STORE: 'Store',
+  BRANCH: 'Store',
   PROFILE: 'Profile',
   HIGHLIGHT: 'Highlight',
 };
@@ -35,7 +32,7 @@ export function toRequestRow(summary: RequestSummaryResponse): RequestRow {
   return {
     rowKey: summary.requestId,
     id: summary.requestId,
-    type: ENTITY_TO_TYPE[summary.entityType] ?? 'Offer',
+    type: ENTITY_TO_TYPE[String(summary.entityType ?? '').toUpperCase()] ?? 'Offer',
     actionType: REQUEST_TO_ACTION[summary.requestType] ?? 'Created',
     targetEntity: summary.title,
     timestamp: formatTimestamp(date),

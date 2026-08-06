@@ -17,6 +17,7 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
 import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { noWhitespaceValidator } from '../../../../shared/utils/form-validators';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { MapUrlCoordinatesService } from '../../../../features/vendors/services/map-url-coordinates.service';
@@ -114,6 +115,7 @@ export class BranchForm {
  
   private readonly fb = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
+  private readonly i18n = inject(I18nService);
   private readonly mapUrlCoordinatesService = inject(MapUrlCoordinatesService);
   private readonly locationSettingsService = inject(LocationSettingsService);
  
@@ -122,22 +124,22 @@ export class BranchForm {
   backNavRouteLink = input<string>('');
   editableFormData = input<BranchApiPayload | null>(null);
   isLoading = input<boolean>(false);
-  /** Hosts that already render their own back button turn this off to avoid a second one. */
+  saving = input<boolean>(false);
   showBackNav = input<boolean>(true);
-  /**
-   * What the topbar's secondary button does. `draft` saves a draft (the branch pages);
-   * `cancel` just leaves (the request-edit page, where there is no separate draft to save).
-   */
+  
   secondaryAction = input<'draft' | 'cancel'>('draft');
  
   submitBranchFormEvent = output<BranchFormSubmit>();
   saveDraftEvent = output<BranchFormSubmit>();
-cancelEvent = output<void>();
+  cancelEvent = output<void>();
   branchForm: FormGroup;
  
   private readonly resolvingCoordinates = signal(false);
   readonly locationPhoneError = signal(false);
- 
+
+  private readonly hasUnsavedEditChanges = signal(false);
+  private suppressDirtyTracking = false;
+
   private readonly locationSettings = signal<LocationSettingsRow[]>([]);
   private readonly selectedCountry = signal<string>('Saudi Arabia');
   private readonly selectedRegion = signal<string>('');
@@ -190,7 +192,6 @@ cancelEvent = output<void>();
       phoneNumber: ['', [Validators.maxLength(20), Validators.pattern(this.phonePattern)]],
       latitude: [null as number | null],
       longitude: [null as number | null],
-      // requestSummary: ['', [Validators.required, noWhitespaceValidator()]],
     });
  
     this.locationSettingsService.list().subscribe({
@@ -213,7 +214,15 @@ cancelEvent = output<void>();
     });
  
     this.setupMapLinkSubscription();
- 
+
+    this.branchForm.valueChanges.subscribe(() => {
+      if (this.suppressDirtyTracking) {
+        return;
+      }
+      this.branchForm.markAsDirty();
+      this.hasUnsavedEditChanges.set(true);
+    });
+
     effect(() => {
       const data = this.editableFormData();
       if (!data) {
@@ -222,7 +231,9 @@ cancelEvent = output<void>();
       this.originalGoogleMapLink = String(data.link ?? '').trim();
       this.incomingSettingsLocationId = data.settingsLocationId;
       const [longitude, latitude] = data.geoPoint?.coordinates ?? [null, null];
- 
+
+
+      this.suppressDirtyTracking = true;
       this.branchForm.patchValue(
         {
           locationNameEn: data.branch_name,
@@ -239,7 +250,8 @@ cancelEvent = output<void>();
         },
         { emitEvent: false },
       );
- 
+      this.suppressDirtyTracking = false;
+
       this.selectedCountry.set(String(data.country ?? '').trim());
       this.selectedRegion.set(String(data.region ?? '').trim());
     });
@@ -262,9 +274,16 @@ cancelEvent = output<void>();
     const control = this.branchForm.get(controlName);
     return !!control && control.touched && control.hasError(errorKey);
   }
- 
+
+  hasEditChanges(): boolean {
+    return !this.isEditMode || this.hasUnsavedEditChanges();
+  }
+
   isSubmitDisabled(): boolean {
-    return this.isLoading() || this.resolvingCoordinates();
+    if (this.isEditMode && !this.hasEditChanges()) {
+      return true;
+    }
+    return this.isLoading() || this.resolvingCoordinates() || this.saving();
   }
  
   sanitizeArabicInput(controlName: string): void {
@@ -334,9 +353,15 @@ cancelEvent = output<void>();
   async submit(): Promise<void> {
     if (this.branchForm.invalid) {
       this.branchForm.markAllAsTouched();
+      this.messageService.add({
+        severity: 'warn',
+        summary: this.i18n.t('branchForm.toast.missingFieldsSummary'),
+        detail: this.i18n.t('branchForm.toast.missingFieldsDetail'),
+        life: 5000,
+      });
       return;
     }
- 
+
     const value = this.branchForm.value;
     let latitude: number | null = value.latitude;
     let longitude: number | null = value.longitude;
@@ -387,9 +412,15 @@ cancelEvent = output<void>();
   onSaveDraft(): void {
     if (this.branchForm.invalid) {
       this.branchForm.markAllAsTouched();
+      this.messageService.add({
+        severity: 'warn',
+        summary: this.i18n.t('branchForm.toast.missingFieldsSummary'),
+        detail: this.i18n.t('branchForm.toast.missingFieldsDetail'),
+        life: 5000,
+      });
       return;
     }
- 
+
     const value = this.branchForm.value;
     const payload = this.buildApiPayload(value.latitude, value.longitude);
     const changedFields = this.diffAgainstBaseline(payload);

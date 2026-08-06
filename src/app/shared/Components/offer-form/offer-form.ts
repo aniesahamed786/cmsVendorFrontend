@@ -199,13 +199,20 @@ export class OfferForm {
   highlightDesktopFileInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild(PreviewOfferDetails) previewComponent?: PreviewOfferDetails;
 
+
+  private readonly overlayTriggerFields = new Set(['startdate', 'expiry']);
+
   @HostListener('focusin', ['$event'])
   onFocusIn(event: FocusEvent) {
     const target = event.target as HTMLElement;
     const controlEl = target.closest('[formControlName]');
     if (controlEl) {
       const formControlName = controlEl.getAttribute('formControlName');
-      if (formControlName && this.previewComponent) {
+      if (
+        formControlName &&
+        this.previewComponent &&
+        !this.overlayTriggerFields.has(formControlName)
+      ) {
         this.previewComponent.scrollToSection(formControlName);
       }
     }

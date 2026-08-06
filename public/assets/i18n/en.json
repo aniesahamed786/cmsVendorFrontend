@@ -310,7 +310,7 @@
     },
     "type": {
       "offer": "Offer",
-      "store": "Store",
+      "store": "Branch",
       "profile": "Profile",
       "highlight": "Highlight"
     },
@@ -1182,8 +1182,8 @@
     },
     "footer": {
       "saveDraft": "Save As Draft",
-      "addStore": "Add Store",
-      "updateStore": "Update Store",
+      "addStore": "Add Branch",
+      "updateStore": "Edit Branch",
       "edit": "Edit"
     },
     "view": {
@@ -1206,7 +1206,9 @@
       "loadFailed": "Failed to Load Branch",
       "loadFailedDetail": "Could not load this branch's details. Please try again.",
       "noChangesSummary": "No Changes to Save",
-      "noChangesDetail": "You haven't changed anything on this branch yet."
+      "noChangesDetail": "You haven't changed anything on this branch yet.",
+      "missingFieldsSummary": "Missing Required Fields",
+      "missingFieldsDetail": "Please fill in all required fields before continuing."
     }
   },
   "settingsPage": {
