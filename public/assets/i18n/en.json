@@ -346,6 +346,15 @@
       "resubmitRequest": "Resubmit",
       "cancelRequest": "Cancel Request",
       "editRequest": "Edit Request",
+      "tab": {
+        "details": "Request Details",
+        "changes": "Changes"
+      },
+      "diff": {
+        "previous": "Previous value",
+        "updated": "Requested value",
+        "empty": "This request has no field-level changes recorded."
+      },
       "notFound": "Request not found.",
       "noBasicInfo": "No additional details available for this request.",
       "editedBadge": "Edited",

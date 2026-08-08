@@ -206,6 +206,28 @@ function sectionsFor(entityType: string | undefined): SectionDef[] {
 }
 
 /**
+ * i18n key for a raw diff field name, e.g. `crn_no` → the "CR Number" label.
+ *
+ * Searches both spellings a field can arrive under, since the diff keys off whatever
+ * `requestData` used. Falls back to the raw name so an unmapped field still reads as
+ * something rather than disappearing.
+ */
+export function changeFieldLabelKey(field: string, entityType: string | undefined): string {
+  for (const section of sectionsFor(entityType)) {
+    for (const def of section.fields) {
+      if (def.key === field || def.aliases?.includes(field)) return def.labelKey;
+    }
+  }
+  // Also try the other entity's layout — STORE requests have no section defs of their own.
+  for (const section of [...OFFER_SECTIONS, ...PROFILE_SECTIONS]) {
+    for (const def of section.fields) {
+      if (def.key === field || def.aliases?.includes(field)) return def.labelKey;
+    }
+  }
+  return field;
+}
+
+/**
  * Builds the read-only view of a request: every field of the entity, showing the value it
  * would have if the request is approved, with the ones this request edits flagged.
  *

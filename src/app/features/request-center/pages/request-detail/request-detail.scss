@@ -586,3 +586,89 @@
     padding-right: 0.85rem;
   }
 }
+
+/* Tabs — details vs. the raw field diff. Square corners, underline for the active tab. */
+.request-detail__tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--app-border);
+  margin-bottom: 1.25rem;
+}
+
+.request-detail__tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--app-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    color: var(--app-primary);
+    background: var(--app-primary-hover-soft);
+  }
+
+  &--active {
+    color: var(--app-primary);
+    border-bottom-color: var(--app-primary);
+  }
+}
+
+/* Field diff — previous on the left, requested on the right, one grid so the two sides
+   always line up row for row however long either value is. */
+.request-detail__diff {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1rem;
+}
+
+.request-detail__diff-head {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.request-detail__diff-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.65rem 0.75rem;
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+  border: 1px solid var(--app-border);
+  min-width: 0;
+
+  &--new {
+    background: var(--app-primary-soft);
+    border-color: var(--app-primary);
+  }
+}
+
+.request-detail__diff-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--app-muted);
+}
+
+.request-detail__diff-value {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--app-text);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .request-detail__diff {
+    grid-template-columns: 1fr;
+  }
+
+  .request-detail__diff-head {
+    display: none;
+  }
+}

@@ -41,8 +41,60 @@
     }
   </div>
 
+  <!-- Two views of the same request: the entity as it would look approved, and the raw
+       field-by-field diff behind it. -->
+  <div class="request-detail__tabs" role="tablist">
+    <button type="button" role="tab" class="request-detail__tab"
+      [class.request-detail__tab--active]="activeTab() === 'details'"
+      [attr.aria-selected]="activeTab() === 'details'" (click)="selectTab('details')">
+      {{ 'requestCenter.detail.tab.details' | translate }}
+    </button>
+    <button type="button" role="tab" class="request-detail__tab"
+      [class.request-detail__tab--active]="activeTab() === 'changes'"
+      [attr.aria-selected]="activeTab() === 'changes'" (click)="selectTab('changes')">
+      {{ 'requestCenter.detail.tab.changes' | translate }}
+    </button>
+  </div>
+
   <div class="request-detail__layout">
     <div class="request-detail__main">
+      @if (activeTab() === 'changes') {
+      <section class="request-detail__card">
+        <div class="request-detail__section-header">
+          <span class="request-detail__section-icon"><i class="pi pi-arrow-right-arrow-left"></i></span>
+          <h3 class="request-detail__section-title">{{ 'requestCenter.detail.tab.changes' | translate }}</h3>
+        </div>
+
+        @if (changesTabLoading()) {
+        @for (line of [1, 2, 3]; track line) {
+        <div class="request-detail__field">
+          <span class="app-skeleton request-detail__skeleton-label"></span>
+          <span class="app-skeleton request-detail__skeleton-value"></span>
+        </div>
+        }
+        } @else if (!changeRows().length) {
+        <p class="request-detail__empty">{{ 'requestCenter.detail.diff.empty' | translate }}</p>
+        } @else {
+        <!-- One grid, two columns: every field's previous value on the left lines up with its
+             requested value on the right. -->
+        <div class="request-detail__diff">
+          <div class="request-detail__diff-head">{{ 'requestCenter.detail.diff.previous' | translate }}</div>
+          <div class="request-detail__diff-head">{{ 'requestCenter.detail.diff.updated' | translate }}</div>
+
+          @for (row of changeRows(); track row.key) {
+          <div class="request-detail__diff-cell">
+            <span class="request-detail__diff-label">{{ row.label }}</span>
+            <p class="request-detail__diff-value">{{ row.oldValue || '—' }}</p>
+          </div>
+          <div class="request-detail__diff-cell request-detail__diff-cell--new">
+            <span class="request-detail__diff-label">{{ row.label }}</span>
+            <p class="request-detail__diff-value">{{ row.newValue || '—' }}</p>
+          </div>
+          }
+        </div>
+        }
+      </section>
+      } @else {
       @if (changesLoading()) {
       <!-- Mirrors the real card shape so the layout doesn't jump when the data lands. -->
       @for (block of [1, 2]; track block) {
@@ -247,6 +299,7 @@
       </section>
         }
         }
+      }
       }
       }
     </div>

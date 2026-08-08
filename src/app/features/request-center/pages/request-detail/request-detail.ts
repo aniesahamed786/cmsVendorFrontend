@@ -11,7 +11,13 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import { RequestStatus, RequestTimelineStep } from '../../models/request.model';
-import { buildRequestView, RequestViewField, RequestViewSection } from '../../models/request-change.model';
+import {
+  buildRequestView,
+  changeFieldLabelKey,
+  formatChangeValue,
+  RequestViewField,
+  RequestViewSection,
+} from '../../models/request-change.model';
 import {
   buildEditedFieldSet,
   buildProposedEntity,
@@ -25,7 +31,12 @@ import { BranchesService } from '../../../Branches/services/branches.service';
 import { VendorHeroCard } from '../../../Profile/components/vendor-hero-card/vendor-hero-card';
 import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
 import { environment } from '../../../../../environments/environment';
-import { RequestAdminAction, RequestDetailsResponse, RequestHistoryResponse } from '../../models/request-api.model';
+import {
+  RequestAdminAction,
+  RequestChangeResponse,
+  RequestDetailsResponse,
+  RequestHistoryResponse,
+} from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 
 /**
@@ -118,6 +129,54 @@ export class RequestDetail {
 
   readonly entityType = computed(() => this.details()?.entityType ?? null);
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
+
+  // ---- Tabs -----------------------------------------------------------------
+  /** `details` shows the entity as it would look approved; `changes` shows the raw diff. */
+  readonly activeTab = signal<'details' | 'changes'>('details');
+
+  // ---- Field diff (GET /cmsVendor/requests/{id}/changes) ---------------------
+  readonly changeRowsRaw = signal<RequestChangeResponse[]>([]);
+  readonly changesTabLoading = signal(false);
+  private changesRequested = false;
+
+  /** Old/new pairs for the Changes tab, in the order the backend assigns. */
+  readonly changeRows = computed(() => {
+    this.i18n.loadSeq();
+    const entityType = this.details()?.entityType;
+    return [...this.changeRowsRaw()]
+      .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+      .map((change) => ({
+        key: change._id ?? change.field,
+        label: this.i18n.t(changeFieldLabelKey(change.field, entityType)),
+        oldValue: formatChangeValue(change.oldValue, change.field),
+        newValue: formatChangeValue(change.newValue, change.field),
+      }));
+  });
+
+  selectTab(tab: 'details' | 'changes'): void {
+    this.activeTab.set(tab);
+    // Fetched on first open rather than with the page — most visits never leave the details
+    // tab, and the diff is already implied by the badges there.
+    if (tab === 'changes' && !this.changesRequested) this.loadChanges();
+  }
+
+  private loadChanges(): void {
+    if (!this.rowKey) return;
+    this.changesRequested = true;
+    this.changesTabLoading.set(true);
+    this.api
+      .getChanges(this.rowKey)
+      .pipe(finalize(() => this.changesTabLoading.set(false)))
+      .subscribe({
+        next: (rows) => this.changeRowsRaw.set(rows ?? []),
+        error: (err) => {
+          console.error('Failed to load request changes', err);
+          this.changeRowsRaw.set([]);
+          // Allow a retry the next time the tab is opened.
+          this.changesRequested = false;
+        },
+      });
+  }
 
   // ---- Offer hero banner ----------------------------------------------------
   /**

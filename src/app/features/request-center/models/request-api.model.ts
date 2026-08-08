@@ -126,6 +126,8 @@ export interface RequestHistoryResponse {
 
 /** One row from GET /cmsVendor/requests/{id}/changes. */
 export interface RequestChangeResponse {
+  /** Present on the standalone changes endpoint; absent from the copies embedded in details. */
+  _id?: string;
   requestId: string;
   field: string;
   oldValue: unknown;
