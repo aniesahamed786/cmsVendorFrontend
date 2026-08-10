@@ -1364,6 +1364,7 @@
     "common": {
       "views": "Views",
       "clicks": "Clicks",
+      "shares": "Shares",
       "redemptions": "Redemptions",
       "uniqueClicks": "Unique Clicks"
     }

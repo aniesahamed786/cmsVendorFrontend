@@ -5,9 +5,8 @@ export interface OfferInsightRow {
   title: string;
   discount: string;
   type: string;
-  /** Distinct users who recorded a click (when stats are wired). */
-  clicks: number;
-  /** Total click rows / recorded views for the offer (when stats are wired). */
+  shares: number;
+  redemptions: number;
   views: number;
 }
 
@@ -26,9 +25,8 @@ export interface CountryOption {
  *
  * Centralises computable analytics logic shared by VendorAnalyticsComponent
  * and OfferAnalytics. All metrics that require a dedicated analytics backend
- * endpoint (views, clicks, redemptions, platform breakdown, employee types)
- * are intentionally returned as 0 here unless `offerClickByOfferId` is passed
- * (vendor analytics loads stats from the backend).
+ * endpoint (views, shares, redemptions, platform breakdown, employee types)
+ * are intentionally returned as 0 here until those services are connected.
  */
 @Injectable({ providedIn: 'root' })
 export class VendorAnalyticsService {
@@ -100,33 +98,28 @@ export class VendorAnalyticsService {
 
   /* ─────────────────── Offer table helpers ─────────────────── */
 
-  /**
-   * Builds offer insight rows from the raw offer list.
-   * When `offerClickByOfferId` is set, **views** = `totalClickEvents` and **clicks** = `uniqueUsersWhoClicked`
-   * for that offer id (same semantics as `GET /user-clicks/stats/vendor-analytics` `perOffer`).
-   */
+  /** Builds offer insight rows from the local offer list. */
   offerInsightRows(
     offers: any[],
-    sortField: 'type' | 'clicks' | 'views' | null,
+    sortField: 'shares' | 'redemptions' | 'views' | null,
     sortDirection: 1 | -1,
     maxRows = 3,
-    offerClickByOfferId?: Record<string, { totalClickEvents: number; uniqueUsersWhoClicked: number }>,
   ): OfferInsightRow[] {
     const slice = Array.isArray(offers) && offers.length ? offers.slice(0, maxRows) : [];
     const rows: OfferInsightRow[] = slice.length
       ? slice.map(offer => {
           const id = this.getOfferId(offer);
-          const stats = id && offerClickByOfferId ? offerClickByOfferId[id] : undefined;
           return {
             id,
             title: offer?.title ?? '-',
             discount: this.getDiscountAmount(offer),
             type: this.formatOfferType(offer?.offerMode ?? offer?.offer_type ?? offer?.offerType),
-            clicks: stats?.uniqueUsersWhoClicked ?? 0,
-            views: stats?.totalClickEvents ?? 0,
+            shares: Number(offer?.shares) || 0,
+            redemptions: Number(offer?.redemptions) || 0,
+            views: Number(offer?.views) || 0,
           };
         })
-      : [{ id: null, title: '-', discount: '0', type: '-', clicks: 0, views: 0 }];
+      : [{ id: null, title: '-', discount: '0', type: '-', shares: 0, redemptions: 0, views: 0 }];
 
     if (!sortField) return rows;
 
@@ -140,8 +133,8 @@ export class VendorAnalyticsService {
 
   /** Returns the PrimeNG sort icon class for a given column. */
   getSortIcon(
-    column: 'type' | 'clicks' | 'views',
-    sortField: 'type' | 'clicks' | 'views' | null,
+    column: 'shares' | 'redemptions' | 'views',
+    sortField: 'shares' | 'redemptions' | 'views' | null,
     sortDirection: 1 | -1,
   ): string {
     if (sortField !== column) return 'pi pi-sort-alt';

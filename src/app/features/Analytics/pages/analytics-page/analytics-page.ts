@@ -3,6 +3,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
 import { ChartModule } from 'primeng/chart';
+import { TableModule } from 'primeng/table';
 import { OfferInsightRow, VendorAnalyticsService } from '../../services/analytics.service';
 import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
@@ -12,7 +13,7 @@ import { ThemeService } from '../../../../shared/services/theme.service';
 @Component({
   selector: 'app-analytics-page',
   standalone: true,
-  imports: [CommonModule, ChartModule, TranslatePipe],
+  imports: [CommonModule, ChartModule, TableModule, TranslatePipe],
   templateUrl: './analytics-page.html',
   styleUrl: './analytics-page.scss',
 })
@@ -22,8 +23,6 @@ export class AnalyticsPage implements OnInit {
   requests: any[] = [];
   activeOffers = 0;
 
-  sortField: 'type' | 'clicks' | 'views' | null = null;
-  sortDirection: 1 | -1 = 1;
   readonly redemptionsByLocation = [
     { labelKey: 'analytics.location.riyadh', value: 42 },
     { labelKey: 'analytics.location.jeddah', value: 28 },
@@ -237,12 +236,16 @@ export class AnalyticsPage implements OnInit {
   get offerInsightRows(): OfferInsightRow[] {
     const list = Array.isArray(this.offers) ? this.offers : [];
     const maxRows = list.length ? Math.min(list.length, 500) : 1;
-    return this.analytics.offerInsightRows(list, this.sortField, this.sortDirection, maxRows);
+    return this.analytics.offerInsightRows(list, null, 1, maxRows);
+  }
+
+  get insightTableRows(): Array<OfferInsightRow | null> {
+    return this.loading() ? [null, null, null] : this.offerInsightRows;
   }
 
   get topOffers(): OfferInsightRow[] {
     return [...this.offerInsightRows]
-      .sort((a, b) => b.views - a.views || b.clicks - a.clicks)
+      .sort((a, b) => b.views - a.views || b.shares - a.shares)
       .slice(0, 3);
   }
 
@@ -259,19 +262,6 @@ export class AnalyticsPage implements OnInit {
           ? 'both'
           : null;
     return key ? this.i18n.t(`analytics.offerTypes.${key}`) : type;
-  }
-
-  sortOffers(field: 'type' | 'clicks' | 'views') {
-    if (this.sortField === field) {
-      this.sortDirection = this.sortDirection === 1 ? -1 : 1;
-      return;
-    }
-    this.sortField = field;
-    this.sortDirection = 1;
-  }
-
-  getSortIcon(field: 'type' | 'clicks' | 'views'): string {
-    return this.analytics.getSortIcon(field, this.sortField, this.sortDirection);
   }
 
   viewOfferDetails(offer: OfferInsightRow) {
