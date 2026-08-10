@@ -42,6 +42,8 @@
     "recentActivity": "النشاط الأخير",
     "viewHistory": "عرض السجل",
     "pendingRequests": "الطلبات قيد المراجعة",
+    "noPendingRequests": "لا توجد طلبات معلقة",
+    "noPendingRequestsDescription": "جميع طلباتك محدّثة.",
     "stats": {
       "totalRedemptions": {
         "title": "إجمالي عمليات الاسترداد",

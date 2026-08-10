@@ -57,6 +57,17 @@
       <h2 class="dashboard-page__panel-title dashboard-page__panel-title--spaced">
         {{ 'dashboard.pendingRequests' | translate }}
       </h2>
+      @if (dashboardStats().pendingRequests === 0) {
+      <div class="dashboard-page__empty-state">
+        <div class="dashboard-page__empty-icon" aria-hidden="true">
+          <i class="pi pi-check"></i>
+        </div>
+        <p class="dashboard-page__empty-title">{{ 'dashboard.noPendingRequests' | translate }}</p>
+        <p class="dashboard-page__empty-description">
+          {{ 'dashboard.noPendingRequestsDescription' | translate }}
+        </p>
+      </div>
+      }
     </section>
   </div>
 </div>

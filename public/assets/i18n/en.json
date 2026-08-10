@@ -42,6 +42,8 @@
     "recentActivity": "Recent Activity",
     "viewHistory": "View History",
     "pendingRequests": "Pending Requests",
+    "noPendingRequests": "No pending requests",
+    "noPendingRequestsDescription": "You're all caught up.",
     "stats": {
       "totalRedemptions": {
         "title": "Total Redemptions",
