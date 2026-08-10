@@ -1279,6 +1279,76 @@
       "disclaimer": "Disclaimer"
     }
   },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Track offer performance, engagement, and location activity.",
+    "kpi": {
+      "activeOffers": "Active Offers",
+      "activeOffersHint": "Offers currently available",
+      "inactiveOffers": "Inactive Offers",
+      "inactiveOffersHint": "Offers no longer active",
+      "draftOffers": "Draft Offers",
+      "draftOffersHint": "Offers still being prepared",
+      "pendingRequests": "Pending Requests",
+      "pendingRequestsHint": "Requests awaiting completion",
+      "totalOffers": "Total Offers",
+      "totalOffersHint": "All offers in your account",
+      "offerViews": "Offer Views",
+      "offerViewsHint": "Recorded views across offers",
+      "locations": "Locations",
+      "locationsHint": "Branches offering your deals"
+    },
+    "location": {
+      "title": "Redemption by Location",
+      "subtitle": "Distribution of redemptions across locations",
+      "country": "Country",
+      "allCountries": "All Countries",
+      "locations": "locations",
+      "chartLabel": "Bar chart showing redemptions by location",
+      "totalRedemptions": "Total redemptions",
+      "riyadh": "Riyadh",
+      "jeddah": "Jeddah",
+      "dammam": "Dammam",
+      "other": "Other locations",
+      "empty": "No redemption data is available."
+    },
+    "topOffers": {
+      "title": "Top Offers",
+      "subtitle": "Offers with the strongest engagement",
+      "rank1": "Most viewed offer",
+      "rank2": "Second highest offer",
+      "rank3": "Third highest offer"
+    },
+    "overview": {
+      "title": "Offers Overview",
+      "subtitle": "A quick summary of your current performance"
+    },
+    "activity": {
+      "title": "Redemptions by Day",
+      "subtitle": "Last 7 days",
+      "emptyTitle": "No redemption data yet",
+      "emptyText": "Daily activity will appear here when the redemption analytics endpoint is connected."
+    },
+    "insights": {
+      "title": "Offer Insights",
+      "subtitle": "Compare engagement across your offers"
+    },
+    "table": {
+      "offer": "Offer",
+      "discount": "Discount",
+      "type": "Type"
+    },
+    "offerTypes": {
+      "digital": "Digital",
+      "inStore": "In-Store",
+      "both": "In-Store & Digital"
+    },
+    "common": {
+      "views": "Views",
+      "clicks": "Clicks",
+      "uniqueClicks": "Unique Clicks"
+    }
+  },
   "branchActions": {
     "action": {
       "viewBranch": "View Branch",

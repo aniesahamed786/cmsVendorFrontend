@@ -1281,6 +1281,76 @@
       "disclaimer": "إخلاء المسؤولية"
     }
   },
+  "analytics": {
+    "title": "التحليلات",
+    "subtitle": "تابع أداء العروض والتفاعل والنشاط حسب الموقع.",
+    "kpi": {
+      "activeOffers": "العروض النشطة",
+      "activeOffersHint": "العروض المتاحة حالياً",
+      "inactiveOffers": "العروض غير النشطة",
+      "inactiveOffersHint": "العروض التي لم تعد نشطة",
+      "draftOffers": "مسودات العروض",
+      "draftOffersHint": "العروض التي لا تزال قيد الإعداد",
+      "pendingRequests": "الطلبات المعلقة",
+      "pendingRequestsHint": "الطلبات التي تنتظر الإكمال",
+      "totalOffers": "إجمالي العروض",
+      "totalOffersHint": "جميع العروض في حسابك",
+      "offerViews": "مشاهدات العروض",
+      "offerViewsHint": "المشاهدات المسجلة لجميع العروض",
+      "locations": "المواقع",
+      "locationsHint": "الفروع التي تقدم عروضك"
+    },
+    "location": {
+      "title": "عمليات الاسترداد حسب الموقع",
+      "subtitle": "توزيع عمليات الاسترداد على المواقع",
+      "country": "الدولة",
+      "allCountries": "جميع الدول",
+      "locations": "مواقع",
+      "chartLabel": "مخطط أعمدة يوضح عمليات الاسترداد حسب الموقع",
+      "totalRedemptions": "إجمالي عمليات الاسترداد",
+      "riyadh": "الرياض",
+      "jeddah": "جدة",
+      "dammam": "الدمام",
+      "other": "مواقع أخرى",
+      "empty": "لا تتوفر بيانات استرداد."
+    },
+    "topOffers": {
+      "title": "أفضل العروض",
+      "subtitle": "العروض ذات التفاعل الأعلى",
+      "rank1": "العرض الأكثر مشاهدة",
+      "rank2": "ثاني أفضل عرض",
+      "rank3": "ثالث أفضل عرض"
+    },
+    "overview": {
+      "title": "نظرة عامة على العروض",
+      "subtitle": "ملخص سريع لأدائك الحالي"
+    },
+    "activity": {
+      "title": "عمليات الاسترداد حسب اليوم",
+      "subtitle": "آخر 7 أيام",
+      "emptyTitle": "لا توجد بيانات استرداد بعد",
+      "emptyText": "سيظهر النشاط اليومي هنا عند ربط واجهة تحليلات الاسترداد."
+    },
+    "insights": {
+      "title": "إحصاءات العروض",
+      "subtitle": "قارن التفاعل بين عروضك"
+    },
+    "table": {
+      "offer": "العرض",
+      "discount": "الخصم",
+      "type": "النوع"
+    },
+    "offerTypes": {
+      "digital": "رقمي",
+      "inStore": "داخل المتجر",
+      "both": "داخل المتجر ورقمي"
+    },
+    "common": {
+      "views": "المشاهدات",
+      "clicks": "النقرات",
+      "uniqueClicks": "النقرات الفريدة"
+    }
+  },
   "branchActions": {
     "action": {
       "viewBranch": "عرض الفرع",
