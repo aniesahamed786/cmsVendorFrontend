@@ -35,9 +35,31 @@
 
   <div class="analytics-grid analytics-grid--primary">
     <section class="panel location-panel">
-      <div class="panel__header">
-        <h2>{{ 'analytics.location.title' | translate }}</h2>
-        <p>{{ 'analytics.location.subtitle' | translate }}</p>
+      <div class="panel__header panel__header--split">
+        <div>
+          <h2>{{ 'analytics.location.title' | translate }}</h2>
+          <p>
+            {{ (redemptionChartMode() === 'day' ? 'analytics.location.daySubtitle' : 'analytics.location.subtitle') | translate }}
+          </p>
+        </div>
+        <div class="period-filter" role="group" [attr.aria-label]="'analytics.location.filterLabel' | translate">
+          <button
+            type="button"
+            [class.is-active]="redemptionChartMode() === 'location'"
+            [attr.aria-pressed]="redemptionChartMode() === 'location'"
+            (click)="redemptionChartMode.set('location')"
+          >
+            {{ 'analytics.location.byLocation' | translate }}
+          </button>
+          <button
+            type="button"
+            [class.is-active]="redemptionChartMode() === 'day'"
+            [attr.aria-pressed]="redemptionChartMode() === 'day'"
+            (click)="redemptionChartMode.set('day')"
+          >
+            {{ 'analytics.location.byDay' | translate }}
+          </button>
+        </div>
       </div>
 
       @if (loading()) {
@@ -86,9 +108,23 @@
 
   <div class="analytics-grid analytics-grid--secondary">
     <section class="panel overview-panel">
-      <div class="panel__header">
-        <h2>{{ 'analytics.overview.title' | translate }}</h2>
-        <p>{{ 'analytics.overview.subtitle' | translate }}</p>
+      <div class="panel__header panel__header--split">
+        <div>
+          <h2>{{ 'analytics.overview.title' | translate }}</h2>
+          <p>{{ 'analytics.overview.subtitle' | translate }}</p>
+        </div>
+        <div class="period-filter" role="group" [attr.aria-label]="'analytics.overview.filterLabel' | translate">
+          @for (period of overviewPeriods; track period.value) {
+            <button
+              type="button"
+              [class.is-active]="selectedOverviewPeriod() === period.value"
+              [attr.aria-pressed]="selectedOverviewPeriod() === period.value"
+              (click)="selectedOverviewPeriod.set(period.value)"
+            >
+              {{ period.labelKey | translate }}
+            </button>
+          }
+        </div>
       </div>
       <div class="overview-metrics">
         <div>
@@ -100,8 +136,8 @@
           <span>{{ 'analytics.kpi.offerViews' | translate }}</span>
         </div>
         <div>
-          <strong>{{ totalUniqueOfferClicks | number: '1.0-0':i18n.numberLocale }}</strong>
-          <span>{{ 'analytics.common.uniqueClicks' | translate }}</span>
+          <strong>{{ redemptionTotal | number: '1.0-0':i18n.numberLocale }}</strong>
+          <span>{{ 'analytics.common.redemptions' | translate }}</span>
         </div>
         <div>
           <strong>{{ locationCount | number: '1.0-0':i18n.numberLocale }}</strong>
@@ -110,17 +146,6 @@
       </div>
     </section>
 
-    <section class="panel activity-panel">
-      <div class="panel__header">
-        <h2>{{ 'analytics.activity.title' | translate }}</h2>
-        <p>{{ 'analytics.activity.subtitle' | translate }}</p>
-      </div>
-      <div class="activity-empty">
-        <span class="icon-box"><i class="pi pi-chart-bar"></i></span>
-        <strong>{{ 'analytics.activity.emptyTitle' | translate }}</strong>
-        <p>{{ 'analytics.activity.emptyText' | translate }}</p>
-      </div>
-    </section>
   </div>
 
   <section class="panel insights-panel">

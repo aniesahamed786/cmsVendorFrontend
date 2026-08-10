@@ -1301,6 +1301,10 @@
     "location": {
       "title": "Redemption by Location",
       "subtitle": "Distribution of redemptions across locations",
+      "daySubtitle": "Redemptions during the last 7 days",
+      "filterLabel": "Group redemptions by",
+      "byLocation": "Location",
+      "byDay": "Day",
       "country": "Country",
       "allCountries": "All Countries",
       "locations": "locations",
@@ -1310,6 +1314,15 @@
       "jeddah": "Jeddah",
       "dammam": "Dammam",
       "other": "Other locations",
+      "days": {
+        "sun": "Sun",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
+      },
       "empty": "No redemption data is available."
     },
     "topOffers": {
@@ -1321,7 +1334,12 @@
     },
     "overview": {
       "title": "Offers Overview",
-      "subtitle": "A quick summary of your current performance"
+      "subtitle": "A quick summary of your current performance",
+      "filterLabel": "Overview period",
+      "sevenDays": "7 Days",
+      "thirtyDays": "30 Days",
+      "ninetyDays": "90 Days",
+      "allTime": "All Time"
     },
     "activity": {
       "title": "Redemptions by Day",
@@ -1346,6 +1364,7 @@
     "common": {
       "views": "Views",
       "clicks": "Clicks",
+      "redemptions": "Redemptions",
       "uniqueClicks": "Unique Clicks"
     }
   },

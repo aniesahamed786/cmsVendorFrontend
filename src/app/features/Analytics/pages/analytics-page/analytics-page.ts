@@ -30,6 +30,23 @@ export class AnalyticsPage implements OnInit {
     { labelKey: 'analytics.location.dammam', value: 18 },
     { labelKey: 'analytics.location.other', value: 12 },
   ];
+  readonly redemptionsByDay = [
+    { labelKey: 'analytics.location.days.sun', value: 18 },
+    { labelKey: 'analytics.location.days.mon', value: 26 },
+    { labelKey: 'analytics.location.days.tue', value: 34 },
+    { labelKey: 'analytics.location.days.wed', value: 22 },
+    { labelKey: 'analytics.location.days.thu', value: 19 },
+    { labelKey: 'analytics.location.days.fri', value: 31 },
+    { labelKey: 'analytics.location.days.sat', value: 28 },
+  ];
+  readonly redemptionChartMode = signal<'location' | 'day'>('location');
+  readonly overviewPeriods = [
+    { value: '7d', labelKey: 'analytics.overview.sevenDays' },
+    { value: '30d', labelKey: 'analytics.overview.thirtyDays' },
+    { value: '90d', labelKey: 'analytics.overview.ninetyDays' },
+    { value: 'all', labelKey: 'analytics.overview.allTime' },
+  ] as const;
+  readonly selectedOverviewPeriod = signal<(typeof this.overviewPeriods)[number]['value']>('7d');
 
   // ===========================================================================
   // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
@@ -55,12 +72,15 @@ export class AnalyticsPage implements OnInit {
     const dark = this.theme.isDarkMode();
     const accent = this.theme.accentTheme();
     const palette = dark ? accent.darkPalette : accent.palette;
+    const rows = this.redemptionChartMode() === 'day'
+      ? this.redemptionsByDay
+      : this.redemptionsByLocation;
 
     return {
-      labels: this.redemptionsByLocation.map((location) => this.i18n.t(location.labelKey)),
+      labels: rows.map((row) => this.i18n.t(row.labelKey)),
       datasets: [{
         label: this.i18n.t('analytics.location.totalRedemptions'),
-        data: this.redemptionsByLocation.map((location) => location.value),
+        data: rows.map((row) => row.value),
         backgroundColor: palette[600],
         hoverBackgroundColor: palette[500],
         borderRadius: 2,
@@ -99,6 +119,7 @@ export class AnalyticsPage implements OnInit {
       },
       scales: {
         x: {
+          reverse: this.i18n.isRtl(),
           border: { display: false },
           grid: { display: false },
           ticks: { color: surfaces.muted, font: { family: 'var(--font-family)', size: 13 } },
@@ -207,8 +228,8 @@ export class AnalyticsPage implements OnInit {
     return String(item?.status ?? '').trim().toLowerCase();
   }
 
-  get totalUniqueOfferClicks(): number {
-    return 0;
+  get redemptionTotal(): number {
+    return this.redemptionsByLocation.reduce((total, location) => total + location.value, 0);
   }
 
   /* ─── Offer Insights ─── */

@@ -118,7 +118,40 @@
 }
 
 .analytics-grid--secondary {
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1fr;
+}
+
+.period-filter {
+  display: flex;
+  padding: 0.3rem;
+  background: var(--app-primary-soft);
+
+  button {
+    min-height: 2.35rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    background: transparent;
+    color: var(--app-muted);
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover:not(.is-active) {
+      color: var(--app-primary);
+    }
+
+    &.is-active {
+      background: var(--app-primary);
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--app-primary);
+      outline-offset: 2px;
+    }
+  }
 }
 
 .redemption-chart {
@@ -216,30 +249,6 @@
   }
 }
 
-.activity-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--app-muted);
-}
-
-.activity-empty {
-  min-height: 12.5rem;
-  flex-direction: column;
-  text-align: center;
-
-  strong {
-    margin-top: 0.8rem;
-    color: var(--app-text);
-  }
-
-  p {
-    max-width: 24rem;
-    margin: 0.35rem 0 0;
-    font-size: 0.85rem;
-  }
-}
-
 .chart-skeleton,
 .offer-skeleton,
 .table-skeleton {
@@ -331,6 +340,15 @@ table {
   .panel__header--split {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .period-filter {
+    width: 100%;
+    overflow-x: auto;
+
+    button {
+      flex: 1;
+    }
   }
 
   .top-offer {
