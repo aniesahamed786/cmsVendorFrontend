@@ -94,19 +94,10 @@
 
   <div class="analytics-grid analytics-grid--secondary">
     <section class="panel overview-panel">
-      <div class="panel__header panel__header--split">
+      <div class="panel__header">
         <div>
           <h2>{{ 'analytics.overview.title' | translate }}</h2>
           <p>{{ 'analytics.overview.subtitle' | translate }}</p>
-        </div>
-        <div class="period-filter" role="group" [attr.aria-label]="'analytics.overview.filterLabel' | translate">
-          @for (period of overviewPeriods; track period.value) {
-          <button type="button" [class.is-active]="selectedOverviewPeriod() === period.value"
-            [attr.aria-pressed]="selectedOverviewPeriod() === period.value"
-            (click)="selectedOverviewPeriod.set(period.value)">
-            {{ period.labelKey | translate }}
-          </button>
-          }
         </div>
       </div>
       <div class="overview-metrics">

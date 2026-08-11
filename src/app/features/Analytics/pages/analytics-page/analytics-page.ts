@@ -37,13 +37,6 @@ export class AnalyticsPage implements OnInit {
   readonly redemptionsByDay = signal<AnalyticsRedemptionsByDay[]>([]);
   readonly dayLoading = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
-  readonly overviewPeriods = [
-    { value: '7d', labelKey: 'analytics.overview.sevenDays' },
-    { value: '30d', labelKey: 'analytics.overview.thirtyDays' },
-    { value: '90d', labelKey: 'analytics.overview.ninetyDays' },
-    { value: 'all', labelKey: 'analytics.overview.allTime' },
-  ] as const;
-  readonly selectedOverviewPeriod = signal<(typeof this.overviewPeriods)[number]['value']>('7d');
 
   readonly loading = signal(true);
 
