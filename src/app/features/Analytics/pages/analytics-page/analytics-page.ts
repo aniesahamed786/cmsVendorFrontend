@@ -243,14 +243,19 @@ export class AnalyticsPage implements OnInit {
     return this.loading() ? [null, null, null] : this.offerInsightRows;
   }
 
-  get topOffers(): OfferInsightRow[] {
-    return [...this.offerInsightRows]
-      .sort((a, b) => b.views - a.views || b.shares - a.shares)
-      .slice(0, 3);
-  }
+  /** One card per metric: most favorited, most viewed, most shared. */
+  get topOfferCards(): Array<{ offer: OfferInsightRow; icon: string; labelKey: string; metricKey: string; value: number }> {
+    const rows = this.offerInsightRows;
+    const metrics = [
+      { metric: 'favorites', icon: 'pi pi-heart', labelKey: 'analytics.topOffers.mostFavorited', metricKey: 'analytics.common.favorites' },
+      { metric: 'views', icon: 'pi pi-eye', labelKey: 'analytics.topOffers.mostViewed', metricKey: 'analytics.common.views' },
+      { metric: 'shares', icon: 'pi pi-share-alt', labelKey: 'analytics.topOffers.mostShared', metricKey: 'analytics.common.shares' },
+    ] as const;
 
-  topOfferLabel(index: number): string {
-    return `analytics.topOffers.rank${Math.min(index + 1, 3)}`;
+    return metrics.map(({ metric, ...rest }) => {
+      const offer = [...rows].sort((a, b) => b[metric] - a[metric])[0];
+      return { offer, value: offer[metric], ...rest };
+    });
   }
 
   offerTypeLabel(type: string): string {

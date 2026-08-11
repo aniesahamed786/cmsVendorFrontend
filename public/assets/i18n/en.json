@@ -1151,7 +1151,7 @@
       "submit": "Submit Ticket"
     }
   },
- "branchForm": {
+  "branchForm": {
     "back": "Back",
     "section": {
       "businessLocations": "Business Locations"
@@ -1330,9 +1330,9 @@
     "topOffers": {
       "title": "Top Offers",
       "subtitle": "Offers with the strongest engagement",
-      "rank1": "Most viewed offer",
-      "rank2": "Second highest offer",
-      "rank3": "Third highest offer"
+      "mostFavorited": "Most favorited offer",
+      "mostViewed": "Most viewed offer",
+      "mostShared": "Most shared offer"
     },
     "overview": {
       "title": "Offers Overview",
@@ -1368,7 +1368,8 @@
       "clicks": "Clicks",
       "shares": "Shares",
       "redemptions": "Redemptions",
-      "uniqueClicks": "Unique Clicks"
+      "uniqueClicks": "Unique Clicks",
+      "favorites": "Favorites"
     }
   },
   "branchActions": {

@@ -8,6 +8,7 @@ export interface OfferInsightRow {
   shares: number;
   redemptions: number;
   views: number;
+  favorites: number;
 }
 
 export interface CityInsightRow {
@@ -117,9 +118,10 @@ export class VendorAnalyticsService {
             shares: Number(offer?.shares) || 0,
             redemptions: Number(offer?.redemptions) || 0,
             views: Number(offer?.views) || 0,
+            favorites: Number(offer?.favorites) || 0,
           };
         })
-      : [{ id: null, title: '-', discount: '0', type: '-', shares: 0, redemptions: 0, views: 0 }];
+      : [{ id: null, title: '-', discount: '0', type: '-', shares: 0, redemptions: 0, views: 0, favorites: 0 }];
 
     if (!sortField) return rows;
 
