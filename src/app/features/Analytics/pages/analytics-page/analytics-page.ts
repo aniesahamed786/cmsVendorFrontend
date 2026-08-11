@@ -8,6 +8,7 @@ import { catchError, finalize, forkJoin, of } from 'rxjs';
 import {
   AnalyticsOffersSummary,
   AnalyticsOverview,
+  AnalyticsRedemptionsByDay,
   AnalyticsRedemptionsByLocation,
   AnalyticsTopOffer,
   OfferInsightRow,
@@ -33,15 +34,8 @@ export class AnalyticsPage implements OnInit {
   readonly overview = signal<AnalyticsOverview | null>(null);
   readonly offersSummary = signal<AnalyticsOffersSummary | null>(null);
   readonly redemptionsByLocation = signal<AnalyticsRedemptionsByLocation[]>([]);
-  readonly redemptionsByDay = [
-    { labelKey: 'analytics.location.days.sun', value: 18 },
-    { labelKey: 'analytics.location.days.mon', value: 26 },
-    { labelKey: 'analytics.location.days.tue', value: 34 },
-    { labelKey: 'analytics.location.days.wed', value: 22 },
-    { labelKey: 'analytics.location.days.thu', value: 19 },
-    { labelKey: 'analytics.location.days.fri', value: 31 },
-    { labelKey: 'analytics.location.days.sat', value: 28 },
-  ];
+  readonly redemptionsByDay = signal<AnalyticsRedemptionsByDay[]>([]);
+  readonly dayLoading = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
   readonly overviewPeriods = [
     { value: '7d', labelKey: 'analytics.overview.sevenDays' },
@@ -65,8 +59,17 @@ export class AnalyticsPage implements OnInit {
     const dark = this.theme.isDarkMode();
     const accent = this.theme.accentTheme();
     const palette = dark ? accent.darkPalette : accent.palette;
+    const dayFormatter = new Intl.DateTimeFormat(this.i18n.locale(), {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    });
     const rows = this.redemptionChartMode() === 'day'
-      ? this.redemptionsByDay.map((row) => ({ label: this.i18n.t(row.labelKey), value: row.value }))
+      ? this.redemptionsByDay().map((row) => ({
+          label: dayFormatter.format(new Date(`${row.day}T00:00:00Z`)),
+          value: row.redemptionsCount,
+        }))
       : this.redemptionsByLocation().map((row) => ({
           label: (this.i18n.lang() === 'ar' ? row.branchName_ar || row.city_ar : row.branchName || row.city) || '-',
           value: row.redemptionsCount,
@@ -160,6 +163,19 @@ export class AnalyticsPage implements OnInit {
         this.overview.set(overview);
         this.offersSummary.set(offersSummary);
         this.redemptionsByLocation.set(redemptionsByLocation);
+      });
+  }
+
+  showRedemptionsByDay(): void {
+    this.redemptionChartMode.set('day');
+    if (this.dayLoading()) return;
+
+    this.dayLoading.set(true);
+    this.analytics.getRedemptionsByDays()
+      .pipe(finalize(() => this.dayLoading.set(false)))
+      .subscribe({
+        next: (rows) => this.redemptionsByDay.set(rows),
+        error: (error) => console.error('Failed to load redemptions by day', error),
       });
   }
 

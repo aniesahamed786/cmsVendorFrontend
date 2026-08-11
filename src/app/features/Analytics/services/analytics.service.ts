@@ -36,6 +36,12 @@ export interface AnalyticsRedemptionsByLocation {
   redemptionsCount: number;
 }
 
+export interface AnalyticsRedemptionsByDay {
+  day: string;
+  dayOfWeek: string;
+  redemptionsCount: number;
+}
+
 export interface OfferInsightRow {
   id: string | null;
   title: string;
@@ -79,6 +85,10 @@ export class VendorAnalyticsService {
 
   getRedemptionsByLocation(): Observable<AnalyticsRedemptionsByLocation[]> {
     return this.http.get<AnalyticsRedemptionsByLocation[]>(`${environment.apiBaseUrl}/analytics/getRedemptionsByLocation`);
+  }
+
+  getRedemptionsByDays(): Observable<AnalyticsRedemptionsByDay[]> {
+    return this.http.get<AnalyticsRedemptionsByDay[]>(`${environment.apiBaseUrl}/analytics/redemptionsByDays`);
   }
 
   /* ─────────────────── Location helpers ─────────────────── */

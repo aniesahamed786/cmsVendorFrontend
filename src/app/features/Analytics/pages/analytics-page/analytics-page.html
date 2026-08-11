@@ -49,13 +49,13 @@
             {{ 'analytics.location.byLocation' | translate }}
           </button>
           <button type="button" [class.is-active]="redemptionChartMode() === 'day'"
-            [attr.aria-pressed]="redemptionChartMode() === 'day'" (click)="redemptionChartMode.set('day')">
+            [attr.aria-pressed]="redemptionChartMode() === 'day'" (click)="showRedemptionsByDay()">
             {{ 'analytics.location.byDay' | translate }}
           </button>
         </div>
       </div>
 
-      @if (loading()) {
+      @if (loading() || (redemptionChartMode() === 'day' && dayLoading())) {
       <span class="app-skeleton chart-skeleton"></span>
       } @else {
       <p-chart styleClass="redemption-chart" type="bar" height="18rem" [data]="redemptionChartData()"
