@@ -1,4 +1,31 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+
+export interface AnalyticsTopOffer {
+  offerId: string;
+  offerTitle: string;
+  offerTitleAr: string;
+  count: number;
+}
+
+export interface AnalyticsOverview {
+  activeOffersCount: number;
+  inactiveOffersCount: number;
+  draftOffersCount: number;
+  pendingRequestsCount: number;
+  mostFavouritedOffer: AnalyticsTopOffer;
+  mostViewedOffer: AnalyticsTopOffer;
+  mostSharedOffer: AnalyticsTopOffer;
+}
+
+export interface AnalyticsOffersSummary {
+  totalOffers: number;
+  totalViews: number;
+  totalLocations: number;
+  totalRedemptions: number;
+}
 
 export interface OfferInsightRow {
   id: string | null;
@@ -31,6 +58,15 @@ export interface CountryOption {
  */
 @Injectable({ providedIn: 'root' })
 export class VendorAnalyticsService {
+  private readonly http = inject(HttpClient);
+
+  getOverview(): Observable<AnalyticsOverview> {
+    return this.http.get<AnalyticsOverview>(`${environment.apiBaseUrl}/analytics/overview`);
+  }
+
+  getOffersSummary(): Observable<AnalyticsOffersSummary> {
+    return this.http.get<AnalyticsOffersSummary>(`${environment.apiBaseUrl}/analytics/offersSummary`);
+  }
 
   /* ─────────────────── Location helpers ─────────────────── */
 
