@@ -8,6 +8,7 @@ import { catchError, finalize, forkJoin, of } from 'rxjs';
 import {
   AnalyticsOffersSummary,
   AnalyticsOverview,
+  AnalyticsRedemptionsByLocation,
   AnalyticsTopOffer,
   OfferInsightRow,
   VendorAnalyticsService,
@@ -31,13 +32,7 @@ export class AnalyticsPage implements OnInit {
   activeOffers = 0;
   readonly overview = signal<AnalyticsOverview | null>(null);
   readonly offersSummary = signal<AnalyticsOffersSummary | null>(null);
-
-  readonly redemptionsByLocation = [
-    { labelKey: 'analytics.location.riyadh', value: 42 },
-    { labelKey: 'analytics.location.jeddah', value: 28 },
-    { labelKey: 'analytics.location.dammam', value: 18 },
-    { labelKey: 'analytics.location.other', value: 12 },
-  ];
+  readonly redemptionsByLocation = signal<AnalyticsRedemptionsByLocation[]>([]);
   readonly redemptionsByDay = [
     { labelKey: 'analytics.location.days.sun', value: 18 },
     { labelKey: 'analytics.location.days.mon', value: 26 },
@@ -71,11 +66,14 @@ export class AnalyticsPage implements OnInit {
     const accent = this.theme.accentTheme();
     const palette = dark ? accent.darkPalette : accent.palette;
     const rows = this.redemptionChartMode() === 'day'
-      ? this.redemptionsByDay
-      : this.redemptionsByLocation;
+      ? this.redemptionsByDay.map((row) => ({ label: this.i18n.t(row.labelKey), value: row.value }))
+      : this.redemptionsByLocation().map((row) => ({
+          label: (this.i18n.lang() === 'ar' ? row.branchName_ar || row.city_ar : row.branchName || row.city) || '-',
+          value: row.redemptionsCount,
+        }));
 
     return {
-      labels: rows.map((row) => this.i18n.t(row.labelKey)),
+      labels: rows.map((row) => row.label),
       datasets: [{
         label: this.i18n.t('analytics.location.totalRedemptions'),
         data: rows.map((row) => row.value),
@@ -149,14 +147,19 @@ export class AnalyticsPage implements OnInit {
         console.error('Failed to load analytics offers summary', error);
         return of(null);
       })),
+      redemptionsByLocation: this.analytics.getRedemptionsByLocation().pipe(catchError((error) => {
+        console.error('Failed to load redemptions by location', error);
+        return of([]);
+      })),
     })
       .pipe(finalize(() => {
         this.loading.set(false);
         this.startCountUp();
       }))
-      .subscribe(({ overview, offersSummary }) => {
+      .subscribe(({ overview, offersSummary, redemptionsByLocation }) => {
         this.overview.set(overview);
         this.offersSummary.set(offersSummary);
+        this.redemptionsByLocation.set(redemptionsByLocation);
       });
   }
 
@@ -256,7 +259,7 @@ export class AnalyticsPage implements OnInit {
   get redemptionTotal(): number {
     const count = this.offersSummary()?.totalRedemptions;
     if (count != null) return count;
-    return this.redemptionsByLocation.reduce((total, location) => total + location.value, 0);
+    return this.redemptionsByLocation().reduce((total, location) => total + location.redemptionsCount, 0);
   }
 
   /* ─── Offer Insights ─── */

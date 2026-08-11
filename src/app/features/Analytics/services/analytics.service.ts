@@ -27,6 +27,15 @@ export interface AnalyticsOffersSummary {
   totalRedemptions: number;
 }
 
+export interface AnalyticsRedemptionsByLocation {
+  branchId: unknown;
+  branchName: string;
+  branchName_ar: string;
+  city: string;
+  city_ar: string;
+  redemptionsCount: number;
+}
+
 export interface OfferInsightRow {
   id: string | null;
   title: string;
@@ -66,6 +75,10 @@ export class VendorAnalyticsService {
 
   getOffersSummary(): Observable<AnalyticsOffersSummary> {
     return this.http.get<AnalyticsOffersSummary>(`${environment.apiBaseUrl}/analytics/offersSummary`);
+  }
+
+  getRedemptionsByLocation(): Observable<AnalyticsRedemptionsByLocation[]> {
+    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${environment.apiBaseUrl}/analytics/getRedemptionsByLocation`);
   }
 
   /* ─────────────────── Location helpers ─────────────────── */
