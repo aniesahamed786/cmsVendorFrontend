@@ -1048,14 +1048,15 @@
     },
     "label": {
       "transactionType": "Transaction Type",
-      "userId": "User ID",
       "transactionDate": "Transaction Date",
       "offer": "Offer",
       "branch": "Branch",
       "totalInvoiceAmount": "Total Invoice Amount (Including VAT)",
       "totalAmountPaid": "Total Amount Paid",
       "currency": "Currency",
-      "discountAmount": "Discount Amount"
+      "discountAmount": "Discount Amount",
+      "membershipId": "Membership ID",
+      "mobileNumber": "Mobile Number"
     },
     "placeholder": {
       "offer": "Select Offer...",
@@ -1063,21 +1064,40 @@
       "amount": "e.g. SAR.250",
       "date": "e.g. 2024-01-15",
       "currency": "e.g. SAR",
-      "discountAmount": "e.g. 50.00"
+      "discountAmount": "e.g. 50.00",
+      "membershipId": "e.g. 1111111111",
+      "mobileNumber": "e.g. 0555555555",
+      "branchNeedsOffer": "Select an offer first..."
     },
     "submit": "Redeem Offer",
     "list": {
       "title": "Redemption List"
     },
     "column": {
-      "userId": "User ID",
+      "membershipId": "Membership ID",
       "offer": "Offer",
       "currentPrice": "Current Price",
       "discountPrice": "Discount Price",
       "amountSaved": "Amount Saved"
     },
     "currency": "SAR.",
-    "empty": "No redemptions found."
+    "empty": "No redemptions found.",
+    "collectiveUnsupported": "Collective transactions are not available yet. Please use Single Transaction.",
+    "toast": {
+      "successSummary": "Redemption recorded",
+      "successDetail": "The redemption was recorded successfully.",
+      "submitFailed": "Could not record redemption",
+      "offersFailed": "Could not load offers",
+      "branchesFailed": "Could not load branches",
+      "listFailed": "Could not load redemption list",
+      "invalidSummary": "Missing information",
+      "invalidDetail": "Please fill in all required fields before submitting.",
+      "collectiveUnsupportedSummary": "Not available yet",
+      "collectiveUnsupportedDetail": "Collective transactions are not supported yet. Please use Single Transaction.",
+      "genericErrorDetail": "Something went wrong. Please try again."
+    },
+    "emptyOffers": "No active in-store offers available.",
+    "emptyBranches": "No branches available for this offer."
   },
   "messaging": {
     "search": "Search tickets...",
@@ -1151,7 +1171,7 @@
       "submit": "Submit Ticket"
     }
   },
- "branchForm": {
+  "branchForm": {
     "back": "Back",
     "section": {
       "businessLocations": "Business Locations"

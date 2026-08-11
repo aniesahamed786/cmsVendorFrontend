@@ -1048,7 +1048,6 @@
     },
     "label": {
       "transactionType": "نوع العملية",
-      "userId": "معرّف المستخدم",
       "transactionDate": "تاريخ العملية",
       "totalInvoiceAmount": "إجمالي مبلغ الفاتورة (شامل ضريبة القيمة المضافة)",
       "totalAmountPaid": "إجمالي المبلغ المدفوع",
@@ -1057,7 +1056,9 @@
       "offer": "العرض",
       "branch": "الفرع",
       "totalAmount": "المبلغ الإجمالي",
-      "paidAmount": "المبلغ المدفوع"
+      "paidAmount": "المبلغ المدفوع",
+      "membershipId": "رقم العضوية",
+      "mobileNumber": "رقم الجوال"
     },
     "placeholder": {
       "offer": "اختر العرض...",
@@ -1065,21 +1066,40 @@
       "amount": "مثال: 250 ريال",
       "date": "مثال: 2024-01-15",
       "currency": "مثال: ر.س",
-      "discountAmount": "مثال: 50.00"
+      "discountAmount": "مثال: 50.00",
+      "membershipId": "مثال: 1111111111",
+      "mobileNumber": "مثال: 0555555555",
+      "branchNeedsOffer": "اختر العرض أولاً..."
     },
     "submit": "استرداد العرض",
     "list": {
       "title": "قائمة الاستردادات"
     },
     "column": {
-      "userId": "معرّف المستخدم",
+      "membershipId": "رقم العضوية",
       "offer": "العرض",
       "currentPrice": "السعر الحالي",
       "discountPrice": "السعر بعد الخصم",
       "amountSaved": "المبلغ الموفَّر"
     },
     "currency": "ر.س",
-    "empty": "لا توجد عمليات استبدال."
+    "empty": "لا توجد عمليات استبدال.",
+    "collectiveUnsupported": "العمليات الجماعية غير متاحة حالياً. الرجاء استخدام العملية الفردية.",
+    "toast": {
+      "successSummary": "تم تسجيل الاسترداد",
+      "successDetail": "تم تسجيل عملية الاسترداد بنجاح.",
+      "submitFailed": "تعذّر تسجيل الاسترداد",
+      "offersFailed": "تعذّر تحميل العروض",
+      "branchesFailed": "تعذّر تحميل الفروع",
+      "listFailed": "تعذّر تحميل قائمة الاستردادات",
+      "invalidSummary": "معلومات ناقصة",
+      "invalidDetail": "الرجاء تعبئة جميع الحقول المطلوبة قبل الإرسال.",
+      "collectiveUnsupportedSummary": "غير متاح حالياً",
+      "collectiveUnsupportedDetail": "العمليات الجماعية غير مدعومة حالياً. الرجاء استخدام العملية الفردية.",
+      "genericErrorDetail": "حدث خطأ ما. الرجاء المحاولة مرة أخرى."
+    },
+    "emptyOffers": "لا توجد عروض نشطة في المتجر.",
+    "emptyBranches": "لا توجد فروع متاحة لهذا العرض."
   },
   "messaging": {
     "search": "البحث في التذاكر...",
