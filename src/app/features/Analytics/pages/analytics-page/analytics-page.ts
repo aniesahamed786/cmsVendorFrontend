@@ -1,31 +1,51 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { PrimeUIModules } from '../../../../core/prime.import';
-import { VendorClickAnalyticsResponse, VendorClickAnalyticsService } from '../../services/click-analytics.service';
+import { ChartData, ChartOptions } from 'chart.js';
+import { ChartModule } from 'primeng/chart';
+import { TableModule } from 'primeng/table';
 import { OfferInsightRow, VendorAnalyticsService } from '../../services/analytics.service';
 import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { ThemeService } from '../../../../shared/services/theme.service';
 
 @Component({
   selector: 'app-analytics-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule],
+  imports: [CommonModule, ChartModule, TableModule, TranslatePipe],
   templateUrl: './analytics-page.html',
   styleUrl: './analytics-page.scss',
 })
-export class AnalyticsPage implements OnInit, OnDestroy {
-  vendorId: string | null = '1';
+export class AnalyticsPage implements OnInit {
   locations: any[] = [];
   offers: any[] = [];
+  requests: any[] = [];
   activeOffers = 0;
 
-  sortField: 'type' | 'clicks' | 'views' | null = null;
-  sortDirection: 1 | -1 = 1;
-  selectedCountry = signal<string>('all');
-
-  readonly employeeTypes = ['Regular', 'Dependents', 'Retirees', 'Affiliates', 'SMPs'];
+  readonly redemptionsByLocation = [
+    { labelKey: 'analytics.location.riyadh', value: 42 },
+    { labelKey: 'analytics.location.jeddah', value: 28 },
+    { labelKey: 'analytics.location.dammam', value: 18 },
+    { labelKey: 'analytics.location.other', value: 12 },
+  ];
+  readonly redemptionsByDay = [
+    { labelKey: 'analytics.location.days.sun', value: 18 },
+    { labelKey: 'analytics.location.days.mon', value: 26 },
+    { labelKey: 'analytics.location.days.tue', value: 34 },
+    { labelKey: 'analytics.location.days.wed', value: 22 },
+    { labelKey: 'analytics.location.days.thu', value: 19 },
+    { labelKey: 'analytics.location.days.fri', value: 31 },
+    { labelKey: 'analytics.location.days.sat', value: 28 },
+  ];
+  readonly redemptionChartMode = signal<'location' | 'day'>('location');
+  readonly overviewPeriods = [
+    { value: '7d', labelKey: 'analytics.overview.sevenDays' },
+    { value: '30d', labelKey: 'analytics.overview.thirtyDays' },
+    { value: '90d', labelKey: 'analytics.overview.ninetyDays' },
+    { value: 'all', labelKey: 'analytics.overview.allTime' },
+  ] as const;
+  readonly selectedOverviewPeriod = signal<(typeof this.overviewPeriods)[number]['value']>('7d');
 
   // ===========================================================================
   // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
@@ -43,29 +63,89 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   private readonly animated = signal<Record<string, number>>({});
 
   private readonly analytics = inject(VendorAnalyticsService);
-  private readonly clickAnalytics = inject(VendorClickAnalyticsService);
+  private readonly theme = inject(ThemeService);
+  readonly i18n = inject(I18nService);
 
-  /** Loaded from `GET /user-clicks/stats/vendor-analytics` (admin JWT). */
-  private readonly vendorClickPayload = signal<VendorClickAnalyticsResponse | null>(null);
-  private vendorClickSub: Subscription | null = null;
+  readonly redemptionChartData = computed<ChartData<'bar'>>(() => {
+    this.i18n.loadSeq();
+    const dark = this.theme.isDarkMode();
+    const accent = this.theme.accentTheme();
+    const palette = dark ? accent.darkPalette : accent.palette;
+    const rows = this.redemptionChartMode() === 'day'
+      ? this.redemptionsByDay
+      : this.redemptionsByLocation;
+
+    return {
+      labels: rows.map((row) => this.i18n.t(row.labelKey)),
+      datasets: [{
+        label: this.i18n.t('analytics.location.totalRedemptions'),
+        data: rows.map((row) => row.value),
+        backgroundColor: palette[600],
+        hoverBackgroundColor: palette[500],
+        borderRadius: 2,
+        maxBarThickness: 56,
+        categoryPercentage: 0.65,
+        barPercentage: 0.75,
+      }],
+    };
+  });
+
+  readonly redemptionChartOptions = computed<ChartOptions<'bar'>>(() => {
+    const dark = this.theme.isDarkMode();
+    const accent = this.theme.accentTheme();
+    const surfaces = dark ? accent.darkBackground : accent.background;
+    this.i18n.loadSeq();
+
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      locale: this.i18n.numberLocale,
+      animation: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+        ? false
+        : { duration: 450 },
+      layout: { padding: { top: 10 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          rtl: this.i18n.isRtl(),
+          backgroundColor: surfaces.surface,
+          titleColor: surfaces.text,
+          bodyColor: surfaces.text,
+          borderColor: surfaces.border,
+          borderWidth: 1,
+          displayColors: false,
+        },
+      },
+      scales: {
+        x: {
+          reverse: this.i18n.isRtl(),
+          border: { display: false },
+          grid: { display: false },
+          ticks: { color: surfaces.muted, font: { family: 'var(--font-family)', size: 13 } },
+        },
+        y: {
+          beginAtZero: true,
+          border: { display: false },
+          grid: { color: surfaces.border },
+          ticks: { color: surfaces.muted, precision: 0 },
+        },
+      },
+    };
+  });
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.locations = MOCK_VENDOR_PROFILE.locations || [];
     this.offers = MOCK_VENDOR_PROFILE.offers || [];
+    this.requests = MOCK_VENDOR_PROFILE.requests || [];
     this.activeOffers = this.offers.filter(o => o.status === 'Active').length;
-    this.loadVendorClickAnalytics();
 
     // DELETE WHEN THE API IS WIRED — see the ARTIFICIAL LOADING block above.
     setTimeout(() => {
       this.loading.set(false);
       this.startCountUp();
     }, AnalyticsPage.FAKE_LOAD_MS);
-  }
-
-  ngOnDestroy(): void {
-    this.vendorClickSub?.unsubscribe();
   }
 
   // ---- Count-up KPI stats (number_animation.md) ----------------------------
@@ -75,16 +155,16 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 
   /** Animated, formatted value for a KPI key (0 until startCountUp fires). */
   animatedCount(key: string): string {
-    return (this.animated()[key] ?? 0).toLocaleString('en-US');
+    return (this.animated()[key] ?? 0).toLocaleString(this.i18n.numberLocale);
   }
 
   private startCountUp(): void {
     this.animateTo('locations', this.locationCount);
     this.animateTo('activeOffers', this.activeOfferCount);
-    this.animateTo('vendorViews', this.vendorViewEvents);
+    this.animateTo('inactiveOffers', this.inactiveOfferCount);
+    this.animateTo('draftOffers', this.draftOfferCount);
+    this.animateTo('pendingRequests', this.pendingRequestCount);
     this.animateTo('totalOfferViews', this.totalOfferViewEvents);
-    this.animateTo('highlightViews', 0);
-    this.animateTo('redemptions', 0);
   }
 
   /** easeOutCubic count-up from the current value to target. */
@@ -105,34 +185,8 @@ export class AnalyticsPage implements OnInit, OnDestroy {
     requestAnimationFrame(step);
   }
 
-  private loadVendorClickAnalytics(): void {
-    this.vendorClickSub?.unsubscribe();
-    this.vendorClickSub = null;
-
-    const id = typeof this.vendorId === 'string' ? this.vendorId.trim() : '';
-    if (!id) {
-      this.vendorClickPayload.set(null);
-      return;
-    }
-    this.vendorClickSub = this.clickAnalytics.getVendorAnalytics(id).subscribe({
-      next: (data) => this.vendorClickPayload.set(data),
-      error: () => this.vendorClickPayload.set(null),
-    });
-  }
-
-  get vendorViewEvents(): number {
-    return this.vendorClickPayload()?.vendor?.totalClickEvents ?? 0;
-  }
-
   get totalOfferViewEvents(): number {
-    return this.vendorClickPayload()?.offersAggregate?.totalClickEvents ?? 0;
-  }
-
-  private offerClickByOfferId(): Record<string, { totalClickEvents: number; uniqueUsersWhoClicked: number }> {
-    const rows = this.vendorClickPayload()?.perOffer ?? [];
-    return Object.fromEntries(
-      rows.map((r) => [r.offerId, { totalClickEvents: r.totalClickEvents, uniqueUsersWhoClicked: r.uniqueUsersWhoClicked }]),
-    );
+    return 0;
   }
 
   /* ─── Overview ─── */
@@ -143,7 +197,38 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 
   get activeOfferCount(): number {
     if (!Array.isArray(this.offers) || this.offers.length === 0) return this.activeOffers || 0;
-    return this.offers.filter((o) => o?.isActive !== false).length;
+    return this.offers.filter((offer) =>
+      offer?.isActive === true ||
+      (offer?.isActive == null && String(offer?.status ?? '').toLowerCase() === 'active')
+    ).length;
+  }
+
+  get totalOfferCount(): number {
+    return Array.isArray(this.offers) ? this.offers.length : 0;
+  }
+
+  get inactiveOfferCount(): number {
+    return this.offers.filter((offer) =>
+      offer?.isActive === false || ['inactive', 'rejected'].includes(this.statusOf(offer))
+    ).length;
+  }
+
+  get draftOfferCount(): number {
+    return this.offers.filter((offer) => this.statusOf(offer) === 'draft').length;
+  }
+
+  get pendingRequestCount(): number {
+    return this.requests.filter((request) =>
+      !['completed', 'approved', 'rejected', 'closed'].includes(this.statusOf(request))
+    ).length;
+  }
+
+  private statusOf(item: any): string {
+    return String(item?.status ?? '').trim().toLowerCase();
+  }
+
+  get redemptionTotal(): number {
+    return this.redemptionsByLocation.reduce((total, location) => total + location.value, 0);
   }
 
   /* ─── Offer Insights ─── */
@@ -151,47 +236,40 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   get offerInsightRows(): OfferInsightRow[] {
     const list = Array.isArray(this.offers) ? this.offers : [];
     const maxRows = list.length ? Math.min(list.length, 500) : 1;
-    return this.analytics.offerInsightRows(list, this.sortField, this.sortDirection, maxRows, this.offerClickByOfferId());
+    return this.analytics.offerInsightRows(list, null, 1, maxRows);
   }
 
-  sortOffers(field: 'type' | 'clicks' | 'views') {
-    if (this.sortField === field) {
-      this.sortDirection = this.sortDirection === 1 ? -1 : 1;
-      return;
-    }
-    this.sortField = field;
-    this.sortDirection = 1;
+  get insightTableRows(): Array<OfferInsightRow | null> {
+    return this.loading() ? [null, null, null] : this.offerInsightRows;
   }
 
-  getSortIcon(field: 'type' | 'clicks' | 'views'): string {
-    return this.analytics.getSortIcon(field, this.sortField, this.sortDirection);
+  get topOffers(): OfferInsightRow[] {
+    return [...this.offerInsightRows]
+      .sort((a, b) => b.views - a.views || b.shares - a.shares)
+      .slice(0, 3);
+  }
+
+  topOfferLabel(index: number): string {
+    return `analytics.topOffers.rank${Math.min(index + 1, 3)}`;
+  }
+
+  offerTypeLabel(type: string): string {
+    const key = type === 'Digital'
+      ? 'digital'
+      : type === 'In-Store'
+        ? 'inStore'
+        : type === 'In-Store & Digital'
+          ? 'both'
+          : null;
+    return key ? this.i18n.t(`analytics.offerTypes.${key}`) : type;
   }
 
   viewOfferDetails(offer: OfferInsightRow) {
     const id = offer?.id;
     if (!id) return;
-    this.router.navigate(['/offers/detail', id]);
+    this.router.navigate(['/offers', id]);
   }
 
   /* ─── Location Insights ─── */
 
-  get countryOptions() {
-    return this.analytics.countryOptions(this.locations);
-  }
-
-  get locationInsightRows() {
-    return this.analytics.locationInsightRows(this.locations, this.selectedCountry());
-  }
-
-  get locationAxisLabels(): number[] {
-    return this.analytics.locationAxisLabels(this.locationInsightRows);
-  }
-
-  getLocationBarHeight(count: number): string {
-    return this.analytics.getLocationBarHeight(count, this.locationInsightRows);
-  }
-
-  updateSelectedCountry(value: string | null | undefined) {
-    this.selectedCountry.set(value ?? 'all');
-  }
 }

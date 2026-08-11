@@ -33,6 +33,9 @@ export class I18nService {
   /** For the date/number pipes: `| date : 'short' : undefined : i18n.locale()`. */
   readonly locale = computed(() => (this.lang() === 'ar' ? 'ar-SA' : 'en-US'));
 
+  /** Keep numeric data in Western digits in both interface languages. */
+  readonly numberLocale = 'en-US';
+
   readonly isRtl = computed(() => this.lang() === 'ar');
 
   /** Called by provideAppInitializer so no page paints raw keys. */

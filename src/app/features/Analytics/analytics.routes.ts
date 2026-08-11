@@ -6,14 +6,14 @@ import { AnalyticsPage } from './pages/analytics-page/analytics-page';
 // analytics view. It's left in place, untouched, but is no longer routed —
 // `AnalyticsOverviewPage` now renders at '/analytics'.
 export const routes: Route[] = [
-  {
-    path: '',
-    component: AnalyticsOverviewPage,
-    data: { title: 'Analytics' },
-  },
-  //  {
+  // {
   //   path: '',
-  //   component: AnalyticsPage,
+  //   component: AnalyticsOverviewPage,
   //   data: { title: 'Analytics' },
   // },
+   {
+    path: '',
+    component: AnalyticsPage,
+    data: { title: 'Analytics' },
+  },
 ];

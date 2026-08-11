@@ -1,281 +1,201 @@
 <div class="analytics-page">
-  <!-- Export header -->
-  <div class="analytics-page__header">
+  <header class="analytics-page__header">
     <div>
-      <h1 class="analytics-page__title">Analytics</h1>
-      <p class="analytics-page__subtitle">Track performance, audience insights, and location metrics.</p>
+      <h1>{{ 'analytics.title' | translate }}</h1>
+      <p>{{ 'analytics.subtitle' | translate }}</p>
     </div>
-  </div>
+  </header>
 
-  <section class="analytics-page__section">
-    <h3 class="analytics-page__section-title">Overview</h3>
-    <div class="analytics-page__divider"></div>
-
-    <div class="analytics-page__overview-grid">
-      <div class="analytics-page__stat-card">
-        <div class="analytics-page__stat-header">
-          <div class="analytics-page__stat-icon-wrapper">
-            <i class="pi pi-map-marker"></i>
-          </div>
-          <span class="analytics-page__stat-trend">
-            <i class="pi pi-arrow-up"></i>
-            +0%
-          </span>
-        </div>
-        <p class="analytics-page__stat-value">{{ animatedCount('locations') }}</p>
-        <p class="analytics-page__stat-label">Locations</p>
-      </div>
-
-      <div class="analytics-page__stat-card">
-        <div class="analytics-page__stat-header">
-          <div class="analytics-page__stat-icon-wrapper">
-            <i class="pi pi-tag"></i>
-          </div>
-          <span class="analytics-page__stat-trend">
-            <i class="pi pi-arrow-up"></i>
-            +0%
-          </span>
-        </div>
-        <p class="analytics-page__stat-value">{{ animatedCount('activeOffers') }}</p>
-        <p class="analytics-page__stat-label">Active Offers</p>
-      </div>
-
-      <div class="analytics-page__stat-card">
-        <div class="analytics-page__stat-header">
-          <div class="analytics-page__stat-icon-wrapper">
-            <i class="pi pi-eye"></i>
-          </div>
-          <span class="analytics-page__stat-trend">
-            <i class="pi pi-arrow-up"></i>
-            +0%
-          </span>
-        </div>
-        <p class="analytics-page__stat-value">{{ animatedCount('vendorViews') }}</p>
-        <p class="analytics-page__stat-label">Vendor Views</p>
-      </div>
-
-      <div class="analytics-page__stat-card">
-        <div class="analytics-page__stat-header">
-          <div class="analytics-page__stat-icon-wrapper">
-            <i class="pi pi-eye"></i>
-          </div>
-          <span class="analytics-page__stat-trend">
-            <i class="pi pi-arrow-up"></i>
-            +0%
-          </span>
-        </div>
-        <p class="analytics-page__stat-value">{{ animatedCount('highlightViews') }}</p>
-        <p class="analytics-page__stat-label">Highlight Views</p>
-      </div>
-
-      <div class="analytics-page__stat-card">
-        <div class="analytics-page__stat-header">
-          <div class="analytics-page__stat-icon-wrapper">
-            <i class="pi pi-chart-line"></i>
-          </div>
-          <span class="analytics-page__stat-trend">
-            <i class="pi pi-arrow-up"></i>
-            +0%
-          </span>
-        </div>
-        <p class="analytics-page__stat-value">{{ animatedCount('totalOfferViews') }}</p>
-        <p class="analytics-page__stat-label">Total Offer Views</p>
-      </div>
-
-      <div class="analytics-page__stat-card">
-        <div class="analytics-page__stat-header">
-          <div class="analytics-page__stat-icon-wrapper">
-            <i class="pi pi-check-circle"></i>
-          </div>
-          <span class="analytics-page__stat-trend">
-            <i class="pi pi-arrow-up"></i>
-            +0%
-          </span>
-        </div>
-        <p class="analytics-page__stat-value">{{ animatedCount('redemptions') }}</p>
-        <p class="analytics-page__stat-label">Redemptions</p>
-      </div>
-    </div>
+  <section class="kpi-grid" [attr.aria-label]="'analytics.overview.title' | translate">
+    <article class="kpi-card">
+      <span class="icon-box"><i class="pi pi-tag"></i></span>
+      <strong>{{ animatedCount('activeOffers') }}</strong>
+      <h2>{{ 'analytics.kpi.activeOffers' | translate }}</h2>
+      <p>{{ 'analytics.kpi.activeOffersHint' | translate }}</p>
+    </article>
+    <article class="kpi-card kpi-card--danger">
+      <span class="icon-box"><i class="pi pi-times-circle"></i></span>
+      <strong>{{ animatedCount('inactiveOffers') }}</strong>
+      <h2>{{ 'analytics.kpi.inactiveOffers' | translate }}</h2>
+      <p>{{ 'analytics.kpi.inactiveOffersHint' | translate }}</p>
+    </article>
+    <article class="kpi-card">
+      <span class="icon-box"><i class="pi pi-file-edit"></i></span>
+      <strong>{{ animatedCount('draftOffers') }}</strong>
+      <h2>{{ 'analytics.kpi.draftOffers' | translate }}</h2>
+      <p>{{ 'analytics.kpi.draftOffersHint' | translate }}</p>
+    </article>
+    <article class="kpi-card kpi-card--warning">
+      <span class="icon-box"><i class="pi pi-clock"></i></span>
+      <strong>{{ animatedCount('pendingRequests') }}</strong>
+      <h2>{{ 'analytics.kpi.pendingRequests' | translate }}</h2>
+      <p>{{ 'analytics.kpi.pendingRequestsHint' | translate }}</p>
+    </article>
   </section>
 
-  <section class="analytics-page__section">
-    <h3 class="analytics-page__section-title">Offers Insights</h3>
-    <div class="analytics-page__divider"></div>
-
-    <div class="analytics-page__table-wrapper">
-      <table class="analytics-page__table">
-        <thead>
-          <tr>
-            <th>Offer Title</th>
-            <th>Discount</th>
-            <th>
-              <button type="button" class="analytics-page__sort-btn" (click)="sortOffers('type')">
-                Type
-                <i [class]="getSortIcon('type')"></i>
-              </button>
-            </th>
-            <th class="analytics-page__cell--right">
-              <button type="button" class="analytics-page__sort-btn" (click)="sortOffers('clicks')">
-                Clicks
-                <i [class]="getSortIcon('clicks')"></i>
-              </button>
-            </th>
-            <th class="analytics-page__cell--right">
-              <button type="button" class="analytics-page__sort-btn" (click)="sortOffers('views')">
-                Views
-                <i [class]="getSortIcon('views')"></i>
-              </button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (loading()) {
-          @for (i of [1, 2, 3, 4, 5]; track i) {
-          <tr class="analytics-page__row--skeleton">
-            <td><span class="app-skeleton analytics-page__skel-cell"></span></td>
-            <td><span class="app-skeleton analytics-page__skel-cell"></span></td>
-            <td><span class="app-skeleton analytics-page__skel-cell"></span></td>
-            <td class="analytics-page__cell--right"><span class="app-skeleton analytics-page__skel-cell analytics-page__skel-cell--right"></span></td>
-            <td class="analytics-page__cell--right"><span class="app-skeleton analytics-page__skel-cell analytics-page__skel-cell--right"></span></td>
-          </tr>
-          }
-          } @else {
-          @for (offer of offerInsightRows; track $index) {
-          <tr [class.is-clickable]="offer.id" (click)="viewOfferDetails(offer)">
-            <td>{{ offer.title }}</td>
-            <td>{{ offer.discount }}</td>
-            <td>{{ offer.type }}</td>
-            <td class="analytics-page__cell--right analytics-page__cell--primary">{{ offer.clicks }} Clicks</td>
-            <td class="analytics-page__cell--right analytics-page__cell--primary">{{ offer.views }} Views</td>
-          </tr>
-          }
-          }
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="analytics-page__section">
-    <h3 class="analytics-page__section-title">Audience Insights</h3>
-    <div class="analytics-page__divider"></div>
-
-    <div class="analytics-page__insights-grid">
-      <div class="analytics-page__insight-card">
-        <h4 class="analytics-page__insight-title">By Employee Types</h4>
-        @if (loading()) {
-        <span class="app-skeleton analytics-page__skel-chart"></span>
-        } @else {
-        <div class="analytics-page__chart-container">
-          <div class="analytics-page__chart-y-axis">
-            <span>1000</span>
-            <span>750</span>
-            <span>500</span>
-            <span>250</span>
-            <span>0</span>
-          </div>
-          <div class="analytics-page__chart-grid">
-            <div class="analytics-page__chart-lines">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <div class="analytics-page__chart-bars">
-              @for (label of employeeTypes; track label) {
-              <div class="analytics-page__chart-bar-wrapper">
-                <div class="analytics-page__chart-bar analytics-page__chart-bar--employee"></div>
-              </div>
-              }
-            </div>
-          </div>
-          <div class="analytics-page__chart-x-axis">
-            @for (label of employeeTypes; track label) {
-            <p class="analytics-page__chart-label">{{ label }}</p>
-            }
-          </div>
+  <div class="analytics-grid analytics-grid--primary">
+    <section class="panel location-panel">
+      <div class="panel__header panel__header--split">
+        <div>
+          <h2>{{ 'analytics.location.title' | translate }}</h2>
+          <p>
+            {{ (redemptionChartMode() === 'day' ? 'analytics.location.daySubtitle' : 'analytics.location.subtitle') | translate }}
+          </p>
         </div>
-        }
-      </div>
-
-      <div class="analytics-page__insight-card">
-        <h4 class="analytics-page__insight-title">By Platform</h4>
-        @if (loading()) {
-        <span class="app-skeleton analytics-page__skel-chart"></span>
-        } @else {
-        <div class="analytics-page__platform-container">
-          <!-- Empty donut ring — no analytics endpoint yet -->
-          <div class="analytics-page__donut-chart">
-            <div class="analytics-page__donut-ring"></div>
-            <div class="analytics-page__donut-hole"></div>
-          </div>
-          <div class="analytics-page__platform-stats">
-            <div class="analytics-page__platform-stat analytics-page__platform-stat--mobile">
-              <span>Mobile</span>
-              <span>0 Views</span>
-            </div>
-            <div class="analytics-page__platform-stat analytics-page__platform-stat--web">
-              <span>Website</span>
-              <span>0 Views</span>
-            </div>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="analytics-page__section">
-    <h3 class="analytics-page__section-title">Locations Insights</h3>
-    <div class="analytics-page__divider"></div>
-
-    <div class="analytics-page__insight-card">
-      <div class="analytics-page__locations-header">
-        <h4 class="analytics-page__insight-title">By City</h4>
-        <div class="analytics-page__filter-group">
-          <label>Country</label>
-          <p-select [options]="countryOptions" [ngModel]="selectedCountry()"
-            (ngModelChange)="updateSelectedCountry($event)" optionLabel="label" optionValue="value"
-            placeholder="Select Country" appendTo="body"></p-select>
+        <div class="period-filter" role="group" [attr.aria-label]="'analytics.location.filterLabel' | translate">
+          <button
+            type="button"
+            [class.is-active]="redemptionChartMode() === 'location'"
+            [attr.aria-pressed]="redemptionChartMode() === 'location'"
+            (click)="redemptionChartMode.set('location')"
+          >
+            {{ 'analytics.location.byLocation' | translate }}
+          </button>
+          <button
+            type="button"
+            [class.is-active]="redemptionChartMode() === 'day'"
+            [attr.aria-pressed]="redemptionChartMode() === 'day'"
+            (click)="redemptionChartMode.set('day')"
+          >
+            {{ 'analytics.location.byDay' | translate }}
+          </button>
         </div>
       </div>
 
       @if (loading()) {
-      <span class="app-skeleton analytics-page__skel-chart analytics-page__skel-chart--tall"></span>
-      } @else if (locationInsightRows.length > 0) {
-      <div class="analytics-page__chart-container analytics-page__chart-container--locations">
-        <div class="analytics-page__chart-y-axis">
-          @for (label of locationAxisLabels; track $index) {
-          <span>{{ label }}</span>
-          }
-        </div>
-        <div class="analytics-page__chart-grid">
-          <div class="analytics-page__chart-lines">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div class="analytics-page__chart-bars analytics-page__chart-bars--locations">
-            @for (city of locationInsightRows; track city.city) {
-            <div class="analytics-page__chart-bar-wrapper">
-              <div class="analytics-page__chart-bar" [style.height]="getLocationBarHeight(city.count)"
-                [attr.aria-label]="city.city + ': ' + city.count" [pTooltip]="city.count + ' locations'"
-                tooltipPosition="top"></div>
-            </div>
-            }
-          </div>
-        </div>
-        <div class="analytics-page__chart-x-axis analytics-page__chart-x-axis--locations">
-          @for (city of locationInsightRows; track city.city) {
-          <p class="analytics-page__chart-label">{{ city.city }}</p>
-          }
-        </div>
-      </div>
+        <span class="app-skeleton chart-skeleton"></span>
       } @else {
-      <div class="analytics-page__chart-empty">
-        No locations found for the selected country.
-      </div>
+        <p-chart
+          styleClass="redemption-chart"
+          type="bar"
+          height="18rem"
+          [data]="redemptionChartData()"
+          [options]="redemptionChartOptions()"
+          [ariaLabel]="'analytics.location.chartLabel' | translate"
+        />
       }
+    </section>
+
+    <aside class="panel top-offers">
+      <div class="panel__header">
+        <h2>{{ 'analytics.topOffers.title' | translate }}</h2>
+        <p>{{ 'analytics.topOffers.subtitle' | translate }}</p>
+      </div>
+
+      @if (loading()) {
+        @for (i of [1, 2, 3]; track i) {
+          <span class="app-skeleton offer-skeleton"></span>
+        }
+      } @else {
+        @for (offer of topOffers; track offer.id ?? $index; let index = $index) {
+          <button class="top-offer" type="button" [disabled]="!offer.id" (click)="viewOfferDetails(offer)">
+            <span class="icon-box">
+              <i [class]="index === 0 ? 'pi pi-heart' : index === 1 ? 'pi pi-eye' : 'pi pi-chart-line'"></i>
+            </span>
+            <span class="top-offer__copy">
+              <small>{{ topOfferLabel(index) | translate }}</small>
+              <strong>{{ offer.title }}</strong>
+              <span>{{ offer.views | number: '1.0-0':i18n.numberLocale }} {{ 'analytics.common.views' | translate }}</span>
+            </span>
+            <span class="top-offer__metric">
+              {{ offer.shares | number: '1.0-0':i18n.numberLocale }} {{ 'analytics.common.shares' | translate }}
+            </span>
+          </button>
+        }
+      }
+    </aside>
+  </div>
+
+  <div class="analytics-grid analytics-grid--secondary">
+    <section class="panel overview-panel">
+      <div class="panel__header panel__header--split">
+        <div>
+          <h2>{{ 'analytics.overview.title' | translate }}</h2>
+          <p>{{ 'analytics.overview.subtitle' | translate }}</p>
+        </div>
+        <div class="period-filter" role="group" [attr.aria-label]="'analytics.overview.filterLabel' | translate">
+          @for (period of overviewPeriods; track period.value) {
+            <button
+              type="button"
+              [class.is-active]="selectedOverviewPeriod() === period.value"
+              [attr.aria-pressed]="selectedOverviewPeriod() === period.value"
+              (click)="selectedOverviewPeriod.set(period.value)"
+            >
+              {{ period.labelKey | translate }}
+            </button>
+          }
+        </div>
+      </div>
+      <div class="overview-metrics">
+        <div>
+          <strong>{{ totalOfferCount | number: '1.0-0':i18n.numberLocale }}</strong>
+          <span>{{ 'analytics.kpi.totalOffers' | translate }}</span>
+        </div>
+        <div>
+          <strong>{{ totalOfferViewEvents | number: '1.0-0':i18n.numberLocale }}</strong>
+          <span>{{ 'analytics.kpi.offerViews' | translate }}</span>
+        </div>
+        <div>
+          <strong>{{ redemptionTotal | number: '1.0-0':i18n.numberLocale }}</strong>
+          <span>{{ 'analytics.common.redemptions' | translate }}</span>
+        </div>
+        <div>
+          <strong>{{ locationCount | number: '1.0-0':i18n.numberLocale }}</strong>
+          <span>{{ 'analytics.kpi.locations' | translate }}</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="panel insights-panel">
+    <div class="panel__header">
+      <h2>{{ 'analytics.insights.title' | translate }}</h2>
+      <p>{{ 'analytics.insights.subtitle' | translate }}</p>
     </div>
+    <p-table
+      [value]="insightTableRows"
+      [paginator]="!loading()"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      paginatorDropdownAppendTo="body"
+      styleClass="analytics-table"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ 'analytics.table.offer' | translate }}</th>
+          <th>{{ 'analytics.table.discount' | translate }}</th>
+          <th>{{ 'analytics.table.type' | translate }}</th>
+          <th pSortableColumn="shares">
+            {{ 'analytics.common.shares' | translate }} <p-sortIcon field="shares" />
+          </th>
+          <th pSortableColumn="redemptions">
+            {{ 'analytics.common.redemptions' | translate }} <p-sortIcon field="redemptions" />
+          </th>
+          <th pSortableColumn="views">
+            {{ 'analytics.common.views' | translate }} <p-sortIcon field="views" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-offer>
+        <tr [class.is-clickable]="offer.id" (click)="viewOfferDetails(offer)">
+          <td><span class="analytics-table__row-title">{{ offer.title }}</span></td>
+          <td>{{ offer.discount }}</td>
+          <td>{{ offerTypeLabel(offer.type) }}</td>
+          <td>{{ offer.shares | number: '1.0-0':i18n.numberLocale }}</td>
+          <td>{{ offer.redemptions | number: '1.0-0':i18n.numberLocale }}</td>
+          <td>{{ offer.views | number: '1.0-0':i18n.numberLocale }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="loadingbody">
+        <tr class="analytics-table__row--skeleton">
+          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+            <td><span class="app-skeleton table-skeleton"></span></td>
+          }
+        </tr>
+      </ng-template>
+    </p-table>
   </section>
 </div>

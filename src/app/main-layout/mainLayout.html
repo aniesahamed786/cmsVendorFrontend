@@ -31,8 +31,8 @@
         [headerData]="receivedHeaderData()"
       ></app-navbar>
 
-      <div class="main-layout app-shell__outlet">
-        <router-outlet />
+      <div #scrollContainer class="main-layout app-shell__outlet">
+        <router-outlet (activate)="scrollContainer.scrollTo(0, 0)" />
       </div>
     </div>
   </div>

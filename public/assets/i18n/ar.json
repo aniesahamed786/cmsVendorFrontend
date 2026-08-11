@@ -42,6 +42,8 @@
     "recentActivity": "النشاط الأخير",
     "viewHistory": "عرض السجل",
     "pendingRequests": "الطلبات قيد المراجعة",
+    "noPendingRequests": "لا توجد طلبات معلقة",
+    "noPendingRequestsDescription": "جميع طلباتك محدّثة.",
     "stats": {
       "totalRedemptions": {
         "title": "إجمالي عمليات الاسترداد",
@@ -1279,6 +1281,96 @@
       "terms": "الشروط والأحكام",
       "privacy": "الخصوصية والسياسة",
       "disclaimer": "إخلاء المسؤولية"
+    }
+  },
+  "analytics": {
+    "title": "التحليلات",
+    "subtitle": "تابع أداء العروض والتفاعل والنشاط حسب الموقع.",
+    "kpi": {
+      "activeOffers": "العروض النشطة",
+      "activeOffersHint": "العروض المتاحة حالياً",
+      "inactiveOffers": "العروض غير النشطة",
+      "inactiveOffersHint": "العروض التي لم تعد نشطة",
+      "draftOffers": "مسودات العروض",
+      "draftOffersHint": "العروض التي لا تزال قيد الإعداد",
+      "pendingRequests": "الطلبات المعلقة",
+      "pendingRequestsHint": "الطلبات التي تنتظر الإكمال",
+      "totalOffers": "إجمالي العروض",
+      "totalOffersHint": "جميع العروض في حسابك",
+      "offerViews": "مشاهدات العروض",
+      "offerViewsHint": "المشاهدات المسجلة لجميع العروض",
+      "locations": "المواقع",
+      "locationsHint": "الفروع التي تقدم عروضك"
+    },
+    "location": {
+      "title": "عمليات الاسترداد حسب الموقع",
+      "subtitle": "توزيع عمليات الاسترداد على المواقع",
+      "daySubtitle": "عمليات الاسترداد خلال آخر 7 أيام",
+      "filterLabel": "تجميع عمليات الاسترداد حسب",
+      "byLocation": "الموقع",
+      "byDay": "اليوم",
+      "country": "الدولة",
+      "allCountries": "جميع الدول",
+      "locations": "مواقع",
+      "chartLabel": "مخطط أعمدة يوضح عمليات الاسترداد حسب الموقع",
+      "totalRedemptions": "إجمالي عمليات الاسترداد",
+      "riyadh": "الرياض",
+      "jeddah": "جدة",
+      "dammam": "الدمام",
+      "other": "مواقع أخرى",
+      "days": {
+        "sun": "الأحد",
+        "mon": "الاثنين",
+        "tue": "الثلاثاء",
+        "wed": "الأربعاء",
+        "thu": "الخميس",
+        "fri": "الجمعة",
+        "sat": "السبت"
+      },
+      "empty": "لا تتوفر بيانات استرداد."
+    },
+    "topOffers": {
+      "title": "أفضل العروض",
+      "subtitle": "العروض ذات التفاعل الأعلى",
+      "rank1": "العرض الأكثر مشاهدة",
+      "rank2": "ثاني أفضل عرض",
+      "rank3": "ثالث أفضل عرض"
+    },
+    "overview": {
+      "title": "نظرة عامة على العروض",
+      "subtitle": "ملخص سريع لأدائك الحالي",
+      "filterLabel": "الفترة الزمنية للنظرة العامة",
+      "sevenDays": "7 أيام",
+      "thirtyDays": "30 يوماً",
+      "ninetyDays": "90 يوماً",
+      "allTime": "كل الوقت"
+    },
+    "activity": {
+      "title": "عمليات الاسترداد حسب اليوم",
+      "subtitle": "آخر 7 أيام",
+      "emptyTitle": "لا توجد بيانات استرداد بعد",
+      "emptyText": "سيظهر النشاط اليومي هنا عند ربط واجهة تحليلات الاسترداد."
+    },
+    "insights": {
+      "title": "إحصاءات العروض",
+      "subtitle": "قارن التفاعل بين عروضك"
+    },
+    "table": {
+      "offer": "العرض",
+      "discount": "الخصم",
+      "type": "النوع"
+    },
+    "offerTypes": {
+      "digital": "رقمي",
+      "inStore": "داخل المتجر",
+      "both": "داخل المتجر ورقمي"
+    },
+    "common": {
+      "views": "المشاهدات",
+      "clicks": "النقرات",
+      "shares": "المشاركات",
+      "redemptions": "عمليات الاسترداد",
+      "uniqueClicks": "النقرات الفريدة"
     }
   },
   "branchActions": {
