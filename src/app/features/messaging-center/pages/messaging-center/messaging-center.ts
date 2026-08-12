@@ -15,13 +15,11 @@ export class MessagingCenterPage implements OnInit {
   private readonly router = inject(Router);
   private readonly store = inject(MessagingCenterStore);
 
-  // The store is root-scoped and survives navigation, so refetch on every entry.
+  // The store is root-scoped and survives navigation, so every entry starts from
+  // empty and refetches — no ticket from the last visit stays on screen.
   ngOnInit(): void {
+    this.store.reset();
     this.store.refreshTickets();
-    const selected = this.store.selectedTicket();
-    if (selected) {
-      this.store.refreshMessages(selected.reference);
-    }
   }
 
   onCreateTicket(): void {

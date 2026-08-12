@@ -8,6 +8,7 @@ import {
   TicketTabKey,
 } from '../models/messaging-center.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { finalize } from 'rxjs';
 import { inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 
@@ -153,6 +154,13 @@ export class MessagingCenterStore {
     // });
   }
 
+  /** Drops everything the root-scoped store is holding so a page entry starts empty. */
+  reset(): void {
+    this.ticketsSignal.set([]);
+    this.messagesRecord.set({});
+    this.selectedTicketId.set(null);
+  }
+
   refreshTickets(): void {
     this.loadTickets();
   }
@@ -282,20 +290,24 @@ export class MessagingCenterStore {
   }
 
   private loadTickets(): void {
-    // this.isLoadingTickets.set(true);
-    this.getTickets().subscribe({
-      next: (response) => {
-        const tickets = response.data.map((ticket: any, index: number) =>
-          this.mapTicket(ticket, index)
-        );
+    // ponytail: skeleton only when there is nothing on screen yet. loadTickets() also runs on
+    // every socket event — skeletoning over a list the user is reading is the thing the
+    // pattern doc forbids. finalize, not complete: complete never fires after an error.
+    this.isLoadingTickets.set(this.ticketsSignal().length === 0);
+    this.getTickets()
+      .pipe(finalize(() => this.isLoadingTickets.set(false)))
+      .subscribe({
+        next: (response) => {
+          const tickets = response.data.map((ticket: any, index: number) =>
+            this.mapTicket(ticket, index)
+          );
 
-        this.ticketsSignal.set(tickets);
-      },
-      error: (error) => {
-        console.error('Failed to load tickets', error);
-      },
-      // complete: () => this.isLoadingTickets.set(false),
-    });
+          this.ticketsSignal.set(tickets);
+        },
+        error: (error) => {
+          console.error('Failed to load tickets', error);
+        },
+      });
   }
 
   getTickets(pageSize: number = 20) {
@@ -387,24 +399,28 @@ export class MessagingCenterStore {
   }
 
   private loadTicketMessages(ticketId: string): void {
-    // this.isLoadingMessages.set(true);
-    this.getTicketMessages(ticketId).subscribe({
-      next: (response) => {
-        const selectedId = this.selectedTicketId();
-        if (!selectedId) return;
-        const messages = response.data.map((message: any) =>
-          this.mapTicketMessage(message)
-        );
-        this.messagesRecord.update(records => ({
-          ...records,
-          [selectedId]: messages
-        }));
-      },
-      error: error => {
-        console.error('Failed to load messages', error);
-      },
-      // complete: () => this.isLoadingMessages.set(false),
-    });
+    // ponytail: same rule as tickets — only skeleton the thread the first time a ticket is
+    // opened, never over messages already on screen (socket refreshes re-enter here).
+    const selected = this.selectedTicketId();
+    this.isLoadingMessages.set(!selected || !this.messagesRecord()[selected]);
+    this.getTicketMessages(ticketId)
+      .pipe(finalize(() => this.isLoadingMessages.set(false)))
+      .subscribe({
+        next: (response) => {
+          const selectedId = this.selectedTicketId();
+          if (!selectedId) return;
+          const messages = response.data.map((message: any) =>
+            this.mapTicketMessage(message)
+          );
+          this.messagesRecord.update(records => ({
+            ...records,
+            [selectedId]: messages
+          }));
+        },
+        error: error => {
+          console.error('Failed to load messages', error);
+        },
+      });
   }
 
   private mapTicketMessage(message: any): TicketMessage {
