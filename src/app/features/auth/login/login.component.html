@@ -13,6 +13,10 @@
         <i class="pi pi-globe"></i>
         {{ 'login.language' | translate }}
       </button>
+      <button type="button" class="login-page__header-link" (click)="toggleTheme()">
+        <i class="pi" [class.pi-sun]="isDark()" [class.pi-moon]="!isDark()"></i>
+        {{ (isDark() ? 'settingsPage.theme.light' : 'settingsPage.theme.dark') | translate }}
+      </button>
       <a class="login-page__header-link" href="#">
         <i class="pi pi-headphones"></i>
         {{ 'login.support' | translate }}

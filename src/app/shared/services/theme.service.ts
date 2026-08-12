@@ -23,48 +23,54 @@ export class ThemeService {
   ];
   readonly accentThemes = ACCENT_THEMES;
 
+  private readonly osQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+  private readonly prefersDark = signal(this.osQuery?.matches ?? false);
+
   readonly appearanceMode = signal<AppearanceMode>('light');
   readonly accentTheme = signal<AccentTheme>(DEFAULT_ACCENT_THEME);
-  readonly isDarkMode = computed(() => this.appearanceMode() === 'dark');
+  /** 'system' is not a look — it resolves to the OS preference. */
+  readonly isDarkMode = computed(
+    () =>
+      this.appearanceMode() === 'dark' ||
+      (this.appearanceMode() === 'system' && this.prefersDark()),
+  );
 
   constructor() {
     this.initializeTheme();
+    this.osQuery?.addEventListener('change', (e) => {
+      this.prefersDark.set(e.matches);
+      if (this.appearanceMode() === 'system') {
+        this.apply();
+      }
+    });
   }
 
   setAppearanceMode(mode: AppearanceMode): void {
     this.appearanceMode.set(mode);
-    this.applyAppearanceMode(mode);
-    this.applyAccentTheme(this.accentTheme(), mode); // brand ramp differs per mode
+    this.apply(); // brand ramp differs per mode
     localStorage.setItem(this.modeKey, mode);
   }
 
   setAccentTheme(name: string): void {
-    const theme = getAccentTheme(name);
-    this.accentTheme.set(theme);
-    this.applyAccentTheme(theme, this.appearanceMode());
-    localStorage.setItem(this.accentKey, theme.name);
+    this.accentTheme.set(getAccentTheme(name));
+    this.apply();
+    localStorage.setItem(this.accentKey, this.accentTheme().name);
   }
 
   private initializeTheme(): void {
     const savedMode = localStorage.getItem(this.modeKey) as AppearanceMode | null;
-    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-    const mode: AppearanceMode = savedMode ?? (prefersDark ? 'dark' : 'light');
-    const theme = getAccentTheme(localStorage.getItem(this.accentKey));
-
-    this.appearanceMode.set(mode);
-    this.accentTheme.set(theme);
-    this.applyAccentTheme(theme, mode);
-    this.applyAppearanceMode(mode);
+    this.appearanceMode.set(savedMode ?? 'system');
+    this.accentTheme.set(getAccentTheme(localStorage.getItem(this.accentKey)));
+    this.apply();
   }
 
-  private applyAppearanceMode(mode: AppearanceMode): void {
-    const root = document.documentElement;
-    root.classList.toggle('dark-mode', mode === 'dark');
-    root.classList.toggle('system-mode', mode === 'system');
+  /** Single write path: both axes land on the DOM together, from the resolved dark flag. */
+  private apply(): void {
+    document.documentElement.classList.toggle('dark-mode', this.isDarkMode());
+    this.applyAccentTheme(this.accentTheme(), this.isDarkMode());
   }
 
-  private applyAccentTheme(theme: AccentTheme, mode: AppearanceMode): void {
-    const dark = mode === 'dark';
+  private applyAccentTheme(theme: AccentTheme, dark: boolean): void {
     const palette = dark ? theme.darkPalette : theme.palette;
     const rgb = dark ? theme.darkRgb : theme.rgb;
     const gradient = dark ? theme.darkGradient : theme.gradient;

@@ -12,6 +12,14 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Button } from '../../../shared/Components/button/button';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
+import { AppearanceMode, ThemeService } from '../../../shared/services/theme.service';
+
+/** vendor_accounts.theme → the UI's appearance modes (inverse of the settings page's map). */
+const API_TO_THEME: Record<string, AppearanceMode> = {
+  LIGHT: 'light',
+  DARK: 'dark',
+  SYSTEM: 'system',
+};
 
 @Component({
   selector: 'app-login',
@@ -29,6 +37,9 @@ import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
 export class LoginComponent {
 
   private readonly i18n = inject(I18nService);
+  private readonly theme = inject(ThemeService);
+
+  readonly isDark = this.theme.isDarkMode;
 
   loginForm: FormGroup;
 
@@ -75,6 +86,11 @@ export class LoginComponent {
     void this.i18n.toggle();
   }
 
+  /** Same reason: no navbar here, so this is the only theme switch before signing in. */
+  toggleTheme(): void {
+    this.theme.setAppearanceMode(this.isDark() ? 'light' : 'dark');
+  }
+
   login(): void {
 
   if (this.loginForm.invalid) {
@@ -101,6 +117,13 @@ export class LoginComponent {
         'vendorAccount',
         JSON.stringify(response.vendorAccount)
       );
+
+      // The account's saved theme was stored but never applied — the settings page
+      // writes it, so honour it here or a second device never picks it up.
+      const saved = API_TO_THEME[response.vendorAccount.theme ?? ''];
+      if (saved) {
+        this.theme.setAppearanceMode(saved);
+      }
 
       this.router.navigate(['/dashboard']);
 
