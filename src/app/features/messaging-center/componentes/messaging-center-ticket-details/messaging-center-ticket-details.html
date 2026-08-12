@@ -40,15 +40,26 @@
   <!-- Thread -->
   <div class="mc-details__thread" #thread>
     @if (store.isLoadingMessages()) {
-    <div class="messages-loading-state">
-      <i class="pi pi-spinner pi-spin"></i>
-      <span>Loading messages…</span>
+    <!-- Reuses the real __message geometry; --skeleton only swaps text for bars. -->
+    @for (i of [1,2,3,4]; track i) {
+    <div class="mc-details__message" [class.mc-details__message--incoming]="i % 2 === 1"
+      [class.mc-details__message--outgoing]="i % 2 === 0">
+      <span class="app-skeleton app-skeleton--circle mc-details__skeleton-avatar"></span>
+      <div class="mc-details__message-body">
+        <div class="mc-details__message-head">
+          <span class="app-skeleton mc-details__skeleton-author"></span>
+          <span class="app-skeleton mc-details__skeleton-time"></span>
+        </div>
+        <span class="app-skeleton mc-details__skeleton-bubble"></span>
+      </div>
     </div>
     }
+    } @else {
 
     @for (msg of messages(); track msg.id) {
     <div class="mc-details__message" [class.mc-details__message--outgoing]="msg.outgoing"
-      [class.mc-details__message--incoming]="!msg.outgoing" [class.mc-details__message--note]="msg.isInternalNote">
+      [class.mc-details__message--incoming]="!msg.outgoing" [class.mc-details__message--note]="msg.isInternalNote"
+      [class.mc-details__message--pending]="msg.pending">
       @if (!msg.outgoing) {
       <div class="mc-details__avatar">
         <i class="pi pi-user"></i>
@@ -62,7 +73,14 @@
             <span class="mc-details__note-tag">{{ 'messaging.details.internalNote' | translate }}</span>
             }
           </div>
-          <span class="mc-details__time">{{ msg.timestamp }}</span>
+          <span class="mc-details__time">
+            @if (msg.pending) {
+            <i class="pi pi-spinner pi-spin"></i>
+            {{ 'messaging.details.sending' | translate }}
+            } @else {
+            {{ msg.timestamp }}
+            }
+          </span>
         </div>
 
         <div class="mc-details__bubble" [class.mc-details__bubble--outgoing]="msg.outgoing"
@@ -97,6 +115,7 @@
       </div>
       }
     </div>
+    }
     }
   </div>
 

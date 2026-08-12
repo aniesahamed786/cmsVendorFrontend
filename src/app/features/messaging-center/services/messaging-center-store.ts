@@ -11,6 +11,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
+import { I18nService } from '../../../shared/i18n/i18n.service';
 
 // Socket
 import { MessagingSocketService } from '../services/messaging-socket.service';
@@ -45,6 +46,7 @@ export class MessagingCenterStore {
 
   // Socket Injection
   private readonly socketService = inject(MessagingSocketService);
+  private readonly i18n = inject(I18nService);
 
   isLoadingTickets = signal(false);
   isLoadingMessages = signal(false);
@@ -141,6 +143,9 @@ export class MessagingCenterStore {
     }
 
     this.selectedTicketId.set(id);
+    // Drop the cached thread so reopening a ticket refetches instead of painting
+    // the old messages. Socket refreshes skip this and keep the thread on screen.
+    this.messagesRecord.update(({ [id]: _dropped, ...rest }) => rest);
     this.patchTicket(id, { unread: false });
     const ticket = this.ticketsSignal().find(t => t.id === id);
     if (!ticket) {
@@ -185,21 +190,49 @@ export class MessagingCenterStore {
     attachments.forEach(file => {
       formData.append('attachment_file', file);
     });
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
+
+    // ponytail: optimistic bubble so the message shows the moment it is sent. The socket
+    // refetch replaces the whole thread with the server copy, so nothing to reconcile —
+    // only the failure path has to undo it. Object URLs are transient for the same reason.
+    const pendingId = `pending-${Date.now()}`;
+    const pending: TicketMessage = {
+      id: pendingId,
+      authorName: this.i18n.t('messaging.details.you'),
+      senderRole: 'Vendor',
+      outgoing: true,
+      timestamp: this.formatMessageDate(new Date().toISOString()),
+      body: content,
+      isInternalNote,
+      attachments: attachments.map(file => ({
+        name: file.name,
+        url: URL.createObjectURL(file),
+      })),
+      pending: true,
+    };
+    this.messagesRecord.update(records => ({
+      ...records,
+      [ticket.id]: [...(records[ticket.id] ?? []), pending],
+    }));
 
     this.http.post<any>(
       `${this.baseUrl}/messaging-center/tickets/${ticket.reference}/messages`,
       formData,
     ).subscribe({
-      next: response => {
-        // console.log('Message Sent', response);
-        // this.loadTicketMessages(ticket.reference);
-        // this.loadTickets();
+      next: () => {
+        // Drops the sending state; the socket refetch swaps in the server copy right after.
+        this.messagesRecord.update(records => ({
+          ...records,
+          [ticket.id]: (records[ticket.id] ?? []).map(m =>
+            m.id === pendingId ? { ...m, pending: false } : m,
+          ),
+        }));
       },
       error: error => {
         console.error('Failed to send message', error);
+        this.messagesRecord.update(records => ({
+          ...records,
+          [ticket.id]: (records[ticket.id] ?? []).filter(m => m.id !== pendingId),
+        }));
       }
     });
 

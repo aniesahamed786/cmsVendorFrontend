@@ -59,6 +59,8 @@ export interface TicketMessage {
   isInternalNote: boolean;
   linkedItem?: TicketLinkedItem;
   attachments?: MessageAttachment[];
+  /** True while the optimistic bubble is still waiting on the POST/upload. */
+  pending?: boolean;
 }
 
 /** A ticket — used in both the left-hand list and the details pane. */

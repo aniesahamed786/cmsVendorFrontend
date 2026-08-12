@@ -1126,7 +1126,9 @@
       "attach": "Attach File",
       "send": "Send",
       "empty": "Select a ticket to view the conversation",
-      "filePreview": "File Preview"
+      "filePreview": "File Preview",
+      "you": "You",
+      "sending": "Sending…"
     },
     "create": {
       "back": "Back to Message Center",
