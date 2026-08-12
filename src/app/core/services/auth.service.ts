@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface LoginRequest {
   email: string;
@@ -33,7 +34,7 @@ export class AuthService {
   login(payload: LoginRequest): Observable<LoginResponse> {
 
     return this.http.post<LoginResponse>(
-      '/api/v1/cmsVendor/login',
+      `${environment.backendUrl}${environment.apiBaseUrl}/login`,
       payload
     );
 
