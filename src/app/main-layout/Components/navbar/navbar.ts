@@ -90,8 +90,8 @@ export class Navbar {
 
   onLogout(): void {
     this.closeProfileMenu();
-    // Placeholder until vendor auth is wired.
-    this.router.navigate(['/dashboard']);
+    // ponytail: no session to clear yet — add token/state cleanup when vendor auth lands.
+    this.router.navigate(['/login']);
   }
 
   isDarkMode(): boolean {

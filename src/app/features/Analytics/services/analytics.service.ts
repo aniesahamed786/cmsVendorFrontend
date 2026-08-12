@@ -53,6 +53,24 @@ export interface OfferInsightRow {
   favorites: number;
 }
 
+export interface OfferInsightApiRow {
+  offerId: string;
+  offerTitle: string;
+  discountAmount: string;
+  discountType: string;
+  offerType: string[];
+  shares: number;
+  views: number;
+  redemptions: number;
+}
+
+export interface OfferInsightsResponse {
+  data: OfferInsightApiRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface CityInsightRow {
   city: string;
   count: number;
@@ -89,6 +107,33 @@ export class VendorAnalyticsService {
 
   getRedemptionsByDays(): Observable<AnalyticsRedemptionsByDay[]> {
     return this.http.get<AnalyticsRedemptionsByDay[]>(`${environment.apiBaseUrl}/analytics/redemptionsByDays`);
+  }
+
+  /** Server-paginated + server-sorted offer insights. */
+  getOfferInsights(
+    page: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+  ): Observable<OfferInsightsResponse> {
+    return this.http.get<OfferInsightsResponse>(
+      `${environment.apiBaseUrl}/analytics/offerInsights`,
+      { params: sortBy ? { page, pageSize, sortBy, sortOrder: sortOrder ?? 'asc' } : { page, pageSize } },
+    );
+  }
+
+  toOfferInsightRow(row: OfferInsightApiRow): OfferInsightRow {
+    const types = Array.isArray(row.offerType) ? row.offerType : [row.offerType];
+    return {
+      id: row.offerId ?? null,
+      title: row.offerTitle || '-',
+      discount: this.getDiscountAmount(row),
+      type: this.formatOfferType(types.length > 1 ? 'both' : types[0]),
+      shares: Number(row.shares) || 0,
+      redemptions: Number(row.redemptions) || 0,
+      views: Number(row.views) || 0,
+      favorites: 0,
+    };
   }
 
   /* ─────────────────── Location helpers ─────────────────── */

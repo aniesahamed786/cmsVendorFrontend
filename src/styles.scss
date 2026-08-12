@@ -95,7 +95,7 @@ html[lang="ar"] {
   --field-placeholder: var(--app-muted);
   --field-icon: var(--app-muted);
   --field-height: 2.5rem; /* matches .app-btn height so fields align with buttons */
-  --field-padding-x: 0.9rem;
+  --field-padding-x: 1rem;
   --field-padding-y: 0.55rem;
   --field-font-size: 0.9rem;
 
@@ -303,6 +303,7 @@ p-button[severity="primary"] .p-button:enabled:hover,
   padding:2px;
 }
 
+.p-select,
 .p-multiselect,
 .p-listbox {
   min-height: var(--field-height);
@@ -395,12 +396,18 @@ p-button[severity="primary"] .p-button:enabled:hover,
   border-color: var(--field-border-hover) !important;
 }
 
+/* Wrapper controls keep focus after a mouse pick, so `:focus-within` left them
+   looking permanently active. `:focus-visible` only fires for keyboard focus;
+   the open state carries the mouse case. */
 .p-inputtext:enabled:focus,
 .p-textarea:enabled:focus,
-.p-select:focus-within,
-.p-multiselect:focus-within,
-.p-listbox:focus-within,
-.p-datepicker:focus-within,
+.p-select:focus-visible,
+.p-select:has(:focus-visible),
+.p-multiselect:focus-visible,
+.p-multiselect:has(:focus-visible),
+.p-listbox:focus-visible,
+.p-listbox:has(:focus-visible),
+.p-datepicker:has(:focus-visible),
 .p-select.p-select-open,
 .p-multiselect.p-multiselect-open,
 .app-search:focus-within {

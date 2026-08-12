@@ -3,7 +3,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
 import { ChartModule } from 'primeng/chart';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import {
   AnalyticsOffersSummary,
@@ -14,8 +14,7 @@ import {
   OfferInsightRow,
   VendorAnalyticsService,
 } from '../../services/analytics.service';
-import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';
-import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ThemeService } from '../../../../shared/services/theme.service';
 
@@ -36,6 +35,9 @@ export class AnalyticsPage implements OnInit {
   readonly redemptionsByLocation = signal<AnalyticsRedemptionsByLocation[]>([]);
   readonly redemptionsByDay = signal<AnalyticsRedemptionsByDay[]>([]);
   readonly dayLoading = signal(false);
+  readonly insightRows = signal<OfferInsightRow[]>([]);
+  readonly insightTotal = signal(0);
+  readonly insightLoading = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
 
   readonly loading = signal(true);
@@ -279,8 +281,23 @@ export class AnalyticsPage implements OnInit {
     return this.analytics.offerInsightRows(list, null, 1, maxRows);
   }
 
-  get insightTableRows(): Array<OfferInsightRow | null> {
-    return this.loading() ? [null, null, null] : this.offerInsightRows;
+  /** Server-paginated offer insights; p-table fires this on init and on every page/sort change. */
+  loadOfferInsights(event: TableLazyLoadEvent): void {
+    const rows = event.rows || 10;
+    const page = Math.floor((event.first ?? 0) / rows) + 1;
+    const sortBy = typeof event.sortField === 'string' ? event.sortField : undefined;
+
+    this.insightLoading.set(true);
+    this.insightRows.set([]); // skeleton rows only — don't leave the previous page on screen
+    this.analytics.getOfferInsights(page, rows, sortBy, event.sortOrder === -1 ? 'desc' : 'asc')
+      .pipe(finalize(() => this.insightLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.insightRows.set((response.data ?? []).map((row) => this.analytics.toOfferInsightRow(row)));
+          this.insightTotal.set(response.total ?? 0);
+        },
+        error: (error) => console.error('Failed to load offer insights', error),
+      });
   }
 
   /** One card per metric: most favorited, most viewed, most shared. */
