@@ -109,16 +109,25 @@ export class VendorAnalyticsService {
     return this.http.get<AnalyticsRedemptionsByDay[]>(`${environment.apiBaseUrl}/analytics/redemptionsByDays`);
   }
 
-  /** Server-paginated + server-sorted offer insights. */
+  /** Server-paginated + server-sorted + server-searched offer insights. */
   getOfferInsights(
     page: number,
     pageSize: number,
     sortBy?: string,
     sortOrder?: 'asc' | 'desc',
+    search?: string,
   ): Observable<OfferInsightsResponse> {
+    const params: Record<string, string | number> = { page, pageSize };
+    if (sortBy) {
+      params['sortBy'] = sortBy;
+      params['sortOrder'] = sortOrder ?? 'asc';
+    }
+    // Backend searches offer title, offer mode and discount amount (case-insensitive).
+    if (search?.trim()) params['search'] = search.trim();
+
     return this.http.get<OfferInsightsResponse>(
       `${environment.apiBaseUrl}/analytics/offerInsights`,
-      { params: sortBy ? { page, pageSize, sortBy, sortOrder: sortOrder ?? 'asc' } : { page, pageSize } },
+      { params },
     );
   }
 

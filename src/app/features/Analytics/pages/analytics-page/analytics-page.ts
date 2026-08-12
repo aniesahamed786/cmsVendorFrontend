@@ -14,14 +14,16 @@ import {
   OfferInsightRow,
   VendorAnalyticsService,
 } from '../../services/analytics.service';
-import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';import { I18nService } from '../../../../shared/i18n/i18n.service';
+import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';
+import { AppSearch } from '../../../../shared/Components/app-search/app-search';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ThemeService } from '../../../../shared/services/theme.service';
 
 @Component({
   selector: 'app-analytics-page',
   standalone: true,
-  imports: [CommonModule, ChartModule, TableModule, TranslatePipe],
+  imports: [CommonModule, ChartModule, TableModule, TranslatePipe, AppSearch],
   templateUrl: './analytics-page.html',
   styleUrl: './analytics-page.scss',
 })
@@ -286,10 +288,12 @@ export class AnalyticsPage implements OnInit {
     const rows = event.rows || 10;
     const page = Math.floor((event.first ?? 0) / rows) + 1;
     const sortBy = typeof event.sortField === 'string' ? event.sortField : undefined;
+    // p-table's global filter carries the search box value and already resets to page 1.
+    const search = typeof event.globalFilter === 'string' ? event.globalFilter : undefined;
 
     this.insightLoading.set(true);
     this.insightRows.set([]); // skeleton rows only — don't leave the previous page on screen
-    this.analytics.getOfferInsights(page, rows, sortBy, event.sortOrder === -1 ? 'desc' : 'asc')
+    this.analytics.getOfferInsights(page, rows, sortBy, event.sortOrder === -1 ? 'desc' : 'asc', search)
       .pipe(finalize(() => this.insightLoading.set(false)))
       .subscribe({
         next: (response) => {

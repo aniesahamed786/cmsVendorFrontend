@@ -123,11 +123,14 @@
   </div>
 
   <section class="panel insights-panel">
-    <div class="panel__header">
-      <h2>{{ 'analytics.insights.title' | translate }}</h2>
-      <p>{{ 'analytics.insights.subtitle' | translate }}</p>
+    <div class="panel__header panel__header--split">
+      <div>
+        <h2>{{ 'analytics.insights.title' | translate }}</h2>
+        <p>{{ 'analytics.insights.subtitle' | translate }}</p>
+      </div>
+      <app-search class="insights-search" (valueChange)="insightTable.filterGlobal($event, 'contains')" />
     </div>
-    <p-table [value]="insightRows()" [lazy]="true" (onLazyLoad)="loadOfferInsights($event)"
+    <p-table #insightTable [value]="insightRows()" [lazy]="true" (onLazyLoad)="loadOfferInsights($event)"
       [loading]="insightLoading()" [showLoader]="false" [totalRecords]="insightTotal()" [paginator]="true" [rows]="10"
       [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body" styleClass="analytics-table">
       <ng-template pTemplate="header">
