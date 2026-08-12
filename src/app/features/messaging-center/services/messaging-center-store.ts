@@ -63,7 +63,8 @@ export class MessagingCenterStore {
           this.loadTicketMessages(payload.ticketId);
         }
       });
-    this.loadTickets();
+    // ponytail: no load here — the page's ngOnInit refreshes on every entry so
+    // navigating away and back always re-hits the backend.
   }
 
   readonly filteredTickets = computed<Ticket[]>(() => {
