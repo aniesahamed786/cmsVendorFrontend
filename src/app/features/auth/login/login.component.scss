@@ -1,385 +1,261 @@
-/* Page */
-
+/* Page shell. Font, page background and text colour come from the global tokens —
+   nothing here re-declares them beyond wiring the surface roles. */
 .login-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f5f7fb;
-  font-family: "Segoe UI", sans-serif;
-  color: #1f2937;
+  background: var(--app-bg);
+  color: var(--app-text);
+
+  &__header,
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 3rem;
+    background: var(--app-surface);
+  }
+
+  &__header {
+    min-height: 4.5rem;
+    border-block-end: 1px solid var(--app-border);
+  }
+
+  &__footer {
+    min-height: 4.375rem;
+    border-block-start: 1px solid var(--app-border);
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.625rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--app-primary);
+
+    &--footer {
+      font-size: 1.3125rem;
+      font-weight: 600;
+    }
+  }
+
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  /* One rule for both the <a> and the language-toggle <button>, so the button
+     has to give up its native chrome. */
+  &__header-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    background: none;
+    border: none;
+    font: inherit;
+    font-size: 0.9375rem;
+    color: var(--app-text);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--app-primary);
+    }
+  }
+
+  &__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3.75rem 1.25rem 2.5rem;
+  }
+
+  &__intro {
+    text-align: center;
+    margin-block-end: 2.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 2.125rem;
+    font-weight: 600;
+    color: var(--app-primary);
+  }
+
+  &__subtitle {
+    margin: 0.75rem 0 0;
+    font-size: 1.0625rem;
+    color: var(--app-text);
+  }
+
+  &__security {
+    margin-block-start: 2rem;
+    display: flex;
+    gap: 3rem;
+  }
+
+  &__security-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--app-muted);
+
+    i {
+      font-size: 1.125rem;
+      /* ponytail: no success/green token exists in :root — kept as-is rather than
+         re-colouring the trust badges to brand. Add --app-success and swap if wanted. */
+      color: #10b981;
+    }
+  }
+
+  &__footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  &__footer-link {
+    font-size: 0.875rem;
+    color: var(--app-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--app-primary);
+    }
+  }
+
+  &__copyright {
+    font-size: 0.8125rem;
+    color: var(--app-muted);
+  }
 }
 
-/* =======================
-   HEADER
-======================= */
-
-.header {
-  height: 72px;
-  background: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 48px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 26px;
-  font-weight: 700;
-}
-
-.offer-text {
-  color: #1e40af;
-}
-
-.divider {
-  color: #1e40af;
-}
-
-.arabic-text {
-  color: #1e40af;
-  font-size: 24px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.header-actions a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: #374151;
-  font-size: 15px;
-  transition: .2s;
-}
-
-.header-actions a:hover {
-  color: #2563eb;
-}
-
-/* =======================
-   MAIN
-======================= */
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 60px 20px 40px;
-}
-
-.title-section {
-  text-align: center;
-  margin-bottom: 36px;
-}
-
-.title-section h2 {
-  margin: 0;
-  font-size: 34px;
-  font-weight: 600;
-  color: #1F3EA3;
-}
-
-.title-section p {
-  margin-top: 12px;
-  color: #0c0c0c;
-  font-size: 17px;
-  font-weight: 400;
-}
-
-/* =======================
-   LOGIN CARD
-======================= */
-
+/* Card. Square corners, a border instead of a drop shadow — house rule. */
 .login-card {
-  width: 430px;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 32px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.08);
-}
-
-.form-group {
-  margin-bottom: 22px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.forgot-link {
-  color: #2563eb;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.forgot-link:hover {
-  text-decoration: underline;
-}
-
-/* =======================
-   INPUT
-======================= */
-
-.input-wrapper {
-  position: relative;
-}
-
-.input-wrapper input {
   width: 100%;
-  height: 50px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  padding-left: 44px;
-  padding-right: 46px;
-  font-size: 15px;
-  outline: none;
-  transition: .2s;
-  box-sizing: border-box;
+  max-width: 26.875rem;
+  padding: 2rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The label owns the gap below it (global --label-gap), so the group adds none. */
+  &__field {
+    display: flex;
+    flex-direction: column;
+    margin-block-end: 1.375rem;
+  }
+
+  /* Not named __label-* on purpose: the global [class*="__label"] rule would turn
+     this row into a block. */
+  &__field-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  /* Colour/size/weight/gap of __label come from styles.scss — nothing to add here. */
+
+  &__link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--app-primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__remember {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-block: 0.25rem 1.625rem;
+    font-size: 0.875rem;
+    color: var(--app-text);
+    cursor: pointer;
+
+    input {
+      width: 1.125rem;
+      height: 1.125rem;
+      accent-color: var(--app-primary);
+    }
+  }
+
+  /* Full width is layout, not a look — no new button variant needed. */
+  &__submit {
+    display: block;
+  }
+
+  &__divider {
+    margin: 1.875rem 0 1.25rem;
+    border: none;
+    border-block-start: 1px solid var(--app-border);
+  }
+
+  &__support {
+    margin: 0;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--app-muted);
+  }
 }
 
-.input-wrapper input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+:host ::ng-deep {
+  .login-card__submit .app-btn {
+    width: 100%;
+  }
+
+  /* p-password is inline by default; the global field rules do the rest. */
+  .login-card__password {
+    display: flex;
+    width: 100%;
+  }
+
+  .login-card__password .p-password-input {
+    width: 100%;
+    /* The global .p-inputtext padding-inline overrides PrimeNG's own end inset,
+       so the text would run under the toggle eye without this. */
+    padding-inline-end: 2.5rem !important;
+  }
 }
-
-.input-wrapper i.pi-envelope,
-.input-wrapper i.pi-lock {
-  position: absolute;
-  left: 16px;
-  top: 17px;
-  color: #9ca3af;
-  font-size: 16px;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 10px;
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-}
-
-.password-toggle:hover {
-  color: #2563eb;
-}
-
-/* =======================
-   CHECKBOX
-======================= */
-
-.remember-row {
-  margin: 20px 0 26px;
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: #0b0b0b;
-  cursor: pointer;
-}
-
-.checkbox-container input {
-  width: 18px;
-  height: 18px;
-}
-
-/* =======================
-   BUTTON
-======================= */
-
-.login-btn {
-  width: 100%;
-  height: 52px;
-  border: none;
-  border-radius: 10px;
-  background: #1e40af;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: .25s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.login-btn:hover {
-  background: #1d4ed8;
-}
-
-.login-btn:active {
-  transform: scale(.98);
-}
-
-/* =======================
-   HR
-======================= */
-
-hr {
-  margin: 30px 0 20px;
-  border: none;
-  border-top: 1px solid #e5e7eb;
-}
-
-/* =======================
-   SUPPORT
-======================= */
-
-.support-text {
-  text-align: center;
-  font-size: 14px;
-  color: #6b7280;
-}
-
-.support-text a {
-  color: #2563eb;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.support-text a:hover {
-  text-decoration: underline;
-}
-
-/* =======================
-   SECURITY
-======================= */
-
-.security-section {
-  margin-top: 32px;
-  display: flex;
-  gap: 48px;
-}
-
-.security-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #4b5563;
-  font-size: 14px;
-}
-
-.security-item i {
-  color: #10b981;
-  font-size: 18px;
-}
-
-/* =======================
-   FOOTER
-======================= */
-
-.footer {
-  background: white;
-  border-top: 1px solid #e5e7eb;
-  height: 70px;
-  padding: 0 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.footer-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.footer-left .offer-text {
-  color: #1F3EA3;
-}
-
-.footer-left .divider {
-  color: #1F3EA3;
-}
-
-.footer-left .portal-text {
-  color: #1F3EA3;
-}
-
-.footer-center {
-  display: flex;
-  gap: 24px;
-}
-
-.footer-center a {
-  text-decoration: none;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.footer-center a:hover {
-  color: #2563eb;
-}
-
-.footer-right {
-  font-size: 13px;
-  color: #9ca3af;
-}
-
-/* =======================
-   RESPONSIVE
-======================= */
 
 @media (max-width: 768px) {
+  .login-page {
+    &__header,
+    &__footer {
+      flex-direction: column;
+      padding: 1.25rem;
+    }
 
-  .header {
-    padding: 16px 20px;
-    flex-direction: column;
-    height: auto;
-    gap: 16px;
+    &__security {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    &__footer-links {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
   }
 
   .login-card {
-    width: 100%;
-    max-width: 420px;
-    padding: 24px;
+    max-width: 26.25rem;
+    padding: 1.5rem;
   }
-
-  .security-section {
-    flex-direction: column;
-    gap: 16px;
-    align-items: center;
-  }
-
-  .footer {
-    flex-direction: column;
-    gap: 12px;
-    height: auto;
-    padding: 20px;
-  }
-
-  .footer-center {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
 }

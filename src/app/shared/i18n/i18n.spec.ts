@@ -34,6 +34,7 @@ describe('translations', () => {
     'offerForm.placeholder.date',
     'offerForm.placeholder.currency',
     'offerForm.placeholder.email',
+    'login.emailPlaceholder',
     'locationDialog.placeholder.mapLink',
   ]);
 

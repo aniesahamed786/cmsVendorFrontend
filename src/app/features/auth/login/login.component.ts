@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,23 +6,31 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../../core/services/auth.service';
+import { Button } from '../../../shared/Components/button/button';
+import { I18nService } from '../../../shared/i18n/i18n.service';
+import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputTextModule,
+    PasswordModule,
+    Button,
+    TranslatePipe
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
-  loginForm: FormGroup;
+  private readonly i18n = inject(I18nService);
 
-  hidePassword = true;
+  loginForm: FormGroup;
 
   isSubmitting = false;
 
@@ -63,8 +70,9 @@ export class LoginComponent {
     return this.loginForm.get('password');
   }
 
-  togglePassword(): void {
-    this.hidePassword = !this.hidePassword;
+  /** Login is pre-shell, so this is the only language switch an Arabic user can reach. */
+  toggleLanguage(): void {
+    void this.i18n.toggle();
   }
 
   login(): void {
@@ -102,7 +110,7 @@ export class LoginComponent {
 
       console.error('Login Failed:', error);
 
-      alert('Invalid Email or Password');
+      alert(this.i18n.t('login.invalidCredentials'));
 
     }
 

@@ -1377,5 +1377,26 @@
       "viewBranch": "View Branch",
       "requestChanges": "Request Changes"
     }
+  },
+  "login": {
+    "language": "العربية",
+    "support": "Support",
+    "title": "Vendor Portal",
+    "subtitle": "Enter your credentials to access the secure portal.",
+    "email": "Business Email",
+    "emailPlaceholder": "name@company.com",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Keep me signed in for 30 days",
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "troubleLoggingIn": "Trouble logging in?",
+    "contactSupport": "Contact Support",
+    "securityEnterprise": "Enterprise Grade Security",
+    "securitySsl": "SSL Encrypted",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
+    "invalidCredentials": "Invalid email or password."
   }
 }

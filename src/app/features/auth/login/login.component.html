@@ -1,192 +1,111 @@
 <div class="login-page">
 
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">
-      <span class="offer-text">Offer</span>
-      <span class="divider">|</span>
-      <span class="arabic-text">أوفر</span>
+  <header class="login-page__header">
+    <!-- Brand lockup: a name, not copy — same in both languages. -->
+    <div class="login-page__brand">
+      <span class="login-page__brand-word">Offer</span>
+      <span class="login-page__brand-word">|</span>
+      <span class="login-page__brand-word">أوفر</span>
     </div>
 
-    <div class="header-actions">
-      <a href="#">
+    <nav class="login-page__header-actions">
+      <button type="button" class="login-page__header-link" (click)="toggleLanguage()">
         <i class="pi pi-globe"></i>
-        العربية
-      </a>
-
-      <a href="#">
+        {{ 'login.language' | translate }}
+      </button>
+      <a class="login-page__header-link" href="#">
         <i class="pi pi-headphones"></i>
-        Support
+        {{ 'login.support' | translate }}
       </a>
-    </div>
+    </nav>
   </header>
 
-  <!-- Main Content -->
-  <main class="main-content">
+  <main class="login-page__main">
 
-    <div class="title-section">
-      <h2>Vendor Portal</h2>
-      <p>Enter your credentials to access the secure portal.</p>
+    <div class="login-page__intro">
+      <h1 class="login-page__title">{{ 'login.title' | translate }}</h1>
+      <p class="login-page__subtitle">{{ 'login.subtitle' | translate }}</p>
     </div>
 
-    <!-- Login Card -->
-    <div class="login-card">
+    <section class="login-card">
 
-      <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <form class="login-card__form" [formGroup]="loginForm" (ngSubmit)="login()">
 
-        <!-- Business Email -->
-        <div class="form-group">
-
-          <label>Business Email</label>
-
-          <div class="input-wrapper">
-
-            <i class="pi pi-envelope"></i>
-
-            <input
-              type="email"
-              placeholder="name@company.com"
-              formControlName="email">
-
-          </div>
-
+        <div class="login-card__field">
+          <label class="login-card__label" for="login-email">{{ 'login.email' | translate }}</label>
+          <input
+            pInputText
+            id="login-email"
+            type="email"
+            dir="ltr"
+            [placeholder]="'login.emailPlaceholder' | translate"
+            formControlName="email" />
         </div>
 
-        <!-- Password -->
-
-        <div class="form-group">
-
-          <div class="label-row">
-            <label>Password</label>
-
-            <a href="#" class="forgot-link">
-              Forgot password?
-            </a>
-
+        <div class="login-card__field">
+          <div class="login-card__field-head">
+            <label class="login-card__label" for="login-password">{{ 'login.password' | translate }}</label>
+            <a class="login-card__link" href="#">{{ 'login.forgotPassword' | translate }}</a>
           </div>
-
-          <div class="input-wrapper">
-
-            <i class="pi pi-lock"></i>
-
-            <input
-              [type]="hidePassword ? 'password' : 'text'"
-              placeholder="********"
-              formControlName="password">
-
-            <button
-  type="button"
-  class="password-toggle"
-  (click)="togglePassword()">
-
-  <i
-    class="pi"
-    [ngClass]="hidePassword ? 'pi-eye' : 'pi-eye-slash'">
-  </i>
-
-</button>
-
-          </div>
-
+          <p-password
+            inputId="login-password"
+            formControlName="password"
+            styleClass="login-card__password"
+            placeholder="••••••••"
+            [toggleMask]="true"
+            [feedback]="false" />
         </div>
 
-        <!-- Remember -->
+        <label class="login-card__remember">
+          <input type="checkbox" formControlName="remember" />
+          <span>{{ 'login.rememberMe' | translate }}</span>
+        </label>
 
-        <div class="remember-row">
-
-          <label class="checkbox-container">
-
-            <input
-              type="checkbox"
-              formControlName="remember">
-
-            <span>Keep me signed in for 30 days</span>
-
-          </label>
-
-        </div>
-
-        <!-- Login Button -->
-
-        <button
-  type="submit"
-  class="login-btn"
-  [disabled]="isSubmitting">
-
-  {{ isSubmitting ? 'Signing In...' : 'Sign In' }}
-
-  <i class="pi pi-sign-in"></i>
-
-</button>
+        <app-button
+          class="login-card__submit"
+          type="submit"
+          icon="pi pi-sign-in"
+          [loading]="isSubmitting">
+          {{ (isSubmitting ? 'login.signingIn' : 'login.signIn') | translate }}
+        </app-button>
 
       </form>
 
-      <hr>
+      <hr class="login-card__divider" />
 
-      <div class="support-text">
+      <p class="login-card__support">
+        {{ 'login.troubleLoggingIn' | translate }}
+        <a class="login-card__link" href="#">{{ 'login.contactSupport' | translate }}</a>
+      </p>
 
-        Trouble logging in?
+    </section>
 
-        <a href="#">
-          Contact Support
-        </a>
-
-      </div>
-
-    </div>
-
-    <!-- Security -->
-
-    <div class="security-section">
-
-      <div class="security-item">
-
+    <div class="login-page__security">
+      <span class="login-page__security-item">
         <i class="pi pi-shield"></i>
-
-        <span>Enterprise Grade Security</span>
-
-      </div>
-
-      <div class="security-item">
-
+        {{ 'login.securityEnterprise' | translate }}
+      </span>
+      <span class="login-page__security-item">
         <i class="pi pi-lock"></i>
-
-        <span>SSL Encrypted</span>
-
-      </div>
-
+        {{ 'login.securitySsl' | translate }}
+      </span>
     </div>
 
   </main>
 
-  <!-- Footer -->
-
-  <footer class="footer">
-
-    <div class="footer-left">
-
-      <span class="offer-text">Offer</span>
-
-      <span class="divider">|</span>
-
-      <span class="portal-text">Vendor Portal</span>
-
+  <footer class="login-page__footer">
+    <div class="login-page__brand login-page__brand--footer">
+      <span class="login-page__brand-word">Offer</span>
+      <span class="login-page__brand-word">|</span>
+      <span class="login-page__brand-word">{{ 'login.title' | translate }}</span>
     </div>
 
-    <div class="footer-center">
+    <nav class="login-page__footer-links">
+      <a class="login-page__footer-link" href="#">{{ 'login.privacyPolicy' | translate }}</a>
+      <a class="login-page__footer-link" href="#">{{ 'login.termsOfService' | translate }}</a>
+    </nav>
 
-      <a href="#">Privacy Policy</a>
-
-      <a href="#">Terms of Service</a>
-
-    </div>
-
-    <div class="footer-right">
-
-      © 2024 Corporate Systems Inc. All rights reserved.
-
-    </div>
-
+    <small class="login-page__copyright">{{ 'login.copyright' | translate }}</small>
   </footer>
 
 </div>

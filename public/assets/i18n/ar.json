@@ -1379,5 +1379,26 @@
       "viewBranch": "عرض الفرع",
       "requestChanges": "طلب تغييرات"
     }
+  },
+  "login": {
+    "language": "English",
+    "support": "الدعم",
+    "title": "بوابة البائعين",
+    "subtitle": "أدخل بيانات الدخول للوصول إلى البوابة الآمنة.",
+    "email": "البريد الإلكتروني للنشاط التجاري",
+    "emailPlaceholder": "name@company.com",
+    "password": "كلمة المرور",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "rememberMe": "أبقني مسجّلاً لمدة 30 يوماً",
+    "signIn": "تسجيل الدخول",
+    "signingIn": "جاري تسجيل الدخول...",
+    "troubleLoggingIn": "تواجه مشكلة في تسجيل الدخول؟",
+    "contactSupport": "التواصل مع الدعم",
+    "securityEnterprise": "أمان بمستوى المؤسسات",
+    "securitySsl": "تشفير SSL",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "copyright": "© 2024 Corporate Systems Inc. جميع الحقوق محفوظة.",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة."
   }
 }
