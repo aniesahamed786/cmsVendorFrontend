@@ -396,18 +396,30 @@ p-button[severity="primary"] .p-button:enabled:hover,
   border-color: var(--field-border-hover) !important;
 }
 
-/* Wrapper controls keep focus after a mouse pick, so `:focus-within` left them
-   looking permanently active. `:focus-visible` only fires for keyboard focus;
-   the open state carries the mouse case. */
+/* Select-likes keep DOM focus after a mouse pick, which left them looking
+   active for good. They're driven by the two rules below instead: hover while
+   the pointer is on them, open while the panel is out, rest the moment both
+   end. Keyboard focus is an outline, so it can't be mistaken for either. */
+.p-select:not(:hover):not(.p-select-open),
+.p-multiselect:not(:hover):not(.p-multiselect-open),
+.p-listbox:not(:hover) {
+  background: var(--field-bg) !important;
+  border-color: var(--field-border) !important;
+}
+
+.p-select:focus-visible,
+.p-multiselect:focus-visible,
+.p-listbox:focus-visible,
+.p-select:has(:focus-visible),
+.p-multiselect:has(:focus-visible),
+.p-listbox:has(:focus-visible) {
+  outline: 2px solid var(--field-border-focus) !important;
+  outline-offset: -2px;
+}
+
 .p-inputtext:enabled:focus,
 .p-textarea:enabled:focus,
-.p-select:focus-visible,
-.p-select:has(:focus-visible),
-.p-multiselect:focus-visible,
-.p-multiselect:has(:focus-visible),
-.p-listbox:focus-visible,
-.p-listbox:has(:focus-visible),
-.p-datepicker:has(:focus-visible),
+.p-datepicker:focus-within,
 .p-select.p-select-open,
 .p-multiselect.p-multiselect-open,
 .app-search:focus-within {
