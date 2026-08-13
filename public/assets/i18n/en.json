@@ -1094,10 +1094,45 @@
       "invalidDetail": "Please fill in all required fields before submitting.",
       "collectiveUnsupportedSummary": "Not available yet",
       "collectiveUnsupportedDetail": "Collective transactions are not supported yet. Please use Single Transaction.",
-      "genericErrorDetail": "Something went wrong. Please try again."
+      "genericErrorDetail": "Something went wrong. Please try again.",
+      "templateFailed": "Could not download template",
+      "uploadFailed": "Could not read the file",
+      "uploadInvalidSummary": "File has errors",
+      "uploadInvalidDetail": "Nothing was uploaded. Fix the listed rows and try again.",
+      "uploadSuccessSummary": "Redemptions uploaded",
+      "uploadSuccessDetail": "{{count}} redemption(s) were uploaded successfully.",
+      "uploadStaleSummary": "Template is out of date",
+      "uploadStaleDetail": "Some offers or branches in this file have changed. Nothing was uploaded — download a fresh template."
     },
     "emptyOffers": "No active in-store offers available.",
-    "emptyBranches": "No branches available for this offer."
+    "emptyBranches": "No branches available for this offer.",
+    "downloadExcel": "Download Excel",
+    "template": {
+      "fileName": "redemption-template",
+      "sheetName": "Redemptions",
+      "listsSheetName": "Lists",
+      "reference": "Reference",
+      "noBranches": "No branches available",
+      "invalidTitle": "Invalid value",
+      "invalidMessage": "Please pick a value from the dropdown list."
+    },
+    "upload": {
+      "errorsTitle": "This file could not be uploaded",
+      "dismiss": "Dismiss",
+      "row": "Row",
+      "missingSheet": "The workbook has no readable sheet.",
+      "emptyFile": "The file contains no redemption rows.",
+      "unknownOffer": "Offer \"{{value}}\" was not found in your active offers.",
+      "unknownBranch": "Branch \"{{value}}\" is not valid for the selected offer.",
+      "required": "{{field}} is required.",
+      "notANumber": "{{field}} must be a number.",
+      "invalidDate": "Transaction Date is not a valid date.",
+      "invalidMembershipId": "Membership ID must be a positive number.",
+      "negativeAmount": "{{field}} cannot be negative.",
+      "invalidTransactionType": "\"{{value}}\" is not a valid transaction type. Use SINGLE or COLLECTIVE.",
+      "offerNoLongerActive": "Offer \"{{value}}\" is no longer active. Download a fresh template.",
+      "branchNoLongerAvailable": "Branch \"{{value}}\" is no longer available for this offer. Download a fresh template."
+    }
   },
   "messaging": {
     "search": "Search tickets...",

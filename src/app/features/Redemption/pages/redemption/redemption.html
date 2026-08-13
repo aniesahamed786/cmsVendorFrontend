@@ -2,8 +2,39 @@
 
   <div class="redemption-header">
     <h1 class="redemption-page__title">{{ 'redemption.title' | translate }}</h1>
-    <app-button variant="primary" icon="pi pi-upload">{{ 'redemption.uploadExcel' | translate }}</app-button>
+    <div class="redemption-header__actions">
+      <app-button variant="outline" icon="pi pi-download" [loading]="downloadingTemplate()"
+        (click)="downloadTemplate()">{{ 'redemption.downloadExcel' | translate }}</app-button>
+      <app-button variant="primary" icon="pi pi-upload" [loading]="uploading()"
+        (click)="triggerUpload(excelInput)">{{ 'redemption.uploadExcel' | translate }}</app-button>
+      <input #excelInput type="file" class="redemption-header__file-input"
+        accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        (change)="onFileSelected($event)" />
+    </div>
   </div>
+
+  @if (uploadErrors().length) {
+    <div class="redemption-upload-errors">
+      <div class="redemption-upload-errors__header">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ 'redemption.upload.errorsTitle' | translate }}</span>
+        <button type="button" class="redemption-upload-errors__close" (click)="clearUploadErrors()"
+          [attr.aria-label]="'redemption.upload.dismiss' | translate">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+      <ul class="redemption-upload-errors__list">
+        @for (err of uploadErrors(); track $index) {
+          <li>
+            @if (err.row) {
+              <strong>{{ 'redemption.upload.row' | translate }} {{ err.row }}:</strong>
+            }
+            {{ err.message }}
+          </li>
+        }
+      </ul>
+    </div>
+  }
 
   <p-card styleClass="redemption-card redemption-card--spaced">
     <div class="redemption-card__header">

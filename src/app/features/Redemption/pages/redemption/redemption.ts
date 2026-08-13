@@ -10,7 +10,8 @@ import {
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { TableLazyLoadEvent } from 'primeng/table';
-import { finalize } from 'rxjs';
+import { Observable, finalize, firstValueFrom, from, of, switchMap } from 'rxjs';
+import { catchError, map, mergeMap, toArray } from 'rxjs/operators';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
@@ -23,10 +24,62 @@ import {
   RedemptionRow,
 } from '../../models/redemption.model';
 import { RedemptionService } from '../../services/redemption.service';
+import {
+  TemplateOffer,
+  branchLabel,
+  buildRedemptionTemplate,
+  downloadBlob,
+} from '../../utils/redemption-template';
+import {
+  LiveCatalogue,
+  RedemptionUploadError,
+  ResolvedRedemptionRow,
+  parseRedemptionUpload,
+  referencedOfferIds,
+  validateAgainstLiveCatalogue,
+} from '../../utils/redemption-upload';
 
 interface SelectOption {
   label: string;
   value: string;
+}
+
+function unwrapArray<T>(response: unknown, keys: string[]): T[] {
+  if (Array.isArray(response)) return response as T[];
+  const body = response as Record<string, unknown> | null;
+  for (const key of keys) {
+    const value = body?.[key];
+    if (Array.isArray(value)) return value as T[];
+  }
+  return [];
+}
+
+function asLocationArray(response: unknown): OfferLocation[] {
+  return unwrapArray<OfferLocation>(response, ['data', 'locations', 'items', 'result']);
+}
+
+function asOfferArray(response: unknown): ActiveStoreOffer[] {
+  return unwrapArray<ActiveStoreOffer>(response, ['data', 'offers', 'items', 'result']);
+}
+
+interface CatalogueEntry {
+  offerId: string;
+  title: string;
+  raw: unknown;
+  locations: { id: string; name: string; city: string; raw: unknown }[];
+}
+
+function toTemplateOffer(entry: CatalogueEntry): TemplateOffer {
+  return {
+    offerId: entry.offerId,
+    title: entry.title,
+    raw: entry.raw,
+    branches: entry.locations.map((l) => ({
+      id: l.id,
+      label: branchLabel(l.name, l.city),
+      raw: l.raw,
+    })),
+  };
 }
 
 @Component({
@@ -55,6 +108,12 @@ export class Redemption implements OnInit {
   readonly offersLoading = signal(false);
   readonly branchesLoading = signal(false);
   readonly submitting = signal(false);
+  readonly downloadingTemplate = signal(false);
+  readonly uploading = signal(false);
+
+  private static readonly LOCATION_FETCH_CONCURRENCY = 6;
+
+  readonly uploadErrors = signal<RedemptionUploadError[]>([]);
 
   readonly offerOptions = computed<SelectOption[]>(() =>
     this.activeOffers().map((o) => ({
@@ -64,11 +123,18 @@ export class Redemption implements OnInit {
   );
 
   readonly branchOptions = computed<SelectOption[]>(() =>
-    this.offerLocations().map((l) => {
-      const name = this.localized(l.locationName, l.locationNameAr);
-      const city = this.localized(l.city, l.cityAr);
-      return { value: l.locationId, label: city ? `${name} — ${city}` : name };
-    }),
+    this.offerLocations()
+      .map((l) => {
+        const raw = l as unknown as Record<string, unknown>;
+        const id = String(l.locationId ?? raw['_id'] ?? raw['id'] ?? '');
+        const name = this.localized(
+          l.locationName ?? (raw['name'] as string),
+          l.locationNameAr ?? (raw['nameAr'] as string),
+        );
+        const city = this.localized(l.city, l.cityAr);
+        return { value: id, label: branchLabel(name, city) || id };
+      })
+      .filter((o) => !!o.value),
   );
 
   readonly redemptions = signal<RedemptionRow[]>([]);
@@ -140,7 +206,7 @@ export class Redemption implements OnInit {
       .getActiveStoreOffers()
       .pipe(finalize(() => this.offersLoading.set(false)))
       .subscribe({
-        next: (offers) => this.activeOffers.set(offers ?? []),
+        next: (offers) => this.activeOffers.set(asOfferArray(offers)),
         error: (err: HttpErrorResponse) => {
           console.error('Failed to load active store offers', err);
           this.activeOffers.set([]);
@@ -155,7 +221,13 @@ export class Redemption implements OnInit {
       .getOfferLocations(offerId)
       .pipe(finalize(() => this.branchesLoading.set(false)))
       .subscribe({
-        next: (locations) => this.offerLocations.set(locations ?? []),
+        next: (locations) => {
+          const list = asLocationArray(locations);
+          this.offerLocations.set(list);
+          if (!list.length) {
+            console.warn('[redemption] No branches returned for offer', offerId, locations);
+          }
+        },
         error: (err: HttpErrorResponse) => {
           console.error('Failed to load offer locations', err);
           this.offerLocations.set([]);
@@ -188,6 +260,283 @@ export class Redemption implements OnInit {
     const page = Math.floor((event.first ?? 0) / rows) + 1;
     this.pageSize.set(rows);
     this.loadRedemptions(page, rows);
+  }
+
+  downloadTemplate(): void {
+    if (this.downloadingTemplate()) return;
+    this.downloadingTemplate.set(true);
+
+    this.loadOfferCatalogue()
+      .pipe(finalize(() => this.downloadingTemplate.set(false)))
+      .subscribe({
+        next: (catalogue) => this.generateTemplateFile(catalogue.map(toTemplateOffer)),
+        error: (err: HttpErrorResponse) => {
+          console.error('Failed to build redemption template', err);
+          this.showError('redemption.toast.templateFailed', err);
+        },
+      });
+  }
+
+  private loadOfferCatalogue(): Observable<CatalogueEntry[]> {
+    return this.api.getActiveStoreOffers().pipe(
+      switchMap((offers) => {
+        const list = asOfferArray(offers);
+        if (!list.length) return of<CatalogueEntry[]>([]);
+
+        return from(list).pipe(
+          mergeMap(
+            (offer) =>
+              this.api.getOfferLocations(offer.offerId).pipe(
+                catchError(() => of<OfferLocation[]>([])),
+                map<unknown, CatalogueEntry>((locations) => ({
+                  offerId: offer.offerId,
+                  title: this.localized(offer.offerTitle, offer.offerTitleAr),
+                  raw: offer,
+                  locations: asLocationArray(locations).map((l) => {
+                    const raw = l as unknown as Record<string, unknown>;
+                    return {
+                      id: String(l.locationId ?? raw['_id'] ?? raw['id'] ?? ''),
+                      name: this.localized(l.locationName, l.locationNameAr),
+                      city: this.localized(l.city, l.cityAr),
+                      raw: l,
+                    };
+                  }),
+                })),
+              ),
+            Redemption.LOCATION_FETCH_CONCURRENCY,
+          ),
+          toArray(),
+          map((entries) => {
+            const order = new Map(list.map((o, i) => [o.offerId, i]));
+            return entries.sort((a, b) => (order.get(a.offerId) ?? 0) - (order.get(b.offerId) ?? 0));
+          }),
+        );
+      }),
+    );
+  }
+
+  triggerUpload(input: HTMLInputElement): void {
+    if (this.uploading()) return;
+    input.value = ''; 
+    input.click();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.uploading.set(true);
+    this.uploadErrors.set([]);
+    void this.parseUploadedFile(file);
+  }
+
+  private async parseUploadedFile(file: File): Promise<void> {
+    try {
+      const result = await parseRedemptionUpload(
+        file,
+        () => firstValueFrom(this.loadOfferCatalogue()).then((c) => c.map(toTemplateOffer)),
+        {
+          missingSheet: this.i18n.t('redemption.upload.missingSheet'),
+          emptyFile: this.i18n.t('redemption.upload.emptyFile'),
+          unknownOffer: this.i18n.t('redemption.upload.unknownOffer'),
+          unknownBranch: this.i18n.t('redemption.upload.unknownBranch'),
+          required: this.i18n.t('redemption.upload.required'),
+          notANumber: this.i18n.t('redemption.upload.notANumber'),
+          invalidDate: this.i18n.t('redemption.upload.invalidDate'),
+          invalidMembershipId: this.i18n.t('redemption.upload.invalidMembershipId'),
+          negativeAmount: this.i18n.t('redemption.upload.negativeAmount'),
+          invalidTransactionType: this.i18n.t('redemption.upload.invalidTransactionType'),
+          offerNoLongerActive: this.i18n.t('redemption.upload.offerNoLongerActive'),
+          branchNoLongerAvailable: this.i18n.t('redemption.upload.branchNoLongerAvailable'),
+        },
+        {
+          membershipId: this.i18n.t('redemption.label.membershipId'),
+          offer: this.i18n.t('redemption.label.offer'),
+          branch: this.i18n.t('redemption.label.branch'),
+          transactionDate: this.i18n.t('redemption.label.transactionDate'),
+          totalAmountIncVat: this.i18n.t('redemption.label.totalInvoiceAmount'),
+          totalAmountPaid: this.i18n.t('redemption.label.totalAmountPaid'),
+          currency: this.i18n.t('redemption.label.currency'),
+          discountAmount: this.i18n.t('redemption.label.discountAmount'),
+        },
+      );
+
+      if (result.errors.length) {
+        this.uploading.set(false);
+        this.uploadErrors.set(result.errors);
+        this.messageService.add({
+          severity: 'warn',
+          summary: this.i18n.t('redemption.toast.uploadInvalidSummary'),
+          detail: this.i18n.t('redemption.toast.uploadInvalidDetail'),
+          life: 6000,
+        });
+        return;
+      }
+
+      console.log('Parsed upload payloads:', result.payloads);
+
+      this.verifyThenSubmit(result.rows);
+    } catch (err) {
+      console.error('Failed to parse uploaded file', err);
+      this.uploading.set(false);
+      this.messageService.add({
+        severity: 'error',
+        summary: this.i18n.t('redemption.toast.uploadFailed'),
+        detail: this.i18n.t('redemption.toast.genericErrorDetail'),
+        life: 6000,
+        closable: true,
+      });
+    }
+  }
+
+  private verifyThenSubmit(rows: ResolvedRedemptionRow[]): void {
+    const offerIds = referencedOfferIds(rows);
+    if (!offerIds.length) {
+      this.submitBulk(rows.map((r) => r.payload));
+      return;
+    }
+
+    this.api
+      .getActiveStoreOffers()
+      .pipe(
+        switchMap((offers) => {
+          const activeOfferIds = new Set(asOfferArray(offers).map((o) => o.offerId));
+          const toCheck = offerIds.filter((id) => activeOfferIds.has(id));
+          if (!toCheck.length) {
+            return of<LiveCatalogue>({ activeOfferIds, branchIdsByOffer: new Map() });
+          }
+
+          return from(toCheck).pipe(
+            mergeMap(
+              (offerId) =>
+                this.api.getOfferLocations(offerId).pipe(
+                  catchError(() => of(null)),
+                  map((locations) => ({ offerId, locations })),
+                ),
+              Redemption.LOCATION_FETCH_CONCURRENCY,
+            ),
+            toArray(),
+            map<{ offerId: string; locations: unknown }[], LiveCatalogue>((results) => {
+              const branchIdsByOffer = new Map<string, Set<string>>();
+              for (const { offerId, locations } of results) {
+                if (locations === null) continue; 
+                const ids = asLocationArray(locations).map((l) => {
+                  const raw = l as unknown as Record<string, unknown>;
+                  return String(l.locationId ?? raw['_id'] ?? raw['id'] ?? '');
+                });
+                branchIdsByOffer.set(offerId, new Set(ids.filter(Boolean)));
+              }
+              return { activeOfferIds, branchIdsByOffer };
+            }),
+          );
+        }),
+      )
+      .subscribe({
+        next: (live) => {
+          const staleErrors = validateAgainstLiveCatalogue(rows, live, {
+            offerNoLongerActive: this.i18n.t('redemption.upload.offerNoLongerActive'),
+            branchNoLongerAvailable: this.i18n.t('redemption.upload.branchNoLongerAvailable'),
+          });
+
+          if (staleErrors.length) {
+            this.uploading.set(false);
+            this.uploadErrors.set(staleErrors);
+            this.messageService.add({
+              severity: 'warn',
+              summary: this.i18n.t('redemption.toast.uploadStaleSummary'),
+              detail: this.i18n.t('redemption.toast.uploadStaleDetail'),
+              life: 8000,
+            });
+            return;
+          }
+
+          this.submitBulk(rows.map((r) => r.payload));
+        },
+        error: (err: HttpErrorResponse) => {
+          this.uploading.set(false);
+          console.error('Failed to verify uploaded rows against live data', err);
+          this.showError('redemption.toast.uploadFailed', err);
+        },
+      });
+  }
+
+  private submitBulk(payloads: RecordRedemptionPayload[]): void {
+    if (!payloads.length) {
+      this.uploading.set(false);
+      this.uploadErrors.set([{ row: 0, message: this.i18n.t('redemption.upload.emptyFile') }]);
+      return;
+    }
+
+    this.api
+      .uploadBulkRedemptions(payloads)
+      .pipe(finalize(() => this.uploading.set(false)))
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: this.i18n.t('redemption.toast.uploadSuccessSummary'),
+            detail: this.i18n
+              .t('redemption.toast.uploadSuccessDetail')
+              .replace('{{count}}', String(payloads.length)),
+            life: 5000,
+          });
+          this.loadRedemptions(1, this.pageSize());
+        },
+        error: (err: HttpErrorResponse) => {
+          const message = extractApiErrorMessage(err);
+          this.uploadErrors.set([
+            { row: 0, message: message ?? this.i18n.t('redemption.toast.genericErrorDetail') },
+          ]);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.i18n.t('redemption.toast.uploadFailed'),
+            detail: message ?? this.i18n.t('redemption.toast.genericErrorDetail'),
+            life: 8000,
+            closable: true,
+          });
+        },
+      });
+  }
+
+  clearUploadErrors(): void {
+    this.uploadErrors.set([]);
+  }
+
+  private async generateTemplateFile(offers: TemplateOffer[]): Promise<void> {
+    try {
+      const blob = await buildRedemptionTemplate(offers, {
+        sheetName: this.i18n.t('redemption.template.sheetName'),
+        listsSheetName: this.i18n.t('redemption.template.listsSheetName'),
+        membershipId: this.i18n.t('redemption.label.membershipId'),
+        mobileNumber: this.i18n.t('redemption.label.mobileNumber'),
+        transactionType: this.i18n.t('redemption.label.transactionType'),
+        offer: this.i18n.t('redemption.label.offer'),
+        branch: this.i18n.t('redemption.label.branch'),
+        transactionDate: this.i18n.t('redemption.label.transactionDate'),
+        totalInvoiceAmount: this.i18n.t('redemption.label.totalInvoiceAmount'),
+        totalAmountPaid: this.i18n.t('redemption.label.totalAmountPaid'),
+        currency: this.i18n.t('redemption.label.currency'),
+        discountAmount: this.i18n.t('redemption.label.discountAmount'),
+        listsOfferHeader: this.i18n.t('redemption.label.offer'),
+        listsRefHeader: this.i18n.t('redemption.template.reference'),
+        noBranches: this.i18n.t('redemption.template.noBranches'),
+        invalidValueTitle: this.i18n.t('redemption.template.invalidTitle'),
+        invalidValueMessage: this.i18n.t('redemption.template.invalidMessage'),
+      });
+
+      const stamp = new Date().toISOString().slice(0, 10);
+      downloadBlob(blob, `${this.i18n.t('redemption.template.fileName')}-${stamp}.xlsx`);
+    } catch (err) {
+      console.error('Failed to generate redemption template file', err);
+      this.messageService.add({
+        severity: 'error',
+        summary: this.i18n.t('redemption.toast.templateFailed'),
+        detail: this.i18n.t('redemption.toast.genericErrorDetail'),
+        life: 6000,
+        closable: true,
+      });
+    }
   }
 
   submit(): void {

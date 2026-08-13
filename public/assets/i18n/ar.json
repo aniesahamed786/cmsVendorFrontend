@@ -1096,10 +1096,45 @@
       "invalidDetail": "الرجاء تعبئة جميع الحقول المطلوبة قبل الإرسال.",
       "collectiveUnsupportedSummary": "غير متاح حالياً",
       "collectiveUnsupportedDetail": "العمليات الجماعية غير مدعومة حالياً. الرجاء استخدام العملية الفردية.",
-      "genericErrorDetail": "حدث خطأ ما. الرجاء المحاولة مرة أخرى."
+      "genericErrorDetail": "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
+      "templateFailed": "تعذّر تنزيل النموذج",
+      "uploadFailed": "تعذّر قراءة الملف",
+      "uploadInvalidSummary": "الملف يحتوي على أخطاء",
+      "uploadInvalidDetail": "لم يتم رفع أي بيانات. صحّح الصفوف المذكورة ثم أعد المحاولة.",
+      "uploadSuccessSummary": "تم رفع الاستردادات",
+      "uploadSuccessDetail": "تم رفع {{count}} عملية استرداد بنجاح.",
+      "uploadStaleSummary": "النموذج قديم",
+      "uploadStaleDetail": "تغيّرت بعض العروض أو الفروع في هذا الملف. لم يتم رفع أي بيانات — الرجاء تنزيل نموذج جديد."
     },
     "emptyOffers": "لا توجد عروض نشطة في المتجر.",
-    "emptyBranches": "لا توجد فروع متاحة لهذا العرض."
+    "emptyBranches": "لا توجد فروع متاحة لهذا العرض.",
+    "downloadExcel": "تنزيل ملف Excel",
+    "template": {
+      "fileName": "نموذج-الاسترداد",
+      "sheetName": "الاستردادات",
+      "listsSheetName": "القوائم",
+      "reference": "المرجع",
+      "noBranches": "لا توجد فروع متاحة",
+      "invalidTitle": "قيمة غير صالحة",
+      "invalidMessage": "الرجاء اختيار قيمة من القائمة المنسدلة."
+    },
+    "upload": {
+      "errorsTitle": "تعذّر رفع هذا الملف",
+      "dismiss": "إغلاق",
+      "row": "الصف",
+      "missingSheet": "لا تحتوي ورقة العمل على بيانات قابلة للقراءة.",
+      "emptyFile": "لا يحتوي الملف على أي صفوف استرداد.",
+      "unknownOffer": "العرض \"{{value}}\" غير موجود ضمن عروضك النشطة.",
+      "unknownBranch": "الفرع \"{{value}}\" غير صالح للعرض المحدد.",
+      "required": "{{field}} مطلوب.",
+      "notANumber": "يجب أن يكون {{field}} رقماً.",
+      "invalidDate": "تاريخ العملية غير صالح.",
+      "invalidMembershipId": "يجب أن يكون رقم العضوية رقماً موجباً.",
+      "negativeAmount": "لا يمكن أن يكون {{field}} بالسالب.",
+      "invalidTransactionType": "\"{{value}}\" ليس نوع عملية صالحاً. استخدم SINGLE أو COLLECTIVE.",
+      "offerNoLongerActive": "العرض \"{{value}}\" لم يعد نشطاً. الرجاء تنزيل نموذج جديد.",
+      "branchNoLongerAvailable": "الفرع \"{{value}}\" لم يعد متاحاً لهذا العرض. الرجاء تنزيل نموذج جديد."
+    }
   },
   "messaging": {
     "search": "البحث في التذاكر...",
