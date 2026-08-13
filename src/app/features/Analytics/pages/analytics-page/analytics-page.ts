@@ -3,9 +3,19 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
 import { ChartModule } from 'primeng/chart';
-import { TableModule } from 'primeng/table';
-import { OfferInsightRow, VendorAnalyticsService } from '../../services/analytics.service';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
+import {
+  AnalyticsOffersSummary,
+  AnalyticsOverview,
+  AnalyticsRedemptionsByDay,
+  AnalyticsRedemptionsByLocation,
+  AnalyticsTopOffer,
+  OfferInsightRow,
+  VendorAnalyticsService,
+} from '../../services/analytics.service';
 import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';
+import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ThemeService } from '../../../../shared/services/theme.service';
@@ -13,7 +23,7 @@ import { ThemeService } from '../../../../shared/services/theme.service';
 @Component({
   selector: 'app-analytics-page',
   standalone: true,
-  imports: [CommonModule, ChartModule, TableModule, TranslatePipe],
+  imports: [CommonModule, ChartModule, TableModule, TranslatePipe, AppSearch],
   templateUrl: './analytics-page.html',
   styleUrl: './analytics-page.scss',
 })
@@ -22,42 +32,17 @@ export class AnalyticsPage implements OnInit {
   offers: any[] = [];
   requests: any[] = [];
   activeOffers = 0;
-
-  readonly redemptionsByLocation = [
-    { labelKey: 'analytics.location.riyadh', value: 42 },
-    { labelKey: 'analytics.location.jeddah', value: 28 },
-    { labelKey: 'analytics.location.dammam', value: 18 },
-    { labelKey: 'analytics.location.other', value: 12 },
-  ];
-  readonly redemptionsByDay = [
-    { labelKey: 'analytics.location.days.sun', value: 18 },
-    { labelKey: 'analytics.location.days.mon', value: 26 },
-    { labelKey: 'analytics.location.days.tue', value: 34 },
-    { labelKey: 'analytics.location.days.wed', value: 22 },
-    { labelKey: 'analytics.location.days.thu', value: 19 },
-    { labelKey: 'analytics.location.days.fri', value: 31 },
-    { labelKey: 'analytics.location.days.sat', value: 28 },
-  ];
+  readonly overview = signal<AnalyticsOverview | null>(null);
+  readonly offersSummary = signal<AnalyticsOffersSummary | null>(null);
+  readonly redemptionsByLocation = signal<AnalyticsRedemptionsByLocation[]>([]);
+  readonly redemptionsByDay = signal<AnalyticsRedemptionsByDay[]>([]);
+  readonly dayLoading = signal(false);
+  readonly insightRows = signal<OfferInsightRow[]>([]);
+  readonly insightTotal = signal(0);
+  readonly insightLoading = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
-  readonly overviewPeriods = [
-    { value: '7d', labelKey: 'analytics.overview.sevenDays' },
-    { value: '30d', labelKey: 'analytics.overview.thirtyDays' },
-    { value: '90d', labelKey: 'analytics.overview.ninetyDays' },
-    { value: 'all', labelKey: 'analytics.overview.allTime' },
-  ] as const;
-  readonly selectedOverviewPeriod = signal<(typeof this.overviewPeriods)[number]['value']>('7d');
 
-  // ===========================================================================
-  // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
-  // ---------------------------------------------------------------------------
-  // This page reads mostly synchronous mock data (MOCK_VENDOR_PROFILE), so there
-  // is no real load to wait for. This timer fakes one so the table/chart
-  // skeletons are reachable and the KPI count-up has a beat to animate from 0.
-  // When the real fetches land: delete the timer, flip `loading` to false in the
-  // data subscribe, and call startCountUp() from there instead.
-  // ===========================================================================
   readonly loading = signal(true);
-  private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER BELOW
 
   // Count-up KPI values (number_animation.md), keyed by stat id.
   private readonly animated = signal<Record<string, number>>({});
@@ -71,12 +56,24 @@ export class AnalyticsPage implements OnInit {
     const dark = this.theme.isDarkMode();
     const accent = this.theme.accentTheme();
     const palette = dark ? accent.darkPalette : accent.palette;
+    const dayFormatter = new Intl.DateTimeFormat(this.i18n.locale(), {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    });
     const rows = this.redemptionChartMode() === 'day'
-      ? this.redemptionsByDay
-      : this.redemptionsByLocation;
+      ? this.redemptionsByDay().map((row) => ({
+          label: dayFormatter.format(new Date(`${row.day}T00:00:00Z`)),
+          value: row.redemptionsCount,
+        }))
+      : this.redemptionsByLocation().map((row) => ({
+          label: (this.i18n.lang() === 'ar' ? row.branchName_ar || row.city_ar : row.branchName || row.city) || '-',
+          value: row.redemptionsCount,
+        }));
 
     return {
-      labels: rows.map((row) => this.i18n.t(row.labelKey)),
+      labels: rows.map((row) => row.label),
       datasets: [{
         label: this.i18n.t('analytics.location.totalRedemptions'),
         data: rows.map((row) => row.value),
@@ -141,15 +138,46 @@ export class AnalyticsPage implements OnInit {
     this.requests = MOCK_VENDOR_PROFILE.requests || [];
     this.activeOffers = this.offers.filter(o => o.status === 'Active').length;
 
-    // DELETE WHEN THE API IS WIRED — see the ARTIFICIAL LOADING block above.
-    setTimeout(() => {
-      this.loading.set(false);
-      this.startCountUp();
-    }, AnalyticsPage.FAKE_LOAD_MS);
+    forkJoin({
+      overview: this.analytics.getOverview().pipe(catchError((error) => {
+        console.error('Failed to load analytics overview', error);
+        return of(null);
+      })),
+      offersSummary: this.analytics.getOffersSummary().pipe(catchError((error) => {
+        console.error('Failed to load analytics offers summary', error);
+        return of(null);
+      })),
+      redemptionsByLocation: this.analytics.getRedemptionsByLocation().pipe(catchError((error) => {
+        console.error('Failed to load redemptions by location', error);
+        return of([]);
+      })),
+    })
+      .pipe(finalize(() => {
+        this.loading.set(false);
+        this.startCountUp();
+      }))
+      .subscribe(({ overview, offersSummary, redemptionsByLocation }) => {
+        this.overview.set(overview);
+        this.offersSummary.set(offersSummary);
+        this.redemptionsByLocation.set(redemptionsByLocation);
+      });
+  }
+
+  showRedemptionsByDay(): void {
+    this.redemptionChartMode.set('day');
+    if (this.dayLoading()) return;
+
+    this.dayLoading.set(true);
+    this.analytics.getRedemptionsByDays()
+      .pipe(finalize(() => this.dayLoading.set(false)))
+      .subscribe({
+        next: (rows) => this.redemptionsByDay.set(rows),
+        error: (error) => console.error('Failed to load redemptions by day', error),
+      });
   }
 
   // ---- Count-up KPI stats (number_animation.md) ----------------------------
-  // Cards render at 0 and ease to their value once the fake load resolves — the
+  // Cards render at 0 and ease to their value once the overview load resolves — the
   // sanctioned loading affordance for plain stat cards. The data-shaped cards
   // below skeleton instead; never both on one card.
 
@@ -186,16 +214,20 @@ export class AnalyticsPage implements OnInit {
   }
 
   get totalOfferViewEvents(): number {
-    return 0;
+    return this.offersSummary()?.totalViews ?? 0;
   }
 
   /* ─── Overview ─── */
 
   get locationCount(): number {
+    const count = this.offersSummary()?.totalLocations;
+    if (count != null) return count;
     return this.analytics.locationCount(this.locations);
   }
 
   get activeOfferCount(): number {
+    const count = this.overview()?.activeOffersCount;
+    if (count != null) return count;
     if (!Array.isArray(this.offers) || this.offers.length === 0) return this.activeOffers || 0;
     return this.offers.filter((offer) =>
       offer?.isActive === true ||
@@ -204,20 +236,30 @@ export class AnalyticsPage implements OnInit {
   }
 
   get totalOfferCount(): number {
+    const count = this.offersSummary()?.totalOffers;
+    if (count != null) return count;
+    const overview = this.overview();
+    if (overview) return overview.activeOffersCount + overview.inactiveOffersCount + overview.draftOffersCount;
     return Array.isArray(this.offers) ? this.offers.length : 0;
   }
 
   get inactiveOfferCount(): number {
+    const count = this.overview()?.inactiveOffersCount;
+    if (count != null) return count;
     return this.offers.filter((offer) =>
       offer?.isActive === false || ['inactive', 'rejected'].includes(this.statusOf(offer))
     ).length;
   }
 
   get draftOfferCount(): number {
+    const count = this.overview()?.draftOffersCount;
+    if (count != null) return count;
     return this.offers.filter((offer) => this.statusOf(offer) === 'draft').length;
   }
 
   get pendingRequestCount(): number {
+    const count = this.overview()?.pendingRequestsCount;
+    if (count != null) return count;
     return this.requests.filter((request) =>
       !['completed', 'approved', 'rejected', 'closed'].includes(this.statusOf(request))
     ).length;
@@ -228,7 +270,9 @@ export class AnalyticsPage implements OnInit {
   }
 
   get redemptionTotal(): number {
-    return this.redemptionsByLocation.reduce((total, location) => total + location.value, 0);
+    const count = this.offersSummary()?.totalRedemptions;
+    if (count != null) return count;
+    return this.redemptionsByLocation().reduce((total, location) => total + location.redemptionsCount, 0);
   }
 
   /* ─── Offer Insights ─── */
@@ -239,18 +283,73 @@ export class AnalyticsPage implements OnInit {
     return this.analytics.offerInsightRows(list, null, 1, maxRows);
   }
 
-  get insightTableRows(): Array<OfferInsightRow | null> {
-    return this.loading() ? [null, null, null] : this.offerInsightRows;
+  /** Server-paginated offer insights; p-table fires this on init and on every page/sort change. */
+  loadOfferInsights(event: TableLazyLoadEvent): void {
+    const rows = event.rows || 10;
+    const page = Math.floor((event.first ?? 0) / rows) + 1;
+    const sortBy = typeof event.sortField === 'string' ? event.sortField : undefined;
+    // p-table's global filter carries the search box value and already resets to page 1.
+    const search = typeof event.globalFilter === 'string' ? event.globalFilter : undefined;
+
+    this.insightLoading.set(true);
+    this.insightRows.set([]); // skeleton rows only — don't leave the previous page on screen
+    this.analytics.getOfferInsights(page, rows, sortBy, event.sortOrder === -1 ? 'desc' : 'asc', search)
+      .pipe(finalize(() => this.insightLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.insightRows.set((response.data ?? []).map((row) => this.analytics.toOfferInsightRow(row)));
+          this.insightTotal.set(response.total ?? 0);
+        },
+        error: (error) => console.error('Failed to load offer insights', error),
+      });
   }
 
-  get topOffers(): OfferInsightRow[] {
-    return [...this.offerInsightRows]
-      .sort((a, b) => b.views - a.views || b.shares - a.shares)
-      .slice(0, 3);
+  /** One card per metric: most favorited, most viewed, most shared. */
+  get topOfferCards(): Array<{ offer: OfferInsightRow; icon: string; labelKey: string; metricKey: string; value: number }> {
+    const overview = this.overview();
+    if (overview) {
+      return [
+        this.topOfferCard(overview.mostFavouritedOffer, 'pi pi-heart', 'analytics.topOffers.mostFavorited', 'analytics.common.favorites'),
+        this.topOfferCard(overview.mostViewedOffer, 'pi pi-eye', 'analytics.topOffers.mostViewed', 'analytics.common.views'),
+        this.topOfferCard(overview.mostSharedOffer, 'pi pi-share-alt', 'analytics.topOffers.mostShared', 'analytics.common.shares'),
+      ];
+    }
+
+    const rows = this.offerInsightRows;
+    const metrics = [
+      { metric: 'favorites', icon: 'pi pi-heart', labelKey: 'analytics.topOffers.mostFavorited', metricKey: 'analytics.common.favorites' },
+      { metric: 'views', icon: 'pi pi-eye', labelKey: 'analytics.topOffers.mostViewed', metricKey: 'analytics.common.views' },
+      { metric: 'shares', icon: 'pi pi-share-alt', labelKey: 'analytics.topOffers.mostShared', metricKey: 'analytics.common.shares' },
+    ] as const;
+
+    return metrics.map(({ metric, ...rest }) => {
+      const offer = [...rows].sort((a, b) => b[metric] - a[metric])[0];
+      return { offer, value: offer[metric], ...rest };
+    });
   }
 
-  topOfferLabel(index: number): string {
-    return `analytics.topOffers.rank${Math.min(index + 1, 3)}`;
+  private topOfferCard(
+    topOffer: AnalyticsTopOffer,
+    icon: string,
+    labelKey: string,
+    metricKey: string,
+  ): { offer: OfferInsightRow; icon: string; labelKey: string; metricKey: string; value: number } {
+    return {
+      offer: {
+        id: topOffer.offerId,
+        title: (this.i18n.lang() === 'ar' ? topOffer.offerTitleAr : topOffer.offerTitle) || '-',
+        discount: '0',
+        type: '-',
+        shares: 0,
+        redemptions: 0,
+        views: 0,
+        favorites: 0,
+      },
+      icon,
+      labelKey,
+      metricKey,
+      value: topOffer.count,
+    };
   }
 
   offerTypeLabel(type: string): string {

@@ -95,7 +95,7 @@ html[lang="ar"] {
   --field-placeholder: var(--app-muted);
   --field-icon: var(--app-muted);
   --field-height: 2.5rem; /* matches .app-btn height so fields align with buttons */
-  --field-padding-x: 0.9rem;
+  --field-padding-x: 1rem;
   --field-padding-y: 0.55rem;
   --field-font-size: 0.9rem;
 
@@ -303,6 +303,7 @@ p-button[severity="primary"] .p-button:enabled:hover,
   padding:2px;
 }
 
+.p-select,
 .p-multiselect,
 .p-listbox {
   min-height: var(--field-height);
@@ -395,11 +396,29 @@ p-button[severity="primary"] .p-button:enabled:hover,
   border-color: var(--field-border-hover) !important;
 }
 
+/* Select-likes keep DOM focus after a mouse pick, which left them looking
+   active for good. They're driven by the two rules below instead: hover while
+   the pointer is on them, open while the panel is out, rest the moment both
+   end. Keyboard focus is an outline, so it can't be mistaken for either. */
+.p-select:not(:hover):not(.p-select-open),
+.p-multiselect:not(:hover):not(.p-multiselect-open),
+.p-listbox:not(:hover) {
+  background: var(--field-bg) !important;
+  border-color: var(--field-border) !important;
+}
+
+.p-select:focus-visible,
+.p-multiselect:focus-visible,
+.p-listbox:focus-visible,
+.p-select:has(:focus-visible),
+.p-multiselect:has(:focus-visible),
+.p-listbox:has(:focus-visible) {
+  outline: 2px solid var(--field-border-focus) !important;
+  outline-offset: -2px;
+}
+
 .p-inputtext:enabled:focus,
 .p-textarea:enabled:focus,
-.p-select:focus-within,
-.p-multiselect:focus-within,
-.p-listbox:focus-within,
 .p-datepicker:focus-within,
 .p-select.p-select-open,
 .p-multiselect.p-multiselect-open,

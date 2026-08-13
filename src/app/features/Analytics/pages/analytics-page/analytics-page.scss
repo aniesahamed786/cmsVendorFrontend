@@ -450,6 +450,10 @@
     }
   }
 
+  ::ng-deep .insights-search .app-search {
+    width: 100%; /* overrides the shared 16rem search width once the header stacks */
+  }
+
   .top-offer {
     grid-template-columns: auto minmax(0, 1fr);
 

@@ -1,4 +1,46 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+
+export interface AnalyticsTopOffer {
+  offerId: string;
+  offerTitle: string;
+  offerTitleAr: string;
+  count: number;
+}
+
+export interface AnalyticsOverview {
+  activeOffersCount: number;
+  inactiveOffersCount: number;
+  draftOffersCount: number;
+  pendingRequestsCount: number;
+  mostFavouritedOffer: AnalyticsTopOffer;
+  mostViewedOffer: AnalyticsTopOffer;
+  mostSharedOffer: AnalyticsTopOffer;
+}
+
+export interface AnalyticsOffersSummary {
+  totalOffers: number;
+  totalViews: number;
+  totalLocations: number;
+  totalRedemptions: number;
+}
+
+export interface AnalyticsRedemptionsByLocation {
+  branchId: unknown;
+  branchName: string;
+  branchName_ar: string;
+  city: string;
+  city_ar: string;
+  redemptionsCount: number;
+}
+
+export interface AnalyticsRedemptionsByDay {
+  day: string;
+  dayOfWeek: string;
+  redemptionsCount: number;
+}
 
 export interface OfferInsightRow {
   id: string | null;
@@ -8,6 +50,25 @@ export interface OfferInsightRow {
   shares: number;
   redemptions: number;
   views: number;
+  favorites: number;
+}
+
+export interface OfferInsightApiRow {
+  offerId: string;
+  offerTitle: string;
+  discountAmount: string;
+  discountType: string;
+  offerType: string[];
+  shares: number;
+  views: number;
+  redemptions: number;
+}
+
+export interface OfferInsightsResponse {
+  data: OfferInsightApiRow[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 export interface CityInsightRow {
@@ -30,6 +91,59 @@ export interface CountryOption {
  */
 @Injectable({ providedIn: 'root' })
 export class VendorAnalyticsService {
+  private readonly http = inject(HttpClient);
+
+  getOverview(): Observable<AnalyticsOverview> {
+    return this.http.get<AnalyticsOverview>(`${environment.apiBaseUrl}/analytics/overview`);
+  }
+
+  getOffersSummary(): Observable<AnalyticsOffersSummary> {
+    return this.http.get<AnalyticsOffersSummary>(`${environment.apiBaseUrl}/analytics/offersSummary`);
+  }
+
+  getRedemptionsByLocation(): Observable<AnalyticsRedemptionsByLocation[]> {
+    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${environment.apiBaseUrl}/analytics/getRedemptionsByLocation`);
+  }
+
+  getRedemptionsByDays(): Observable<AnalyticsRedemptionsByDay[]> {
+    return this.http.get<AnalyticsRedemptionsByDay[]>(`${environment.apiBaseUrl}/analytics/redemptionsByDays`);
+  }
+
+  /** Server-paginated + server-sorted + server-searched offer insights. */
+  getOfferInsights(
+    page: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    search?: string,
+  ): Observable<OfferInsightsResponse> {
+    const params: Record<string, string | number> = { page, pageSize };
+    if (sortBy) {
+      params['sortBy'] = sortBy;
+      params['sortOrder'] = sortOrder ?? 'asc';
+    }
+    // Backend searches offer title, offer mode and discount amount (case-insensitive).
+    if (search?.trim()) params['search'] = search.trim();
+
+    return this.http.get<OfferInsightsResponse>(
+      `${environment.apiBaseUrl}/analytics/offerInsights`,
+      { params },
+    );
+  }
+
+  toOfferInsightRow(row: OfferInsightApiRow): OfferInsightRow {
+    const types = Array.isArray(row.offerType) ? row.offerType : [row.offerType];
+    return {
+      id: row.offerId ?? null,
+      title: row.offerTitle || '-',
+      discount: this.getDiscountAmount(row),
+      type: this.formatOfferType(types.length > 1 ? 'both' : types[0]),
+      shares: Number(row.shares) || 0,
+      redemptions: Number(row.redemptions) || 0,
+      views: Number(row.views) || 0,
+      favorites: 0,
+    };
+  }
 
   /* ─────────────────── Location helpers ─────────────────── */
 
@@ -117,9 +231,10 @@ export class VendorAnalyticsService {
             shares: Number(offer?.shares) || 0,
             redemptions: Number(offer?.redemptions) || 0,
             views: Number(offer?.views) || 0,
+            favorites: Number(offer?.favorites) || 0,
           };
         })
-      : [{ id: null, title: '-', discount: '0', type: '-', shares: 0, redemptions: 0, views: 0 }];
+      : [{ id: null, title: '-', discount: '0', type: '-', shares: 0, redemptions: 0, views: 0, favorites: 0 }];
 
     if (!sortField) return rows;
 

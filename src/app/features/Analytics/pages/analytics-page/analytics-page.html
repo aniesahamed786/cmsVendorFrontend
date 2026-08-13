@@ -39,40 +39,27 @@
         <div>
           <h2>{{ 'analytics.location.title' | translate }}</h2>
           <p>
-            {{ (redemptionChartMode() === 'day' ? 'analytics.location.daySubtitle' : 'analytics.location.subtitle') | translate }}
+            {{ (redemptionChartMode() === 'day' ? 'analytics.location.daySubtitle' : 'analytics.location.subtitle') |
+            translate }}
           </p>
         </div>
         <div class="period-filter" role="group" [attr.aria-label]="'analytics.location.filterLabel' | translate">
-          <button
-            type="button"
-            [class.is-active]="redemptionChartMode() === 'location'"
-            [attr.aria-pressed]="redemptionChartMode() === 'location'"
-            (click)="redemptionChartMode.set('location')"
-          >
+          <button type="button" [class.is-active]="redemptionChartMode() === 'location'"
+            [attr.aria-pressed]="redemptionChartMode() === 'location'" (click)="redemptionChartMode.set('location')">
             {{ 'analytics.location.byLocation' | translate }}
           </button>
-          <button
-            type="button"
-            [class.is-active]="redemptionChartMode() === 'day'"
-            [attr.aria-pressed]="redemptionChartMode() === 'day'"
-            (click)="redemptionChartMode.set('day')"
-          >
+          <button type="button" [class.is-active]="redemptionChartMode() === 'day'"
+            [attr.aria-pressed]="redemptionChartMode() === 'day'" (click)="showRedemptionsByDay()">
             {{ 'analytics.location.byDay' | translate }}
           </button>
         </div>
       </div>
 
-      @if (loading()) {
-        <span class="app-skeleton chart-skeleton"></span>
+      @if (loading() || (redemptionChartMode() === 'day' && dayLoading())) {
+      <span class="app-skeleton chart-skeleton"></span>
       } @else {
-        <p-chart
-          styleClass="redemption-chart"
-          type="bar"
-          height="18rem"
-          [data]="redemptionChartData()"
-          [options]="redemptionChartOptions()"
-          [ariaLabel]="'analytics.location.chartLabel' | translate"
-        />
+      <p-chart styleClass="redemption-chart" type="bar" height="18rem" [data]="redemptionChartData()"
+        [options]="redemptionChartOptions()" [ariaLabel]="'analytics.location.chartLabel' | translate" />
       }
     </section>
 
@@ -83,47 +70,34 @@
       </div>
 
       @if (loading()) {
-        @for (i of [1, 2, 3]; track i) {
-          <span class="app-skeleton offer-skeleton"></span>
-        }
+      @for (i of [1, 2, 3]; track i) {
+      <span class="app-skeleton offer-skeleton"></span>
+      }
       } @else {
-        @for (offer of topOffers; track offer.id ?? $index; let index = $index) {
-          <button class="top-offer" type="button" [disabled]="!offer.id" (click)="viewOfferDetails(offer)">
-            <span class="icon-box">
-              <i [class]="index === 0 ? 'pi pi-heart' : index === 1 ? 'pi pi-eye' : 'pi pi-chart-line'"></i>
-            </span>
-            <span class="top-offer__copy">
-              <small>{{ topOfferLabel(index) | translate }}</small>
-              <strong>{{ offer.title }}</strong>
-              <span>{{ offer.views | number: '1.0-0':i18n.numberLocale }} {{ 'analytics.common.views' | translate }}</span>
-            </span>
-            <span class="top-offer__metric">
-              {{ offer.shares | number: '1.0-0':i18n.numberLocale }} {{ 'analytics.common.shares' | translate }}
-            </span>
-          </button>
-        }
+      @for (card of topOfferCards; track card.labelKey) {
+      <button class="top-offer" type="button" [disabled]="!card.offer.id" (click)="viewOfferDetails(card.offer)">
+        <span class="icon-box">
+          <i [class]="card.icon"></i>
+        </span>
+        <span class="top-offer__copy">
+          <small>{{ card.labelKey | translate }}</small>
+          <strong>{{ card.offer.title }}</strong>
+        </span>
+        <span class="top-offer__metric">
+          {{ card.value | number: '1.0-0':i18n.numberLocale }} {{ card.metricKey | translate }}
+        </span>
+      </button>
+      }
       }
     </aside>
   </div>
 
   <div class="analytics-grid analytics-grid--secondary">
     <section class="panel overview-panel">
-      <div class="panel__header panel__header--split">
+      <div class="panel__header">
         <div>
           <h2>{{ 'analytics.overview.title' | translate }}</h2>
           <p>{{ 'analytics.overview.subtitle' | translate }}</p>
-        </div>
-        <div class="period-filter" role="group" [attr.aria-label]="'analytics.overview.filterLabel' | translate">
-          @for (period of overviewPeriods; track period.value) {
-            <button
-              type="button"
-              [class.is-active]="selectedOverviewPeriod() === period.value"
-              [attr.aria-pressed]="selectedOverviewPeriod() === period.value"
-              (click)="selectedOverviewPeriod.set(period.value)"
-            >
-              {{ period.labelKey | translate }}
-            </button>
-          }
         </div>
       </div>
       <div class="overview-metrics">
@@ -149,18 +123,16 @@
   </div>
 
   <section class="panel insights-panel">
-    <div class="panel__header">
-      <h2>{{ 'analytics.insights.title' | translate }}</h2>
-      <p>{{ 'analytics.insights.subtitle' | translate }}</p>
+    <div class="panel__header panel__header--split">
+      <div>
+        <h2>{{ 'analytics.insights.title' | translate }}</h2>
+        <p>{{ 'analytics.insights.subtitle' | translate }}</p>
+      </div>
+      <app-search class="insights-search" (valueChange)="insightTable.filterGlobal($event, 'contains')" />
     </div>
-    <p-table
-      [value]="insightTableRows"
-      [paginator]="!loading()"
-      [rows]="10"
-      [rowsPerPageOptions]="[5, 10, 20, 50]"
-      paginatorDropdownAppendTo="body"
-      styleClass="analytics-table"
-    >
+    <p-table #insightTable [value]="insightRows()" [lazy]="true" (onLazyLoad)="loadOfferInsights($event)"
+      [loading]="insightLoading()" [showLoader]="false" [totalRecords]="insightTotal()" [paginator]="true" [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body" styleClass="analytics-table">
       <ng-template pTemplate="header">
         <tr>
           <th>{{ 'analytics.table.offer' | translate }}</th>
@@ -189,12 +161,20 @@
         </tr>
       </ng-template>
 
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">{{ 'offers.empty' | translate }}</td>
+        </tr>
+      </ng-template>
+
       <ng-template pTemplate="loadingbody">
+        @for (row of [1, 2, 3, 4, 5]; track row) {
         <tr class="analytics-table__row--skeleton">
           @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-            <td><span class="app-skeleton table-skeleton"></span></td>
+          <td><span class="app-skeleton table-skeleton"></span></td>
           }
         </tr>
+        }
       </ng-template>
     </p-table>
   </section>
