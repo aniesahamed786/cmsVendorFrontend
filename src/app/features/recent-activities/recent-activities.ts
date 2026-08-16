@@ -1,36 +1,38 @@
-import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TableLazyLoadEvent } from 'primeng/table';
+import { Subject, debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { PrimeUIModules } from '../../core/prime.import';
-
-interface RecentActivity {
-  timestamp: string;
-  date: Date;
-  actionType: string;
-  performedBy: string;
-  targetEntity: string;
-  referenceId: string;
-  status: 'Created' | 'Edited' | 'Approved' | 'Rejected' | 'Published';
-}
+import { AppSearch } from '../../shared/Components/app-search/app-search';
+import { ApiRequestEntityType } from '../request-center/models/request-api.model';
+import { ActivityRow, toActivityPage } from './models/system-log.mapper';
+import { SystemLogAction, SystemLogSortOrder } from './models/system-log.model';
+import { SystemLogService } from './services/system-log.service';
 
 @Component({
   selector: 'app-recent-activities',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules],
+  imports: [CommonModule, FormsModule, PrimeUIModules, AppSearch],
   templateUrl: './recent-activities.html',
   styleUrl: './recent-activities.scss',
 })
-export class RecentActivities {
-  // ponytail: in-memory dummy data; swap for a service feed when the API exists
-  private readonly activities: RecentActivity[] = this.buildRows();
+export class RecentActivities implements OnInit {
+  private readonly api = inject(SystemLogService);
 
-  readonly statusOptions = [
-    { label: 'All statuses', value: null },
-    { label: 'Created', value: 'Created' },
-    { label: 'Edited', value: 'Edited' },
-    { label: 'Approved', value: 'Approved' },
-    { label: 'Rejected', value: 'Rejected' },
-    { label: 'Published', value: 'Published' },
+  readonly entityTypeOptions = [
+    { label: 'All types', value: null },
+    { label: 'Offer', value: 'OFFER' },
+    { label: 'Store', value: 'STORE' },
+    { label: 'Profile', value: 'PROFILE' },
+  ];
+
+  readonly actionOptions = [
+    { label: 'All actions', value: null },
+    { label: 'Submitted', value: 'SUBMITTED' },
+    { label: 'Recalled', value: 'RECALLED' },
+    { label: 'Cancelled', value: 'CANCELLED' },
   ];
 
   readonly periodOptions = [
@@ -42,11 +44,21 @@ export class RecentActivities {
     { label: 'Custom date', value: 'custom' },
   ];
 
-  readonly status = signal<RecentActivity['status'] | null>(null);
+  readonly entityType = signal<ApiRequestEntityType | null>(null);
+  readonly action = signal<SystemLogAction | null>(null);
   readonly period = signal<string>('all');
   readonly customRange = signal<Date[] | null>(null);
+  readonly search = signal<string>('');
+  readonly sortOrder = signal<SystemLogSortOrder>('desc');
 
-  // resolve the active period to a [from, to] window
+  readonly rows = signal<ActivityRow[]>([]);
+  readonly totalRecords = signal(0);
+  readonly loading = signal(true);
+  readonly pageSize = signal(10);
+  readonly loadFailed = signal(false);
+
+  private readonly searchInput = new Subject<string>();
+
   private readonly window = computed<[Date | null, Date | null]>(() => {
     const period = this.period();
     if (period === 'custom') {
@@ -61,38 +73,100 @@ export class RecentActivities {
     return [from, to];
   });
 
-  readonly rows = computed(() => {
-    const status = this.status();
-    const [from, to] = this.window();
-    return this.activities.filter((a) => {
-      if (status && a.status !== status) return false;
-      if (from && a.date < from) return false;
-      if (to && a.date > to) return false;
-      return true;
-    });
-  });
+  ngOnInit(): void {
+    this.searchInput
+      .pipe(debounceTime(350), distinctUntilChanged())
+      .subscribe((value) => {
+        this.search.set(value);
+        this.reload();
+      });
+
+    this.load(1);
+  }
+
+  onEntityTypeChange(value: ApiRequestEntityType | null): void {
+    this.entityType.set(value);
+    this.reload();
+  }
+
+  onActionChange(value: SystemLogAction | null): void {
+    this.action.set(value);
+    this.reload();
+  }
+
+  onPeriodChange(value: string): void {
+    this.period.set(value);
+    if (value !== 'custom') this.reload();
+  }
+
+  onCustomRangeChange(value: Date[] | null): void {
+    this.customRange.set(value);
+    if (value?.[0] && value?.[1]) this.reload();
+  }
+
+  onSearchInput(value: string): void {
+    this.searchInput.next(value);
+  }
 
   clearFilters(): void {
-    this.status.set(null);
+    this.entityType.set(null);
+    this.action.set(null);
     this.period.set('all');
     this.customRange.set(null);
+    this.search.set('');
+    this.reload();
   }
 
-  private buildRows(): RecentActivity[] {
-    const seed: Omit<RecentActivity, 'date'>[] = [
-      { timestamp: 'Sep. 15, 2026 | 8:32 am', actionType: 'Offer Created', performedBy: 'Vendor', targetEntity: 'Offer Creation', referenceId: 'Ref-2026-1009', status: 'Created' },
-      { timestamp: 'Oct. 02, 2026 | 2:15 pm', actionType: 'Offer Edited', performedBy: 'Vendor', targetEntity: 'Marketing Campaign', referenceId: 'Ref-2026-1176', status: 'Edited' },
-      { timestamp: 'Nov. 10, 2026 | 11:00 am', actionType: 'Offer Approved', performedBy: 'Admin', targetEntity: 'Pricing Team', referenceId: 'Ref-2026-1267', status: 'Approved' },
-      { timestamp: 'Dec. 05, 2026 | 4:45 pm', actionType: 'Offer Rejected', performedBy: 'Admin', targetEntity: 'Customer Service', referenceId: 'Ref-2026-1289', status: 'Rejected' },
-      { timestamp: 'Jan. 20, 2027 | 9:30 am', actionType: 'Offer Published', performedBy: 'Admin', targetEntity: 'IT Department', referenceId: 'Ref-2026-1321', status: 'Published' },
-    ];
-    // repeat the seed to give the paginator something to page through
-    return Array.from({ length: 5 }, () => seed)
-      .flat()
-      .map((r) => ({ ...r, date: new Date(r.timestamp.split('|')[0].replace(/\./g, '')) }));
+  readonly hasActiveFilters = computed(
+    () =>
+      !!this.entityType() || !!this.action() || this.period() !== 'all' || !!this.search().trim(),
+  );
+
+  onLazyLoad(event: TableLazyLoadEvent): void {
+    const rows = event.rows ?? this.pageSize();
+    this.pageSize.set(rows);
+
+    if (event.sortOrder) this.sortOrder.set(event.sortOrder === 1 ? 'asc' : 'desc');
+
+    this.load(Math.floor((event.first ?? 0) / rows) + 1);
   }
 
-  statusClass(status: RecentActivity['status']): string {
+  private reload(): void {
+    this.load(1);
+  }
+
+  private load(page: number): void {
+    const [from, to] = this.window();
+    this.loading.set(true);
+    this.loadFailed.set(false);
+
+    this.api
+      .getSystemLogs({
+        page,
+        pageSize: this.pageSize(),
+        sortOrder: this.sortOrder(),
+        entityType: this.entityType() ?? undefined,
+        action: this.action() ?? undefined,
+        search: this.search() || undefined,
+        from: from?.toISOString(),
+        to: to?.toISOString(),
+      })
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (res) => {
+          const { rows, total } = toActivityPage(res);
+          this.rows.set(rows);
+          this.totalRecords.set(total);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.rows.set([]);
+          this.totalRecords.set(0);
+          this.loadFailed.set(true);
+        },
+      });
+  }
+
+  statusClass(status: string): string {
     return `recent-activities__status recent-activities__status--${status.toLowerCase()}`;
   }
 }

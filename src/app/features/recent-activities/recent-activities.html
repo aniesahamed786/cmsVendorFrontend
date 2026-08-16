@@ -8,28 +8,46 @@
     <div class="recent-activities__toolbar">
       <h2 class="recent-activities__card-title">Recent Activity</h2>
       <div class="recent-activities__filters">
-        <p-select [options]="statusOptions" [ngModel]="status()" (ngModelChange)="status.set($event)"
-          optionLabel="label" optionValue="value" placeholder="Status" styleClass="recent-activities__filter" />
-        <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="period.set($event)"
-          optionLabel="label" optionValue="value" placeholder="Period" styleClass="recent-activities__filter" />
-        @if (period() === 'custom') {
-        <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
-          [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy" appendTo="body"
+        <app-search [value]="search()" (valueChange)="onSearchInput($event)"
+          placeholder="Search title or request ID" />
+
+        <p-select [options]="entityTypeOptions" [ngModel]="entityType()"
+          (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
+          placeholder="Type" styleClass="recent-activities__filter" />
+
+        <p-select [options]="actionOptions" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
+          optionLabel="label" optionValue="value" placeholder="Action"
           styleClass="recent-activities__filter" />
+
+        <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
+          optionLabel="label" optionValue="value" placeholder="Period"
+          styleClass="recent-activities__filter" />
+
+        @if (period() === 'custom') {
+        <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
+          selectionMode="range" [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy"
+          appendTo="body" styleClass="recent-activities__filter" />
+        }
+
+        @if (hasActiveFilters()) {
+        <button type="button" class="recent-activities__clear" (click)="clearFilters()">Clear</button>
         }
       </div>
     </div>
 
-    <p-table [value]="rows()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
-      paginatorDropdownAppendTo="body" styleClass="recent-activities__table">
+    <!-- Lazy: filtering, sorting and paging all happen server-side. -->
+    <p-table [value]="rows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+      [totalRecords]="totalRecords()" [loading]="loading()" [paginator]="true" [rows]="pageSize()"
+      [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
+      styleClass="recent-activities__table">
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="timestamp">Timestamp <p-sortIcon field="timestamp" /></th>
-          <th pSortableColumn="actionType">Action Type <p-sortIcon field="actionType" /></th>
-          <th pSortableColumn="performedBy">Performed by <p-sortIcon field="performedBy" /></th>
-          <th pSortableColumn="targetEntity">Target Entity <p-sortIcon field="targetEntity" /></th>
-          <th pSortableColumn="referenceId">Reference ID <p-sortIcon field="referenceId" /></th>
-          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+          <th>Action Type</th>
+          <th>Performed by</th>
+          <th>Target Entity</th>
+          <th>Reference ID</th>
+          <th>Status</th>
         </tr>
       </ng-template>
 
@@ -38,15 +56,29 @@
           <td>{{ row.timestamp }}</td>
           <td><span class="recent-activities__row-title">{{ row.actionType }}</span></td>
           <td>{{ row.performedBy }}</td>
-          <td>{{ row.targetEntity }}</td>
+          <td>
+            {{ row.targetEntity }}
+            @if (row.remarks) {
+            <i class="pi pi-info-circle recent-activities__remarks-icon" [pTooltip]="row.remarks"
+              tooltipPosition="top"></i>
+            }
+          </td>
           <td>{{ row.referenceId }}</td>
-          <td><span [class]="statusClass(row.status)">{{ row.status }}</span></td>
+          <td><span [class]="statusClass(row.status)">{{ row.statusLabel }}</span></td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6" class="recent-activities__empty">No recent activity.</td>
+          <td colspan="6" class="recent-activities__empty">
+            @if (loadFailed()) {
+            Could not load recent activity. Please try again.
+            } @else if (hasActiveFilters()) {
+            No activity matches these filters.
+            } @else {
+            No recent activity.
+            }
+          </td>
         </tr>
       </ng-template>
     </p-table>
