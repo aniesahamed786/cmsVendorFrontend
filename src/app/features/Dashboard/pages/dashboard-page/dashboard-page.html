@@ -38,17 +38,32 @@
       </div>
 
       <div class="dashboard-page__activity-list">
-        @for (activity of recentActivities(); track activity.key) {
+        @if (activityLoading()) {
+        @for (row of skeletonRows; track row) {
+        <div class="dashboard-page__activity">
+          <span class="app-skeleton dashboard-page__activity-icon"></span>
+          <div class="dashboard-page__activity-body">
+            <span class="app-skeleton dashboard-page__skeleton-title"></span>
+            <span class="app-skeleton dashboard-page__skeleton-desc"></span>
+          </div>
+          <span class="app-skeleton dashboard-page__skeleton-time"></span>
+        </div>
+        }
+        } @else {
+        @for (activity of recentActivities(); track $index) {
         <div class="dashboard-page__activity">
           <div class="dashboard-page__activity-icon" [ngClass]="activity.iconClass">
             <i [class]="activity.icon"></i>
           </div>
           <div class="dashboard-page__activity-body">
-            <p class="dashboard-page__activity-title">{{ activity.key + '.title' | translate }}</p>
-            <p class="dashboard-page__activity-desc">{{ activity.key + '.description' | translate }}</p>
+            <p class="dashboard-page__activity-title">{{ activity.title }}</p>
+            <p class="dashboard-page__activity-desc">{{ activity.description }}</p>
           </div>
-          <span class="dashboard-page__activity-time">{{ activity.key + '.time' | translate }}</span>
+          <span class="dashboard-page__activity-time">{{ activity.time }}</span>
         </div>
+        } @empty {
+        <p class="dashboard-page__activity-desc">{{ 'dashboard.noRecentActivity' | translate }}</p>
+        }
         }
       </div>
     </section>

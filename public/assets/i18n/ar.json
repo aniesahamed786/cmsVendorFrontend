@@ -40,6 +40,7 @@
   },
   "dashboard": {
     "recentActivity": "النشاط الأخير",
+    "noRecentActivity": "لا يوجد نشاط حديث.",
     "viewHistory": "عرض السجل",
     "pendingRequests": "الطلبات قيد المراجعة",
     "noPendingRequests": "لا توجد طلبات معلقة",
@@ -67,33 +68,6 @@
       "createOffer": "إنشاء عرض جديد",
       "editProfile": "تعديل الملف الشخصي",
       "contactSupport": "التواصل مع الدعم"
-    },
-    "activity": {
-      "offerActivated": {
-        "title": "تم تفعيل عرض جديد",
-        "description": "تخفيضات الصيف 2025",
-        "time": "قبل دقيقتين"
-      },
-      "offerPending": {
-        "title": "عرض بانتظار الموافقة",
-        "description": "باقة العائلة",
-        "time": "قبل ساعة"
-      },
-      "profileSubmitted": {
-        "title": "تم إرسال تحديث الملف الشخصي",
-        "description": "الملف الشخصي والوسائط",
-        "time": "قبل 3 ساعات"
-      },
-      "branchHours": {
-        "title": "تم تحديث ساعات عمل الفرع",
-        "description": "فرع الدمام",
-        "time": "أمس"
-      },
-      "ticketReplied": {
-        "title": "تم الرد على تذكرة الدعم",
-        "description": "مشكلة في ظهور العرض",
-        "time": "قبل يومين"
-      }
     }
   },
   "navbar": {

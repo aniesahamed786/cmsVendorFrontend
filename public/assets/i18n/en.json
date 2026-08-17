@@ -40,6 +40,7 @@
   },
   "dashboard": {
     "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity.",
     "viewHistory": "View History",
     "pendingRequests": "Pending Requests",
     "noPendingRequests": "No pending requests",
@@ -67,33 +68,6 @@
       "createOffer": "Create New Offer",
       "editProfile": "Edit Profile",
       "contactSupport": "Contact Support"
-    },
-    "activity": {
-      "offerActivated": {
-        "title": "New offer activated",
-        "description": "Summer Sale 2025",
-        "time": "2 mins ago"
-      },
-      "offerPending": {
-        "title": "Offer pending approval",
-        "description": "Family Package",
-        "time": "1 hour ago"
-      },
-      "profileSubmitted": {
-        "title": "Profile update submitted",
-        "description": "Profile & media",
-        "time": "3 hours ago"
-      },
-      "branchHours": {
-        "title": "Branch hours updated",
-        "description": "Dammam Branch",
-        "time": "Yesterday"
-      },
-      "ticketReplied": {
-        "title": "Support ticket replied",
-        "description": "Offer visibility issue",
-        "time": "2 days ago"
-      }
     }
   },
   "navbar": {

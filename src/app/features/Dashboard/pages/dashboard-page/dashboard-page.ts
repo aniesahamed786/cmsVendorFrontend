@@ -1,18 +1,39 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorQuickActions } from '../../components/vendor-quick-actions/vendor-quick-actions';
 import { DashboardService } from '../../services/dashboard.service';
 import { OnInit, inject } from '@angular/core';
+import { toActivityRow } from '../../../recent-activities/models/system-log.mapper';
+import { SystemLogService } from '../../../recent-activities/services/system-log.service';
 
 interface RecentActivityItem {
   icon: string;
   iconClass: string;
-  /** Key prefix; the template appends `.title`, `.description`, `.time`. */
-  key: string;
+  title: string;
+  description: string;
+  time: string;
 }
+
+const ACTIVITY_ICONS: Record<string, string> = {
+  OFFER: 'pi pi-tag',
+  STORE: 'pi pi-building',
+  PROFILE: 'pi pi-user-edit',
+  HIGHLIGHT: 'pi pi-star',
+};
+
+const ACTIVITY_ICON_CLASSES: Record<string, string> = {
+  APPROVED: 'dashboard-page__activity-icon--success',
+  SUBMITTED: 'dashboard-page__activity-icon--warning',
+  PENDING: 'dashboard-page__activity-icon--warning',
+  RETURNED: 'dashboard-page__activity-icon--neutral',
+  REJECTED: 'dashboard-page__activity-icon--neutral',
+  RECALLED: 'dashboard-page__activity-icon--neutral',
+  CANCELLED: 'dashboard-page__activity-icon--neutral',
+};
 
 @Component({
   selector: 'app-dashboard-page',
@@ -32,39 +53,14 @@ export class DashboardPage implements OnInit {
   expiringSoonOffers: 0
 });
 
-  // ponytail: fixtures, so the whole row is translated copy — including the
-  // descriptions and the "2 mins ago" times, which is the only way the Arabic
-  // dashboard reads as Arabic today. When the real feed lands, descriptions
-  // become server data and times want Intl.RelativeTimeFormat(i18n.locale()).
-  recentActivities = signal<RecentActivityItem[]>([
-    {
-      icon: 'pi pi-tag',
-      iconClass: 'dashboard-page__activity-icon--brand',
-      key: 'dashboard.activity.offerActivated',
-    },
-    {
-      icon: 'pi pi-hourglass',
-      iconClass: 'dashboard-page__activity-icon--warning',
-      key: 'dashboard.activity.offerPending',
-    },
-    {
-      icon: 'pi pi-user-edit',
-      iconClass: 'dashboard-page__activity-icon--neutral',
-      key: 'dashboard.activity.profileSubmitted',
-    },
-    {
-      icon: 'pi pi-check-circle',
-      iconClass: 'dashboard-page__activity-icon--success',
-      key: 'dashboard.activity.branchHours',
-    },
-    {
-      icon: 'pi pi-comments',
-      iconClass: 'dashboard-page__activity-icon--brand',
-      key: 'dashboard.activity.ticketReplied',
-    },
-  ]);
+  // ponytail: server copy is English-only; times stay absolute like the
+  // recent-activities table. Relative "2 mins ago" wants Intl.RelativeTimeFormat.
+  recentActivities = signal<RecentActivityItem[]>([]);
+  activityLoading = signal(true);
+  readonly skeletonRows = [0, 1, 2, 3, 4];
 
  private readonly dashboardService = inject(DashboardService);
+ private readonly systemLogs = inject(SystemLogService);
 
 constructor(
   private readonly router: Router
@@ -77,6 +73,26 @@ ngOnInit(): void {
     error: (err) => {
       console.error('Failed to load dashboard stats', err);
     }
+  });
+
+  this.systemLogs.getSystemLogs({ page: 1, pageSize: 5, sortOrder: 'desc' })
+    .pipe(finalize(() => this.activityLoading.set(false)))
+    .subscribe({
+    next: (res) =>
+      this.recentActivities.set(
+        (res?.data ?? []).map((entry) => {
+          const row = toActivityRow(entry);
+          return {
+            icon: ACTIVITY_ICONS[entry.entityType] ?? 'pi pi-clock',
+            iconClass:
+              ACTIVITY_ICON_CLASSES[entry.status] ?? 'dashboard-page__activity-icon--brand',
+            title: row.actionType,
+            description: row.targetEntity,
+            time: row.timestamp,
+          };
+        }),
+      ),
+    error: () => this.recentActivities.set([]),
   });
 }
   goToOffers(): void {

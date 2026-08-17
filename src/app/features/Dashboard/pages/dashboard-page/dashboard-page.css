@@ -230,6 +230,27 @@
   color: var(--app-muted);
 }
 
+/* Activity skeletons (.app-skeleton owns fill + pulse; these own size only),
+   sized to the elements they stand in for so the panel keeps its height. */
+.dashboard-page__skeleton-title {
+  display: block;
+  width: 10rem;
+  height: 1rem;
+}
+
+.dashboard-page__skeleton-desc {
+  display: block;
+  width: 7rem;
+  height: 0.875rem;
+  margin-top: 0.375rem;
+}
+
+.dashboard-page__skeleton-time {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 0.75rem;
+}
+
 /* Top branch */
 .dashboard-page__branch {
   display: flex;
