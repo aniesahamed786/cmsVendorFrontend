@@ -43,16 +43,16 @@
     <form class="redemption-form" [formGroup]="redemptionForm" (ngSubmit)="submit()">
       <div class="redemption-form__grid">
         <div class="redemption-form__field-wrapper redemption-form__field-wrapper--full">
-          <label>{{ 'redemption.label.transactionType' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.transactionType' | translate }} <span class="redemption-form__required">*</span></label>
           <p-select formControlName="transactionType" [options]="transactionTypes" optionLabel="label"
             optionValue="value" styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label>
+          <label class="redemption-form__label">
             {{ 'redemption.label.membershipId' | translate }}
-            @if (!isCollectiveTransaction) {<span class="required-star">*</span>}
+            @if (!isCollectiveTransaction) {<span class="redemption-form__required">*</span>}
           </label>
           <input type="text" inputmode="numeric" pInputText formControlName="membershipId"
             [placeholder]="'redemption.placeholder.membershipId' | translate" class="redemption-form__input--full" />
@@ -60,14 +60,14 @@
 
         <!-- Mobile Number — optional in both modes -->
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.mobileNumber' | translate }}</label>
+          <label class="redemption-form__label">{{ 'redemption.label.mobileNumber' | translate }}</label>
           <input type="tel" pInputText formControlName="mobileNumber"
             [placeholder]="'redemption.placeholder.mobileNumber' | translate" class="redemption-form__input--full" />
         </div>
 
         @if (!isCollectiveTransaction) {
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.transactionDate' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.transactionDate' | translate }} <span class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="transactionDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
@@ -75,7 +75,7 @@
         </div>
         } @else {
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.startDate' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.startDate' | translate }} <span class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="startDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
@@ -83,7 +83,7 @@
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.endDate' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.endDate' | translate }} <span class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="endDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
@@ -95,7 +95,7 @@
         }
 
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.offer' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.offer' | translate }} <span class="redemption-form__required">*</span></label>
           <p-select formControlName="offer" [options]="offerOptions()" optionLabel="label" optionValue="value"
             [loading]="offersLoading()" [filter]="true" filterBy="label"
             [placeholder]="'redemption.placeholder.offer' | translate"
@@ -105,7 +105,7 @@
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.branch' | translate }}</label>
+          <label class="redemption-form__label">{{ 'redemption.label.branch' | translate }}</label>
           <p-select formControlName="branch" [options]="branchOptions()" optionLabel="label" optionValue="value"
             [loading]="branchesLoading()" [showClear]="true" [placeholder]="(redemptionForm.get('offer')?.value
                 ? 'redemption.placeholder.branch'
@@ -116,25 +116,25 @@
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.totalInvoiceAmount' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.totalInvoiceAmount' | translate }} <span class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalInvoiceAmount"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.totalAmountPaid' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.totalAmountPaid' | translate }} <span class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalAmountPaid"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.currency' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.currency' | translate }} <span class="redemption-form__required">*</span></label>
           <input type="text" pInputText formControlName="currency"
             [placeholder]="'redemption.placeholder.currency' | translate" class="redemption-form__input--full" />
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.discountAmount' | translate }} <span class="required-star">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.discountAmount' | translate }} <span class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="discountAmount"
             [placeholder]="'redemption.placeholder.discountAmount' | translate" class="redemption-form__input--full" />
         </div>

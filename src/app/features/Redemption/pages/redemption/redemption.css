@@ -131,11 +131,14 @@ section.redemption-card {
   }
 }
 
-.redemption-form__field-wrapper label {
-  font-weight: 600;
-  color: var(--app-text);
-  margin-bottom: 0.25rem;
-  font-size: 0.875rem;
+.redemption-form__field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.redemption-form__required {
+  color: #dc2626;
 }
 
 .redemption-form__field-wrapper--full {
