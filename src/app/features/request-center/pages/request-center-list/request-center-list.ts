@@ -111,7 +111,7 @@ export class RequestCenterList {
   }
 
   // ---- Tabs / filters / sort ------------------------------------------------
-  readonly activeTab = signal<TabKey>('all');
+  readonly activeTab = signal<TabKey>('incomplete');
 
   private options<T>(entries: [key: string, value: T][]) {
     return computed(() => {

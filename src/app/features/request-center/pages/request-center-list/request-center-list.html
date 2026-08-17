@@ -51,9 +51,9 @@
       <div class="request-center__toolbar-row">
         <div class="request-center__tabs">
           <button type="button" class="request-center__tab"
-            [class.request-center__tab--active]="activeTab() === 'all'" (click)="activeTab.set('all')">
-            {{ 'requestCenter.tabs.all' | translate }}
-            <span class="request-center__tab-count">{{ tabCounts().all }}</span>
+            [class.request-center__tab--active]="activeTab() === 'incomplete'" (click)="activeTab.set('incomplete')">
+            {{ 'requestCenter.tabs.incomplete' | translate }}
+            <span class="request-center__tab-count">{{ tabCounts().incomplete }}</span>
           </button>
           <button type="button" class="request-center__tab"
             [class.request-center__tab--active]="activeTab() === 'completed'" (click)="activeTab.set('completed')">
@@ -61,9 +61,9 @@
             <span class="request-center__tab-count">{{ tabCounts().completed }}</span>
           </button>
           <button type="button" class="request-center__tab"
-            [class.request-center__tab--active]="activeTab() === 'incomplete'" (click)="activeTab.set('incomplete')">
-            {{ 'requestCenter.tabs.incomplete' | translate }}
-            <span class="request-center__tab-count">{{ tabCounts().incomplete }}</span>
+            [class.request-center__tab--active]="activeTab() === 'all'" (click)="activeTab.set('all')">
+            {{ 'requestCenter.tabs.all' | translate }}
+            <span class="request-center__tab-count">{{ tabCounts().all }}</span>
           </button>
         </div>
 
