@@ -178,6 +178,21 @@
   }
 }
 
-.branch-view__mb-2 {
+// Sizes only — .app-skeleton owns the fill and the pulse.
+.branch-view__skeleton-back {
+  width: 6rem;
+  height: 2.25rem;
+}
+.branch-view__skeleton-action {
+  width: 7rem;
+  height: 2.25rem;
+}
+.branch-view__skeleton-label {
+  width: 8rem;
+  height: 1rem;
   margin-bottom: 0.5rem;
+}
+.branch-view__skeleton-value {
+  width: 100%;
+  height: 1.5rem;
 }

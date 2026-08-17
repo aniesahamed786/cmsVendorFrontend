@@ -54,9 +54,9 @@
     <div class="overview-kpi-grid">
       @for (i of [1,2,3,4]; track i) {
       <article class="overview-kpi-card">
-        <p-skeleton shape="circle" size="2.75rem"></p-skeleton>
-        <p-skeleton width="7rem" height="1.9rem" styleClass="branches-page__skel-mt"></p-skeleton>
-        <p-skeleton width="5rem" height="0.9rem" styleClass="branches-page__skel-mt-sm"></p-skeleton>
+        <span class="app-skeleton app-skeleton--circle branches-page__skeleton-kpi-icon"></span>
+        <span class="app-skeleton branches-page__skeleton-kpi-value"></span>
+        <span class="app-skeleton branches-page__skeleton-kpi-label"></span>
       </article>
       }
     </div>

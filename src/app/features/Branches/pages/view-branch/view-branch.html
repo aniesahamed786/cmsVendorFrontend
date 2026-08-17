@@ -109,14 +109,14 @@
 } @else {
 <div class="branch-view__skeleton">
   <div class="branch-view__skeleton-topbar">
-    <p-skeleton width="6rem" height="2.25rem" borderRadius="0"></p-skeleton>
-    <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
+    <span class="app-skeleton branch-view__skeleton-back"></span>
+    <span class="app-skeleton branch-view__skeleton-action"></span>
   </div>
   <div class="branch-view__skeleton-card">
     @for (field of [1,2,3,4,5,6]; track field) {
     <div>
-      <p-skeleton width="8rem" height="1rem" class="branch-view__mb-2"></p-skeleton>
-      <p-skeleton width="100%" height="1.5rem" borderRadius="0"></p-skeleton>
+      <span class="app-skeleton branch-view__skeleton-label"></span>
+      <span class="app-skeleton branch-view__skeleton-value"></span>
     </div>
     }
   </div>

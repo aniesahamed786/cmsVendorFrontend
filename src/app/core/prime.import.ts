@@ -50,7 +50,6 @@ import { DrawerModule } from 'primeng/drawer';
 import { ToastModule } from 'primeng/toast';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
-import { SkeletonModule } from 'primeng/skeleton';
 import { StyleClassModule } from 'primeng/styleclass';
 import { RippleModule } from 'primeng/ripple';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -145,7 +144,6 @@ export const PrimeUIModules = [
   MenuModule,
   PanelMenuModule,
   TabsModule,
-  SkeletonModule,
   ToastModule,
   StyleClassModule,
   RippleModule,

@@ -625,6 +625,23 @@ html body [data-pc-name="toggleswitch"],
   }
 }
 
+/* The block still reserves its space — only the pulse stops. */
+@media (prefers-reduced-motion: reduce) {
+  .app-skeleton {
+    animation: none;
+  }
+}
+
+/* Missing or broken <img>, applied by ImgFallbackDirective. The box is kept at
+   whatever size the layout gave it; only the pixels change. The glyph is a mask
+   rather than a src so its colour comes from --app-border like every skeleton —
+   a custom property can't reach inside an SVG loaded through src. */
+.app-img-fallback {
+  background-color: var(--app-border);
+  -webkit-mask: url('/assets/svg/shared/image-placeholder.svg') center / 40% no-repeat;
+  mask: url('/assets/svg/shared/image-placeholder.svg') center / 40% no-repeat;
+}
+
 /* ---------------------------------------------------------------------------
  * Upload dropzone
  *

@@ -1,0 +1,10 @@
+<!-- Used as a CSS mask by .app-img-fallback, so only the alpha matters — the
+     colour comes from --app-border and flips with the mode. Shape mirrors the
+     `pi pi-image` glyph the app already uses for missing images. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000"
+     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="4" width="19" height="16" rx="2" />
+  <circle cx="8.5" cy="9.5" r="1.7" />
+  <path d="M3 17.5l4.6-4.6a2 2 0 0 1 2.8 0L14.5 17.5" />
+  <path d="M13.6 15.4l1.9-1.9a2 2 0 0 1 2.8 0L21 16.6" />
+</svg>

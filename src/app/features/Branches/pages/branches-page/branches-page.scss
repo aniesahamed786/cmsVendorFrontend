@@ -41,15 +41,25 @@
     color: var(--app-primary);
   }
 
-  &__skel-mt {
+  // ---- Skeletons (.app-skeleton owns fill + pulse; these own size only) ----
+  // KPI cards: the card itself is real, so only the icon/value/label boxes stand in.
+  &__skeleton-kpi-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  &__skeleton-kpi-value {
+    width: 7rem;
+    height: 1.9rem;
     margin-top: 1rem;
   }
 
-  &__skel-mt-sm {
+  &__skeleton-kpi-label {
+    width: 5rem;
+    height: 0.9rem;
     margin-top: 0.5rem;
   }
 
-  // ---- Skeletons (.app-skeleton owns fill + pulse; these own size only) ----
   // Top performers: the blocks sit inside a real __performer-row, so the
   // border, padding and gap all come from the loaded layout — nothing shifts.
   &__skeleton-avatar {

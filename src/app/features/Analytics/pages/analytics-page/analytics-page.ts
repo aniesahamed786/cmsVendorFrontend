@@ -19,6 +19,7 @@ import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ThemeService } from '../../../../shared/services/theme.service';
+import { createCountUp } from '../../../../shared/animation/count-up';
 
 @Component({
   selector: 'app-analytics-page',
@@ -44,12 +45,15 @@ export class AnalyticsPage implements OnInit {
 
   readonly loading = signal(true);
 
-  // Count-up KPI values (number_animation.md), keyed by stat id.
-  private readonly animated = signal<Record<string, number>>({});
-
   private readonly analytics = inject(VendorAnalyticsService);
   private readonly theme = inject(ThemeService);
   readonly i18n = inject(I18nService);
+
+  // Count-up KPI values (shared/animation/count-up.ts), keyed by stat id.
+  // Declared after `i18n` — field initializers run in order.
+  private readonly countUp = createCountUp(this.i18n.numberLocale);
+  readonly animatedCount = this.countUp.animatedCount;
+  private readonly animateTo = this.countUp.animateTo;
 
   readonly redemptionChartData = computed<ChartData<'bar'>>(() => {
     this.i18n.loadSeq();
@@ -176,15 +180,10 @@ export class AnalyticsPage implements OnInit {
       });
   }
 
-  // ---- Count-up KPI stats (number_animation.md) ----------------------------
+  // ---- Count-up KPI stats (shared/animation/count-up.ts) -------------------
   // Cards render at 0 and ease to their value once the overview load resolves — the
   // sanctioned loading affordance for plain stat cards. The data-shaped cards
   // below skeleton instead; never both on one card.
-
-  /** Animated, formatted value for a KPI key (0 until startCountUp fires). */
-  animatedCount(key: string): string {
-    return (this.animated()[key] ?? 0).toLocaleString(this.i18n.numberLocale);
-  }
 
   private startCountUp(): void {
     this.animateTo('locations', this.locationCount);
@@ -193,24 +192,6 @@ export class AnalyticsPage implements OnInit {
     this.animateTo('draftOffers', this.draftOfferCount);
     this.animateTo('pendingRequests', this.pendingRequestCount);
     this.animateTo('totalOfferViews', this.totalOfferViewEvents);
-  }
-
-  /** easeOutCubic count-up from the current value to target. */
-  private animateTo(key: string, target: number, duration = 900): void {
-    // Accessibility: honour reduced motion by landing on the value directly.
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      this.animated.update((m) => ({ ...m, [key]: target }));
-      return;
-    }
-    const from = this.animated()[key] ?? 0;
-    const start = performance.now();
-    const step = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      this.animated.update((m) => ({ ...m, [key]: Math.round(from + (target - from) * eased) }));
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
   }
 
   get totalOfferViewEvents(): number {

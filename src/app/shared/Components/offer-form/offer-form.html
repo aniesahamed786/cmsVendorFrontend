@@ -555,7 +555,7 @@
                branch) must not swap the control out, or an open dropdown is destroyed
                mid-selection and looks like it closed by itself. -->
           } @else if (locationsLoading() && !vendorLocations().length) {
-          <p-skeleton width="100%" height="2.5rem"></p-skeleton>
+          <span class="app-skeleton offer-form__skeleton-locations"></span>
           } @else {
           <!-- appendTo="body" keeps the overlay outside this @if block, so re-rendering the
                block can never tear down the open panel. -->
@@ -1245,12 +1245,12 @@
   <!-- Top action bar skeleton -->
   <div class="offer-form__skeleton-topbar">
     <div class="offer-form__row offer-form__row--gap3">
-      <p-skeleton shape="circle" size="1.5rem"></p-skeleton>
-      <p-skeleton width="5rem" height="1rem"></p-skeleton>
+      <span class="app-skeleton app-skeleton--circle offer-form__skeleton-icon"></span>
+      <span class="app-skeleton offer-form__skeleton-back"></span>
     </div>
     <div class="offer-form__row offer-form__row--gap2">
-      <p-skeleton width="8rem" height="2.25rem" borderRadius="0"></p-skeleton>
-      <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
+      <span class="app-skeleton offer-form__skeleton-action"></span>
+      <span class="app-skeleton offer-form__skeleton-action offer-form__skeleton-action--sm"></span>
     </div>
   </div>
 
@@ -1258,25 +1258,25 @@
   <div class="offer-form__skeleton-card">
     <div class="offer-form__grid offer-form__grid--mt-0">
       <div class="offer-form__col-2">
-        <p-skeleton width="10rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
-        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+        <span class="app-skeleton offer-form__skeleton-label offer-form__skeleton-label--lg"></span>
+        <span class="app-skeleton offer-form__skeleton-field"></span>
       </div>
 
       @for (field of [1,2,3,4]; track field) {
       <div>
-        <p-skeleton width="8rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
-        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+        <span class="app-skeleton offer-form__skeleton-label"></span>
+        <span class="app-skeleton offer-form__skeleton-field"></span>
       </div>
       }
 
       <div class="offer-form__col-2">
-        <p-skeleton width="9rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
-        <p-skeleton width="100%" height="6rem" borderRadius="0"></p-skeleton>
+        <span class="app-skeleton offer-form__skeleton-label offer-form__skeleton-label--md"></span>
+        <span class="app-skeleton offer-form__skeleton-field offer-form__skeleton-field--tall"></span>
       </div>
 
       <div class="offer-form__col-2">
-        <p-skeleton width="9rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
-        <p-skeleton width="100%" height="6rem" borderRadius="0"></p-skeleton>
+        <span class="app-skeleton offer-form__skeleton-label offer-form__skeleton-label--md"></span>
+        <span class="app-skeleton offer-form__skeleton-field offer-form__skeleton-field--tall"></span>
       </div>
     </div>
   </div>
@@ -1284,30 +1284,30 @@
   <!-- Secondary sections -->
   <div class="offer-form__skeleton-card offer-form__skeleton-card--gap5">
     <div class="offer-form__row offer-form__skeleton-between">
-      <p-skeleton width="12rem" height="1.5rem"></p-skeleton>
-      <p-skeleton width="7rem" height="2.25rem" borderRadius="0"></p-skeleton>
+      <span class="app-skeleton offer-form__skeleton-heading"></span>
+      <span class="app-skeleton offer-form__skeleton-action offer-form__skeleton-action--sm"></span>
     </div>
     @for (row of [1,2]; track row) {
     <div class="offer-form__grid offer-form__grid--mt-0 offer-form__skeleton-subcard">
       <div>
-        <p-skeleton width="7rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
-        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+        <span class="app-skeleton offer-form__skeleton-label offer-form__skeleton-label--sm"></span>
+        <span class="app-skeleton offer-form__skeleton-field"></span>
       </div>
       <div>
-        <p-skeleton width="7rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
-        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+        <span class="app-skeleton offer-form__skeleton-label offer-form__skeleton-label--sm"></span>
+        <span class="app-skeleton offer-form__skeleton-field"></span>
       </div>
     </div>
     }
   </div>
 
   <div class="offer-form__skeleton-card offer-form__skeleton-card--gap4">
-    <p-skeleton width="14rem" height="1.5rem"></p-skeleton>
+    <span class="app-skeleton offer-form__skeleton-heading offer-form__skeleton-heading--wide"></span>
     <div class="offer-form__grid offer-form__grid--cols3 offer-form__grid--mt-0">
       @for (contact of [1,2,3]; track contact) {
       <div>
-        <p-skeleton width="7rem" height="1rem" class="offer-form__mb-2"></p-skeleton>
-        <p-skeleton width="100%" height="2.75rem" borderRadius="0"></p-skeleton>
+        <span class="app-skeleton offer-form__skeleton-label offer-form__skeleton-label--sm"></span>
+        <span class="app-skeleton offer-form__skeleton-field"></span>
       </div>
       }
     </div>

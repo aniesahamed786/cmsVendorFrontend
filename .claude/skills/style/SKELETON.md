@@ -12,6 +12,7 @@ choice (see *Which one* below).
 | Layout would jump: lists, tables, cards, forms, charts, avatars, hero blocks | skeleton (this doc) |
 | Action buttons that only exist once data loads | skeleton, one block per button |
 | A whole page | skeleton **mirroring the real layout**, never a spinner |
+| A button you just clicked, while its action is in flight | spinner **inside that button** — the one sanctioned spinner (`shared/Components/button/button.html`) |
 
 Never both on the same element **at the same time**. They can run in sequence, and on a stat
 card whose whole contents are gated behind a fetch they should: skeleton while the data is
@@ -242,7 +243,7 @@ signal are all real work that the service will reuse — only the timer and the 
 
 ## Checklist
 
-1. Loading state is a skeleton (layout-dependent) or count-up (a number), not both, not a spinner?
+1. Loading state is a skeleton (layout-dependent) or count-up (a number), not both, not a spinner — unless it's the in-button spinner for a click you just made?
 1. Skeleton covers **only what's loading** — static labels, headers, toolbars and filters still render?
 1. Blocks stand in for individual fields, not whole rows or whole cards?
 2. Uses `.app-skeleton`; local `@keyframes pulse` copies deleted?

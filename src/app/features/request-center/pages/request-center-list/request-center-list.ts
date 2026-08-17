@@ -11,6 +11,7 @@ import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import { RequestRow, RequestStats, RequestStatus } from '../../models/request.model';
 import { toRequestRow } from '../../models/request.mapper';
+import { createCountUp } from '../../../../shared/animation/count-up';
 
 type TabKey = 'all' | 'completed' | 'incomplete';
 
@@ -34,12 +35,10 @@ export class RequestCenterList {
   readonly tabCounts = this.requestCenterService.tabCounts;
   private readonly allRows = this.requestCenterService.getRows();
 
-  // ---- Count-up stats (number_animation.md pattern, same as Offers) --------
-  private readonly animated = signal<Record<string, number>>({});
-
-  animatedCount(key: string): string {
-    return (this.animated()[key] ?? 0).toLocaleString('en-US');
-  }
+  // ---- Count-up stats (shared/animation/count-up.ts) -----------------------
+  private readonly countUp = createCountUp();
+  readonly animatedCount = this.countUp.animatedCount;
+  private readonly animateTo = this.countUp.animateTo;
 
   private revealStats(): void {
     const s = this.stats();
@@ -47,22 +46,6 @@ export class RequestCenterList {
     this.animateTo('pendingStore', s.pendingStore);
     this.animateTo('pendingProfile', s.pendingProfile);
     this.animateTo('rejected', s.rejected);
-  }
-
-  private animateTo(key: string, target: number, duration = 900): void {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      this.animated.update((m) => ({ ...m, [key]: target }));
-      return;
-    }
-    const from = this.animated()[key] ?? 0;
-    const start = performance.now();
-    const step = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      this.animated.update((m) => ({ ...m, [key]: Math.round(from + (target - from) * eased) }));
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
   }
 
   // The table skeletons while the list request is in flight (same pattern as Offers).
