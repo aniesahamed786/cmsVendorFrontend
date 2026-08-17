@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { resolveStoredImageUrl } from '../../../../shared/utils/resolve-stored-image-url';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { environment } from '../../../../../environments/environment';
+import { mapOfferModeToFormMode } from '../../models/createOffer';
 
 @Component({
   selector: 'app-preview-offer-details',
@@ -74,21 +75,19 @@ export class PreviewOfferDetails implements OnChanges {
   }
 
   getOfferMode(): string {
-    const mode = (this.offer?.offerMode || 'in store').toLowerCase();
+    const mode = mapOfferModeToFormMode(this.offer?.offerMode);
     if (this.language === 'ar') {
-      if (mode === 'online') return 'أونلاين';
-      if (mode === 'both') return 'في المتجر وأونلاين';
+      if (mode === 'Digital') return 'أونلاين';
+      if (mode === 'In-Store & Digital') return 'في المتجر وأونلاين';
       return 'في المتجر';
     }
-    if (mode === 'online') return 'Digital';
-    if (mode === 'both') return 'In-Store & Digital';
-    return 'In-Store';
+    return mode;
   }
 
   getOfferModeIcon(): string {
-    const mode = (this.offer?.offerMode || 'in store').toLowerCase();
-    if (mode === 'online') return 'pi-globe';
-    if (mode === 'both') return 'pi-shop';
+    const mode = mapOfferModeToFormMode(this.offer?.offerMode);
+    if (mode === 'Digital') return 'pi-globe';
+    if (mode === 'In-Store & Digital') return 'pi-shop';
     return 'pi-home';
   }
 

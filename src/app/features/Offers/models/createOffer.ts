@@ -2,18 +2,20 @@
 export type OfferFormMode = 'In-Store' | 'Digital' | 'In-Store & Digital';
 
 /** API / backend `offerMode` values. */
-export type OfferModePayload = 'in store' | 'online' | 'both';
+export type OfferModePayload = 'in-store' | 'digital' | 'in-store, digital';
 
 export function mapFormModeToOfferMode(mode: OfferFormMode | null | undefined): OfferModePayload {
-    if (mode === 'Digital') return 'online';
-    if (mode === 'In-Store & Digital') return 'both';
-    return 'in store';
+    if (mode === 'Digital') return 'digital';
+    if (mode === 'In-Store & Digital') return 'in-store, digital';
+    return 'in-store';
 }
 
 export function mapOfferModeToFormMode(offerMode: string | null | undefined): OfferFormMode {
+    // ponytail: tolerates the legacy 'in store' / 'online' / 'both' values too, drop once the backend is migrated.
     const m = String(offerMode ?? '').trim().toLowerCase();
-    if (m === 'online' || m === 'digital') return 'Digital';
     if (m === 'both') return 'In-Store & Digital';
+    const digital = m.includes('digital') || m.includes('online');
+    if (digital) return m.includes('store') ? 'In-Store & Digital' : 'Digital';
     return 'In-Store';
 }
 
