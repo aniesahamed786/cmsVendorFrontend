@@ -36,8 +36,8 @@
     </div>
 
     <!-- Lazy: filtering, sorting and paging all happen server-side. -->
-    <p-table [value]="rows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
-      [totalRecords]="totalRecords()" [loading]="loading()" [paginator]="true" [rows]="pageSize()"
+    <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+      [totalRecords]="totalRecords()" [paginator]="true" [rows]="pageSize()"
       [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
       sortField="timestamp" [sortOrder]="-1"
       styleClass="recent-activities__table">
@@ -66,6 +66,19 @@
           </td>
           <td>{{ row.referenceId }}</td>
           <td><span [class]="statusClass(row.status)">{{ row.statusLabel }}</span></td>
+        </tr>
+      </ng-template>
+
+      <!-- PrimeNG renders this for every falsy entry in [value] — the placeholder rows
+           tableRows() feeds while loading(), including on every filter change. -->
+      <ng-template pTemplate="loadingbody">
+        <tr class="recent-activities__row--skeleton">
+          <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--date"></span></td>
+          <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--wide"></span></td>
+          <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--text"></span></td>
+          <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--wide"></span></td>
+          <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--id"></span></td>
+          <td><span class="app-skeleton app-skeleton--pill recent-activities__skeleton-cell recent-activities__skeleton-cell--pill"></span></td>
         </tr>
       </ng-template>
 

@@ -57,6 +57,11 @@ export class RecentActivities implements OnInit {
   readonly pageSize = signal(10);
   readonly loadFailed = signal(false);
 
+  /** While loading, feed the table falsy rows so PrimeNG renders the skeleton body. */
+  readonly tableRows = computed(() =>
+    this.loading() ? new Array(this.pageSize()).fill(null) : this.rows(),
+  );
+
   private readonly searchInput = new Subject<string>();
 
   private readonly window = computed<[Date | null, Date | null]>(() => {

@@ -127,6 +127,18 @@
       color: var(--app-muted);
     }
   }
+
+  // ---- Table skeleton cells (.app-skeleton owns fill + pulse; these own size) ----
+  &__skeleton-cell {
+    display: inline-block;
+    height: 1rem;
+
+    &--date { width: 9rem; }
+    &--wide { width: 8rem; }
+    &--text { width: 6rem; }
+    &--id { width: 6.5rem; }
+    &--pill { width: 4.5rem; }
+  }
 }
 
 // ---- Table theming (square corners, tokens) ----
@@ -190,6 +202,16 @@
 
   .p-datatable-tbody>tr:hover .recent-activities__row-title {
     color: var(--app-primary);
+  }
+
+  // a placeholder row isn't interactive — no lift, bar or tint
+  .p-datatable-tbody>tr.recent-activities__row--skeleton:hover {
+    transform: none;
+    box-shadow: none;
+
+    >td {
+      background: transparent;
+    }
   }
 
   // sort arrows track the muted token, brand color when active
