@@ -39,6 +39,7 @@
     <p-table [value]="rows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
       [totalRecords]="totalRecords()" [loading]="loading()" [paginator]="true" [rows]="pageSize()"
       [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
+      sortField="timestamp" [sortOrder]="-1"
       styleClass="recent-activities__table">
       <ng-template pTemplate="header">
         <tr>

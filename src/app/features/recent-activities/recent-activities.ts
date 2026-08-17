@@ -80,8 +80,7 @@ export class RecentActivities implements OnInit {
         this.search.set(value);
         this.reload();
       });
-
-    this.load(1);
+    // ponytail: no initial load here — p-table [lazy] fires onLazyLoad on init
   }
 
   onEntityTypeChange(value: ApiRequestEntityType | null): void {
