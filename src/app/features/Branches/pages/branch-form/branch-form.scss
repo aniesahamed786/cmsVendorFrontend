@@ -95,10 +95,11 @@
   }
 }
 
-.branch-form__field {
+.branch-form__field,
+.branch-form__field-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--app-text);
