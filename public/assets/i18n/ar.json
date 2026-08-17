@@ -1048,7 +1048,6 @@
     },
     "label": {
       "transactionType": "نوع العملية",
-      "userId": "معرّف المستخدم",
       "transactionDate": "تاريخ العملية",
       "totalInvoiceAmount": "إجمالي مبلغ الفاتورة (شامل ضريبة القيمة المضافة)",
       "totalAmountPaid": "إجمالي المبلغ المدفوع",
@@ -1057,7 +1056,11 @@
       "offer": "العرض",
       "branch": "الفرع",
       "totalAmount": "المبلغ الإجمالي",
-      "paidAmount": "المبلغ المدفوع"
+      "paidAmount": "المبلغ المدفوع",
+      "membershipId": "رقم العضوية",
+      "mobileNumber": "رقم الجوال",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية"
     },
     "placeholder": {
       "offer": "اختر العرض...",
@@ -1065,21 +1068,81 @@
       "amount": "مثال: 250 ريال",
       "date": "مثال: 2024-01-15",
       "currency": "مثال: ر.س",
-      "discountAmount": "مثال: 50.00"
+      "discountAmount": "مثال: 50.00",
+      "membershipId": "مثال: 1111111111",
+      "mobileNumber": "مثال: 0555555555",
+      "branchNeedsOffer": "اختر العرض أولاً..."
     },
     "submit": "استرداد العرض",
     "list": {
       "title": "قائمة الاستردادات"
     },
     "column": {
-      "userId": "معرّف المستخدم",
+      "membershipId": "رقم العضوية",
       "offer": "العرض",
       "currentPrice": "السعر الحالي",
       "discountPrice": "السعر بعد الخصم",
       "amountSaved": "المبلغ الموفَّر"
     },
     "currency": "ر.س",
-    "empty": "لا توجد عمليات استبدال."
+    "empty": "لا توجد عمليات استبدال.",
+    "toast": {
+      "successSummary": "تم تسجيل الاسترداد",
+      "successDetail": "تم تسجيل عملية الاسترداد بنجاح.",
+      "submitFailed": "تعذّر تسجيل الاسترداد",
+      "offersFailed": "تعذّر تحميل العروض",
+      "branchesFailed": "تعذّر تحميل الفروع",
+      "listFailed": "تعذّر تحميل قائمة الاستردادات",
+      "invalidSummary": "معلومات ناقصة",
+      "invalidDetail": "الرجاء تعبئة جميع الحقول المطلوبة قبل الإرسال.",
+      "genericErrorDetail": "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
+      "templateFailed": "تعذّر تنزيل النموذج",
+      "uploadFailed": "تعذّر قراءة الملف",
+      "uploadInvalidSummary": "الملف يحتوي على أخطاء",
+      "uploadInvalidDetail": "لم يتم رفع أي بيانات. صحّح الصفوف المذكورة ثم أعد المحاولة.",
+      "uploadSuccessSummary": "تم رفع الاستردادات",
+      "uploadSuccessDetail": "تم رفع {{count}} عملية استرداد بنجاح.",
+      "uploadStaleSummary": "النموذج قديم",
+      "uploadStaleDetail": "تغيّرت بعض العروض أو الفروع في هذا الملف. لم يتم رفع أي بيانات — الرجاء تنزيل نموذج جديد.",
+      "dateRangeInvalidDetail": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
+    },
+    "emptyOffers": "لا توجد عروض نشطة في المتجر.",
+    "emptyBranches": "لا توجد فروع متاحة لهذا العرض.",
+    "downloadExcel": "تنزيل ملف Excel",
+    "template": {
+      "fileName": "نموذج-الاسترداد",
+      "sheetName": "الاستردادات",
+      "listsSheetName": "القوائم",
+      "reference": "المرجع",
+      "noBranches": "لا توجد فروع متاحة",
+      "invalidTitle": "قيمة غير صالحة",
+      "invalidMessage": "الرجاء اختيار قيمة من القائمة المنسدلة."
+    },
+    "upload": {
+      "errorsTitle": "تعذّر رفع هذا الملف",
+      "dismiss": "إغلاق",
+      "row": "الصف",
+      "missingSheet": "لا تحتوي ورقة العمل على بيانات قابلة للقراءة.",
+      "emptyFile": "لا يحتوي الملف على أي صفوف استرداد.",
+      "unknownOffer": "العرض \"{{value}}\" غير موجود ضمن عروضك النشطة.",
+      "unknownBranch": "الفرع \"{{value}}\" غير صالح للعرض المحدد.",
+      "required": "{{field}} مطلوب.",
+      "notANumber": "يجب أن يكون {{field}} رقماً.",
+      "invalidDate": "تاريخ العملية غير صالح.",
+      "invalidMembershipId": "يجب أن يكون رقم العضوية رقماً موجباً.",
+      "negativeAmount": "لا يمكن أن يكون {{field}} بالسالب.",
+      "invalidTransactionType": "\"{{value}}\" ليس نوع عملية صالحاً. استخدم SINGLE أو COLLECTIVE.",
+      "offerNoLongerActive": "العرض \"{{value}}\" لم يعد نشطاً. الرجاء تنزيل نموذج جديد.",
+      "branchNoLongerAvailable": "الفرع \"{{value}}\" لم يعد متاحاً لهذا العرض. الرجاء تنزيل نموذج جديد.",
+      "startDateRequired": "تاريخ البداية مطلوب للصفوف الجماعية.",
+      "endDateRequired": "تاريخ النهاية مطلوب للصفوف الجماعية.",
+      "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية.",
+      "transactionDateNotAllowed": "تاريخ العملية لا ينطبق على الصفوف الجماعية — استخدم تاريخ البداية/النهاية.",
+      "datesNotAllowed": "تاريخ البداية/النهاية ينطبق على الصفوف الجماعية فقط — استخدم تاريخ العملية."
+    },
+    "error": {
+      "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
+    }
   },
   "messaging": {
     "search": "البحث في التذاكر...",

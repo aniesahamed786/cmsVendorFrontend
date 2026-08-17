@@ -94,7 +94,12 @@ export class RequestCenterList {
   }
 
   // ---- Tabs / filters / sort ------------------------------------------------
-  readonly activeTab = signal<TabKey>('all');
+  readonly activeTab = signal<TabKey>('incomplete');
+
+  setTab(tab: TabKey): void {
+    this.activeTab.set(tab);
+    this.statusFilter.set(null);
+  }
 
   private options<T>(entries: [key: string, value: T][]) {
     return computed(() => {
@@ -103,16 +108,36 @@ export class RequestCenterList {
     });
   }
 
-  readonly statusOptions = this.options<RequestStatus | null>([
-    ['requestCenter.filter.allStatuses', null],
-    ['requestCenter.value.draft', 'DRAFT'],
-    ['requestCenter.value.submitted', 'SUBMITTED'],
-    ['requestCenter.value.returned', 'RETURNED'],
-    ['requestCenter.value.approved', 'APPROVED'],
-    ['requestCenter.value.rejected', 'REJECTED'],
-    ['requestCenter.value.recalled', 'RECALLED'],
-    ['requestCenter.value.cancelled', 'CANCELLED'],
-  ]);
+  readonly statusOptions = computed(() => {
+    this.i18n.loadSeq();
+    const tab = this.activeTab();
+    const entries: [key: string, value: RequestStatus | null][] = [
+      ['requestCenter.filter.allStatuses', null],
+    ];
+
+    if (tab === 'incomplete') {
+      entries.push(
+        ['requestCenter.value.submitted', 'SUBMITTED'],
+        ['requestCenter.value.returned', 'RETURNED'],
+        ['requestCenter.value.draft', 'DRAFT'],
+      );
+    } else if (tab === 'completed') {
+      entries.push(
+        ['requestCenter.value.approved', 'APPROVED'],
+        ['requestCenter.value.rejected', 'REJECTED'],
+      );
+    } else {
+      entries.push(
+        ['requestCenter.value.submitted', 'SUBMITTED'],
+        ['requestCenter.value.returned', 'RETURNED'],
+        ['requestCenter.value.draft', 'DRAFT'],
+        ['requestCenter.value.approved', 'APPROVED'],
+        ['requestCenter.value.rejected', 'REJECTED'],
+      );
+    }
+
+    return entries.map(([key, value]) => ({ label: this.i18n.t(key), value }));
+  });
 
   readonly sortOptions = this.options<'newest' | 'oldest'>([
     ['requestCenter.sort.newest', 'newest'],

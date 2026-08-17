@@ -1,18 +1,46 @@
 <div class="redemption-page">
-
-  <!-- Header -->
   <div class="redemption-header">
     <h1 class="redemption-page__title">{{ 'redemption.title' | translate }}</h1>
-    <app-button variant="primary" icon="pi pi-upload">{{ 'redemption.uploadExcel' | translate }}</app-button>
+    <div class="redemption-header__actions">
+      <app-button variant="outline" icon="pi pi-download" [loading]="downloadingTemplate()"
+        (click)="downloadTemplate()">{{ 'redemption.downloadExcel' | translate }}</app-button>
+      <app-button variant="primary" icon="pi pi-upload" [loading]="uploading()" (click)="triggerUpload(excelInput)">{{
+        'redemption.uploadExcel' | translate }}</app-button>
+      <input #excelInput type="file" class="redemption-header__file-input"
+        accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        (change)="onFileSelected($event)" />
+    </div>
   </div>
 
-  <!-- Form Card -->
+  @if (uploadErrors().length) {
+  <div class="redemption-upload-errors">
+    <div class="redemption-upload-errors__header">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ 'redemption.upload.errorsTitle' | translate }}</span>
+      <button type="button" class="redemption-upload-errors__close" (click)="clearUploadErrors()"
+        [attr.aria-label]="'redemption.upload.dismiss' | translate">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+    <ul class="redemption-upload-errors__list">
+      @for (err of uploadErrors(); track $index) {
+      <li>
+        @if (err.row) {
+        <strong>{{ 'redemption.upload.row' | translate }} {{ err.row }}:</strong>
+        }
+        {{ err.message }}
+      </li>
+      }
+    </ul>
+  </div>
+  }
+
   <p-card styleClass="redemption-card redemption-card--spaced">
     <div class="redemption-card__header">
       <span>{{ 'redemption.section.basicInfo' | translate }}</span>
     </div>
 
-    <form class="redemption-form" [formGroup]="redemptionForm">
+    <form class="redemption-form" [formGroup]="redemptionForm" (ngSubmit)="submit()">
       <div class="redemption-form__grid">
         <div class="redemption-form__field-wrapper redemption-form__field-wrapper--full">
           <label>{{ 'redemption.label.transactionType' | translate }} <span class="required-star">*</span></label>
@@ -21,54 +49,81 @@
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
 
-        @if (!isCollectiveTransaction) {
-          <!-- User ID -->
-          <div class="redemption-form__field-wrapper">
-            <label>{{ 'redemption.label.userId' | translate }} <span class="required-star">*</span></label>
-            <input type="text" pInputText formControlName="userId" placeholder="CMSV67363"
-              class="redemption-form__input--full" />
-          </div>
-        }
+        <div class="redemption-form__field-wrapper">
+          <label>
+            {{ 'redemption.label.membershipId' | translate }}
+            @if (!isCollectiveTransaction) {<span class="required-star">*</span>}
+          </label>
+          <input type="text" inputmode="numeric" pInputText formControlName="membershipId"
+            [placeholder]="'redemption.placeholder.membershipId' | translate" class="redemption-form__input--full" />
+        </div>
 
-        <div class="redemption-form__field-wrapper" [class.redemption-form__field-wrapper--full]="isCollectiveTransaction">
+        <!-- Mobile Number — optional in both modes -->
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.mobileNumber' | translate }}</label>
+          <input type="tel" pInputText formControlName="mobileNumber"
+            [placeholder]="'redemption.placeholder.mobileNumber' | translate" class="redemption-form__input--full" />
+        </div>
+
+        @if (!isCollectiveTransaction) {
+        <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.transactionDate' | translate }} <span class="required-star">*</span></label>
           <p-datepicker formControlName="transactionDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
         </div>
+        } @else {
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.startDate' | translate }} <span class="required-star">*</span></label>
+          <p-datepicker formControlName="startDate" iconDisplay="input" showIcon="true"
+            styleClass="redemption-form__field--full redemption-form__field"
+            panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
+            [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
+        </div>
 
-        @if (!isCollectiveTransaction) {
-          <!-- Offer -->
-          <div class="redemption-form__field-wrapper">
-            <label>{{ 'redemption.label.offer' | translate }} <span class="required-star">*</span></label>
-            <p-select formControlName="offer" [options]="offers" optionLabel="label" optionValue="value"
-              [placeholder]="'redemption.placeholder.offer' | translate"
-              styleClass="redemption-form__field--full redemption-form__field"
-              panelStyleClass="redemption-form__overlay-panel"></p-select>
-          </div>
-
-          <!-- Branch -->
-          <div class="redemption-form__field-wrapper">
-            <label>{{ 'redemption.label.branch' | translate }}</label>
-            <p-select formControlName="branch" [options]="branches" optionLabel="label" optionValue="value"
-              [placeholder]="'redemption.placeholder.branch' | translate"
-              styleClass="redemption-form__field--full redemption-form__field"
-              panelStyleClass="redemption-form__overlay-panel"></p-select>
-          </div>
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.endDate' | translate }} <span class="required-star">*</span></label>
+          <p-datepicker formControlName="endDate" iconDisplay="input" showIcon="true"
+            styleClass="redemption-form__field--full redemption-form__field"
+            panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
+            [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
+          @if (isDateRangeInvalid) {
+          <small class="redemption-form__error">{{ 'redemption.error.endBeforeStart' | translate }}</small>
+          }
+        </div>
         }
 
-        <!-- Total Invoice Amount -->
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.offer' | translate }} <span class="required-star">*</span></label>
+          <p-select formControlName="offer" [options]="offerOptions()" optionLabel="label" optionValue="value"
+            [loading]="offersLoading()" [filter]="true" filterBy="label"
+            [placeholder]="'redemption.placeholder.offer' | translate"
+            [emptyMessage]="'redemption.emptyOffers' | translate"
+            styleClass="redemption-form__field--full redemption-form__field"
+            panelStyleClass="redemption-form__overlay-panel"></p-select>
+        </div>
+
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.branch' | translate }}</label>
+          <p-select formControlName="branch" [options]="branchOptions()" optionLabel="label" optionValue="value"
+            [loading]="branchesLoading()" [showClear]="true" [placeholder]="(redemptionForm.get('offer')?.value
+                ? 'redemption.placeholder.branch'
+                : 'redemption.placeholder.branchNeedsOffer') | translate"
+            [emptyMessage]="'redemption.emptyBranches' | translate"
+            styleClass="redemption-form__field--full redemption-form__field"
+            panelStyleClass="redemption-form__overlay-panel"></p-select>
+        </div>
+
         <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.totalInvoiceAmount' | translate }} <span class="required-star">*</span></label>
-          <input type="text" pInputText formControlName="totalInvoiceAmount"
+          <input type="text" inputmode="decimal" pInputText formControlName="totalInvoiceAmount"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
         </div>
 
-        <!-- Total Amount Paid -->
         <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.totalAmountPaid' | translate }} <span class="required-star">*</span></label>
-          <input type="text" pInputText formControlName="totalAmountPaid"
+          <input type="text" inputmode="decimal" pInputText formControlName="totalAmountPaid"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
         </div>
 
@@ -80,52 +135,42 @@
 
         <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.discountAmount' | translate }} <span class="required-star">*</span></label>
-          <input type="text" pInputText formControlName="discountAmount"
+          <input type="text" inputmode="decimal" pInputText formControlName="discountAmount"
             [placeholder]="'redemption.placeholder.discountAmount' | translate" class="redemption-form__input--full" />
         </div>
       </div>
 
       <div class="redemption-form__actions">
-        <app-button variant="primary" icon="pi pi-ticket" type="submit">{{ 'redemption.submit' | translate
-          }}</app-button>
+        <app-button variant="primary" icon="pi pi-ticket" type="submit" [loading]="submitting()"
+          [disabled]="!canSubmit">{{ 'redemption.submit' | translate }}</app-button>
       </div>
     </form>
   </p-card>
 
-  <!-- Table Section -->
   <section class="redemption-card">
     <div class="redemption-card__header redemption-card__header--table">
       <h2 class="redemption-card__title">{{ 'redemption.list.title' | translate }}</h2>
     </div>
 
-    <p-table [value]="redemptions" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+    <p-table [value]="redemptionRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
+      [loading]="listLoading()" [paginator]="true" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]"
       paginatorDropdownAppendTo="body" styleClass="redemption-table">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="userId" class="redemption-table__th--sortable">
-            {{ 'redemption.column.userId' | translate }} <p-sortIcon field="userId"></p-sortIcon>
-          </th>
-          <th pSortableColumn="offer" class="redemption-table__th--sortable">
-            {{ 'redemption.column.offer' | translate }} <p-sortIcon field="offer"></p-sortIcon>
-          </th>
-          <th pSortableColumn="currentPrice" class="redemption-table__th--sortable">
-            {{ 'redemption.column.currentPrice' | translate }}
-          </th>
-          <th pSortableColumn="discountPrice" class="redemption-table__th--sortable">
-            {{ 'redemption.column.discountPrice' | translate }}
-          </th>
-          <th pSortableColumn="amountSaved" class="redemption-table__th--sortable">
-            {{ 'redemption.column.amountSaved' | translate }}
-          </th>
+          <th>{{ 'redemption.column.membershipId' | translate }}</th>
+          <th>{{ 'redemption.column.offer' | translate }}</th>
+          <th>{{ 'redemption.column.currentPrice' | translate }}</th>
+          <th>{{ 'redemption.column.discountPrice' | translate }}</th>
+          <th>{{ 'redemption.column.amountSaved' | translate }}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-item>
         <tr>
-          <td>{{ item.userId }}</td>
+          <td>{{ item.membershipId }}</td>
           <td><span class="redemption-table__row-title">{{ item.offer }}</span></td>
-          <td>{{ 'redemption.currency' | translate }} {{ item.currentPrice }}</td>
-          <td>{{ 'redemption.currency' | translate }} {{ item.discountPrice }}</td>
-          <td>{{ 'redemption.currency' | translate }} {{ item.amountSaved }}</td>
+          <td>{{ item.currency }} {{ item.totalAmountPaid }}</td>
+          <td>{{ item.currency }} {{ item.discountAmount }}</td>
+          <td>{{ item.currency }} {{ item.amountSaved }}</td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
@@ -135,5 +180,4 @@
       </ng-template>
     </p-table>
   </section>
-
 </div>

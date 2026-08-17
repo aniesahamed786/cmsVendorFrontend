@@ -53,6 +53,29 @@
 
   /* No local __filter rule — styles.scss owns every .p-select / .p-datepicker. */
 
+  &__clear {
+    height: 2.75rem;
+    padding: 0 1rem;
+    background: transparent;
+    border: 1px solid var(--app-border);
+    color: var(--app-muted);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+
+    &:hover {
+      background: var(--app-primary-hover-soft);
+      border-color: var(--app-primary);
+      color: var(--app-primary);
+    }
+  }
+
+  &__remarks-icon {
+    margin-inline-start: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--app-muted);
+    cursor: help;
+  }
+
   &__empty {
     text-align: center;
     color: var(--app-muted);
@@ -78,7 +101,8 @@
       color: #16a34a;
     }
 
-    &--edited {
+    &--edited,
+    &--submitted {
       background: var(--app-primary-soft);
       color: var(--app-primary);
     }
@@ -89,6 +113,18 @@
     &--rejected {
       background: rgba(239, 68, 68, 0.16);
       color: #dc2626;
+    }
+
+    &--returned {
+      background: rgba(245, 158, 11, 0.16);
+      color: #d97706;
+    }
+
+    &--recalled,
+    &--cancelled,
+    &--draft {
+      background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+      color: var(--app-muted);
     }
   }
 }

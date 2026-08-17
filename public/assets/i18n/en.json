@@ -1048,14 +1048,17 @@
     },
     "label": {
       "transactionType": "Transaction Type",
-      "userId": "User ID",
       "transactionDate": "Transaction Date",
       "offer": "Offer",
       "branch": "Branch",
       "totalInvoiceAmount": "Total Invoice Amount (Including VAT)",
       "totalAmountPaid": "Total Amount Paid",
       "currency": "Currency",
-      "discountAmount": "Discount Amount"
+      "discountAmount": "Discount Amount",
+      "membershipId": "Membership ID",
+      "mobileNumber": "Mobile Number",
+      "startDate": "Start Date",
+      "endDate": "End Date"
     },
     "placeholder": {
       "offer": "Select Offer...",
@@ -1063,21 +1066,81 @@
       "amount": "e.g. SAR.250",
       "date": "e.g. 2024-01-15",
       "currency": "e.g. SAR",
-      "discountAmount": "e.g. 50.00"
+      "discountAmount": "e.g. 50.00",
+      "membershipId": "e.g. 1111111111",
+      "mobileNumber": "e.g. 0555555555",
+      "branchNeedsOffer": "Select an offer first..."
     },
     "submit": "Redeem Offer",
     "list": {
       "title": "Redemption List"
     },
     "column": {
-      "userId": "User ID",
+      "membershipId": "Membership ID",
       "offer": "Offer",
       "currentPrice": "Current Price",
       "discountPrice": "Discount Price",
       "amountSaved": "Amount Saved"
     },
     "currency": "SAR.",
-    "empty": "No redemptions found."
+    "empty": "No redemptions found.",
+    "toast": {
+      "successSummary": "Redemption recorded",
+      "successDetail": "The redemption was recorded successfully.",
+      "submitFailed": "Could not record redemption",
+      "offersFailed": "Could not load offers",
+      "branchesFailed": "Could not load branches",
+      "listFailed": "Could not load redemption list",
+      "invalidSummary": "Missing information",
+      "invalidDetail": "Please fill in all required fields before submitting.",
+      "genericErrorDetail": "Something went wrong. Please try again.",
+      "templateFailed": "Could not download template",
+      "uploadFailed": "Could not read the file",
+      "uploadInvalidSummary": "File has errors",
+      "uploadInvalidDetail": "Nothing was uploaded. Fix the listed rows and try again.",
+      "uploadSuccessSummary": "Redemptions uploaded",
+      "uploadSuccessDetail": "{{count}} redemption(s) were uploaded successfully.",
+      "uploadStaleSummary": "Template is out of date",
+      "uploadStaleDetail": "Some offers or branches in this file have changed. Nothing was uploaded — download a fresh template.",
+      "dateRangeInvalidDetail": "End date cannot be before the start date."
+    },
+    "emptyOffers": "No active in-store offers available.",
+    "emptyBranches": "No branches available for this offer.",
+    "downloadExcel": "Download Excel",
+    "template": {
+      "fileName": "redemption-template",
+      "sheetName": "Redemptions",
+      "listsSheetName": "Lists",
+      "reference": "Reference",
+      "noBranches": "No branches available",
+      "invalidTitle": "Invalid value",
+      "invalidMessage": "Please pick a value from the dropdown list."
+    },
+    "upload": {
+      "errorsTitle": "This file could not be uploaded",
+      "dismiss": "Dismiss",
+      "row": "Row",
+      "missingSheet": "The workbook has no readable sheet.",
+      "emptyFile": "The file contains no redemption rows.",
+      "unknownOffer": "Offer \"{{value}}\" was not found in your active offers.",
+      "unknownBranch": "Branch \"{{value}}\" is not valid for the selected offer.",
+      "required": "{{field}} is required.",
+      "notANumber": "{{field}} must be a number.",
+      "invalidDate": "Transaction Date is not a valid date.",
+      "invalidMembershipId": "Membership ID must be a positive number.",
+      "negativeAmount": "{{field}} cannot be negative.",
+      "invalidTransactionType": "\"{{value}}\" is not a valid transaction type. Use SINGLE or COLLECTIVE.",
+      "offerNoLongerActive": "Offer \"{{value}}\" is no longer active. Download a fresh template.",
+      "branchNoLongerAvailable": "Branch \"{{value}}\" is no longer available for this offer. Download a fresh template.",
+      "startDateRequired": "Start Date is required for collective rows.",
+      "endDateRequired": "End Date is required for collective rows.",
+      "endBeforeStart": "End Date cannot be before Start Date.",
+      "transactionDateNotAllowed": "Transaction Date does not apply to collective rows — use Start/End Date.",
+      "datesNotAllowed": "Start/End Date only apply to collective rows — use Transaction Date."
+    },
+    "error": {
+      "endBeforeStart": "End date cannot be before the start date."
+    }
   },
   "messaging": {
     "search": "Search tickets...",

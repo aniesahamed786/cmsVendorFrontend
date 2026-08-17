@@ -22,6 +22,7 @@ import {
 } from '../../models/vendor-profile-edit.model';
 import { toVendorSchemaPayload } from '../../models/vendor-profile-request.mapper';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
+import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
 
 export interface VendorProfilePreviewData {
   nameEn: string;
@@ -224,10 +225,12 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       coverMobile: data.coverMobile ?? null,
       coverDesktop: data.coverDesktop ?? null,
     });
-    // Seed previews for any images that arrive as ready-made URLs.
-    if (typeof data.logo === 'string') this.logoPreview.set(data.logo);
-    if (typeof data.coverMobile === 'string') this.coverMobilePreview.set(data.coverMobile);
-    if (typeof data.coverDesktop === 'string') this.coverDesktopPreview.set(data.coverDesktop);
+    // Seed previews for any images that arrive as ready-made URLs. Stored paths are unscoped
+    // (`/api/v1/media/...`) and only servable off the vendor media proxy — the form controls above
+    // keep the raw value so the saved payload stays unchanged.
+    if (typeof data.logo === 'string') this.logoPreview.set(toVendorMediaUrl(data.logo));
+    if (typeof data.coverMobile === 'string') this.coverMobilePreview.set(toVendorMediaUrl(data.coverMobile));
+    if (typeof data.coverDesktop === 'string') this.coverDesktopPreview.set(toVendorMediaUrl(data.coverDesktop));
   }
 
   private syncPreview(): void {
