@@ -1058,7 +1058,9 @@
       "totalAmount": "المبلغ الإجمالي",
       "paidAmount": "المبلغ المدفوع",
       "membershipId": "رقم العضوية",
-      "mobileNumber": "رقم الجوال"
+      "mobileNumber": "رقم الجوال",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية"
     },
     "placeholder": {
       "offer": "اختر العرض...",
@@ -1084,7 +1086,6 @@
     },
     "currency": "ر.س",
     "empty": "لا توجد عمليات استبدال.",
-    "collectiveUnsupported": "العمليات الجماعية غير متاحة حالياً. الرجاء استخدام العملية الفردية.",
     "toast": {
       "successSummary": "تم تسجيل الاسترداد",
       "successDetail": "تم تسجيل عملية الاسترداد بنجاح.",
@@ -1094,8 +1095,6 @@
       "listFailed": "تعذّر تحميل قائمة الاستردادات",
       "invalidSummary": "معلومات ناقصة",
       "invalidDetail": "الرجاء تعبئة جميع الحقول المطلوبة قبل الإرسال.",
-      "collectiveUnsupportedSummary": "غير متاح حالياً",
-      "collectiveUnsupportedDetail": "العمليات الجماعية غير مدعومة حالياً. الرجاء استخدام العملية الفردية.",
       "genericErrorDetail": "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
       "templateFailed": "تعذّر تنزيل النموذج",
       "uploadFailed": "تعذّر قراءة الملف",
@@ -1104,7 +1103,8 @@
       "uploadSuccessSummary": "تم رفع الاستردادات",
       "uploadSuccessDetail": "تم رفع {{count}} عملية استرداد بنجاح.",
       "uploadStaleSummary": "النموذج قديم",
-      "uploadStaleDetail": "تغيّرت بعض العروض أو الفروع في هذا الملف. لم يتم رفع أي بيانات — الرجاء تنزيل نموذج جديد."
+      "uploadStaleDetail": "تغيّرت بعض العروض أو الفروع في هذا الملف. لم يتم رفع أي بيانات — الرجاء تنزيل نموذج جديد.",
+      "dateRangeInvalidDetail": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
     },
     "emptyOffers": "لا توجد عروض نشطة في المتجر.",
     "emptyBranches": "لا توجد فروع متاحة لهذا العرض.",
@@ -1133,7 +1133,15 @@
       "negativeAmount": "لا يمكن أن يكون {{field}} بالسالب.",
       "invalidTransactionType": "\"{{value}}\" ليس نوع عملية صالحاً. استخدم SINGLE أو COLLECTIVE.",
       "offerNoLongerActive": "العرض \"{{value}}\" لم يعد نشطاً. الرجاء تنزيل نموذج جديد.",
-      "branchNoLongerAvailable": "الفرع \"{{value}}\" لم يعد متاحاً لهذا العرض. الرجاء تنزيل نموذج جديد."
+      "branchNoLongerAvailable": "الفرع \"{{value}}\" لم يعد متاحاً لهذا العرض. الرجاء تنزيل نموذج جديد.",
+      "startDateRequired": "تاريخ البداية مطلوب للصفوف الجماعية.",
+      "endDateRequired": "تاريخ النهاية مطلوب للصفوف الجماعية.",
+      "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية.",
+      "transactionDateNotAllowed": "تاريخ العملية لا ينطبق على الصفوف الجماعية — استخدم تاريخ البداية/النهاية.",
+      "datesNotAllowed": "تاريخ البداية/النهاية ينطبق على الصفوف الجماعية فقط — استخدم تاريخ العملية."
+    },
+    "error": {
+      "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
     }
   },
   "messaging": {

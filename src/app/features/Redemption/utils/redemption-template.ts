@@ -27,6 +27,8 @@ export interface TemplateLabels {
   offer: string;
   branch: string;
   transactionDate: string;
+  startDate: string;
+  endDate: string;
   totalInvoiceAmount: string;
   totalAmountPaid: string;
   currency: string;
@@ -97,6 +99,8 @@ export async function buildRedemptionTemplate(
     { header: labels.offer, key: 'offer', width: 38 },
     { header: labels.branch, key: 'branch', width: 34 },
     { header: labels.transactionDate, key: 'transactionDate', width: 20 },
+    { header: labels.startDate, key: 'startDate', width: 20 },
+    { header: labels.endDate, key: 'endDate', width: 20 },
     { header: labels.totalInvoiceAmount, key: 'totalInvoiceAmount', width: 26 },
     { header: labels.totalAmountPaid, key: 'totalAmountPaid', width: 20 },
     { header: labels.currency, key: 'currency', width: 12 },
@@ -210,8 +214,10 @@ export async function buildRedemptionTemplate(
       };
     }
 
-    sheet.getCell(`F${row}`).numFmt = 'yyyy-mm-dd';
-    for (const col of ['G', 'H', 'J']) {
+    for (const col of ['F', 'G', 'H']) {
+      sheet.getCell(`${col}${row}`).numFmt = 'yyyy-mm-dd';
+    }
+    for (const col of ['I', 'J', 'L']) {
       sheet.getCell(`${col}${row}`).numFmt = '0.00';
     }
   }

@@ -155,6 +155,8 @@ export class Redemption implements OnInit {
       membershipId: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       mobileNumber: [''],
       transactionDate: ['', Validators.required],
+      startDate: [''],
+      endDate: [''],
       offer: [null, Validators.required],
       branch: [null],
       totalInvoiceAmount: ['', Validators.required],
@@ -184,20 +186,36 @@ export class Redemption implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return !this.isCollectiveTransaction && !this.submitting();
+    return !this.submitting();
   }
 
   private updateTransactionValidators(): void {
-    const requiredForSingle: Record<string, ValidatorFn[]> = {
-      membershipId: [Validators.required, Validators.pattern(/^\d+$/)],
-      offer: [Validators.required],
+    const collective = this.isCollectiveTransaction;
+
+    const rules: Record<string, ValidatorFn[]> = {
+      membershipId: collective ? [Validators.pattern(/^\d+$/)] : [Validators.required, Validators.pattern(/^\d+$/)],
+      transactionDate: collective ? [] : [Validators.required],
+      startDate: collective ? [Validators.required] : [],
+      endDate: collective ? [Validators.required] : [],
     };
 
-    for (const [field, validators] of Object.entries(requiredForSingle)) {
+    for (const [field, validators] of Object.entries(rules)) {
       const control = this.redemptionForm.get(field)!;
-      control.setValidators(this.isCollectiveTransaction ? [] : validators);
+      control.setValidators(validators);
       control.updateValueAndValidity({ emitEvent: false });
     }
+
+    const toClear = collective ? ['transactionDate'] : ['startDate', 'endDate'];
+    for (const field of toClear) {
+      this.redemptionForm.get(field)!.reset('', { emitEvent: false });
+    }
+  }
+
+  get isDateRangeInvalid(): boolean {
+    if (!this.isCollectiveTransaction) return false;
+    const { startDate, endDate } = this.redemptionForm.getRawValue();
+    if (!startDate || !endDate) return false;
+    return new Date(startDate).getTime() > new Date(endDate).getTime();
   }
 
   private loadActiveOffers(): void {
@@ -345,6 +363,9 @@ export class Redemption implements OnInit {
           notANumber: this.i18n.t('redemption.upload.notANumber'),
           invalidDate: this.i18n.t('redemption.upload.invalidDate'),
           invalidMembershipId: this.i18n.t('redemption.upload.invalidMembershipId'),
+          startDateRequired: this.i18n.t('redemption.upload.startDateRequired'),
+          endDateRequired: this.i18n.t('redemption.upload.endDateRequired'),
+          endBeforeStart: this.i18n.t('redemption.upload.endBeforeStart'),
           negativeAmount: this.i18n.t('redemption.upload.negativeAmount'),
           invalidTransactionType: this.i18n.t('redemption.upload.invalidTransactionType'),
           offerNoLongerActive: this.i18n.t('redemption.upload.offerNoLongerActive'),
@@ -514,6 +535,8 @@ export class Redemption implements OnInit {
         offer: this.i18n.t('redemption.label.offer'),
         branch: this.i18n.t('redemption.label.branch'),
         transactionDate: this.i18n.t('redemption.label.transactionDate'),
+        startDate: this.i18n.t('redemption.label.startDate'),
+        endDate: this.i18n.t('redemption.label.endDate'),
         totalInvoiceAmount: this.i18n.t('redemption.label.totalInvoiceAmount'),
         totalAmountPaid: this.i18n.t('redemption.label.totalAmountPaid'),
         currency: this.i18n.t('redemption.label.currency'),
@@ -540,22 +563,14 @@ export class Redemption implements OnInit {
   }
 
   submit(): void {
-    if (this.isCollectiveTransaction) {
-      this.messageService.add({
-        severity: 'info',
-        summary: this.i18n.t('redemption.toast.collectiveUnsupportedSummary'),
-        detail: this.i18n.t('redemption.toast.collectiveUnsupportedDetail'),
-        life: 5000,
-      });
-      return;
-    }
-
-    if (this.redemptionForm.invalid) {
+    if (this.redemptionForm.invalid || this.isDateRangeInvalid) {
       this.redemptionForm.markAllAsTouched();
       this.messageService.add({
         severity: 'warn',
         summary: this.i18n.t('redemption.toast.invalidSummary'),
-        detail: this.i18n.t('redemption.toast.invalidDetail'),
+        detail: this.isDateRangeInvalid
+          ? this.i18n.t('redemption.toast.dateRangeInvalidDetail')
+          : this.i18n.t('redemption.toast.invalidDetail'),
         life: 4000,
       });
       return;
@@ -564,13 +579,11 @@ export class Redemption implements OnInit {
     const v = this.redemptionForm.getRawValue();
     const mobileNumber = String(v.mobileNumber ?? '').trim();
     const branchId = String(v.branch ?? '').trim();
+    const membershipRaw = String(v.membershipId ?? '').trim();
 
-    const payload: RecordRedemptionPayload = {
-      membershipId: Number(v.membershipId),
+    const common = {
       offerId: v.offer,
-      transactionType: 'SINGLE',
       totalAmountIncVat: this.toNumber(v.totalInvoiceAmount),
-      transactionDate: this.toIsoDate(v.transactionDate),
       totalAmountPaid: this.toNumber(v.totalAmountPaid),
       currency: String(v.currency ?? '')
         .trim()
@@ -579,6 +592,21 @@ export class Redemption implements OnInit {
       ...(mobileNumber ? { mobileNumber } : {}),
       ...(branchId ? { branchId } : {}),
     };
+
+    const payload: RecordRedemptionPayload = this.isCollectiveTransaction
+      ? {
+          ...common,
+          transactionType: 'COLLECTIVE',
+          startDate: this.toIsoDate(v.startDate),
+          endDate: this.toIsoDate(v.endDate, true),
+          ...(membershipRaw ? { membershipId: Number(membershipRaw) } : {}),
+        }
+      : {
+          ...common,
+          transactionType: 'SINGLE',
+          membershipId: Number(membershipRaw),
+          transactionDate: this.toIsoDate(v.transactionDate),
+        };
 
     this.submitting.set(true);
     this.api
@@ -608,6 +636,8 @@ export class Redemption implements OnInit {
       membershipId: '',
       mobileNumber: '',
       transactionDate: '',
+      startDate: '',
+      endDate: '',
       offer: null,
       branch: null,
       totalInvoiceAmount: '',
@@ -628,10 +658,13 @@ export class Redemption implements OnInit {
     return Number.isFinite(n) ? n : 0;
   }
 
-  private toIsoDate(value: unknown): string {
-    if (value instanceof Date) return value.toISOString();
-    const parsed = new Date(String(value ?? ''));
-    return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+  private toIsoDate(value: unknown, endOfDay = false): string {
+    const parsed = value instanceof Date ? value : new Date(String(value ?? ''));
+    const date = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+    const ms = endOfDay
+      ? Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 0)
+      : Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+    return new Date(ms).toISOString();
   }
 
   private showError(summaryKey: string, err: HttpErrorResponse): void {

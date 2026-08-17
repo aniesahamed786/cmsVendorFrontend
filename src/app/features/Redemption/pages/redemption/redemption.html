@@ -1,12 +1,11 @@
 <div class="redemption-page">
-
   <div class="redemption-header">
     <h1 class="redemption-page__title">{{ 'redemption.title' | translate }}</h1>
     <div class="redemption-header__actions">
       <app-button variant="outline" icon="pi pi-download" [loading]="downloadingTemplate()"
         (click)="downloadTemplate()">{{ 'redemption.downloadExcel' | translate }}</app-button>
-      <app-button variant="primary" icon="pi pi-upload" [loading]="uploading()"
-        (click)="triggerUpload(excelInput)">{{ 'redemption.uploadExcel' | translate }}</app-button>
+      <app-button variant="primary" icon="pi pi-upload" [loading]="uploading()" (click)="triggerUpload(excelInput)">{{
+        'redemption.uploadExcel' | translate }}</app-button>
       <input #excelInput type="file" class="redemption-header__file-input"
         accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         (change)="onFileSelected($event)" />
@@ -14,26 +13,26 @@
   </div>
 
   @if (uploadErrors().length) {
-    <div class="redemption-upload-errors">
-      <div class="redemption-upload-errors__header">
-        <i class="pi pi-exclamation-triangle"></i>
-        <span>{{ 'redemption.upload.errorsTitle' | translate }}</span>
-        <button type="button" class="redemption-upload-errors__close" (click)="clearUploadErrors()"
-          [attr.aria-label]="'redemption.upload.dismiss' | translate">
-          <i class="pi pi-times"></i>
-        </button>
-      </div>
-      <ul class="redemption-upload-errors__list">
-        @for (err of uploadErrors(); track $index) {
-          <li>
-            @if (err.row) {
-              <strong>{{ 'redemption.upload.row' | translate }} {{ err.row }}:</strong>
-            }
-            {{ err.message }}
-          </li>
-        }
-      </ul>
+  <div class="redemption-upload-errors">
+    <div class="redemption-upload-errors__header">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ 'redemption.upload.errorsTitle' | translate }}</span>
+      <button type="button" class="redemption-upload-errors__close" (click)="clearUploadErrors()"
+        [attr.aria-label]="'redemption.upload.dismiss' | translate">
+        <i class="pi pi-times"></i>
+      </button>
     </div>
+    <ul class="redemption-upload-errors__list">
+      @for (err of uploadErrors(); track $index) {
+      <li>
+        @if (err.row) {
+        <strong>{{ 'redemption.upload.row' | translate }} {{ err.row }}:</strong>
+        }
+        {{ err.message }}
+      </li>
+      }
+    </ul>
+  </div>
   }
 
   <p-card styleClass="redemption-card redemption-card--spaced">
@@ -50,37 +49,51 @@
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
 
-        @if (isCollectiveTransaction) {
-        <div class="redemption-form__notice redemption-form__field-wrapper--full">
-          <i class="pi pi-info-circle"></i>
-          <span>{{ 'redemption.collectiveUnsupported' | translate }}</span>
-        </div>
-        }
-
-        @if (!isCollectiveTransaction) {
         <div class="redemption-form__field-wrapper">
-          <label>{{ 'redemption.label.membershipId' | translate }} <span class="required-star">*</span></label>
+          <label>
+            {{ 'redemption.label.membershipId' | translate }}
+            @if (!isCollectiveTransaction) {<span class="required-star">*</span>}
+          </label>
           <input type="text" inputmode="numeric" pInputText formControlName="membershipId"
             [placeholder]="'redemption.placeholder.membershipId' | translate" class="redemption-form__input--full" />
         </div>
 
+        <!-- Mobile Number — optional in both modes -->
         <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.mobileNumber' | translate }}</label>
           <input type="tel" pInputText formControlName="mobileNumber"
             [placeholder]="'redemption.placeholder.mobileNumber' | translate" class="redemption-form__input--full" />
         </div>
-        }
 
-        <div class="redemption-form__field-wrapper"
-          [class.redemption-form__field-wrapper--full]="isCollectiveTransaction">
+        @if (!isCollectiveTransaction) {
+        <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.transactionDate' | translate }} <span class="required-star">*</span></label>
           <p-datepicker formControlName="transactionDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
         </div>
+        } @else {
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.startDate' | translate }} <span class="required-star">*</span></label>
+          <p-datepicker formControlName="startDate" iconDisplay="input" showIcon="true"
+            styleClass="redemption-form__field--full redemption-form__field"
+            panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
+            [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
+        </div>
 
-        @if (!isCollectiveTransaction) {
+        <div class="redemption-form__field-wrapper">
+          <label>{{ 'redemption.label.endDate' | translate }} <span class="required-star">*</span></label>
+          <p-datepicker formControlName="endDate" iconDisplay="input" showIcon="true"
+            styleClass="redemption-form__field--full redemption-form__field"
+            panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
+            [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
+          @if (isDateRangeInvalid) {
+          <small class="redemption-form__error">{{ 'redemption.error.endBeforeStart' | translate }}</small>
+          }
+        </div>
+        }
+
         <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.offer' | translate }} <span class="required-star">*</span></label>
           <p-select formControlName="offer" [options]="offerOptions()" optionLabel="label" optionValue="value"
@@ -101,7 +114,6 @@
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
-        }
 
         <div class="redemption-form__field-wrapper">
           <label>{{ 'redemption.label.totalInvoiceAmount' | translate }} <span class="required-star">*</span></label>
@@ -168,5 +180,4 @@
       </ng-template>
     </p-table>
   </section>
-
 </div>

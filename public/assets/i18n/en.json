@@ -1056,7 +1056,9 @@
       "currency": "Currency",
       "discountAmount": "Discount Amount",
       "membershipId": "Membership ID",
-      "mobileNumber": "Mobile Number"
+      "mobileNumber": "Mobile Number",
+      "startDate": "Start Date",
+      "endDate": "End Date"
     },
     "placeholder": {
       "offer": "Select Offer...",
@@ -1082,7 +1084,6 @@
     },
     "currency": "SAR.",
     "empty": "No redemptions found.",
-    "collectiveUnsupported": "Collective transactions are not available yet. Please use Single Transaction.",
     "toast": {
       "successSummary": "Redemption recorded",
       "successDetail": "The redemption was recorded successfully.",
@@ -1092,8 +1093,6 @@
       "listFailed": "Could not load redemption list",
       "invalidSummary": "Missing information",
       "invalidDetail": "Please fill in all required fields before submitting.",
-      "collectiveUnsupportedSummary": "Not available yet",
-      "collectiveUnsupportedDetail": "Collective transactions are not supported yet. Please use Single Transaction.",
       "genericErrorDetail": "Something went wrong. Please try again.",
       "templateFailed": "Could not download template",
       "uploadFailed": "Could not read the file",
@@ -1102,7 +1101,8 @@
       "uploadSuccessSummary": "Redemptions uploaded",
       "uploadSuccessDetail": "{{count}} redemption(s) were uploaded successfully.",
       "uploadStaleSummary": "Template is out of date",
-      "uploadStaleDetail": "Some offers or branches in this file have changed. Nothing was uploaded — download a fresh template."
+      "uploadStaleDetail": "Some offers or branches in this file have changed. Nothing was uploaded — download a fresh template.",
+      "dateRangeInvalidDetail": "End date cannot be before the start date."
     },
     "emptyOffers": "No active in-store offers available.",
     "emptyBranches": "No branches available for this offer.",
@@ -1131,7 +1131,15 @@
       "negativeAmount": "{{field}} cannot be negative.",
       "invalidTransactionType": "\"{{value}}\" is not a valid transaction type. Use SINGLE or COLLECTIVE.",
       "offerNoLongerActive": "Offer \"{{value}}\" is no longer active. Download a fresh template.",
-      "branchNoLongerAvailable": "Branch \"{{value}}\" is no longer available for this offer. Download a fresh template."
+      "branchNoLongerAvailable": "Branch \"{{value}}\" is no longer available for this offer. Download a fresh template.",
+      "startDateRequired": "Start Date is required for collective rows.",
+      "endDateRequired": "End Date is required for collective rows.",
+      "endBeforeStart": "End Date cannot be before Start Date.",
+      "transactionDateNotAllowed": "Transaction Date does not apply to collective rows — use Start/End Date.",
+      "datesNotAllowed": "Start/End Date only apply to collective rows — use Transaction Date."
+    },
+    "error": {
+      "endBeforeStart": "End date cannot be before the start date."
     }
   },
   "messaging": {

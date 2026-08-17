@@ -142,19 +142,10 @@ section.redemption-card {
   grid-column: 1 / -1;
 }
 
-.redemption-form__notice {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: var(--app-primary-soft);
-  color: var(--app-primary);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.redemption-form__notice i {
-  font-size: 0.9rem;
+.redemption-form__error {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #dc2626;
 }
 
 .redemption-form input:focus {

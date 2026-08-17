@@ -1,4 +1,3 @@
-
 import { RecordRedemptionPayload } from '../models/redemption.model';
 import { REF_COL, REF_SHEET, TemplateOffer, uniqueTitles } from './redemption-template';
 
@@ -9,10 +8,12 @@ const COL = {
   offer: 4,
   branch: 5,
   transactionDate: 6,
-  totalAmountIncVat: 7,
-  totalAmountPaid: 8,
-  currency: 9,
-  discountAmount: 10,
+  startDate: 7,
+  endDate: 8,
+  totalAmountIncVat: 9,
+  totalAmountPaid: 10,
+  currency: 11,
+  discountAmount: 12,
 } as const;
 
 const FIRST_DATA_ROW = 2;
@@ -47,6 +48,9 @@ export interface UploadMessages {
   negativeAmount: string;
   invalidDate: string;
   invalidMembershipId: string;
+  startDateRequired: string;
+  endDateRequired: string;
+  endBeforeStart: string;
   invalidTransactionType: string;
   offerNoLongerActive: string;
   branchNoLongerAvailable: string;
@@ -85,11 +89,36 @@ function toNumber(raw: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-function toIsoDate(value: unknown, raw: string): string | null {
-  if (value instanceof Date) return value.toISOString();
-  if (!raw) return null;
-  const parsed = new Date(raw);
-  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
+function toIsoDate(value: unknown, raw: string, endOfDay = false): string | null {
+  let year: number;
+  let month: number;
+  let day: number;
+
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return null;
+    year = value.getUTCFullYear();
+    month = value.getUTCMonth();
+    day = value.getUTCDate();
+  } else {
+    if (!raw) return null;
+    const iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(raw);
+    if (iso) {
+      year = Number(iso[1]);
+      month = Number(iso[2]) - 1;
+      day = Number(iso[3]);
+    } else {
+      const parsed = new Date(raw);
+      if (Number.isNaN(parsed.getTime())) return null;
+      year = parsed.getFullYear();
+      month = parsed.getMonth();
+      day = parsed.getDate();
+    }
+  }
+
+  const ms = endOfDay
+    ? Date.UTC(year, month, day, 23, 59, 59, 0)
+    : Date.UTC(year, month, day, 0, 0, 0, 0);
+  return new Date(ms).toISOString();
 }
 
 interface OfferRef {
@@ -130,7 +159,9 @@ function addBranch(catalogue: Catalogue, offerId: string, ref: BranchRef): void 
   if (bare && !map.has(bare)) map.set(bare, ref);
 }
 
-function catalogueFromRefSheet(sheet: { eachRow: (cb: (row: RowLike, n: number) => void) => void }): Catalogue {
+function catalogueFromRefSheet(sheet: {
+  eachRow: (cb: (row: RowLike, n: number) => void) => void;
+}): Catalogue {
   const catalogue = emptyCatalogue();
 
   sheet.eachRow((row, rowNumber) => {
@@ -168,7 +199,11 @@ function catalogueFromOffers(offers: TemplateOffer[]): Catalogue {
     const ref: OfferRef = { offerId: offer.offerId, title: titles[i], raw: offer.raw };
     addTitle(catalogue.offerByTitle, titles[i], ref, true);
     for (const branch of offer.branches) {
-      addBranch(catalogue, offer.offerId, { branchId: branch.id, label: branch.label, raw: branch.raw });
+      addBranch(catalogue, offer.offerId, {
+        branchId: branch.id,
+        label: branch.label,
+        raw: branch.raw,
+      });
     }
   });
   offers.forEach((offer, i) => {
@@ -205,7 +240,17 @@ export async function parseRedemptionUpload(
   file: File | ArrayBuffer,
   loadFallbackOffers: () => Promise<TemplateOffer[]>,
   messages: UploadMessages,
-  labels: Record<'membershipId' | 'offer' | 'branch' | 'transactionDate' | 'totalAmountIncVat' | 'totalAmountPaid' | 'currency' | 'discountAmount', string>,
+  labels: Record<
+    | 'membershipId'
+    | 'offer'
+    | 'branch'
+    | 'transactionDate'
+    | 'totalAmountIncVat'
+    | 'totalAmountPaid'
+    | 'currency'
+    | 'discountAmount',
+    string
+  >,
 ): Promise<RedemptionUploadResult> {
   const ExcelJS = await import('exceljs');
   const workbook = new ExcelJS.Workbook();
@@ -229,7 +274,9 @@ export async function parseRedemptionUpload(
   const refSheet = workbook.getWorksheet(REF_SHEET);
   const usedEmbeddedIds = !!refSheet;
   const catalogue = refSheet
-    ? catalogueFromRefSheet(refSheet as unknown as { eachRow: (cb: (row: RowLike, n: number) => void) => void })
+    ? catalogueFromRefSheet(
+        refSheet as unknown as { eachRow: (cb: (row: RowLike, n: number) => void) => void },
+      )
     : catalogueFromOffers(await loadFallbackOffers());
 
   const payloads: RecordRedemptionPayload[] = [];
@@ -246,22 +293,40 @@ export async function parseRedemptionUpload(
     const offerTitle = get(COL.offer);
     const branchText = get(COL.branch);
     const dateRaw = get(COL.transactionDate);
+    const startRaw = get(COL.startDate);
+    const endRaw = get(COL.endDate);
     const incVatRaw = get(COL.totalAmountIncVat);
     const paidRaw = get(COL.totalAmountPaid);
     const currency = get(COL.currency);
     const discountRaw = get(COL.discountAmount);
 
     const isBlank =
-      !membershipRaw && !offerTitle && !branchText && !dateRaw && !incVatRaw && !paidRaw && !discountRaw;
+      !membershipRaw &&
+      !offerTitle &&
+      !branchText &&
+      !dateRaw &&
+      !startRaw &&
+      !endRaw &&
+      !incVatRaw &&
+      !paidRaw &&
+      !discountRaw;
     if (isBlank) return;
 
     rowsRead++;
     const rowErrors: string[] = [];
 
+    const typeRaw = get(COL.transactionType).trim().toUpperCase();
+    if (typeRaw && typeRaw !== 'SINGLE' && typeRaw !== 'COLLECTIVE') {
+      rowErrors.push(t(messages.invalidTransactionType, { value: get(COL.transactionType) }));
+    }
+    const isCollective = typeRaw === 'COLLECTIVE';
+
     const membershipText = membershipRaw.replace(/\.0+$/, '');
     const membershipId = Number(membershipText);
-    if (!membershipRaw) rowErrors.push(t(messages.required, { field: labels.membershipId }));
-    else if (!/^\d+$/.test(membershipText) || membershipId <= 0) {
+    const hasMembership = !!membershipRaw;
+    if (!hasMembership) {
+      if (!isCollective) rowErrors.push(t(messages.required, { field: labels.membershipId }));
+    } else if (!/^\d+$/.test(membershipText) || membershipId <= 0) {
       rowErrors.push(messages.invalidMembershipId);
     }
 
@@ -277,9 +342,28 @@ export async function parseRedemptionUpload(
       if (offerId && !branchRef) rowErrors.push(t(messages.unknownBranch, { value: branchText }));
     }
 
-    const transactionDate = toIsoDate(row.getCell(COL.transactionDate).value, dateRaw);
-    if (!dateRaw) rowErrors.push(t(messages.required, { field: labels.transactionDate }));
-    else if (!transactionDate) rowErrors.push(messages.invalidDate);
+    let transactionDate: string | null = null;
+    let startDate: string | null = null;
+    let endDate: string | null = null;
+
+    if (isCollective) {
+      startDate = toIsoDate(row.getCell(COL.startDate).value, startRaw);
+      endDate = toIsoDate(row.getCell(COL.endDate).value, endRaw, true);
+
+      if (!startRaw) rowErrors.push(messages.startDateRequired);
+      else if (!startDate) rowErrors.push(messages.invalidDate);
+
+      if (!endRaw) rowErrors.push(messages.endDateRequired);
+      else if (!endDate) rowErrors.push(messages.invalidDate);
+
+      if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+        rowErrors.push(messages.endBeforeStart);
+      }
+    } else {
+      transactionDate = toIsoDate(row.getCell(COL.transactionDate).value, dateRaw);
+      if (!dateRaw) rowErrors.push(t(messages.required, { field: labels.transactionDate }));
+      else if (!transactionDate) rowErrors.push(messages.invalidDate);
+    }
 
     const amount = (raw: string, field: string): number | null => {
       if (!raw) {
@@ -304,31 +388,36 @@ export async function parseRedemptionUpload(
 
     if (!currency) rowErrors.push(t(messages.required, { field: labels.currency }));
 
-    const typeRaw = get(COL.transactionType).trim().toUpperCase();
-    if (typeRaw && typeRaw !== 'SINGLE' && typeRaw !== 'COLLECTIVE') {
-      rowErrors.push(t(messages.invalidTransactionType, { value: get(COL.transactionType) }));
-    }
-
     if (rowErrors.length) {
       for (const message of rowErrors) errors.push({ row: rowNumber, message });
       return;
     }
 
     const mobileNumber = get(COL.mobileNumber);
-    const transactionType: 'SINGLE' | 'COLLECTIVE' = typeRaw === 'COLLECTIVE' ? 'COLLECTIVE' : 'SINGLE';
-
-    const payload: RecordRedemptionPayload = {
-      membershipId,
+    const common = {
       offerId: offerId!,
-      transactionType,
       totalAmountIncVat: totalAmountIncVat!,
-      transactionDate: transactionDate!,
       totalAmountPaid: totalAmountPaid!,
       currency: currency.toUpperCase(),
       discountAmount: discountAmount!,
       ...(mobileNumber ? { mobileNumber } : {}),
       ...(branchRef ? { branchId: branchRef.branchId } : {}),
     };
+
+    const payload: RecordRedemptionPayload = isCollective
+      ? {
+          ...common,
+          transactionType: 'COLLECTIVE',
+          startDate: startDate!,
+          endDate: endDate!,
+          ...(hasMembership ? { membershipId } : {}),
+        }
+      : {
+          ...common,
+          transactionType: 'SINGLE',
+          membershipId,
+          transactionDate: transactionDate!,
+        };
 
     payloads.push(payload);
     rows.push({
@@ -389,4 +478,3 @@ export function validateAgainstLiveCatalogue(
 export function referencedOfferIds(rows: ResolvedRedemptionRow[]): string[] {
   return Array.from(new Set(rows.map((r) => r.payload.offerId).filter(Boolean)));
 }
-
