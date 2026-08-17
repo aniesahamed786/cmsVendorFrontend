@@ -200,21 +200,24 @@ export class OfferForm {
   @ViewChild(PreviewOfferDetails) previewComponent?: PreviewOfferDetails;
 
 
-  private readonly overlayTriggerFields = new Set(['startdate', 'expiry']);
+  /** Controls that open a floating panel on focus. scrollToSection scrolls the
+   *  page (the preview column is sticky, not its own scroller), and PrimeNG hides
+   *  an open overlay as soon as a scrollable ancestor scrolls — so focusing one of
+   *  these would scroll the panel shut the instant it opened. Matching on the
+   *  PrimeNG root class covers every dropdown here, present and future. */
+  private static readonly OVERLAY_CONTROLS =
+    '.p-select, .p-multiselect, .p-datepicker, .p-autocomplete';
 
   @HostListener('focusin', ['$event'])
   onFocusIn(event: FocusEvent) {
     const target = event.target as HTMLElement;
     const controlEl = target.closest('[formControlName]');
-    if (controlEl) {
-      const formControlName = controlEl.getAttribute('formControlName');
-      if (
-        formControlName &&
-        this.previewComponent &&
-        !this.overlayTriggerFields.has(formControlName)
-      ) {
-        this.previewComponent.scrollToSection(formControlName);
-      }
+    if (!controlEl || controlEl.closest(OfferForm.OVERLAY_CONTROLS)) {
+      return;
+    }
+    const formControlName = controlEl.getAttribute('formControlName');
+    if (formControlName && this.previewComponent) {
+      this.previewComponent.scrollToSection(formControlName);
     }
   }
 
