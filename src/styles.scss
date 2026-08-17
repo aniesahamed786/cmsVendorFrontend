@@ -557,10 +557,11 @@ p-button[severity="primary"] .p-button:enabled:hover,
 /* The label already owns the gap, so field wrappers must not add their own */
 [class*="__field-group"],
 [class*="__field-wrapper"],
+.field-dropdown,
 .profile-form-grid > div {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0 !important;
 }
 
 /* Force toggle switch handle to be white always, including dark mode overrides */

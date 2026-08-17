@@ -35,7 +35,7 @@
           </div>
         </div> -->
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.titleEn' | translate }}
             <span class="offer-form__required">*</span>
@@ -52,7 +52,7 @@
           }
         </div>
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.titleAr' | translate }}
             <span class="offer-form__required">*</span>
@@ -108,7 +108,7 @@
           }
         </div>
 
-        <div class="offer-form__flex-auto">
+        <div class="offer-form__flex-auto offer-form__field-group">
           <label for="discountStartDate" class="offer-form__label">
             {{ 'offerForm.label.startDate' | translate }}
             <span class="offer-form__required">*</span>
@@ -122,7 +122,7 @@
           }
         </div>
 
-        <div class="offer-form__flex-auto">
+        <div class="offer-form__flex-auto offer-form__field-group">
           <label for="discountExpireDate" class="offer-form__label">
             {{ 'offerForm.label.expiryDate' | translate }}
             <span class="offer-form__required">*</span>
@@ -138,18 +138,18 @@
           }
         </div>
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <app-category-dropdown [label]="'offerForm.label.category' | translate" [placeholder]="'offerForm.placeholder.category' | translate" [multiple]="true"
             [required]="true" [control]="category">
           </app-category-dropdown>
         </div>
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <app-target-audience-dropdown [label]="'offerForm.label.targetAudience' | translate" [placeholder]="'offerForm.placeholder.targetAudience' | translate"
             [required]="false" [control]="targetAudience" />
         </div>
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <label class="offer-form__label">{{ 'offerForm.label.tags' | translate }}</label>
           <div class="offer-form__row">
             <div class="offer-form__input-wrap offer-form__flex-1">
@@ -200,7 +200,7 @@
         </h2>
       </div>
       <div class="offer-form__grid">
-        <div>
+        <div class="offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.taxValueEn' | translate }}
             <span class="offer-form__required">*</span>
@@ -214,7 +214,7 @@
           }
         </div>
 
-        <div>
+        <div class="offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.taxValueAr' | translate }}
             <span class="offer-form__required">*</span>
@@ -228,7 +228,7 @@
           }
         </div>
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.currency' | translate }}
             <span class="offer-form__required">*</span>
@@ -242,7 +242,7 @@
           }
         </div>
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.amenitiesEn' | translate }}
             <span class="offer-form__required">*</span>
@@ -256,7 +256,7 @@
           }
         </div>
 
-        <div class="offer-form__col-2">
+        <div class="offer-form__col-2 offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.amenitiesAr' | translate }}
             <span class="offer-form__required">*</span>
@@ -327,7 +327,7 @@
         </h2>
       </div>
       <div class="offer-form__stack offer-form__mt-6">
-        <div class="offer-form-loading offer-form__stack offer-form__stack--gap4">
+        <div class="offer-form-loading offer-form__field-group">
           <label class="offer-form__label">
             {{ 'offerForm.label.discountType' | translate }}
             <span class="offer-form__required">*</span>
@@ -358,7 +358,7 @@
         </div>
 
         <div class="offer-form__grid offer-form__grid--mt-0">
-          <div class="offer-form__field-group offer-form__field-group--gap3"
+          <div class="offer-form__field-group"
             [ngClass]="offerForm.get('discountType')?.value !== 'Others' ? 'offer-form__col-2' : ''">
             <label class="offer-form__label">
               {{ (offerForm.get('discountType')?.value === 'Others' ? 'offerForm.label.amountEn' : 'offerForm.label.discountAmountEn') | translate }}
@@ -393,7 +393,7 @@
           </div>
 
           @if (offerForm.get('discountType')?.value === 'Others') {
-          <div class="offer-form__field-group offer-form__field-group--gap3">
+          <div class="offer-form__field-group">
             <label class="offer-form__label">
               {{ (offerForm.get('discountType')?.value === 'Others' ? 'offerForm.label.amountAr' : 'offerForm.label.discountAmountAr') | translate }}
               <span class="offer-form__required">*</span>
@@ -474,7 +474,7 @@
         </h2>
       </div>
       <div class="offer-form__grid offer-form__grid--gap-xl">
-        <div class="offer-form__stack offer-form__stack--gap4 offer-form__col-2">
+        <div class="offer-form__field-group offer-form__col-2">
           <label class="offer-form__label">
             {{ 'offerForm.label.offerType' | translate }}
             <span class="offer-form__required">*</span>
@@ -541,7 +541,7 @@
         </div>
       </div>
       @if (offerForm.get('mode')?.value !== 'Digital') {
-      <div class="offer-form__mt-6">
+      <div class="offer-form__mt-6 offer-form__field-group">
         <label class="offer-form__label">{{ 'offerForm.label.selectedLocations' | translate }}</label>
         <div class="offer-form__locations-box">
           <div class="offer-form__row offer-form__row--gap2">
@@ -597,12 +597,12 @@
           {{ 'offerForm.section.branding' | translate }} <span class="offer-form__required">*</span>
         </h2>
       </div>
-      <div class="offer-form__mt-6">
-        <label class="offer-form__label offer-form__label--block offer-form__label--mb">
+      <div class="offer-form__mt-6 offer-form__field-group">
+        <label class="offer-form__label">
           {{ 'offerForm.label.backgroundImages' | translate }}
           <span class="offer-form__required">*</span>
         </label>
-        <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg offer-form__mt-2 app-dropzone"
+        <div class="offer-form__upload-dropzone offer-form__upload-dropzone--lg app-dropzone"
           (dragover)="onOfferDragOver($event)" (dragleave)="onOfferDragLeave($event)" (drop)="onOfferDrop($event)"
           (click)="offerFileInput.click()" [class.app-dropzone--dragging]="isOfferDragging()">
           <div class="offer-form__dropzone-body">
@@ -718,12 +718,12 @@
         }
       </div>
 
-      <div class="offer-form__mt-6">
-        <label class="offer-form__label offer-form__label--block offer-form__label--mb">
+      <div class="offer-form__mt-6 offer-form__field-group">
+        <label class="offer-form__label">
           {{ 'offerForm.highlight.imagesLabel' | translate }}
           <span class="offer-form__required">*</span>
         </label>
-        <div class="offer-form__highlight-split offer-form__grid offer-form__grid--gap-sm offer-form__grid--mt-0 offer-form__mt-4">
+        <div class="offer-form__highlight-split offer-form__grid offer-form__grid--gap-sm offer-form__grid--mt-0">
           <div class="offer-form__crop-card offer-form__crop-card--highlight">
             <div class="offer-form__crop-card-header offer-form__crop-card-header--highlight">
               <div class="offer-form__crop-card-title">
