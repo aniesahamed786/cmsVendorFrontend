@@ -57,7 +57,17 @@ export class VendorPreview implements OnChanges {
   scrollToSection(sectionId: string): void {
     if (!sectionId) return;
     setTimeout(() => {
-      this.document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const el = this.document.getElementById(sectionId);
+      if (el) {
+        const container = el.closest('.vendor-preview__screen') as HTMLElement;
+        if (container) {
+          const containerRect = container.getBoundingClientRect();
+          const elRect = el.getBoundingClientRect();
+          const targetScrollTop =
+            container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (el.clientHeight / 2);
+          container.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
+        }
+      }
     }, 50);
   }
 

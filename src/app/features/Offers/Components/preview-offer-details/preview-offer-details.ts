@@ -73,7 +73,14 @@ export class PreviewOfferDetails implements OnChanges {
       setTimeout(() => {
         const el = this.document.getElementById(sectionId);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const container = el.closest('.preview-offer-details__screen') as HTMLElement;
+          if (container) {
+            const containerRect = container.getBoundingClientRect();
+            const elRect = el.getBoundingClientRect();
+            const targetScrollTop =
+              container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (el.clientHeight / 2);
+            container.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
+          }
         }
       }, 50);
     }
