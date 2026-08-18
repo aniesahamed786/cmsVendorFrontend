@@ -53,6 +53,12 @@ export const routes: Route[] = [
         data: { title: 'Analytics' },
       },
       {
+        path: 'account-management',
+        loadChildren: () =>
+          import('../features/AccountManagement/account-management.routes').then((m) => m.routes),
+        data: { title: 'Account Management' },
+      },
+      {
         path: 'profile',
         loadChildren: () => import('../features/Profile/profile.routes').then((m) => m.routes),
         data: { title: 'Vendor Profile' },

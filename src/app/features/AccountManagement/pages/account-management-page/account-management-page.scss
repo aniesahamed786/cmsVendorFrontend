@@ -1,0 +1,234 @@
+:host {
+  display: block;
+}
+
+.account-management {
+  color: var(--app-text);
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.95rem;
+    color: var(--app-muted);
+  }
+
+  &__tabs {
+    display: inline-flex;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    padding: 0.25rem;
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__tab {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--app-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover:not(.is-active) {
+      color: var(--app-primary);
+    }
+
+    &.is-active {
+      background: var(--app-primary);
+      color: #fff;
+    }
+  }
+
+  &__card {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    padding: 1.25rem 1.5rem;
+  }
+
+  &__card-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+  }
+
+  &__row-title {
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__permissions {
+    font-size: 0.85rem;
+    color: var(--app-muted);
+  }
+
+  &__empty {
+    text-align: center;
+    color: var(--app-muted);
+    padding: 2rem 0;
+  }
+
+  &__td-center {
+    text-align: center;
+  }
+
+  &__row--skeleton {
+    cursor: default;
+  }
+
+  &__skeleton-cell {
+    display: block;
+    height: 1rem; 
+
+    &--name { width: 9rem; }
+    &--email { width: 12rem; }
+    &--date { width: 10rem; }
+    &--status { width: 4.5rem; }
+    &--action { width: 1.25rem; margin-inline: auto; }
+  }
+
+  &__action-btn {
+    background: transparent;
+    border: none;
+    color: var(--app-muted);
+    cursor: pointer;
+    padding: 0.35rem 0.5rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--app-primary);
+    }
+  }
+
+  &__status {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+
+    &--active {
+      background: rgba(34, 197, 94, 0.16);
+      color: #16a34a;
+    }
+
+    &--suspended {
+      background: rgba(239, 68, 68, 0.16);
+      color: #dc2626;
+    }
+  }
+}
+
+::ng-deep .account-management__table {
+  background: var(--app-surface);
+  margin: 0 -1.5rem -1.25rem;
+
+  .p-datatable-thead > tr > th:first-child,
+  .p-datatable-tbody > tr > td:first-child {
+    padding-inline-start: 1.5rem;
+  }
+
+  .p-datatable-thead > tr > th:last-child,
+  .p-datatable-tbody > tr > td:last-child {
+    padding-inline-end: 1.5rem;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: transparent;
+    color: var(--app-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.9rem 1rem;
+    border: none;
+    border-block-start: 1px solid var(--app-border);
+    border-block-end: 1px solid var(--app-border);
+  }
+
+  .p-datatable-tbody > tr {
+    background: transparent;
+    color: var(--app-text);
+
+    > td {
+      padding: 1.1rem 1rem;
+      border: none;
+      border-block-end: 1px solid var(--app-border);
+    }
+  }
+
+  .p-sortable-column .p-sortable-column-icon,
+  .p-sortable-column:hover .p-sortable-column-icon {
+    color: var(--app-muted);
+  }
+
+  .p-sortable-column.p-highlight,
+  .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--app-primary);
+  }
+
+  .p-paginator {
+    background: transparent;
+    border: none;
+    padding: 1rem;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .p-paginator .p-select {
+    width: auto;
+    min-width: 4.5rem;
+  }
+
+  .p-paginator .p-paginator-page,
+  .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-prev,
+  .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-last {
+    color: var(--app-muted);
+    background: transparent;
+    border-radius: 0;
+    min-width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .p-paginator .p-paginator-page.p-highlight {
+    background: var(--app-primary);
+    color: #fff;
+    border-radius: 999px;
+  }
+
+  .p-paginator .p-paginator-page:not(.p-highlight):hover {
+    background: var(--app-primary-hover-soft);
+    color: var(--app-text);
+  }
+}

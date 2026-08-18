@@ -1,0 +1,247 @@
+
+:host {
+  display: block;
+}
+
+.account-page {
+  display: flex;
+  flex-direction: column;
+
+  &__topbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  &__back-button {
+    display: inline-flex;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    background: transparent;
+    border: 1px solid var(--app-border);
+    color: var(--app-muted);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+
+    &:hover {
+      background: var(--app-primary-soft);
+      border-color: var(--app-primary);
+      color: var(--app-primary);
+    }
+
+    i,
+    span {
+      color: inherit;
+    }
+  }
+
+  &__header {
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.95rem;
+    color: var(--app-muted);
+  }
+
+  &__skeleton-subtitle {
+    display: inline-block;
+    width: 10rem;
+    height: 0.9rem;
+    vertical-align: middle;
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__skeleton-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  &__skeleton-heading {
+    width: 11rem;
+    height: 1.25rem;
+  }
+
+  &__skeleton-label {
+    width: 6rem;
+    height: 0.8rem;
+    margin-bottom: 0.45rem;
+  }
+
+  &__skeleton-input {
+    width: 100%;
+    height: 2.75rem;
+  }
+
+  &__not-found {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: var(--app-muted);
+  }
+}
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__section {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    padding: 1.5rem;
+  }
+
+  &__section-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  &__section-icon {
+    display: flex;
+    height: 2.25rem;
+    width: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    background: var(--app-primary-soft);
+    color: var(--app-primary);
+
+    i {
+      font-size: 0.95rem;
+    }
+  }
+
+  &__section-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__section-hint {
+    margin: 0 0 1.25rem;
+    font-size: 0.875rem;
+    color: var(--app-muted);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--app-text);
+    margin-bottom: 0.25rem;
+  }
+
+  &__required {
+    color: #dc2626; 
+    margin-inline-start: 0.125rem;
+  }
+
+  &__input,
+  &__select {
+    width: 100%;
+  }
+
+  &__error {
+    margin: 0.25rem 0 0;
+    font-size: 0.75rem;
+    color: #dc2626;
+  }
+
+  &__toggles {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--app-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__toggle-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__toggle-value {
+    font-size: 0.72rem;
+    color: var(--app-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  &__notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    padding: 0.875rem 1rem;
+    background: var(--app-primary-soft);
+    color: var(--app-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    i {
+      font-size: 0.9rem;
+    }
+
+    &--muted {
+      margin-top: 0;
+      background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+      color: var(--app-muted);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,224 @@
+<div class="account-page">
+  <div class="account-page__topbar">
+    <button type="button" class="account-page__back-button" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      <span>{{ 'accountManagement.backToList' | translate }}</span>
+    </button>
+  </div>
+
+  <header class="account-page__header">
+    <h1 class="account-page__title">
+      @if (isEdit()) {
+      {{ 'accountManagement.edit.title' | translate }}
+      } @else if (isSubAccount()) {
+      {{ 'accountManagement.create.subTitle' | translate }}
+      } @else {
+      {{ 'accountManagement.create.mainTitle' | translate }}
+      }
+    </h1>
+    <p class="account-page__subtitle">
+      @if (isEdit()) {
+        @if (loading()) {
+        <span class="app-skeleton account-page__skeleton-subtitle"></span>
+        } @else {
+        {{ editing()?.name }}
+        }
+      } @else if (isSubAccount()) {
+      {{ 'accountManagement.create.subSubtitle' | translate }}
+      } @else {
+      {{ 'accountManagement.create.mainSubtitle' | translate }}
+      }
+    </p>
+  </header>
+
+  @if (loading()) {
+  <div class="account-page__loading">
+    @for (section of skeletonSections(); track $index) {
+    <div class="account-form__section">
+      <div class="account-form__section-head">
+        <span class="app-skeleton account-page__skeleton-icon"></span>
+        <span class="app-skeleton account-page__skeleton-heading"></span>
+      </div>
+      <div class="account-form__grid">
+        @for (field of section; track $index) {
+        <div class="account-form__field">
+          <span class="app-skeleton account-page__skeleton-label"></span>
+          <span class="app-skeleton account-page__skeleton-input"></span>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  } @else if (notFound()) {
+  <div class="account-page__not-found">{{ 'accountManagement.edit.notFound' | translate }}</div>
+  } @else {
+
+  <form class="account-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="account-form__section">
+      <div class="account-form__section-head">
+        <div class="account-form__section-icon"><i class="pi pi-user"></i></div>
+        <h2 class="account-form__section-title">{{ 'accountManagement.form.section.details' | translate }}</h2>
+      </div>
+
+      <div class="account-form__grid">
+        <div class="account-form__field">
+          <label class="account-form__label">
+            {{ 'accountManagement.form.label.name' | translate }}
+            <span class="account-form__required">*</span>
+          </label>
+          <input pInputText formControlName="name" class="account-form__input"
+            [placeholder]="'accountManagement.form.placeholder.name' | translate" />
+          @if (showError('name', 'required')) {
+          <p class="account-form__error">{{ 'accountManagement.form.error.nameRequired' | translate }}</p>
+          }
+        </div>
+
+        <div class="account-form__field">
+          <label class="account-form__label">
+            {{ 'accountManagement.form.label.email' | translate }}
+            <span class="account-form__required">*</span>
+          </label>
+          <input pInputText type="email" formControlName="email" class="account-form__input"
+            [placeholder]="'accountManagement.form.placeholder.email' | translate" />
+          @if (isEdit()) {
+          <p class="account-form__hint">{{ 'accountManagement.form.hint.emailLocked' | translate }}</p>
+          } @else if (showError('email', 'required')) {
+          <p class="account-form__error">{{ 'accountManagement.form.error.emailRequired' | translate }}</p>
+          } @else if (showError('email', 'email')) {
+          <p class="account-form__error">{{ 'accountManagement.form.error.emailInvalid' | translate }}</p>
+          }
+        </div>
+
+        <div class="account-form__field">
+          <label class="account-form__label">
+            {{ 'accountManagement.form.label.phone' | translate }}
+            <span class="account-form__required">*</span>
+          </label>
+          <input pInputText type="tel" formControlName="phone" class="account-form__input"
+            [placeholder]="'accountManagement.form.placeholder.phone' | translate" />
+          @if (showError('phone', 'required')) {
+          <p class="account-form__error">{{ 'accountManagement.form.error.phoneRequired' | translate }}</p>
+          } @else if (showError('phone', 'pattern')) {
+          <p class="account-form__error">{{ 'accountManagement.form.error.phoneInvalid' | translate }}</p>
+          }
+        </div>
+
+        @if (isEdit()) {
+        <div class="account-form__field">
+          <label class="account-form__label">
+            {{ 'accountManagement.form.label.status' | translate }}
+            <span class="account-form__required">*</span>
+          </label>
+          <p-select formControlName="accountStatus" [options]="statusOptions()" optionLabel="label"
+            optionValue="value" styleClass="account-form__select"
+            panelStyleClass="account-form__overlay-panel" appendTo="body" />
+          <p class="account-form__hint">{{ 'accountManagement.form.hint.status' | translate }}</p>
+        </div>
+        }
+      </div>
+
+      @if (!isSubAccount()) {
+      <div class="account-form__notice">
+        <i class="pi pi-info-circle"></i>
+        <span>{{ 'accountManagement.form.mainNotice' | translate }}</span>
+      </div>
+      }
+    </div>
+
+    @if (isSubAccount()) {
+    <div class="account-form__section">
+      <div class="account-form__section-head">
+        <div class="account-form__section-icon"><i class="pi pi-shield"></i></div>
+        <h2 class="account-form__section-title">{{ 'accountManagement.form.section.permissions' | translate }}</h2>
+      </div>
+
+      <!-- <p class="account-form__section-hint">{{ 'accountManagement.form.hint.permissions' | translate }}</p> -->
+
+      <div class="account-form__toggles">
+        @for (option of permissionOptions; track option.value) {
+        <div class="account-form__toggle-row">
+          <div class="account-form__toggle-text">
+            <span class="account-form__toggle-label">
+              {{ 'accountManagement.permission.' + option.key | translate }}
+            </span>
+            <span class="account-form__toggle-value">{{ option.value }}</span>
+          </div>
+          <p-toggleSwitch [ngModel]="isPermissionOn(option.value)" [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="togglePermission(option.value, $event)" />
+        </div>
+        }
+      </div>
+
+      @if (showError('permissions', 'required')) {
+      <p class="account-form__error">{{ 'accountManagement.form.error.permissionsRequired' | translate }}</p>
+      }
+    </div>
+
+    <div class="account-form__section">
+      <div class="account-form__section-head">
+        <div class="account-form__section-icon"><i class="pi pi-sitemap"></i></div>
+        <h2 class="account-form__section-title">{{ 'accountManagement.form.section.scope' | translate }}</h2>
+      </div>
+
+      <!-- <p class="account-form__section-hint">{{ 'accountManagement.form.hint.scope' | translate }}</p> -->
+
+      <div class="account-form__grid">
+        <div class="account-form__field">
+          <label class="account-form__label">
+            {{ 'accountManagement.form.label.branches' | translate }}
+            <span class="account-form__required">*</span>
+          </label>
+          <p-multiSelect formControlName="locationIds" [options]="locations()" optionLabel="label"
+            optionValue="value" [loading]="locationsLoading()" [filter]="true" filterBy="label"
+            display="chip" [placeholder]="'accountManagement.form.placeholder.branches' | translate"
+            [emptyMessage]="'accountManagement.form.empty.branches' | translate"
+            styleClass="account-form__select" panelStyleClass="account-form__overlay-panel"
+            appendTo="body" />
+          @if (showError('locationIds', 'required')) {
+          <p class="account-form__error">{{ 'accountManagement.form.error.branchesRequired' | translate }}</p>
+          }
+        </div>
+
+        <div class="account-form__field">
+          <label class="account-form__label">
+            {{ 'accountManagement.form.label.categories' | translate }}
+            <span class="account-form__required">*</span>
+          </label>
+          <p-multiSelect formControlName="categoryIds" [options]="categories()" optionLabel="label"
+            optionValue="value" [loading]="categoriesLoading()" [filter]="true" filterBy="label"
+            display="chip" [placeholder]="'accountManagement.form.placeholder.categories' | translate"
+            [emptyMessage]="'accountManagement.form.empty.categories' | translate"
+            styleClass="account-form__select" panelStyleClass="account-form__overlay-panel"
+            appendTo="body" />
+          @if (showError('categoryIds', 'required')) {
+          <p class="account-form__error">{{ 'accountManagement.form.error.categoriesRequired' | translate }}</p>
+          }
+        </div>
+      </div>
+    </div>
+    }
+
+    @if (!isEdit()) {
+    <div class="account-form__notice account-form__notice--muted">
+      <i class="pi pi-key"></i>
+      <span>{{ 'accountManagement.form.passwordNotice' | translate }}</span>
+    </div>
+    }
+
+    <div class="account-form__actions">
+      <app-button type="button" variant="outline" [disabled]="saving()" (click)="goBack()">
+        {{ 'accountManagement.form.cancel' | translate }}
+      </app-button>
+      <app-button type="submit" variant="primary" icon="pi pi-check" [loading]="saving()"
+        [disabled]="saving()">
+        @if (isEdit()) {
+        {{ 'accountManagement.form.save' | translate }}
+        } @else {
+        {{ 'accountManagement.form.submit' | translate }}
+        }
+      </app-button>
+    </div>
+  </form>
+  }
+</div>

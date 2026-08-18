@@ -36,6 +36,10 @@
     "recent-activities": {
       "label": "Recent Activities",
       "title": "Recent Activities"
+    },
+    "account-management": {
+      "label": "Account Management",
+      "title": "Account Management"
     }
   },
   "dashboard": {
@@ -1437,5 +1441,136 @@
     "termsOfService": "Terms of Service",
     "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
     "invalidCredentials": "Invalid email or password."
+  },
+  "accountManagement": {
+    "title": "Account Management",
+    "subtitle": "Create and manage the vendor accounts under your business.",
+    "addMain": "Add Main Vendor",
+    "addSub": "Add Subaccount",
+    "backToList": "Back to Account Management",
+    "searchPlaceholder": "Search name, email or phone",
+    "empty": "No accounts yet. Add one to get started.",
+    "emptyFiltered": "No accounts match your search.",
+    "tab": {
+      "main": "Main Vendor",
+      "sub": "Vendor Subaccount"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "SUSPENDED": "Suspended"
+    },
+    "permission": {
+      "redemptionHistory": "View redemption history",
+      "analytics": "View analytics",
+      "manageBranches": "Manage branches"
+    },
+    "column": {
+      "name": "Name",
+      "email": "Email",
+      "status": "Status",
+      "action": "Action",
+      "lastLogin": "Last Login"
+    },
+    "create": {
+      "mainTitle": "Add Main Vendor",
+      "mainSubtitle": "Creates a vendor admin with the full permission set.",
+      "subTitle": "Add Subaccount",
+      "subSubtitle": "Creates vendor staff limited to the permissions, branches and categories you choose."
+    },
+    "form": {
+      "section": {
+        "details": "Account Details",
+        "permissions": "Permissions",
+        "scope": "Branches & Categories"
+      },
+      "label": {
+        "name": "Full Name",
+        "email": "Email",
+        "phone": "Phone Number",
+        "branches": "Branches",
+        "status": "Status",
+        "categories": "Categories"
+      },
+      "placeholder": {
+        "name": "e.g. Jane Doe",
+        "email": "e.g. jane.doe@vendor.com",
+        "phone": "e.g. +966551234567",
+        "branches": "Select branches…",
+        "categories": "Select categories…"
+      },
+      "hint": {
+        "permissions": "Read access to your profile, offers and branches - plus redemption management - is always granted. Choose any extra permissions below.",
+        "scope": "The subaccount can only act where a selected branch and a selected category overlap.",
+        "emailLocked": "Email cannot be changed after the account is created.",
+        "status": "A suspended account cannot sign in."
+      },
+      "empty": {
+        "branches": "No branches available.",
+        "categories": "No categories available."
+      },
+      "error": {
+        "nameRequired": "Name is required.",
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Enter a valid email address.",
+        "phoneRequired": "Phone number is required.",
+        "phoneInvalid": "Enter a valid phone number.",
+        "permissionsRequired": "Select at least one permission.",
+        "branchesRequired": "Select at least one branch.",
+        "categoriesRequired": "Select at least one category."
+      },
+      "mainNotice": "A main vendor holds the fixed vendor admin permission set — no branch or category limits apply.",
+      "passwordNotice": "No password is set here. The account starts on the shared default password, which the holder changes from Profile Settings.",
+      "cancel": "Cancel",
+      "submit": "Create Account",
+      "save": "Save Changes"
+    },
+    "toast": {
+      "createdSummary": "Account created",
+      "createdDetail": "{{name}} was created successfully.",
+      "createFailed": "Could not create account",
+      "invalidSummary": "Missing information",
+      "invalidDetail": "Please complete all required fields before submitting.",
+      "genericErrorDetail": "Something went wrong. Please try again.",
+      "updatedSummary": "Account updated",
+      "updatedDetail": "{{name}} was updated successfully.",
+      "updateFailed": "Could not update account",
+      "noChangesSummary": "Nothing to save",
+      "noChangesDetail": "No changes were made to this account.",
+      "suspendedSummary": "Account suspended",
+      "suspendedDetail": "{{name}} can no longer sign in.",
+      "activatedSummary": "Account activated",
+      "activatedDetail": "{{name}} can sign in again.",
+      "deletedSummary": "Account deleted",
+      "deletedDetail": "{{name}} was removed.",
+      "suspendFailed": "Could not suspend account",
+      "activateFailed": "Could not activate account",
+      "deleteFailed": "Could not delete account"
+    },
+    "action": {
+      "edit": "Edit",
+      "suspend": "Suspend",
+      "activate": "Activate",
+      "delete": "Delete"
+    },
+    "edit": {
+      "title": "Edit Account",
+      "notFound": "This account could not be found."
+    },
+    "loadFailed": "Could not load accounts. Please try again.",
+    "confirm": {
+      "cancel": "Cancel",
+      "suspend": {
+        "title": "Suspend account",
+        "message": "{{name}} will no longer be able to sign in. You can activate them again later."
+      },
+      "activate": {
+        "title": "Activate account",
+        "message": "{{name}} will be able to sign in again."
+      },
+      "delete": {
+        "title": "Delete account",
+        "message": "{{name}} will be removed permanently. This cannot be undone."
+      }
+    }
   }
 }
