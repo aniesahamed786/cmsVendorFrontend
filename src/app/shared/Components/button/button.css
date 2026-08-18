@@ -3,13 +3,15 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 2.5rem;
+  height: var(--field-height, 2.5rem);
+  min-height: var(--field-height, 2.5rem);
   padding: 0 1rem;
   border-radius: 0;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
+  box-sizing: border-box;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 .app-btn:disabled {

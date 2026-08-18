@@ -93,8 +93,8 @@ html[lang="ar"] {
   --field-ring: var(--app-primary-ring);
   --field-text: var(--app-text);
   --field-placeholder: var(--app-muted);
-  --field-icon: var(--app-muted);
-  --field-height: 2.5rem; /* matches .app-btn height so fields align with buttons */
+  --field-height: 2.5rem; /* unified height factor for buttons (.app-btn, .p-button), search, select, multiselect, p-list, datepicker, inputs */
+  --btn-height: var(--field-height);
   --field-padding-x: 1rem;
   --field-padding-y: 0.55rem;
   --field-font-size: 0.9rem;
@@ -196,6 +196,13 @@ body {
   border-color: var(--app-border) !important;
 }
 
+.p-button,
+.app-btn {
+  height: var(--field-height) !important;
+  min-height: var(--field-height) !important;
+  box-sizing: border-box;
+}
+
 .p-button:not(.p-button-secondary):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-danger),
 p-button[severity="primary"] .p-button,
 .p-button.p-button-primary {
@@ -294,19 +301,36 @@ p-button[severity="primary"] .p-button:enabled:hover,
   box-shadow: none !important;
   font-size: var(--field-font-size);
   transition: background-color 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
 }
 
-/* One height for every single-line control, so a select, a text input and the
+/* One height for every single-line control, so a select, a text input, buttons and the
    search box line up exactly in a filter row. Multiselect gets min-height
    instead — it has to grow when the selected chips wrap to a second line. */
-.p-datepicker{
-  padding:2px;
+.p-inputtext:not(textarea),
+.p-select,
+.p-dropdown,
+.p-datepicker,
+.p-password,
+.p-inputnumber,
+.p-autocomplete,
+.app-search {
+  height: var(--field-height) !important;
+  min-height: var(--field-height) !important;
+  box-sizing: border-box;
 }
 
-.p-select,
 .p-multiselect,
-.p-listbox {
-  min-height: var(--field-height);
+.p-listbox,
+.p-list {
+  min-height: var(--field-height) !important;
+  box-sizing: border-box;
+}
+
+.p-datepicker {
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Side gap: one token, applied with padding-inline so it mirrors itself in RTL.
@@ -317,6 +341,7 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-datepicker,
 .p-iconfield {
   padding-inline: 0 !important;
+  padding-block: 0 !important;
 }
 
 .p-inputtext,
@@ -350,6 +375,7 @@ p-button[severity="primary"] .p-button:enabled:hover,
   height: 100%;
   min-height: 0 !important;
   font-size: inherit;
+  padding-block: 0 !important;
 }
 
 /* Text sits centred in the fixed height. Spans get flex; real <input>s can't. */
@@ -692,14 +718,20 @@ html body [data-pc-name="toggleswitch"],
   align-items: center;
   gap: 0.5rem;
   width: 16rem;
-  padding-block: var(--field-padding-y); /* inline padding comes from the unified field rules */
+  height: var(--field-height) !important;
+  min-height: var(--field-height) !important;
+  padding-block: 0 !important;
+  box-sizing: border-box;
 
   i {
     font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
   }
 
   input {
     flex: 1;
+    height: 100%;
     outline: none;
   }
 }
