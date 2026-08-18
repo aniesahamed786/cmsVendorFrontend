@@ -12,6 +12,7 @@ import { environment } from '../../../../../environments/environment';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
 import { OfferHeroCard, OfferHeroVendor } from '../../Components/offer-hero-card/offer-hero-card';
 import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
+import { BranchesService } from '../../../Branches/services/branches.service';
 
 type RedemptionTab = 'in-store' | 'online';
 
@@ -26,6 +27,7 @@ type RedemptionTab = 'in-store' | 'online';
 export class OfferDetailsPage {
   private readonly i18n = inject(I18nService);
   private readonly offerDetailService = inject(OfferDetailService);
+  private readonly branchesService = inject(BranchesService);
   readonly pendingRequest = inject(PendingRequestCheck);
   readonly offerDetailIconBasePath = 'assets/svg/Offers/offer-details';
 
@@ -65,11 +67,7 @@ export class OfferDetailsPage {
   OfferBasicData = signal<any>({});
   vendor = signal<any>({});
   readonly backendUrl = environment.backendUrl;
-  offerLocations = signal<any[]>([
-    { branch_name: 'Main Branch', city: 'Dhahran', region: 'Eastern Province', country: 'Saudi Arabia', address: 'King Saud Rd' },
-    { branch_name: 'City Center', city: 'Riyadh', region: 'Riyadh', country: 'Saudi Arabia', address: 'Olaya St' },
-    { branch_name: 'Corniche', city: 'Jeddah', region: 'Makkah', country: 'Saudi Arabia', address: 'Corniche Rd' },
-  ]);
+  offerLocations = signal<any[]>([]);
 
   isLoading = signal(false);
   offerId = signal('');
@@ -259,6 +257,16 @@ export class OfferDetailsPage {
                 icon: res.categories[0].categoryLogo
               }
               : null,
+            categories: (res.categories || []).map((c: any) => ({
+              id: c.categoryId ?? c._id ?? c.id,
+              name: c.categoryName ?? c.name,
+              name_ar: c.categoryNameAr ?? c.name_ar,
+              icon: c.categoryLogo ?? c.icon,
+              categoryId: c.categoryId,
+              categoryName: c.categoryName,
+              categoryNameAr: c.categoryNameAr,
+              categoryLogo: c.categoryLogo
+            })),
             tags: res.tags ?? [],
             targetAudience: res.audience ?? [],
             discount_type: res.discountType,
@@ -300,7 +308,38 @@ export class OfferDetailsPage {
             name_ar: res.vendorNameAr,
             logo: res.vendorLogo
           });
-          this.offerLocations.set([]);
+
+          const locationIds: string[] = Array.isArray(res.locationIds) ? res.locationIds : [];
+          if (Array.isArray(res.locations) && res.locations.length > 0 && typeof res.locations[0] === 'object') {
+            this.offerLocations.set(res.locations);
+          } else if (locationIds.length > 0) {
+            this.branchesService.getBranches().subscribe({
+              next: (branches) => {
+                const idSet = new Set(locationIds.map((id) => String(id)));
+                const matched = (branches ?? [])
+                  .filter((b) => idSet.has(String(b.locationId)))
+                  .map((b) => ({
+                    id: b.locationId,
+                    _id: b.locationId,
+                    locationId: b.locationId,
+                    branch_name: b.locationName,
+                    branch_name_ar: b.locationNameAr,
+                    locationName: b.locationName,
+                    locationNameAr: b.locationNameAr,
+                    city: b.city,
+                    cityAr: b.cityAr,
+                  }));
+                this.offerLocations.set(matched);
+              },
+              error: (err) => {
+                console.error('Failed to load branches for offer locations', err);
+                this.offerLocations.set([]);
+              }
+            });
+          } else {
+            this.offerLocations.set([]);
+          }
+
           this.isLoading.set(false);
         },
         error: () => {

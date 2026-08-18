@@ -29,15 +29,14 @@
   &__logo {
     width: 8rem;
     height: 8rem;
-    /* on-fill contrast: white logo plate sitting on the brand hero */
     background: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem;
-    border: 1px solid var(--app-border);
+    border: 2px solid #ffffff;
     flex-shrink: 0;
+    overflow: hidden;
   }
 
   &__logo-image {

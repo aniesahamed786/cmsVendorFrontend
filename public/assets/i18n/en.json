@@ -266,7 +266,7 @@
       "allStatuses": "All statuses"
     },
     "sort": {
-      "label": "Sort by:",
+      "label": "Sort by",
       "newest": "Date (Newest)",
       "oldest": "Date (Oldest)"
     },

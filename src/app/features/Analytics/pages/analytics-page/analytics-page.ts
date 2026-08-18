@@ -14,7 +14,6 @@ import {
   OfferInsightRow,
   VendorAnalyticsService,
 } from '../../services/analytics.service';
-import { MOCK_VENDOR_PROFILE } from '../../../Profile/data/mock-vendor-profile';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -29,10 +28,6 @@ import { createCountUp } from '../../../../shared/animation/count-up';
   styleUrl: './analytics-page.scss',
 })
 export class AnalyticsPage implements OnInit {
-  locations: any[] = [];
-  offers: any[] = [];
-  requests: any[] = [];
-  activeOffers = 0;
   readonly overview = signal<AnalyticsOverview | null>(null);
   readonly offersSummary = signal<AnalyticsOffersSummary | null>(null);
   readonly redemptionsByLocation = signal<AnalyticsRedemptionsByLocation[]>([]);
@@ -42,6 +37,10 @@ export class AnalyticsPage implements OnInit {
   readonly insightTotal = signal(0);
   readonly insightLoading = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
+
+  readonly tableRows = computed(() =>
+    this.insightLoading() ? new Array(5).fill(null) : this.insightRows()
+  );
 
   readonly loading = signal(true);
 
@@ -103,7 +102,16 @@ export class AnalyticsPage implements OnInit {
       locale: this.i18n.numberLocale,
       animation: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
         ? false
-        : { duration: 450 },
+        : {
+            duration: 1000,
+            easing: 'easeOutQuart',
+          },
+      animations: {
+        y: {
+          duration: 1000,
+          easing: 'easeOutCubic',
+        },
+      },
       layout: { padding: { top: 10 } },
       plugins: {
         legend: { display: false },
@@ -137,11 +145,6 @@ export class AnalyticsPage implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.locations = MOCK_VENDOR_PROFILE.locations || [];
-    this.offers = MOCK_VENDOR_PROFILE.offers || [];
-    this.requests = MOCK_VENDOR_PROFILE.requests || [];
-    this.activeOffers = this.offers.filter(o => o.status === 'Active').length;
-
     forkJoin({
       overview: this.analytics.getOverview().pipe(catchError((error) => {
         console.error('Failed to load analytics overview', error);
@@ -186,12 +189,23 @@ export class AnalyticsPage implements OnInit {
   // below skeleton instead; never both on one card.
 
   private startCountUp(): void {
+    const ov = this.overview();
+    const sum = this.offersSummary();
+
+    this.animateTo('activeOffers', ov?.activeOffersCount ?? 0);
+    this.animateTo('inactiveOffers', ov?.inactiveOffersCount ?? 0);
+    this.animateTo('draftOffers', ov?.draftOffersCount ?? 0);
+    this.animateTo('pendingRequests', ov?.pendingRequestsCount ?? 0);
+
+    const totalOffers = sum?.totalOffers ?? (ov ? (ov.activeOffersCount + ov.inactiveOffersCount + ov.draftOffersCount) : 0);
+    this.animateTo('totalOffers', totalOffers);
+    this.animateTo('totalOfferViews', sum?.totalViews ?? 0);
+    this.animateTo('totalRedemptions', this.redemptionTotal);
     this.animateTo('locations', this.locationCount);
-    this.animateTo('activeOffers', this.activeOfferCount);
-    this.animateTo('inactiveOffers', this.inactiveOfferCount);
-    this.animateTo('draftOffers', this.draftOfferCount);
-    this.animateTo('pendingRequests', this.pendingRequestCount);
-    this.animateTo('totalOfferViews', this.totalOfferViewEvents);
+
+    this.animateTo('top_favorites', ov?.mostFavouritedOffer?.count ?? 0);
+    this.animateTo('top_views', ov?.mostViewedOffer?.count ?? 0);
+    this.animateTo('top_shares', ov?.mostSharedOffer?.count ?? 0);
   }
 
   get totalOfferViewEvents(): number {
@@ -201,53 +215,31 @@ export class AnalyticsPage implements OnInit {
   /* ─── Overview ─── */
 
   get locationCount(): number {
-    const count = this.offersSummary()?.totalLocations;
-    if (count != null) return count;
-    return this.analytics.locationCount(this.locations);
+    return this.offersSummary()?.totalLocations ?? 0;
   }
 
   get activeOfferCount(): number {
-    const count = this.overview()?.activeOffersCount;
-    if (count != null) return count;
-    if (!Array.isArray(this.offers) || this.offers.length === 0) return this.activeOffers || 0;
-    return this.offers.filter((offer) =>
-      offer?.isActive === true ||
-      (offer?.isActive == null && String(offer?.status ?? '').toLowerCase() === 'active')
-    ).length;
+    return this.overview()?.activeOffersCount ?? 0;
   }
 
   get totalOfferCount(): number {
-    const count = this.offersSummary()?.totalOffers;
-    if (count != null) return count;
+    const sum = this.offersSummary();
+    if (sum?.totalOffers != null) return sum.totalOffers;
     const overview = this.overview();
     if (overview) return overview.activeOffersCount + overview.inactiveOffersCount + overview.draftOffersCount;
-    return Array.isArray(this.offers) ? this.offers.length : 0;
+    return 0;
   }
 
   get inactiveOfferCount(): number {
-    const count = this.overview()?.inactiveOffersCount;
-    if (count != null) return count;
-    return this.offers.filter((offer) =>
-      offer?.isActive === false || ['inactive', 'rejected'].includes(this.statusOf(offer))
-    ).length;
+    return this.overview()?.inactiveOffersCount ?? 0;
   }
 
   get draftOfferCount(): number {
-    const count = this.overview()?.draftOffersCount;
-    if (count != null) return count;
-    return this.offers.filter((offer) => this.statusOf(offer) === 'draft').length;
+    return this.overview()?.draftOffersCount ?? 0;
   }
 
   get pendingRequestCount(): number {
-    const count = this.overview()?.pendingRequestsCount;
-    if (count != null) return count;
-    return this.requests.filter((request) =>
-      !['completed', 'approved', 'rejected', 'closed'].includes(this.statusOf(request))
-    ).length;
-  }
-
-  private statusOf(item: any): string {
-    return String(item?.status ?? '').trim().toLowerCase();
+    return this.overview()?.pendingRequestsCount ?? 0;
   }
 
   get redemptionTotal(): number {
@@ -257,12 +249,6 @@ export class AnalyticsPage implements OnInit {
   }
 
   /* ─── Offer Insights ─── */
-
-  get offerInsightRows(): OfferInsightRow[] {
-    const list = Array.isArray(this.offers) ? this.offers : [];
-    const maxRows = list.length ? Math.min(list.length, 500) : 1;
-    return this.analytics.offerInsightRows(list, null, 1, maxRows);
-  }
 
   /** Server-paginated offer insights; p-table fires this on init and on every page/sort change. */
   loadOfferInsights(event: TableLazyLoadEvent): void {
@@ -286,39 +272,40 @@ export class AnalyticsPage implements OnInit {
   }
 
   /** One card per metric: most favorited, most viewed, most shared. */
-  get topOfferCards(): Array<{ offer: OfferInsightRow; icon: string; labelKey: string; metricKey: string; value: number }> {
+  get topOfferCards(): Array<{
+    offer: OfferInsightRow;
+    icon: string;
+    labelKey: string;
+    metricKey: string;
+    metricId: string;
+    value: number;
+  }> {
     const overview = this.overview();
-    if (overview) {
-      return [
-        this.topOfferCard(overview.mostFavouritedOffer, 'pi pi-heart', 'analytics.topOffers.mostFavorited', 'analytics.common.favorites'),
-        this.topOfferCard(overview.mostViewedOffer, 'pi pi-eye', 'analytics.topOffers.mostViewed', 'analytics.common.views'),
-        this.topOfferCard(overview.mostSharedOffer, 'pi pi-share-alt', 'analytics.topOffers.mostShared', 'analytics.common.shares'),
-      ];
-    }
-
-    const rows = this.offerInsightRows;
-    const metrics = [
-      { metric: 'favorites', icon: 'pi pi-heart', labelKey: 'analytics.topOffers.mostFavorited', metricKey: 'analytics.common.favorites' },
-      { metric: 'views', icon: 'pi pi-eye', labelKey: 'analytics.topOffers.mostViewed', metricKey: 'analytics.common.views' },
-      { metric: 'shares', icon: 'pi pi-share-alt', labelKey: 'analytics.topOffers.mostShared', metricKey: 'analytics.common.shares' },
-    ] as const;
-
-    return metrics.map(({ metric, ...rest }) => {
-      const offer = [...rows].sort((a, b) => b[metric] - a[metric])[0];
-      return { offer, value: offer[metric], ...rest };
-    });
+    return [
+      this.topOfferCard(overview?.mostFavouritedOffer, 'pi pi-heart', 'analytics.topOffers.mostFavorited', 'analytics.common.favorites', 'top_favorites'),
+      this.topOfferCard(overview?.mostViewedOffer, 'pi pi-eye', 'analytics.topOffers.mostViewed', 'analytics.common.views', 'top_views'),
+      this.topOfferCard(overview?.mostSharedOffer, 'pi pi-share-alt', 'analytics.topOffers.mostShared', 'analytics.common.shares', 'top_shares'),
+    ];
   }
 
   private topOfferCard(
-    topOffer: AnalyticsTopOffer,
+    topOffer: AnalyticsTopOffer | null | undefined,
     icon: string,
     labelKey: string,
     metricKey: string,
-  ): { offer: OfferInsightRow; icon: string; labelKey: string; metricKey: string; value: number } {
+    metricId: string,
+  ): {
+    offer: OfferInsightRow;
+    icon: string;
+    labelKey: string;
+    metricKey: string;
+    metricId: string;
+    value: number;
+  } {
     return {
       offer: {
-        id: topOffer.offerId,
-        title: (this.i18n.lang() === 'ar' ? topOffer.offerTitleAr : topOffer.offerTitle) || '-',
+        id: topOffer?.offerId ?? '',
+        title: (this.i18n.lang() === 'ar' ? topOffer?.offerTitleAr : topOffer?.offerTitle) || (topOffer?.offerId ? '-' : '—'),
         discount: '0',
         type: '-',
         shares: 0,
@@ -329,7 +316,8 @@ export class AnalyticsPage implements OnInit {
       icon,
       labelKey,
       metricKey,
-      value: topOffer.count,
+      metricId,
+      value: topOffer?.count ?? 0,
     };
   }
 
@@ -349,7 +337,4 @@ export class AnalyticsPage implements OnInit {
     if (!id) return;
     this.router.navigate(['/offers', id]);
   }
-
-  /* ─── Location Insights ─── */
-
 }

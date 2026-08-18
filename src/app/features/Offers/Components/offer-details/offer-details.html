@@ -101,14 +101,14 @@
         @if (isEdited('categories','categoryIds')) { <span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
       </header>
       <div class="offer-card__tags">
-        @for (category of getCategories(offer()); track category?._id?.$oid || category?._id || category?.id || $index) {
+        @for (category of getCategories(offer()); track category?._id?.$oid || category?._id || category?.id || category?.categoryId || $index) {
         <div class="offer-detail-tile offer-detail-tile--square">
-          @if (isPrimeIcon(category?.icon)) {
-          <i [class]="category.icon + ' offer-detail-tile__icon'"></i>
-          } @else if (category?.icon && !hasCategoryIconError(category?.icon)) {
-          <img [src]="getCategoryIconImage(category.icon)" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
-            (error)="markCategoryIconError(category?.icon)" />
-          } @else if (category?.icon) {
+          @if (isPrimeIcon(getCategoryTileIcon(category))) {
+          <i [class]="getCategoryTileIcon(category) + ' offer-detail-tile__icon'"></i>
+          } @else if (getCategoryTileIcon(category) && !hasCategoryIconError(getCategoryTileIcon(category))) {
+          <img [src]="getCategoryIconImage(getCategoryTileIcon(category))" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
+            (error)="markCategoryIconError(getCategoryTileIcon(category))" />
+          } @else if (getCategoryTileIcon(category)) {
           <i class="pi pi-image offer-detail-tile__icon-placeholder"></i>
           }
           <span class="offer-detail-tile__label">{{ getCategoryLabel(category) }}</span>
@@ -118,7 +118,7 @@
           @if (isPrimeIcon(getCategoryIcon(offer()))) {
           <i [class]="getCategoryIcon(offer()) + ' offer-detail-tile__icon'"></i>
           } @else if (getCategoryIcon(offer()) && !hasCategoryIconError(getCategoryIcon(offer()))) {
-          <img [src]="getCategoryIcon(offer())" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
+          <img [src]="getCategoryIconImage(getCategoryIcon(offer()))" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
             (error)="markCategoryIconError(getCategoryIcon(offer()))" />
           } @else if (getCategoryIcon(offer())) {
           <i class="pi pi-image offer-detail-tile__icon-placeholder"></i>

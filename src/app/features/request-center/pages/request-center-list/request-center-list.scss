@@ -127,7 +127,7 @@
 
   &__toolbar-row {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
@@ -187,21 +187,9 @@
 
   &__toolbar-controls {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 0.75rem;
     flex-wrap: wrap;
-  }
-
-  &__sort {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  &__sort-label {
-    font-size: 0.9rem;
-    color: var(--app-muted);
-    white-space: nowrap;
   }
 
   &__empty {

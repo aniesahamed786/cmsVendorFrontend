@@ -29,8 +29,13 @@ export class PreviewOfferDetails implements OnChanges {
   }
 
   get isHotelOffer(): boolean {
-    const categoryName = this.offer?.category?.name?.trim().toLowerCase();
-    return categoryName === 'hotels' || categoryName === 'hotel';
+    const categories = Array.isArray(this.offer?.categories) && this.offer.categories.length > 0
+      ? this.offer.categories
+      : (this.offer?.category ? [this.offer.category] : []);
+    return categories.some((category: any) => {
+      const name = (category?.name || category?.categoryName || '')?.trim().toLowerCase();
+      return name === 'hotels' || name === 'hotel';
+    });
   }
 
   get hotelDetails(): any { return this.offer?.hotel_details || this.offer; }
@@ -158,14 +163,14 @@ export class PreviewOfferDetails implements OnChanges {
 
   getLocationTitle(loc: any): string {
     if (this.language === 'ar') {
-      return loc?.branch_name_ar || loc?.city_ar || loc?.branch_name || loc?.city || 'اسم الموقع';
+      return loc?.branch_name_ar || loc?.locationNameAr || loc?.city_ar || loc?.cityAr || loc?.branch_name || loc?.locationName || loc?.city || 'اسم الموقع';
     }
-    return loc?.branch_name || loc?.city || 'Location name';
+    return loc?.branch_name || loc?.locationName || loc?.city || 'Location name';
   }
 
   getLocationSubtitle(loc: any): string {
-    if (this.language === 'ar') return loc?.address_ar || loc?.address || 'تفاصيل الموقع';
-    return loc?.address || 'Location detail';
+    if (this.language === 'ar') return loc?.address_ar || loc?.addressAr || loc?.address || loc?.city_ar || loc?.cityAr || loc?.city || 'تفاصيل الموقع';
+    return loc?.address || loc?.city || 'Location detail';
   }
 
   getRoomDetails(): any[] { return this.hotelDetails?.roomDetails || []; }

@@ -7,6 +7,16 @@
   </header>
 
   <section class="kpi-grid" [attr.aria-label]="'analytics.overview.title' | translate">
+    @if (loading()) {
+    @for (i of [1, 2, 3, 4]; track i) {
+    <article class="kpi-card">
+      <span class="app-skeleton kpi-card__skeleton-icon"></span>
+      <span class="app-skeleton kpi-card__skeleton-value"></span>
+      <span class="app-skeleton kpi-card__skeleton-title"></span>
+      <span class="app-skeleton kpi-card__skeleton-hint"></span>
+    </article>
+    }
+    } @else {
     <article class="kpi-card">
       <span class="icon-box"><i class="pi pi-tag"></i></span>
       <strong>{{ animatedCount('activeOffers') }}</strong>
@@ -31,6 +41,7 @@
       <h2>{{ 'analytics.kpi.pendingRequests' | translate }}</h2>
       <p>{{ 'analytics.kpi.pendingRequestsHint' | translate }}</p>
     </article>
+    }
   </section>
 
   <div class="analytics-grid analytics-grid--primary">
@@ -71,7 +82,14 @@
 
       @if (loading()) {
       @for (i of [1, 2, 3]; track i) {
-      <span class="app-skeleton offer-skeleton"></span>
+      <div class="top-offer top-offer--skeleton">
+        <span class="app-skeleton top-offer__skeleton-icon"></span>
+        <span class="top-offer__copy">
+          <span class="app-skeleton top-offer__skeleton-label"></span>
+          <span class="app-skeleton top-offer__skeleton-title"></span>
+        </span>
+        <span class="app-skeleton top-offer__skeleton-metric"></span>
+      </div>
       }
       } @else {
       @for (card of topOfferCards; track card.labelKey) {
@@ -84,7 +102,7 @@
           <strong>{{ card.offer.title }}</strong>
         </span>
         <span class="top-offer__metric">
-          {{ card.value | number: '1.0-0':i18n.numberLocale }} {{ card.metricKey | translate }}
+          {{ animatedCount(card.metricId) }} {{ card.metricKey | translate }}
         </span>
       </button>
       }
@@ -101,22 +119,31 @@
         </div>
       </div>
       <div class="overview-metrics">
+        @if (loading()) {
+        @for (i of [1, 2, 3, 4]; track i) {
         <div>
-          <strong>{{ totalOfferCount | number: '1.0-0':i18n.numberLocale }}</strong>
+          <span class="app-skeleton overview-metrics__skeleton-value"></span>
+          <span class="app-skeleton overview-metrics__skeleton-label"></span>
+        </div>
+        }
+        } @else {
+        <div>
+          <strong>{{ animatedCount('totalOffers') }}</strong>
           <span>{{ 'analytics.kpi.totalOffers' | translate }}</span>
         </div>
         <div>
-          <strong>{{ totalOfferViewEvents | number: '1.0-0':i18n.numberLocale }}</strong>
+          <strong>{{ animatedCount('totalOfferViews') }}</strong>
           <span>{{ 'analytics.kpi.offerViews' | translate }}</span>
         </div>
         <div>
-          <strong>{{ redemptionTotal | number: '1.0-0':i18n.numberLocale }}</strong>
+          <strong>{{ animatedCount('totalRedemptions') }}</strong>
           <span>{{ 'analytics.common.redemptions' | translate }}</span>
         </div>
         <div>
-          <strong>{{ locationCount | number: '1.0-0':i18n.numberLocale }}</strong>
+          <strong>{{ animatedCount('locations') }}</strong>
           <span>{{ 'analytics.kpi.locations' | translate }}</span>
         </div>
+        }
       </div>
     </section>
 
@@ -130,8 +157,8 @@
       </div>
       <app-search class="insights-search" (valueChange)="insightTable.filterGlobal($event, 'contains')" />
     </div>
-    <p-table #insightTable [value]="insightRows()" [lazy]="true" (onLazyLoad)="loadOfferInsights($event)"
-      [loading]="insightLoading()" [showLoader]="false" [totalRecords]="insightTotal()" [paginator]="true" [rows]="10"
+    <p-table #insightTable [value]="tableRows()" [lazy]="true" (onLazyLoad)="loadOfferInsights($event)"
+      [loading]="false" [showLoader]="false" [totalRecords]="insightTotal()" [paginator]="!insightLoading()" [rows]="10"
       [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body" styleClass="analytics-table">
       <ng-template pTemplate="header">
         <tr>
@@ -161,20 +188,21 @@
         </tr>
       </ng-template>
 
+      <ng-template pTemplate="loadingbody">
+        <tr class="analytics-table__row--skeleton">
+          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--title"></span></td>
+          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--discount"></span></td>
+          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--type"></span></td>
+          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span></td>
+          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span></td>
+          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span></td>
+        </tr>
+      </ng-template>
+
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="6">{{ 'offers.empty' | translate }}</td>
         </tr>
-      </ng-template>
-
-      <ng-template pTemplate="loadingbody">
-        @for (row of [1, 2, 3, 4, 5]; track row) {
-        <tr class="analytics-table__row--skeleton">
-          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-          <td><span class="app-skeleton table-skeleton"></span></td>
-          }
-        </tr>
-        }
       </ng-template>
     </p-table>
   </section>

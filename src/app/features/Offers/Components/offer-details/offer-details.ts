@@ -54,14 +54,14 @@ export class OfferDetails {
 
     isHotelOffer = computed(() => {
         return this.getCategories(this.offer()).some((category) => {
-            const categoryName = category?.name?.trim().toLowerCase();
+            const categoryName = (category?.name || category?.categoryName || '')?.trim().toLowerCase();
             return categoryName === 'hotels' || categoryName === 'hotel';
         });
     });
 
     getCategories(offer: any): any[] {
         console.log("Categories", offer)
-        if (Array.isArray(offer?.categories)) {
+        if (Array.isArray(offer?.categories) && offer.categories.length > 0) {
             return offer.categories.filter((category: any) => category && typeof category === 'object');
         }
 
@@ -75,7 +75,15 @@ export class OfferDetails {
     getCategoryLabel(category: any): string {
         const fallback = this.i18n.t('offerDetails.value.uncategorized');
         if (!category || typeof category !== 'object') return fallback;
-        return category.name || category.name_ar || fallback;
+        const isAr = this.i18n.lang() === 'ar';
+        if (isAr) {
+            return category.name_ar || category.categoryNameAr || category.name || category.categoryName || fallback;
+        }
+        return category.name || category.categoryName || category.name_ar || category.categoryNameAr || fallback;
+    }
+
+    getCategoryTileIcon(category: any): string {
+        return category?.icon || category?.categoryLogo || '';
     }
 
     getStartDate(offer: any): Date | null {
@@ -114,7 +122,11 @@ export class OfferDetails {
     }
 
     getCategoryIcon(offer: any): string {
-        return this.getCategories(offer)[0]?.icon || offer?.category?.icon || '';
+        const cats = this.getCategories(offer);
+        if (cats.length > 0) {
+            return this.getCategoryTileIcon(cats[0]);
+        }
+        return offer?.category?.icon || offer?.category?.categoryLogo || '';
     }
 
     isPrimeIcon(icon: string | null | undefined): boolean {
@@ -295,15 +307,24 @@ export class OfferDetails {
     }
 
     getLocationTitle(loc: any): string {
-        return loc?.branch_name || loc?.name || loc?.title || this.i18n.t('offerDetails.value.unknownLocation');
+        const isAr = this.i18n.lang() === 'ar';
+        if (isAr) {
+            return loc?.branch_name_ar || loc?.locationNameAr || loc?.branch_name || loc?.locationName || loc?.name || loc?.title || this.i18n.t('offerDetails.value.unknownLocation');
+        }
+        return loc?.branch_name || loc?.locationName || loc?.name || loc?.title || loc?.branch_name_ar || loc?.locationNameAr || this.i18n.t('offerDetails.value.unknownLocation');
     }
 
     getLocationSubtitle(loc: any): string {
+        const isAr = this.i18n.lang() === 'ar';
+        const city = isAr ? (loc?.cityAr || loc?.city) : (loc?.city || loc?.cityAr);
+        const region = isAr ? (loc?.regionAr || loc?.region) : (loc?.region || loc?.regionAr);
+        const country = isAr ? (loc?.countryAr || loc?.country) : (loc?.country || loc?.countryAr);
+        const address = isAr ? (loc?.address_ar || loc?.addressAr || loc?.address) : (loc?.address || loc?.address_ar || loc?.addressAr);
         return [
-            loc?.city,
-            loc?.region,
-            loc?.country,
-            loc?.address,
+            city,
+            region,
+            country,
+            address,
         ]
             .filter((value) => typeof value === 'string' && value.trim())
             .join(', ');
@@ -347,7 +368,7 @@ export class OfferDetails {
         return `${this.offerDetailIconBasePath}/${iconName}`;
     }
 
-    getCategoryIconImage(icon:string){
-        return this.backendUrl + icon.replace('/api/v1/media/', '/api/v1/cmsVendor/media/')
+    getCategoryIconImage(icon: string): string {
+        return toVendorMediaUrl(icon);
     }
 }

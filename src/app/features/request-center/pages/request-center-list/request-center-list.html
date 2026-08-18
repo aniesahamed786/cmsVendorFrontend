@@ -68,12 +68,15 @@
         </div>
 
         <div class="request-center__toolbar-controls">
-          <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
-            optionLabel="label" optionValue="value" [placeholder]="'requestCenter.filter.status' | translate"
-            styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
+          <div class="app-filter-group">
+            <label class="app-filter-label">{{ 'requestCenter.filter.status' | translate }}</label>
+            <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+              optionLabel="label" optionValue="value" [placeholder]="'requestCenter.filter.status' | translate"
+              styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
+          </div>
 
-          <div class="request-center__sort">
-            <span class="request-center__sort-label">{{ 'requestCenter.sort.label' | translate }}</span>
+          <div class="app-filter-group">
+            <label class="app-filter-label">{{ 'requestCenter.sort.label' | translate }}</label>
             <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)"
               optionLabel="label" optionValue="value"
               styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
