@@ -307,15 +307,24 @@ export class OfferDetails {
     }
 
     getLocationTitle(loc: any): string {
-        return loc?.branch_name || loc?.name || loc?.title || this.i18n.t('offerDetails.value.unknownLocation');
+        const isAr = this.i18n.lang() === 'ar';
+        if (isAr) {
+            return loc?.branch_name_ar || loc?.locationNameAr || loc?.branch_name || loc?.locationName || loc?.name || loc?.title || this.i18n.t('offerDetails.value.unknownLocation');
+        }
+        return loc?.branch_name || loc?.locationName || loc?.name || loc?.title || loc?.branch_name_ar || loc?.locationNameAr || this.i18n.t('offerDetails.value.unknownLocation');
     }
 
     getLocationSubtitle(loc: any): string {
+        const isAr = this.i18n.lang() === 'ar';
+        const city = isAr ? (loc?.cityAr || loc?.city) : (loc?.city || loc?.cityAr);
+        const region = isAr ? (loc?.regionAr || loc?.region) : (loc?.region || loc?.regionAr);
+        const country = isAr ? (loc?.countryAr || loc?.country) : (loc?.country || loc?.countryAr);
+        const address = isAr ? (loc?.address_ar || loc?.addressAr || loc?.address) : (loc?.address || loc?.address_ar || loc?.addressAr);
         return [
-            loc?.city,
-            loc?.region,
-            loc?.country,
-            loc?.address,
+            city,
+            region,
+            country,
+            address,
         ]
             .filter((value) => typeof value === 'string' && value.trim())
             .join(', ');

@@ -163,14 +163,14 @@ export class PreviewOfferDetails implements OnChanges {
 
   getLocationTitle(loc: any): string {
     if (this.language === 'ar') {
-      return loc?.branch_name_ar || loc?.city_ar || loc?.branch_name || loc?.city || 'اسم الموقع';
+      return loc?.branch_name_ar || loc?.locationNameAr || loc?.city_ar || loc?.cityAr || loc?.branch_name || loc?.locationName || loc?.city || 'اسم الموقع';
     }
-    return loc?.branch_name || loc?.city || 'Location name';
+    return loc?.branch_name || loc?.locationName || loc?.city || 'Location name';
   }
 
   getLocationSubtitle(loc: any): string {
-    if (this.language === 'ar') return loc?.address_ar || loc?.address || 'تفاصيل الموقع';
-    return loc?.address || 'Location detail';
+    if (this.language === 'ar') return loc?.address_ar || loc?.addressAr || loc?.address || loc?.city_ar || loc?.cityAr || loc?.city || 'تفاصيل الموقع';
+    return loc?.address || loc?.city || 'Location detail';
   }
 
   getRoomDetails(): any[] { return this.hotelDetails?.roomDetails || []; }
