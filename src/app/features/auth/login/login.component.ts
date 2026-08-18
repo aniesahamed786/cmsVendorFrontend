@@ -111,12 +111,7 @@ export class LoginComponent {
 
       console.log('Login Success:', response);
 
-      localStorage.setItem('accessToken', response.accessToken);
-
-      localStorage.setItem(
-        'vendorAccount',
-        JSON.stringify(response.vendorAccount)
-      );
+      this.authService.setSession(response.accessToken, response.vendorAccount);
 
       // The account's saved theme was stored but never applied — the settings page
       // writes it, so honour it here or a second device never picks it up.

@@ -5,6 +5,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { Popover } from 'primeng/popover';
 import { PrimeUIModules } from '../../../core/prime.import';
+import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
@@ -19,6 +20,7 @@ export class Navbar {
   private readonly router = inject(Router);
   private readonly themeService = inject(ThemeService);
   private readonly i18n = inject(I18nService);
+  private readonly authService = inject(AuthService);
 
   readonly isArabic = this.i18n.isRtl;
 
@@ -28,7 +30,7 @@ export class Navbar {
   headerData = input<string>('');
   private readonly routeSlug = signal('dashboard');
 
-  readonly userName = signal('Alex Rivera');
+  readonly userName = computed(() => this.authService.getVendorAccount()?.name || 'Alex Rivera');
   // ponytail: a key while the user is mocked. Real auth returns a role string —
   // pipe it through a `roles.*` lookup then, or drop the pipe in the template.
   readonly userRole = signal('navbar.roleVendor');
@@ -90,8 +92,7 @@ export class Navbar {
 
   onLogout(): void {
     this.closeProfileMenu();
-    // ponytail: no session to clear yet — add token/state cleanup when vendor auth lands.
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
   isDarkMode(): boolean {

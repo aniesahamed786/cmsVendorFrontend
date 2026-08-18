@@ -1,25 +1,40 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
 
-  // Skip login API
-  if (req.url.includes('/cmsVendor/login')) {
+  // Skip login API and static assets
+  if (req.url.includes('/cmsVendor/login') || req.url.includes('assets/')) {
     return next(req);
   }
 
-  const token = localStorage.getItem('accessToken');
+  const token = authService.getAccessToken();
 
-  // If no token is available, send the request as-is
-  if (!token) {
-    return next(req);
+  // If token is already expired locally, trigger logout immediately and reject
+  if (token && authService.isTokenExpired()) {
+    authService.logout();
+    return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Unauthorized - Token expired' }));
   }
 
-  // Clone the request and attach the Authorization header
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+  let outgoing = req;
+  if (token) {
+    outgoing = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
 
-  return next(authReq);
+  return next(outgoing).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        console.warn('HTTP 401 Unauthorized received. Logging out automatically.');
+        authService.logout();
+      }
+      return throwError(() => error);
+    })
+  );
 };
