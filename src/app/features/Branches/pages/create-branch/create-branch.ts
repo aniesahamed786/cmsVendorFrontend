@@ -67,7 +67,10 @@ export class CreateBranch {
       entityType: 'STORE',
       // entityId is omitted deliberately: the backend rejects CREATE requests that carry one.
       requestType: 'CREATE',
-      title: branch.branch_name || this.i18n.t('branchForm.request.untitledBranch'),
+      title:
+        branch.branch_name ||
+        branch.branch_name_ar ||
+        this.i18n.t('branchForm.request.untitledBranch'),
       requestData,
       actionType,
     };

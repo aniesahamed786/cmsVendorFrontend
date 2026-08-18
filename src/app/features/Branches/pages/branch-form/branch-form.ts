@@ -81,16 +81,6 @@ export interface BranchFormSubmit {
   changedFields: Record<string, unknown>;
 }
  
-function arabicOnlyValidator(): ValidatorFn {
-  const arabicPattern = /^[\u0600-\u06FF\u0660-\u0669\s]+$/;
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
-    if (!value) {
-      return null;
-    }
-    return arabicPattern.test(value) ? null : { arabicOnly: true };
-  };
-}
  
 @Component({
   selector: 'app-branch-form',
@@ -179,7 +169,7 @@ export class BranchForm {
   constructor() {
     this.branchForm = this.fb.group({
       locationNameEn: ['', [Validators.required, noWhitespaceValidator()]],
-      locationNameAr: ['', [Validators.required, noWhitespaceValidator(), arabicOnlyValidator()]],
+      locationNameAr: ['', [Validators.required, noWhitespaceValidator()]],
       country: ['Saudi Arabia', [Validators.required, noWhitespaceValidator()]],
       region: [''],
       city: ['', [Validators.required, noWhitespaceValidator()]],
@@ -280,23 +270,38 @@ export class BranchForm {
   }
 
   isSubmitDisabled(): boolean {
-    if (this.isEditMode && !this.hasEditChanges()) {
-      return true;
-    }
     return this.isLoading() || this.resolvingCoordinates() || this.saving();
   }
- 
-  sanitizeArabicInput(controlName: string): void {
-    const control = this.branchForm.get(controlName);
-    const currentValue = control?.value;
-    if (typeof currentValue !== 'string') {
-      return;
+
+  hasAtLeastOneFieldFilled(): boolean {
+    if (this.isEditMode) {
+      return this.hasEditChanges();
     }
-    const sanitized = currentValue.replace(/[a-zA-Z]/g, '');
-    if (sanitized !== currentValue) {
-      control?.setValue(sanitized);
-      control?.markAsTouched();
+
+    const form = this.branchForm?.value;
+    if (!form) return false;
+
+    const fields = [
+      form.locationNameEn,
+      form.locationNameAr,
+      form.region,
+      form.city,
+      form.address,
+      form.googleMapLink,
+      form.representativeName,
+      form.phoneNumber,
+    ];
+
+    const hasValue = fields.some(
+      (val) => typeof val === 'string' && val.trim().length > 0,
+    );
+    if (hasValue) return true;
+
+    if (form.country && form.country.trim() !== '' && form.country.trim() !== 'Saudi Arabia') {
+      return true;
     }
+
+    return false;
   }
  
   sanitizePhoneNumber(event: Event): void {
@@ -410,13 +415,14 @@ export class BranchForm {
   }
  
   onSaveDraft(): void {
-    if (this.branchForm.invalid) {
-      this.branchForm.markAllAsTouched();
+    if (this.isSubmitDisabled()) return;
+
+    if (!this.hasAtLeastOneFieldFilled()) {
       this.messageService.add({
         severity: 'warn',
-        summary: this.i18n.t('branchForm.toast.missingFieldsSummary'),
-        detail: this.i18n.t('branchForm.toast.missingFieldsDetail'),
-        life: 5000,
+        summary: this.i18n.t('branchForm.toast.noChangesSummary'),
+        detail: this.i18n.t('branchForm.toast.noChangesDetail'),
+        life: 4000,
       });
       return;
     }

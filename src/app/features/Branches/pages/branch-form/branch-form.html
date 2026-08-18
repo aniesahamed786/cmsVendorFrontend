@@ -53,12 +53,9 @@
         </label>
         <input pInputText formControlName="locationNameAr" dir="rtl"
           class="branch-form__input branch-form__input--right"
-          [placeholder]="'branchForm.placeholder.locationNameAr' | translate"
-          (input)="sanitizeArabicInput('locationNameAr')" />
+          [placeholder]="'branchForm.placeholder.locationNameAr' | translate" />
         @if (hasRequiredError('locationNameAr')) {
         <p class="branch-form__error">{{ 'branchForm.error.locationNameArRequired' | translate }}</p>
-        } @else if (hasFieldError('locationNameAr', 'arabicOnly')) {
-        <p class="branch-form__error">{{ 'branchForm.error.locationNameArArabicOnly' | translate }}</p>
         }
       </div>
 

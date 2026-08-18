@@ -140,7 +140,11 @@ export class EditBranch {
       entityType: this.entityType,
       entityId: this.entityId!,
       requestType: 'UPDATE',
-      title: this.branchTitle || event.payload.branch_name || '',
+      title:
+        this.branchTitle ||
+        event.payload.branch_name ||
+        event.payload.branch_name_ar ||
+        this.i18n.t('branchForm.request.untitledBranch'),
       requestData: changedFields,
       actionType,
     };
@@ -162,7 +166,10 @@ export class EditBranch {
       entityType: this.entityType,
       // entityId intentionally omitted — CREATE requests must not carry one.
       requestType: 'CREATE',
-      title: event.payload.branch_name || this.i18n.t('branchForm.request.untitledBranch'),
+      title:
+        event.payload.branch_name ||
+        event.payload.branch_name_ar ||
+        this.i18n.t('branchForm.request.untitledBranch'),
       requestData,
       actionType,
     };
