@@ -29,8 +29,13 @@ export class PreviewOfferDetails implements OnChanges {
   }
 
   get isHotelOffer(): boolean {
-    const categoryName = this.offer?.category?.name?.trim().toLowerCase();
-    return categoryName === 'hotels' || categoryName === 'hotel';
+    const categories = Array.isArray(this.offer?.categories) && this.offer.categories.length > 0
+      ? this.offer.categories
+      : (this.offer?.category ? [this.offer.category] : []);
+    return categories.some((category: any) => {
+      const name = (category?.name || category?.categoryName || '')?.trim().toLowerCase();
+      return name === 'hotels' || name === 'hotel';
+    });
   }
 
   get hotelDetails(): any { return this.offer?.hotel_details || this.offer; }

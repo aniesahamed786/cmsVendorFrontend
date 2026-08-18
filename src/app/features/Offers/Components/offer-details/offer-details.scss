@@ -129,12 +129,6 @@
   background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
   border: 1px solid var(--app-border);
   border-radius: 0; /* Square borders forced */
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--app-primary-hover-soft);
-    border-color: var(--app-primary);
-  }
 
   &__icon {
     color: var(--app-muted);

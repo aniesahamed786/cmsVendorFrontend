@@ -259,6 +259,16 @@ export class OfferDetailsPage {
                 icon: res.categories[0].categoryLogo
               }
               : null,
+            categories: (res.categories || []).map((c: any) => ({
+              id: c.categoryId ?? c._id ?? c.id,
+              name: c.categoryName ?? c.name,
+              name_ar: c.categoryNameAr ?? c.name_ar,
+              icon: c.categoryLogo ?? c.icon,
+              categoryId: c.categoryId,
+              categoryName: c.categoryName,
+              categoryNameAr: c.categoryNameAr,
+              categoryLogo: c.categoryLogo
+            })),
             tags: res.tags ?? [],
             targetAudience: res.audience ?? [],
             discount_type: res.discountType,
