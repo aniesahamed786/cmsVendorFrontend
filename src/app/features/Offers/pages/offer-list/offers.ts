@@ -290,7 +290,7 @@ export class Offers implements OnInit {
   private loadOffers() {
     this.loading.set(true);
     this.offerListService
-      .getOffers('6a5d039814db22e9a862746b', 1, 10)
+      .getOffers(1, 10)
       .subscribe({
         next: (res) => {
           console.log('Offer List', res)
@@ -306,29 +306,37 @@ export class Offers implements OnInit {
       });
   }
 
-  private mapOffer = (offer: OfferApi): Offer => ({
-    id: offer.offerId,
-    title: offer.offerTitle,
-    discount:
-      offer.discountType === 'percentage'
-        ? `${offer.discount}%`
-        : offer.discount,
-    discountType:
-      offer.discountType === 'percentage'
-        ? 'Percentage'
-        : 'Fixed Amount',
-    availability:
-      offer.availability[0] === 'online'
-        ? 'Online'
-        : offer.availability[0] === 'hybrid'
-          ? 'Hybrid'
-          : 'In-Store',
-    startDate: new Date(offer.startDate.$date),
-    expirationDate: new Date(offer.endDate.$date),
-    status: offer.status as OfferStatus,
-    branch: '',
-    offerLogo: offer.offerLogo
-  });
+  private mapOffer = (offer: OfferApi): Offer => {
+    const av = (offer.availability || []).map((a) => a.toLowerCase());
+    const hasOnline = av.includes('online') || av.includes('digital');
+    const hasInStore = av.includes('in-store') || av.includes('instore');
+
+    let availability: Availability = 'In-Store';
+    if (hasOnline && hasInStore) {
+      availability = 'Hybrid';
+    } else if (hasOnline) {
+      availability = 'Online';
+    }
+
+    return {
+      id: offer.offerId,
+      title: offer.offerTitle,
+      discount:
+        offer.discountType === 'percentage'
+          ? (offer.discount ? `${offer.discount}%` : '')
+          : (offer.discount ?? ''),
+      discountType:
+        offer.discountType === 'percentage'
+          ? 'Percentage'
+          : 'Fixed Amount',
+      availability,
+      startDate: offer.startDate?.$date ? new Date(offer.startDate.$date) : new Date(),
+      expirationDate: offer.endDate?.$date ? new Date(offer.endDate.$date) : new Date(),
+      status: (offer.status || 'Active') as OfferStatus,
+      branch: '',
+      offerLogo: offer.offerLogo
+    };
+  };
 
   getImageUrl(path: string): string {
     if (!path) return '';

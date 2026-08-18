@@ -10,9 +10,9 @@ export class OfferListService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
-  getOffers(vendorId: string, page: number, pageSize: number) {
+  getOffers(page: number = 1, pageSize: number = 10) {
     return this.http.get<OffersResponse>(
-      `${this.baseUrl}/offers/${vendorId}`,
+      `${this.baseUrl}/offers`,
       {
         params: {
           page,

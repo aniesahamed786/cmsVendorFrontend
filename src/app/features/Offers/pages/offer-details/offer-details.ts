@@ -235,13 +235,23 @@ export class OfferDetailsPage {
       .subscribe({
         next: (res: any) => {
           console.log("Offer Detail", res)
+          const av = (res.availability || []).map((a: string) => a.toLowerCase());
+          const hasOnline = av.includes('online') || av.includes('digital');
+          const hasInStore = av.includes('in-store') || av.includes('instore');
+          let offerMode = 'in store';
+          if (hasOnline && hasInStore) {
+            offerMode = 'both';
+          } else if (hasOnline) {
+            offerMode = 'online';
+          }
+
           this.OfferBasicData.set({
             title: res.offerTitle,
-            title_ar: res.offerTitleAr,
-            description: res.description,
-            description_ar: '',
-            startDate: res.startDate.$date,
-            expiryDate: res.endDate,
+            title_ar: res.offerTitleAr || res.offerTitle,
+            description: res.description ?? '',
+            description_ar: res.descriptionAr ?? res.description ?? '',
+            startDate: res.startDate?.$date ?? res.startDate,
+            expiryDate: res.endDate?.$date ?? res.endDate,
             category: res.categories?.length
               ? {
                 name: res.categories[0].categoryName,
@@ -253,13 +263,11 @@ export class OfferDetailsPage {
             targetAudience: res.audience ?? [],
             discount_type: res.discountType,
             discount_amount: res.discount,
-            discount_amount_ar: res.discount,
-            offerMode:
-              res.availability?.length > 1
-                ? 'both'
-                : res.availability?.[0] === 'online'
-                  ? 'online'
-                  : 'in store',
+            discount_amount_ar: res.discountAmountAr || res.discount,
+            discountCode: res.discountCode ?? '',
+            discount_url: res.discountUrl ?? '',
+            website: res.website ?? '',
+            offerMode,
             howToAvail:
               res.redemptionInstructions?.instructions ?? '',
             howToAvail_ar:
@@ -270,13 +278,18 @@ export class OfferDetailsPage {
               res.contactDetails?.telephone?.join(', ') ?? '',
             email:
               res.contactDetails?.email?.join(', ') ?? '',
-            highlight_title: '',
-            highlight_title_ar: '',
-            highlight_description: '',
-            highlight_description_ar: '',
+            isHighlightEnabled: res.isHighlightEnabled ?? false,
+            highlight_title: res.highlightTitle ?? '',
+            highlight_title_ar: res.highlightTitleAr ?? '',
+            highlight_description: res.highlightDescription ?? '',
+            highlight_description_ar: res.highlightDescriptionAr ?? '',
+            highlight_image: res.highlightImage ?? '',
+            highlight_image_landscape: res.highlightImageLandscape ?? '',
             status: res.status,
             offerLogo: res.offerLogo,
             offerImages: res.offerImages,
+            locationIds: res.locationIds ?? [],
+            hotelDetails: res.hotelDetails ?? null,
             vendorName: res.vendorName,
             vendorNameAr: res.vendorNameAr,
             vendorLogo: res.vendorLogo
