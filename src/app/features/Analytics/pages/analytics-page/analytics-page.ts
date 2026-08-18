@@ -38,6 +38,10 @@ export class AnalyticsPage implements OnInit {
   readonly insightLoading = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
 
+  readonly tableRows = computed(() =>
+    this.insightLoading() ? new Array(5).fill(null) : this.insightRows()
+  );
+
   readonly loading = signal(true);
 
   private readonly analytics = inject(VendorAnalyticsService);
