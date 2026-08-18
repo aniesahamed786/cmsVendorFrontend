@@ -1232,11 +1232,70 @@ export class OfferForm {
   }
 
   isSubmitDisabled(): boolean {
-    if (this.actionType() === "edit" && !this.hasEditChanges()) {
+    return this.isSubmitting();
+  }
+
+  hasAtLeastOneFieldFilled(): boolean {
+    if (this.actionType() === "edit") {
+      return this.hasEditChanges();
+    }
+
+    const form = this.offerForm?.value;
+    if (!form) return false;
+
+    const stringFields = [
+      form.selectedVendor,
+      form.titleEn,
+      form.titleAr,
+      form.descriptionEn,
+      form.descriptionAr,
+      form.discountEn,
+      form.discountAr,
+      form.discountCode,
+      form.startdate,
+      form.expiry,
+      form.instructionsEn,
+      form.instructionsAr,
+      form.urlLink,
+      form.storeWebsiteLink,
+      form.phone,
+      form.email,
+      form.landline,
+      form.highlightTitleEn,
+      form.highlightTitleAr,
+      form.highlightDescription,
+      form.highlightDescriptionAr,
+      form.hotelAmenities,
+      form.hotelAmenitiesAr,
+      form.rooms,
+      form.currency,
+      form.taxValue,
+      form.taxValueAr,
+    ];
+
+    const hasStringValue = stringFields.some(
+      (val) => typeof val === "string" && val.trim().length > 0,
+    );
+    if (hasStringValue) return true;
+
+    if (Array.isArray(form.category) && form.category.length > 0) return true;
+    if (Array.isArray(form.targetAudience) && form.targetAudience.length > 0) return true;
+    if (Array.isArray(form.locationIds) && form.locationIds.length > 0) return true;
+    if (Array.isArray(form.selectedTags) && form.selectedTags.length > 0) return true;
+    if (this.roomItems().length > 0) return true;
+
+    if (
+      form.offerImage ||
+      form.offerImageLandscape ||
+      form.highlightImage ||
+      form.highlightImageLandscape
+    ) {
       return true;
     }
 
-    return this.isSubmitting() || this.hasBranchActivationIssue();
+    if (form.highlight) return true;
+
+    return false;
   }
 
   private expiryDateValidator: ValidatorFn = (
@@ -1373,6 +1432,16 @@ export class OfferForm {
 
   onSaveDraft() {
     if (this.isSubmitting()) return;
+
+    if (!this.hasAtLeastOneFieldFilled()) {
+      this.messageService.add({
+        severity: "warn",
+        summary: this.i18n.t("offerForm.toast.noChangesSummary"),
+        detail: this.i18n.t("offerForm.toast.noChangesDetail"),
+        life: 4000,
+      });
+      return;
+    }
 
     this.isSubmitting.set(true);
     this.saveDraftEvent.emit(this.buildSubmitEvent());
