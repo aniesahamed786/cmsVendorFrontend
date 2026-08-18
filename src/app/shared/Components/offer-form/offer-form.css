@@ -195,14 +195,14 @@
 
 /* Inputs (background/border/focus come from the global .p-inputtext rules) */
 .offer-form__input { width: 100%; }
-.offer-form__input--pl2 { padding-inline-start: 0.5rem; }
-.offer-form__input--pl4 { padding-inline-start: 1rem; }
-.offer-form__input--pl5 { padding-inline-start: 1.25rem; }
-.offer-form__input--pl11 { padding-inline-start: 2.75rem; }
-.offer-form__input--pr4 { padding-right: 1rem; }
-.offer-form__input--pr8 { padding-right: 2rem; }
+.offer-form__input--pl2 { padding-inline-start: 0.5rem !important; }
+.offer-form__input--pl4 { padding-inline-start: 1rem !important; }
+.offer-form__input--pl5 { padding-inline-start: 1.25rem !important; }
+.offer-form__input--pl11 { padding-inline-start: 2.75rem !important; }
+.offer-form__input--pr4 { padding-inline-end: 1rem !important; }
+.offer-form__input--pr8 { padding-inline-end: 2rem !important; }
 .offer-form__input--h11 { height: 2.75rem; }
-.offer-form__input--p5 { padding: 1.25rem; }
+.offer-form__input--p5 { padding: 1.25rem !important; }
 .offer-form__input--right { text-align: right; }
 
 .offer-form__input-wrap { position: relative; }
@@ -243,6 +243,8 @@
   transform: translateY(-50%);
   font-size: 0.875rem;
   color: var(--app-muted);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .offer-form__select {
