@@ -66,6 +66,7 @@
         </label>
         <p-select [options]="countryOptions()" optionLabel="label" optionValue="value"
           [placeholder]="'branchForm.placeholder.country' | translate" appendTo="body"
+          [filter]="true" filterBy="label"
           styleClass="w-full branch-form__select !rounded-none"
           panelStyleClass="branch-form__overlay-panel branch-form__select-panel"
           formControlName="country" />
