@@ -58,7 +58,7 @@ export interface HighlightOffer {
 export const MOCK_HIGHLIGHT_OFFERS: HighlightOffer[] = [
   {
     id: 'favourited',
-    icon: 'pi pi-heart',
+    icon: 'pi pi-bookmark',
     label: 'Most Favourited Offer',
     offerTitle: 'Summer Staycation Deluxe',
     metricValue: '14.2k Likes',

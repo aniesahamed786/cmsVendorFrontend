@@ -282,7 +282,7 @@ export class AnalyticsPage implements OnInit {
   }> {
     const overview = this.overview();
     return [
-      this.topOfferCard(overview?.mostFavouritedOffer, 'pi pi-heart', 'analytics.topOffers.mostFavorited', 'analytics.common.favorites', 'top_favorites'),
+      this.topOfferCard(overview?.mostFavouritedOffer, 'pi pi-bookmark', 'analytics.topOffers.mostFavorited', 'analytics.common.favorites', 'top_favorites'),
       this.topOfferCard(overview?.mostViewedOffer, 'pi pi-eye', 'analytics.topOffers.mostViewed', 'analytics.common.views', 'top_views'),
       this.topOfferCard(overview?.mostSharedOffer, 'pi pi-share-alt', 'analytics.topOffers.mostShared', 'analytics.common.shares', 'top_shares'),
     ];
