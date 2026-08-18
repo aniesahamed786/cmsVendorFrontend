@@ -58,52 +58,24 @@ export class Offers implements OnInit {
   private readonly offers = signal<Offer[]>([]);
   readonly backendUrl = environment.backendUrl;
 
-  // ===========================================================================
-  // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
-  // ---------------------------------------------------------------------------
-  // `offers` above is a synchronous in-memory array, so there is no real load to
-  // wait for. This timer fakes one purely so the skeleton state is reachable and
-  // reviewable. When the real service lands:
-  //   1. delete the `setTimeout` in the constructor below;
-  //   2. flip `loading` to false in the service's `subscribe`, exactly as
-  //      `branches-page.ts` does;
-  //   3. delete this comment block.
-  // Keep `loading`, `tableRows` and the skeleton markup — only the fake timer
-  // and the initial `true` sourcing are throwaway.
-  // ===========================================================================
   readonly loading = signal(true);
-  private static readonly FAKE_LOAD_MS = 800; // DELETE WITH THE TIMER ABOVE
-
-  constructor() {
-    this.loadOffers()
-    // DELETE WHEN THE API IS WIRED — see the block above. Keep the revealStats()
-    // call; move it into the service's subscribe alongside `loading.set(false)`.
-   this.offersService.getOfferStats().subscribe({
-  next: (stats) => {
-    this.offerStats.set(stats);
-    this.loading.set(false);
-    this.revealStats();
-  },
-  error: () => {
-    this.loading.set(false);
-  }
-});
-    // setTimeout(() => {
-    //   this.loading.set(false);
-    //   this.revealStats();
-    // }, Offers.FAKE_LOAD_MS);
-  }
 
   ngOnInit(): void {
-  this.offersService.getOfferStats().subscribe({
-    next: (stats) => {
-      this.offerStats.set(stats);
-    },
-    error: (err) => {
-      console.error('Failed to load offer stats', err);
-    }
-  });
-}
+    this.loadOffers();
+    this.loadOfferStats();
+  }
+
+  private loadOfferStats(): void {
+    this.offersService.getOfferStats().subscribe({
+      next: (stats) => {
+        this.offerStats.set(stats);
+        this.revealStats();
+      },
+      error: (err) => {
+        console.error('Failed to load offer stats', err);
+      }
+    });
+  }
   // ---- Count-up stats (shared/animation/count-up.ts) ------------------------
   // The cards skeleton while the data is absent, then count up once it lands —
   // the skeleton covers the fetch, the count-up covers the arrival. They never
@@ -293,12 +265,11 @@ export class Offers implements OnInit {
       .getOffers(1, 10)
       .subscribe({
         next: (res) => {
-          console.log('Offer List', res)
+          console.log('Offer List', res);
           this.offers.set(
             res.data.map(this.mapOffer)
           );
           this.loading.set(false);
-          this.revealStats();
         },
         error: () => {
           this.loading.set(false);
