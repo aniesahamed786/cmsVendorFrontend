@@ -84,7 +84,7 @@
           <strong>{{ card.offer.title }}</strong>
         </span>
         <span class="top-offer__metric">
-          {{ card.value | number: '1.0-0':i18n.numberLocale }} {{ card.metricKey | translate }}
+          {{ animatedCount(card.metricId) }} {{ card.metricKey | translate }}
         </span>
       </button>
       }
@@ -102,19 +102,19 @@
       </div>
       <div class="overview-metrics">
         <div>
-          <strong>{{ totalOfferCount | number: '1.0-0':i18n.numberLocale }}</strong>
+          <strong>{{ animatedCount('totalOffers') }}</strong>
           <span>{{ 'analytics.kpi.totalOffers' | translate }}</span>
         </div>
         <div>
-          <strong>{{ totalOfferViewEvents | number: '1.0-0':i18n.numberLocale }}</strong>
+          <strong>{{ animatedCount('totalOfferViews') }}</strong>
           <span>{{ 'analytics.kpi.offerViews' | translate }}</span>
         </div>
         <div>
-          <strong>{{ redemptionTotal | number: '1.0-0':i18n.numberLocale }}</strong>
+          <strong>{{ animatedCount('totalRedemptions') }}</strong>
           <span>{{ 'analytics.common.redemptions' | translate }}</span>
         </div>
         <div>
-          <strong>{{ locationCount | number: '1.0-0':i18n.numberLocale }}</strong>
+          <strong>{{ animatedCount('locations') }}</strong>
           <span>{{ 'analytics.kpi.locations' | translate }}</span>
         </div>
       </div>
