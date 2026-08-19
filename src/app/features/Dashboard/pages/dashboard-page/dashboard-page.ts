@@ -9,6 +9,7 @@ import { DashboardService } from '../../services/dashboard.service';
 import { OnInit, inject } from '@angular/core';
 import { toActivityRow } from '../../../recent-activities/models/system-log.mapper';
 import { SystemLogService } from '../../../recent-activities/services/system-log.service';
+import { createCountUp } from '../../../../shared/animation/count-up';
 
 interface RecentActivityItem {
   icon: string;
@@ -42,6 +43,10 @@ const ACTIVITY_ICON_CLASSES: Record<string, string> = {
   styleUrl: './dashboard-page.css',
 })
 export class DashboardPage implements OnInit {
+  private readonly countUp = createCountUp();
+  readonly animatedCount = this.countUp.animatedCount;
+  private readonly animateTo = this.countUp.animateTo;
+
   headerLoading = signal(false);
   vendorName = signal('Lumee Street');
   vendorDescription = signal(
@@ -85,6 +90,10 @@ export class DashboardPage implements OnInit {
       .subscribe({
         next: (stats) => {
           this.dashboardStats.set(stats);
+          this.animateTo('totalRedemptions', stats?.totalRedemptions ?? 0);
+          this.animateTo('activeOffers', stats?.activeOffers ?? 0);
+          this.animateTo('pendingRequests', stats?.pendingRequests ?? 0);
+          this.animateTo('expiringSoonOffers', stats?.expiringSoonOffers ?? 0);
         },
         error: (err) => {
           console.error('Failed to load dashboard stats', err);
