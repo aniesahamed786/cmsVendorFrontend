@@ -91,10 +91,6 @@ export class OfferDetailsPage {
     if(this.offerId()){
       this.loadOfferDetail()
     }
-
-    // ponytail: dummy loading to test skeleton loader; remove once real fetch wires up isLoading
-    // this.isLoading.set(true);
-    // setTimeout(() => this.isLoading.set(false), 3000);
   }
 
   getOfferStatus(offer: any): 'Active' | 'Scheduled' | 'Expired' | 'Inactive' {

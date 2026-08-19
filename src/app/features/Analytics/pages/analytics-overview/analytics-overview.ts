@@ -35,17 +35,7 @@ import {
   styleUrl: './analytics-overview.scss',
 })
 export class AnalyticsOverviewPage implements OnInit {
-  // ===========================================================================
-  // ARTIFICIAL LOADING — DELETE WHEN THE API IS WIRED
-  // ---------------------------------------------------------------------------
-  // All data on this page is static mock data, so there's nothing to actually wait
-  // on. This timer fakes a load so the skeletons are reachable and the KPI count-up
-  // has a beat to animate from 0 (see the style skill's number_animation.md /
-  // SKELETON.md). Delete the timer + `loading` signal once a real fetch lands and
-  // drive `loading` from that request instead.
-  // ===========================================================================
-  readonly loading = signal(true);
-  private static readonly FAKE_LOAD_MS = 800;
+  readonly loading = signal(false);
 
   readonly statusStats: StatusStatCard[] = MOCK_OFFER_STATUS_STATS;
   readonly locationRedemption: LocationRedemption[] = MOCK_REDEMPTION_BY_LOCATION;
@@ -60,11 +50,7 @@ export class AnalyticsOverviewPage implements OnInit {
   private readonly animated = signal<Record<string, number>>({});
 
   ngOnInit(): void {
-    // DELETE WHEN THE API IS WIRED — see the ARTIFICIAL LOADING block above.
-    setTimeout(() => {
-      this.loading.set(false);
-      this.startCountUp();
-    }, AnalyticsOverviewPage.FAKE_LOAD_MS);
+    this.startCountUp();
   }
 
   /* ─── Period switching ─── */
