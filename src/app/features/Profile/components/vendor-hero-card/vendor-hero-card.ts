@@ -22,6 +22,7 @@ export class VendorHeroCard {
   nameAr = input<string>('');
   /** Stored media path or absolute URL; resolved onto the vendor media proxy for display. */
   logo = input<string>('');
+  loading = input<boolean>(false);
 
   logoUrl(): string {
     return toVendorMediaUrl(this.logo());

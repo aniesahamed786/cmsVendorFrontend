@@ -2,6 +2,9 @@
   <ng-content select="[hero-action]"></ng-content>
 
   <div class="vendor-hero-card__content">
+    @if (loading()) {
+    <div class="app-skeleton app-skeleton--on-primary vendor-hero-card__logo vendor-hero-card__logo--skeleton"></div>
+    } @else {
     <div class="vendor-hero-card__logo">
       @if (logoUrl()) {
       <img [src]="logoUrl()" [alt]="name()" class="vendor-hero-card__logo-image" />
@@ -9,10 +12,16 @@
       <i class="pi pi-image vendor-hero-card__logo-icon"></i>
       }
     </div>
+    }
 
     <div class="vendor-hero-card__details">
+      @if (loading()) {
+      <div class="app-skeleton app-skeleton--on-primary vendor-hero-card__skeleton-title"></div>
+      <div class="app-skeleton app-skeleton--on-primary vendor-hero-card__skeleton-subtitle"></div>
+      } @else {
       <h1 class="vendor-hero-card__title">{{ name() }}</h1>
       <h2 class="vendor-hero-card__subtitle" dir="rtl">{{ nameAr() }}</h2>
+      }
     </div>
   </div>
 </div>

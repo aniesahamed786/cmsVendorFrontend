@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal,OnInit} from '@angular/core';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
@@ -28,41 +29,41 @@ import { PendingRequestCheck } from '../../../request-center/services/pending-re
   providers: [PendingRequestCheck],
 })
 export class VendorProfilePage implements OnInit {
-  ngOnInit(): void {
-  this.loadVendorProfile();
-}
-readonly backendUrl = environment.backendUrl;
-getImageUrl(path: string): string {
-  if (!path) return '';
-  return this.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
-}
+  readonly isLoading = signal(true);
   readonly profile = signal<any | null>(null);
-  constructor(private readonly router: Router,private readonly vendorProfileService: VendorProfileService, private readonly authService: AuthService) {}
-private loadVendorProfile(): void {
-
-  this.vendorProfileService
-      .getVendorProfile()
-      .subscribe({
-
-        next: (response) => {
-
-          console.log(response);
-
-          this.profile.set(response);
-
-        },
-
-        error: (err) => {
-
-          console.error(err);
-
-        }
-
-      });
-
-}
+  readonly backendUrl = environment.backendUrl;
   readonly pendingRequest = inject(PendingRequestCheck);
   private readonly i18n = inject(I18nService);
+
+  constructor(
+    private readonly router: Router,
+    private readonly vendorProfileService: VendorProfileService,
+    private readonly authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadVendorProfile();
+  }
+
+  getImageUrl(path: string): string {
+    if (!path) return '';
+    return this.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
+  }
+
+  private loadVendorProfile(): void {
+    this.isLoading.set(true);
+    this.vendorProfileService
+      .getVendorProfile()
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.profile.set(response);
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
 
   /**
    * Editing the profile raises a PROFILE/UPDATE request, and only one may be open at a time.
