@@ -1444,17 +1444,11 @@
   },
   "accountManagement": {
     "title": "Account Management",
-    "subtitle": "Create and manage the vendor accounts under your business.",
-    "addMain": "Add Main Vendor",
-    "addSub": "Add Subaccount",
+    "subtitle": "Create and manage the subaccounts under your vendor account.",
     "backToList": "Back to Account Management",
     "searchPlaceholder": "Search name, email or phone",
     "empty": "No accounts yet. Add one to get started.",
     "emptyFiltered": "No accounts match your search.",
-    "tab": {
-      "main": "Main Vendor",
-      "sub": "Vendor Subaccount"
-    },
     "status": {
       "ACTIVE": "Active",
       "SUSPENDED": "Suspended"
@@ -1472,10 +1466,8 @@
       "lastLogin": "Last Login"
     },
     "create": {
-      "mainTitle": "Add Main Vendor",
-      "mainSubtitle": "Creates a vendor admin with the full permission set.",
-      "subTitle": "Add Subaccount",
-      "subSubtitle": "Creates vendor staff limited to the permissions, branches and categories you choose."
+      "title": "Add Subaccount",
+      "subtitle": "Creates vendor staff limited to the permissions, branches and categories you choose."
     },
     "form": {
       "section": {
@@ -1518,7 +1510,6 @@
         "branchesRequired": "Select at least one branch.",
         "categoriesRequired": "Select at least one category."
       },
-      "mainNotice": "A main vendor holds the fixed vendor admin permission set — no branch or category limits apply.",
       "passwordNotice": "No password is set here. The account starts on the shared default password, which the holder changes from Profile Settings.",
       "cancel": "Cancel",
       "submit": "Create Account",
@@ -1553,7 +1544,7 @@
       "delete": "Delete"
     },
     "edit": {
-      "title": "Edit Account",
+      "title": "Edit Subaccount",
       "notFound": "This account could not be found."
     },
     "loadFailed": "Could not load accounts. Please try again.",
@@ -1571,6 +1562,10 @@
         "title": "Delete account",
         "message": "{{name}} will be removed permanently. This cannot be undone."
       }
+    },
+    "add": "Add Subaccount",
+    "list": {
+      "title": "Subaccounts"
     }
   }
 }

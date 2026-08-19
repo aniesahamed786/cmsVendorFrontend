@@ -47,7 +47,8 @@ export class AccountManagementPage implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  readonly activeTab = signal<AccountType>('MAIN');
+  private static readonly ACCOUNT_TYPE: AccountType = 'SUB_ACCOUNT';
+
   readonly loading = signal(true);
   readonly loadFailed = signal(false);
   readonly rows = signal<VendorAccount[]>([]);
@@ -56,15 +57,7 @@ export class AccountManagementPage implements OnInit {
   private readonly currentPage = signal(1);
   readonly searchQuery = signal('');
 
-  readonly isSubAccount = computed(() => this.activeTab() === 'SUB_ACCOUNT');
 
-  readonly tabs = computed(() => {
-    this.i18n.loadSeq();
-    return [
-      { label: this.i18n.t('accountManagement.tab.main'), value: 'MAIN' as AccountType },
-      { label: this.i18n.t('accountManagement.tab.sub'), value: 'SUB_ACCOUNT' as AccountType },
-    ];
-  });
 
   readonly filteredRows = computed(() => {
     const term = this.searchQuery().trim().toLowerCase();
@@ -140,22 +133,9 @@ export class AccountManagementPage implements OnInit {
   });
 
   ngOnInit(): void {
-    const tab = (this.route.snapshot.queryParamMap.get('tab') ?? 'main').toLowerCase();
-    this.activeTab.set(tab === 'sub-account' ? 'SUB_ACCOUNT' : 'MAIN');
     this.load(1);
   }
 
-  selectTab(value: AccountType): void {
-    if (this.activeTab() === value) return;
-    this.activeTab.set(value);
-    this.searchQuery.set('');
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { tab: value === 'SUB_ACCOUNT' ? 'sub-account' : 'main' },
-      replaceUrl: true,
-    });
-    this.load(1);
-  }
 
   onLazyLoad(event: TableLazyLoadEvent): void {
     const rows = event.rows ?? this.pageSize();
@@ -169,7 +149,7 @@ export class AccountManagementPage implements OnInit {
     this.loadFailed.set(false);
 
     this.api
-      .list({ page, pageSize: this.pageSize(), accountType: this.activeTab() })
+      .list({ page, pageSize: this.pageSize(), accountType: AccountManagementPage.ACCOUNT_TYPE })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (res) => {
@@ -186,15 +166,11 @@ export class AccountManagementPage implements OnInit {
   }
 
   addAccount(): void {
-    this.router.navigate([
-      '/account-management/create',
-      this.isSubAccount() ? 'sub-account' : 'main',
-    ]);
+    this.router.navigate(['/account-management/create']);
   }
 
   editAccount(row: VendorAccount): void {
-    const type = (row.accountType ?? this.activeTab()) === 'SUB_ACCOUNT' ? 'sub-account' : 'main';
-    this.router.navigate(['/account-management/edit', type, row.id]);
+    this.router.navigate(['/account-management/edit', row.id]);
   }
 
   private askConfirm(action: RowAction, row: VendorAccount): void {

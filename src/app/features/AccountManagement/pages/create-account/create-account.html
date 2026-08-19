@@ -10,10 +10,8 @@
     <h1 class="account-page__title">
       @if (isEdit()) {
       {{ 'accountManagement.edit.title' | translate }}
-      } @else if (isSubAccount()) {
-      {{ 'accountManagement.create.subTitle' | translate }}
       } @else {
-      {{ 'accountManagement.create.mainTitle' | translate }}
+      {{ 'accountManagement.create.title' | translate }}
       }
     </h1>
     <p class="account-page__subtitle">
@@ -23,17 +21,15 @@
         } @else {
         {{ editing()?.name }}
         }
-      } @else if (isSubAccount()) {
-      {{ 'accountManagement.create.subSubtitle' | translate }}
       } @else {
-      {{ 'accountManagement.create.mainSubtitle' | translate }}
+      {{ 'accountManagement.create.subtitle' | translate }}
       }
     </p>
   </header>
 
   @if (loading()) {
   <div class="account-page__loading">
-    @for (section of skeletonSections(); track $index) {
+    @for (section of skeletonSections; track $index) {
     <div class="account-form__section">
       <div class="account-form__section-head">
         <span class="app-skeleton account-page__skeleton-icon"></span>
@@ -118,15 +114,8 @@
         }
       </div>
 
-      @if (!isSubAccount()) {
-      <div class="account-form__notice">
-        <i class="pi pi-info-circle"></i>
-        <span>{{ 'accountManagement.form.mainNotice' | translate }}</span>
-      </div>
-      }
     </div>
 
-    @if (isSubAccount()) {
     <div class="account-form__section">
       <div class="account-form__section-head">
         <div class="account-form__section-icon"><i class="pi pi-shield"></i></div>
@@ -197,7 +186,6 @@
         </div>
       </div>
     </div>
-    }
 
     @if (!isEdit()) {
     <div class="account-form__notice account-form__notice--muted">

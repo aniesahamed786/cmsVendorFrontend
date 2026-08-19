@@ -9,13 +9,13 @@ export const routes: Route[] = [
     data: { title: 'Account Management' },
   },
   {
-    path: 'create/:accountType',
+    path: 'create',
     component: CreateAccount,
-    data: { title: 'Create Account' },
+    data: { title: 'Create Subaccount' },
   },
   {
-    path: 'edit/:accountType/:id',
+    path: 'edit/:id',
     component: CreateAccount,
-    data: { title: 'Edit Account' },
+    data: { title: 'Edit Subaccount' },
   },
 ];

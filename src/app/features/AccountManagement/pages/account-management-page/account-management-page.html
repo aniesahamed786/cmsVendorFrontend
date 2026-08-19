@@ -5,33 +5,14 @@
       <p class="account-management__subtitle">{{ 'accountManagement.subtitle' | translate }}</p>
     </div>
     <app-button variant="primary" icon="pi pi-plus" (click)="addAccount()">
-      @if (isSubAccount()) {
-      {{ 'accountManagement.addSub' | translate }}
-      } @else {
-      {{ 'accountManagement.addMain' | translate }}
-      }
+      {{ 'accountManagement.add' | translate }}
     </app-button>
   </div>
 
-  <div class="account-management__tabs" role="tablist">
-    @for (tab of tabs(); track tab.value) {
-    <button type="button" role="tab" class="account-management__tab"
-      [class.is-active]="activeTab() === tab.value" [attr.aria-selected]="activeTab() === tab.value"
-      (click)="selectTab(tab.value)">
-      {{ tab.label }}
-    </button>
-    }
-  </div>
 
   <section class="account-management__card">
     <div class="account-management__toolbar">
-      <h2 class="account-management__card-title">
-        @if (isSubAccount()) {
-        {{ 'accountManagement.tab.sub' | translate }}
-        } @else {
-        {{ 'accountManagement.tab.main' | translate }}
-        }
-      </h2>
+      <h2 class="account-management__card-title">{{ 'accountManagement.list.title' | translate }}</h2>
       <app-search [value]="searchQuery()" (valueChange)="searchQuery.set($event)"
         [placeholder]="'accountManagement.searchPlaceholder' | translate" />
     </div>

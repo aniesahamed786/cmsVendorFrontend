@@ -27,34 +27,7 @@
     color: var(--app-muted);
   }
 
-  &__tabs {
-    display: inline-flex;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-    padding: 0.25rem;
-    gap: 0.25rem;
-    margin-bottom: 1.25rem;
-  }
 
-  &__tab {
-    padding: 0.6rem 1.25rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--app-muted);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.2s, color 0.2s;
-
-    &:hover:not(.is-active) {
-      color: var(--app-primary);
-    }
-
-    &.is-active {
-      background: var(--app-primary);
-      color: #fff;
-    }
-  }
 
   &__card {
     background: var(--app-surface);
@@ -146,7 +119,6 @@
   }
 }
 
-// Full-bleed table sides & bottom inside the card
 ::ng-deep .account-management__table {
   margin: 0 -1.5rem -1.25rem;
 }

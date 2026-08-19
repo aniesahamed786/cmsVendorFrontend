@@ -14,27 +14,16 @@ export interface AccountFormValue {
   categoryIds?: string[];
 }
 
-export function buildAccountPayload(
-  accountType: AccountType,
-  value: AccountFormValue,
-): CreateAccountPayload {
-  const base = {
+export function buildAccountPayload(value: AccountFormValue): CreateAccountPayload {
+  return {
     name: (value.name ?? '').trim(),
     email: (value.email ?? '').trim().toLowerCase(),
     phone: (value.phone ?? '').trim(),
+    accountType: 'SUB_ACCOUNT',
+    permissions: [...(value.permissions ?? [])],
+    locationIds: [...(value.locationIds ?? [])],
+    categoryIds: [...(value.categoryIds ?? [])],
   };
-
-  if (accountType === 'SUB_ACCOUNT') {
-    return {
-      ...base,
-      accountType: 'SUB_ACCOUNT',
-      permissions: [...(value.permissions ?? [])],
-      locationIds: [...(value.locationIds ?? [])],
-      categoryIds: [...(value.categoryIds ?? [])],
-    };
-  }
-
-  return { ...base, accountType: 'MAIN' };
 }
 
 function sameMembers(a: string[] = [], b: string[] = []): boolean {

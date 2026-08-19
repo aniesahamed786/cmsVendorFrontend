@@ -21,24 +21,18 @@ export const SUBACCOUNT_PERMISSION_OPTIONS: SubaccountPermissionOption[] = [
   { key: 'manageBranches', value: 'cms_locations:manage' },
 ];
 
-interface CreateAccountBase {
+
+export interface CreateSubAccountPayload {
   name: string;
   email: string;
   phone: string;
-}
-
-export interface CreateMainAccountPayload extends CreateAccountBase {
-  accountType: 'MAIN';
-}
-
-export interface CreateSubAccountPayload extends CreateAccountBase {
   accountType: 'SUB_ACCOUNT';
   permissions: string[];
   locationIds: string[];
   categoryIds: string[];
 }
 
-export type CreateAccountPayload = CreateMainAccountPayload | CreateSubAccountPayload;
+export type CreateAccountPayload = CreateSubAccountPayload;
 
 export interface UpdateAccountPayload {
   name?: string;

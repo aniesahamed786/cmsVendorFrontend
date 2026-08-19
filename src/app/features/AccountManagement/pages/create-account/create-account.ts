@@ -55,7 +55,6 @@ export class CreateAccount implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  readonly accountType = signal<AccountType>('MAIN');
   readonly saving = signal(false);
 
   readonly editing = signal<VendorAccountDetail | null>(null);
@@ -71,13 +70,8 @@ export class CreateAccount implements OnInit {
   readonly locationsLoading = signal(false);
   readonly categoriesLoading = signal(false);
 
-  readonly isSubAccount = computed(() => this.accountType() === 'SUB_ACCOUNT');
 
-  readonly skeletonSections = computed<number[][]>(() =>
-    this.isSubAccount()
-      ? [new Array(4).fill(0), new Array(2).fill(0)]
-      : [new Array(4).fill(0)],
-  );
+  readonly skeletonSections: number[][] = [new Array(4).fill(0), new Array(2).fill(0)];
 
   readonly statusOptions = computed(() => {
     this.i18n.loadSeq();
@@ -102,16 +96,13 @@ export class CreateAccount implements OnInit {
   }
 
   ngOnInit(): void {
-    const param = (this.route.snapshot.paramMap.get('accountType') ?? 'main').toLowerCase();
-    this.accountType.set(param === 'sub-account' ? 'SUB_ACCOUNT' : 'MAIN');
-
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit.set(true);
       this.loadForEdit(id);
       return;
     }
-    this.applyTypeRules();
+    this.applyScopeRules();
   }
 
   private loadForEdit(id: string): void {
@@ -130,8 +121,7 @@ export class CreateAccount implements OnInit {
 
   private applyEditRecord(record: VendorAccountDetail): void {
     this.editing.set(record);
-    if (record.accountType) this.accountType.set(record.accountType);
-    this.applyTypeRules();
+    this.applyScopeRules();
 
     this.form.patchValue(
       {
@@ -149,8 +139,7 @@ export class CreateAccount implements OnInit {
     this.form.get('email')!.disable({ emitEvent: false });
   }
 
-  private applyTypeRules(): void {
-    if (!this.isSubAccount()) return;
+  private applyScopeRules(): void {
     for (const field of ['permissions', 'locationIds', 'categoryIds']) {
       const control = this.form.get(field)!;
       control.setValidators([nonEmptyArray]);
@@ -212,7 +201,7 @@ export class CreateAccount implements OnInit {
       return;
     }
 
-    const payload = buildAccountPayload(this.accountType(), value);
+    const payload = buildAccountPayload(value);
     const displayName = payload.name;
 
     this.saving.set(true);
@@ -285,9 +274,7 @@ export class CreateAccount implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/account-management'], {
-      queryParams: { tab: this.isSubAccount() ? 'sub-account' : 'main' },
-    });
+    this.router.navigate(['/account-management']);
   }
 }
 
