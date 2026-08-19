@@ -29,6 +29,18 @@
   letter-spacing: 0.05em;
 }
 
+.dashboard-page__logo--img {
+  background: #ffffff;
+  border: 1px solid var(--app-border);
+  overflow: hidden;
+}
+
+.dashboard-page__logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .dashboard-page__intro {
   min-width: 0;
 }

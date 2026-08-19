@@ -47,6 +47,7 @@ export class DashboardPage implements OnInit {
   vendorDescription = signal(
     'Lumee Street is a modern casual dining brand offering fresh, flavorful meals in a vibrant and welcoming atmosphere.',
   );
+  vendorLogo = signal('');
   dashboardStats = signal({
     totalRedemptions: 0,
     activeOffers: 0,

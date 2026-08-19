@@ -8,7 +8,13 @@
       <span class="app-skeleton dashboard-page__skeleton-header-desc dashboard-page__skeleton-header-desc--short"></span>
     </div>
     } @else {
-    <div class="dashboard-page__logo">LUMEE</div>
+    @if (vendorLogo()) {
+    <div class="dashboard-page__logo dashboard-page__logo--img">
+      <img [src]="vendorLogo()" [alt]="vendorName()" class="dashboard-page__logo-image" />
+    </div>
+    } @else {
+    <div class="dashboard-page__logo">{{ vendorName() ? (vendorName().length > 6 ? vendorName().substring(0, 6).toUpperCase() : vendorName().toUpperCase()) : 'LUMEE' }}</div>
+    }
     <div class="dashboard-page__intro">
       <h1 class="dashboard-page__title">{{ vendorName() }}</h1>
       <p class="dashboard-page__description">{{ vendorDescription() }}</p>
