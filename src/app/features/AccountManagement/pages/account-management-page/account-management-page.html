@@ -36,66 +36,64 @@
         [placeholder]="'accountManagement.searchPlaceholder' | translate" />
     </div>
 
-    <div class="account-management__table-wrapper">
-      <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
-        [totalRecords]="totalRecords()" [loading]="loading()" [showLoader]="false"
-        [paginator]="!loading()" [rows]="pageSize()"
-        [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
-        styleClass="account-management__table">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>{{ 'accountManagement.column.name' | translate }}</th>
-            <th>{{ 'accountManagement.column.email' | translate }}</th>
-            <th>{{ 'accountManagement.column.lastLogin' | translate }}</th>
-            <th>{{ 'accountManagement.column.status' | translate }}</th>
-            <th class="account-management__td-center">{{ 'accountManagement.column.action' | translate }}</th>
-          </tr>
-        </ng-template>
+    <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+      [totalRecords]="totalRecords()" [loading]="loading()" [showLoader]="false"
+      [paginator]="!loading()" [rows]="pageSize()"
+      [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
+      styleClass="account-management__table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ 'accountManagement.column.name' | translate }}</th>
+          <th>{{ 'accountManagement.column.email' | translate }}</th>
+          <th>{{ 'accountManagement.column.lastLogin' | translate }}</th>
+          <th>{{ 'accountManagement.column.status' | translate }}</th>
+          <th class="account-management__td-center">{{ 'accountManagement.column.action' | translate }}</th>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="body" let-row>
-          <tr>
-            <td><span class="account-management__row-title">{{ row.name }}</span></td>
-            <td>{{ row.email }}</td>
-            <td>{{ formatLastLogin(row.lastLoginAt) }}</td>
-            <td><span [class]="statusClass(row.accountStatus)">{{ statusLabel(row.accountStatus) }}</span></td>
-            <td class="account-management__td-center">
-              <button type="button" class="account-management__action-btn"
-                [attr.aria-label]="'accountManagement.column.action' | translate"
-                (click)="selectedRow.set(row); menu.toggle($event)">
-                <i class="pi pi-ellipsis-h"></i>
-              </button>
-              <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body" />
-            </td>
-          </tr>
-        </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td><span class="account-management__row-title">{{ row.name }}</span></td>
+          <td>{{ row.email }}</td>
+          <td>{{ formatLastLogin(row.lastLoginAt) }}</td>
+          <td><span [class]="statusClass(row.accountStatus)">{{ statusLabel(row.accountStatus) }}</span></td>
+          <td class="account-management__td-center">
+            <button type="button" class="account-management__action-btn"
+              [attr.aria-label]="'accountManagement.column.action' | translate"
+              (click)="selectedRow.set(row); menu.toggle($event)">
+              <i class="pi pi-ellipsis-h"></i>
+            </button>
+            <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body" />
+          </td>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="loadingbody">
-          <tr class="account-management__row--skeleton">
-            <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--name"></span></td>
-            <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--email"></span></td>
-            <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--date"></span></td>
-            <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--status"></span></td>
-            <td class="account-management__td-center">
-              <span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--action"></span>
-            </td>
-          </tr>
-        </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr class="account-management__row--skeleton">
+          <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--name"></span></td>
+          <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--email"></span></td>
+          <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--date"></span></td>
+          <td><span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--status"></span></td>
+          <td class="account-management__td-center">
+            <span class="app-skeleton account-management__skeleton-cell account-management__skeleton-cell--action"></span>
+          </td>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="5" class="account-management__empty">
-              @if (loadFailed()) {
-              {{ 'accountManagement.loadFailed' | translate }}
-              } @else if (searchQuery().trim()) {
-              {{ 'accountManagement.emptyFiltered' | translate }}
-              } @else {
-              {{ 'accountManagement.empty' | translate }}
-              }
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="account-management__empty">
+            @if (loadFailed()) {
+            {{ 'accountManagement.loadFailed' | translate }}
+            } @else if (searchQuery().trim()) {
+            {{ 'accountManagement.emptyFiltered' | translate }}
+            } @else {
+            {{ 'accountManagement.empty' | translate }}
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </section>
 </div>
 
