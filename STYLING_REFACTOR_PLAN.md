@@ -13,10 +13,10 @@ review gate before anything commits.
   Per-page button CSS is deleted, not converted.
 - **Fields, filters, search, select/multiselect/listbox, labels**: already global
   in `styles.scss`. Per-page copies are deleted, not converted.
-- **Tables**: header strip, rows and paginator are one `--app-surface`. Row hover is the
+- **Tables**: header grey band (`--table-header-bg`), rows with `--table-row-border`,
+  and paginator with top dividing line are unified globally in `styles.scss`. Row hover is the
   four-part effect in `REFACTOR.md` Step 4 — lift, inset accent bar, cell tint, title
-  recolor — written in SCSS against existing tokens. No utility classes: the only markup
-  it costs is `app-table__title` on the cell text that recolors.
+  recolor — written in SCSS against existing tokens. Per-page table blocks are deleted, not converted.
 - **Review**: one phase per page, nothing committed until you approve.
 - **Authority**: `.claude/skills/style/REFACTOR.md`. `scss-refactor` is now a
   pointer at it, so there is one procedure, not two.
