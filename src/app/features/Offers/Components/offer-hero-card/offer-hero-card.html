@@ -64,7 +64,6 @@
       <!-- Vendor row (Arabic) -->
       @if (vendorNameAr()) {
       <div class="offer-hero-card__vendor-row">
-        <span class="offer-hero-card__vendor-name">{{ vendorNameAr() }}</span>
         @if (vendorLogo()) {
         <img [src]="vendorLogo()" [alt]="'offerDetails.alt.vendorLogo' | translate" class="offer-hero-card__vendor-logo"
           (error)="markVendorLogoError()" />
@@ -73,6 +72,7 @@
           <i class="pi pi-image"></i>
         </div>
         }
+        <span class="offer-hero-card__vendor-name">{{ vendorNameAr() }}</span>
       </div>
       }
 

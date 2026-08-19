@@ -30,9 +30,9 @@
 </div>
 
 @if (isLoading()) {
-<div class="offer-hero-card">
+<p-card class="offer-hero-card">
   <div class="offer-hero-card__content">
-    <div class="offer-hero-card__left">
+    <div class="offer-hero-card__left" dir="ltr">
       <div class="offer-hero-card__vendor-row">
         <div class="skeleton-avatar app-skeleton app-skeleton--on-primary"></div>
         <div class="skeleton-text app-skeleton app-skeleton--on-primary"></div>
@@ -41,7 +41,7 @@
       <div class="skeleton-tag app-skeleton app-skeleton--on-primary app-skeleton--pill"></div>
       <div class="skeleton-badge app-skeleton app-skeleton--on-primary"></div>
     </div>
-    <div class="offer-hero-card__right">
+    <div class="offer-hero-card__right" dir="rtl">
       <div class="offer-hero-card__vendor-row">
         <div class="skeleton-text app-skeleton app-skeleton--on-primary"></div>
         <div class="skeleton-avatar app-skeleton app-skeleton--on-primary"></div>
@@ -49,11 +49,21 @@
       <div class="skeleton-title app-skeleton app-skeleton--on-primary"></div>
     </div>
   </div>
-</div>
+</p-card>
 <div class="offer-details-layout">
   <div class="offer-tab-panel__content">
     <div class="offer-tab-panel__main">
       <app-offer-details [loading]="true" [offer]="null"></app-offer-details>
+    </div>
+    <div class="offer-tab-panel__sidebar">
+      <div class="preview-wrapper">
+        <div class="phone-mockup">
+          <div class="app-skeleton preview-skeleton__screen"></div>
+        </div>
+        <div class="language-toggle-container">
+          <div class="app-skeleton preview-skeleton__toggle"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
