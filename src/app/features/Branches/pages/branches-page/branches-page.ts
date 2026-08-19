@@ -183,15 +183,20 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       this.animateTo('totalRedemptions', data.totalRedemptions);
       this.animateTo('pendingRequests', data.pendingRequests);
     });
-    this.branchesService.getTopPerformers().subscribe(data => {
-      this.topPerformers.set(data);
-      this.performersLoading.set(false);
-      // keyed per performer, so re-fetching animates from each row's current value
-      data.forEach(p => this.animateTo(`perf-${p.id}`, p.redemptions));
-    });
     this.branchesService.getBranches().subscribe(data => {
       this.allBranches.set(data);
       this.branchesLoading.set(false);
+
+      const performers: TopPerformer[] = data.map(branch => ({
+        id: branch.locationId,
+        name: branch.locationName,
+        redemptions: 0,
+      }));
+      this.topPerformers.set(performers);
+      this.performersLoading.set(false);
+      // keyed per performer, so re-fetching animates from each row's current value
+      performers.forEach(p => this.animateTo(`perf-${p.id}`, p.redemptions));
+
       this.ensureMapReady();
     });
   }
@@ -320,11 +325,15 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
     const center = { lat: 24.7136, lng: 46.6753 }; // Riyadh default
     try {
-      this.map = new google.maps.Map(this.mapContainer.nativeElement, {
+      const mapOptions: any = {
         center,
         zoom: 5,
         styles: this.getMapStyles(),
-      });
+      };
+      if ((environment as any).googleMapId) {
+        mapOptions.mapId = (environment as any).googleMapId;
+      }
+      this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
       this.zoomListener = this.map.addListener('zoom_changed', () => this.updateMarkerZoomState());
       this.debug.mapCreated = true;
       this.scheduleJsMapRender();

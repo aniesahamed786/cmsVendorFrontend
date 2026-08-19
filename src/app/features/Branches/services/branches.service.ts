@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 export interface BranchKPIs {
   totalLocations: number;
@@ -25,36 +24,23 @@ export interface BranchRow {
   totalOffers: number;
   representativeName: string;
   representativeNameAr: string;
-  latitude:string;
-  longitude:string;
-  status:string;
+  latitude: string;
+  longitude: string;
+  status: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BranchesService {
+  private http = inject(HttpClient);
+
   getKPIs(): Observable<BranchKPIs> {
     return this.http.get<BranchKPIs>('/api/v1/cmsVendor/location-stats');
   }
 
-getTopPerformers(): Observable<TopPerformer[]> {
-  return this.getBranches().pipe(
-    map((branches) =>
-      branches.map((branch) => ({
-        id: branch.locationId,
-        name: branch.locationName,
-        redemptions: 0, // TODO: Replace when backend provides this field
-      }))
-    )
-  );
+  getBranches(): Observable<BranchRow[]> {
+    return this.http.get<BranchRow[]>('/api/v1/cmsVendor/locations');
+  }
 }
 
-  private http = inject(HttpClient);
-
-getBranches(): Observable<BranchRow[]> {
-  return this.http.get<BranchRow[]>(
-    '/api/v1/cmsVendor/locations'
-  );
-}
-}
