@@ -856,15 +856,18 @@ html body [data-pc-name="toggleswitch"],
     color: var(--app-primary) !important;
   }
 
-  /* Paginator — separated from table records with a fine top border */
-  .p-paginator {
+  /* Paginator — single straight border-bottom from the row above, borderless & square paginator */
+  .p-paginator,
+  .p-datatable-paginator-bottom,
+  .p-datatable-paginator-top {
     background: transparent !important;
     border: none !important;
-    border-top: 1px solid var(--table-row-border) !important;
+    border-radius: 0 !important;
     padding: 0.75rem !important;
     justify-content: center;
     gap: 0.25rem;
     min-height: 0 !important;
+    box-shadow: none !important;
   }
 
   .p-paginator .p-select {
