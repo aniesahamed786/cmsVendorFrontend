@@ -93,7 +93,8 @@ html[lang="ar"] {
   --field-ring: var(--app-primary-ring);
   --field-text: var(--app-text);
   --field-placeholder: var(--app-muted);
-  --field-height: 2.5rem; /* unified height factor for buttons (.app-btn, .p-button), search, select, multiselect, p-list, datepicker, inputs */
+  --field-height: 2.5rem;
+  /* unified height factor for buttons (.app-btn, .p-button), search, select, multiselect, p-list, datepicker, inputs */
   --btn-height: var(--field-height);
   --field-padding-x: 1rem;
   --field-padding-y: 0.55rem;
@@ -106,6 +107,22 @@ html[lang="ar"] {
   --label-gap: 0.5rem;
   --label-desc-color: var(--app-muted);
   --label-desc-size: 0.75rem;
+
+  /* Table tokens — headers, rows, borders, hovers, paginators */
+  --table-header-bg: #eeeeee;
+  --table-header-text: var(--app-text);
+  --table-header-font-size: 0.8125rem;
+  --table-header-weight: 700;
+  --table-header-padding-y: 0.75rem;
+  --table-header-padding-x: 1rem;
+  --table-row-bg: transparent;
+  --table-row-text: var(--app-text);
+  --table-row-border: var(--app-border);
+  --table-row-font-size: 0.875rem;
+  --table-row-padding-y: 0.85rem;
+  --table-row-padding-x: 1rem;
+  --table-row-hover-bg: color-mix(in srgb, var(--app-primary-soft) 40%, var(--app-surface) 60%);
+  --table-row-hover-bar: var(--app-primary);
 }
 
 html,
@@ -130,6 +147,7 @@ body {
   --app-text: #e5e7eb;
   --app-muted: #94a3b8;
   --app-border: #334155;
+  --table-header-bg: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
   color-scheme: dark;
 }
 
@@ -584,7 +602,7 @@ p-button[severity="primary"] .p-button:enabled:hover,
 [class*="__field-group"],
 [class*="__field-wrapper"],
 .field-dropdown,
-.profile-form-grid > div {
+.profile-form-grid>div {
   display: flex;
   flex-direction: column;
   gap: 0 !important;
@@ -733,5 +751,175 @@ html body [data-pc-name="toggleswitch"],
     flex: 1;
     height: 100%;
     outline: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Unified Data Table (PrimeNG p-table & .app-table)
+ *
+ * Global table baseline matching the design tokens across light, dark,
+ * national-day, and swappable accent themes.
+ * ------------------------------------------------------------------------ */
+
+.p-datatable,
+.app-table {
+  background: var(--app-surface) !important;
+  color: var(--app-text);
+  border-radius: 0 !important;
+
+  .p-datatable-table-container,
+  .p-datatable-table {
+    background: transparent !important;
+  }
+
+  /* Full bleed padding compensation for first and last columns when in cards */
+  .p-datatable-thead>tr>th:first-child,
+  .p-datatable-tbody>tr>td:first-child {
+    padding-inline-start: 1.5rem;
+  }
+
+  .p-datatable-thead>tr>th:last-child,
+  .p-datatable-tbody>tr>td:last-child {
+    padding-inline-end: 1.5rem;
+  }
+
+  /* Table Header Strip — grey background band */
+  .p-datatable-thead>tr>th {
+    background: var(--table-header-bg) !important;
+    color: var(--table-header-text) !important;
+    font-weight: var(--table-header-weight) !important;
+    font-size: var(--table-header-font-size) !important;
+    padding: var(--table-header-padding-y) var(--table-header-padding-x) !important;
+    border: none !important;
+    border-bottom: 1px solid var(--table-row-border) !important;
+    text-align: start !important;
+    white-space: nowrap;
+  }
+
+  /* Table Body Rows */
+  .p-datatable-tbody>tr {
+    background: var(--table-row-bg) !important;
+    color: var(--table-row-text) !important;
+    transition:
+      background-color 160ms ease,
+      box-shadow 160ms ease,
+      transform 160ms ease;
+
+    >td {
+      background: transparent;
+      color: inherit;
+      font-size: var(--table-row-font-size) !important;
+      padding: var(--table-row-padding-y) var(--table-row-padding-x) !important;
+      border: none !important;
+      border-bottom: 1px solid var(--table-row-border) !important;
+      text-align: start !important;
+      transition: background-color 160ms ease;
+    }
+  }
+
+  /* Row Hover: 4-part effect (Lift + Accent Bar + Subtle Cell Tint + Title Recolor) */
+  .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover {
+    transform: translateY(-1px);
+    box-shadow: inset 3px 0 0 var(--table-row-hover-bar);
+
+    >td {
+      background: var(--table-row-hover-bg) !important;
+    }
+
+    .app-table__title,
+    [class*="__row-title"] {
+      color: var(--app-primary);
+    }
+  }
+
+  /* Skeleton / placeholder rows: no hover effects */
+  .p-datatable-tbody>tr[class*="--skeleton"]:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    cursor: default;
+
+    >td {
+      background: transparent !important;
+    }
+  }
+
+  /* Sort icons */
+  .p-sortable-column .p-sortable-column-icon,
+  .p-sortable-column:hover .p-sortable-column-icon,
+  .p-sortable-column .p-sorticon {
+    color: var(--app-muted) !important;
+  }
+
+  .p-sortable-column.p-highlight,
+  .p-sortable-column.p-highlight .p-sortable-column-icon,
+  .p-sortable-column.p-highlight .p-sorticon {
+    color: var(--app-primary) !important;
+  }
+
+  /* Paginator — separated from table records with a fine top border */
+  .p-paginator {
+    background: transparent !important;
+    border: none !important;
+    border-top: 1px solid var(--table-row-border) !important;
+    padding: 0.75rem !important;
+    justify-content: center;
+    gap: 0.25rem;
+    min-height: 0 !important;
+  }
+
+  .p-paginator .p-select {
+    width: auto !important;
+    min-width: 4rem;
+    height: 1.85rem !important;
+    min-height: 1.85rem !important;
+    font-size: 0.8125rem;
+  }
+
+  .p-paginator .p-paginator-page,
+  .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-prev,
+  .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-last {
+    color: var(--app-muted) !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    min-width: 1.85rem;
+    height: 1.85rem;
+    font-size: 0.8125rem;
+    padding: 0 !important;
+  }
+
+  .p-paginator .p-paginator-page.p-highlight {
+    background: var(--app-primary) !important;
+    color: #ffffff !important;
+    border-radius: 999px !important;
+  }
+
+  .p-paginator .p-paginator-page:not(.p-highlight):hover {
+    background: var(--app-primary-hover-soft) !important;
+    color: var(--app-text) !important;
+  }
+}
+
+/* RTL Inset Shadow Flip for Arabic */
+html[lang="ar"] .p-datatable .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover,
+html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover {
+  box-shadow: inset -3px 0 0 var(--table-row-hover-bar);
+}
+
+.app-table__title {
+  color: var(--app-text);
+  transition: color 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .p-datatable .p-datatable-tbody>tr,
+  .p-datatable .p-datatable-tbody>tr>td,
+  .app-table .p-datatable-tbody>tr,
+  .app-table .p-datatable-tbody>tr>td,
+  .app-table__title {
+    transition: none !important;
+    transform: none !important;
   }
 }
