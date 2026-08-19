@@ -42,16 +42,22 @@ const ACTIVITY_ICON_CLASSES: Record<string, string> = {
   styleUrl: './dashboard-page.css',
 })
 export class DashboardPage implements OnInit {
+  headerLoading = signal(false);
   vendorName = signal('Lumee Street');
   vendorDescription = signal(
     'Lumee Street is a modern casual dining brand offering fresh, flavorful meals in a vibrant and welcoming atmosphere.',
   );
   dashboardStats = signal({
-  totalRedemptions: 0,
-  activeOffers: 0,
-  pendingRequests: 0,
-  expiringSoonOffers: 0
-});
+    totalRedemptions: 0,
+    activeOffers: 0,
+    pendingRequests: 0,
+    expiringSoonOffers: 0,
+  });
+
+  statsLoading = signal(true);
+  pendingRequestsLoading = signal(true);
+  readonly skeletonStats = [0, 1, 2, 3];
+  readonly skeletonPendingRows = [0, 1, 2];
 
   // ponytail: server copy is English-only; times stay absolute like the
   // recent-activities table. Relative "2 mins ago" wants Intl.RelativeTimeFormat.
@@ -59,21 +65,30 @@ export class DashboardPage implements OnInit {
   activityLoading = signal(true);
   readonly skeletonRows = [0, 1, 2, 3, 4];
 
- private readonly dashboardService = inject(DashboardService);
- private readonly systemLogs = inject(SystemLogService);
+  private readonly dashboardService = inject(DashboardService);
+  private readonly systemLogs = inject(SystemLogService);
 
-constructor(
-  private readonly router: Router
-) {}
-ngOnInit(): void {
-  this.dashboardService.getDashboardStats().subscribe({
-    next: (stats) => {
-      this.dashboardStats.set(stats);
-    },
-    error: (err) => {
-      console.error('Failed to load dashboard stats', err);
-    }
-  });
+  constructor(private readonly router: Router) {}
+
+  ngOnInit(): void {
+    this.statsLoading.set(true);
+    this.pendingRequestsLoading.set(true);
+    this.dashboardService
+      .getDashboardStats()
+      .pipe(
+        finalize(() => {
+          this.statsLoading.set(false);
+          this.pendingRequestsLoading.set(false);
+        }),
+      )
+      .subscribe({
+        next: (stats) => {
+          this.dashboardStats.set(stats);
+        },
+        error: (err) => {
+          console.error('Failed to load dashboard stats', err);
+        },
+      });
 
   this.systemLogs.getSystemLogs({ page: 1, pageSize: 5, sortOrder: 'desc' })
     .pipe(finalize(() => this.activityLoading.set(false)))

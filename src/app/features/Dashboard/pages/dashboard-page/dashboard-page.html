@@ -1,13 +1,27 @@
 <div class="dashboard-page">
   <section class="dashboard-page__header">
+    @if (headerLoading()) {
+    <span class="app-skeleton dashboard-page__skeleton-logo"></span>
+    <div class="dashboard-page__intro dashboard-page__skeleton-intro">
+      <span class="app-skeleton dashboard-page__skeleton-header-title"></span>
+      <span class="app-skeleton dashboard-page__skeleton-header-desc"></span>
+      <span class="app-skeleton dashboard-page__skeleton-header-desc dashboard-page__skeleton-header-desc--short"></span>
+    </div>
+    } @else {
     <div class="dashboard-page__logo">LUMEE</div>
     <div class="dashboard-page__intro">
       <h1 class="dashboard-page__title">{{ vendorName() }}</h1>
       <p class="dashboard-page__description">{{ vendorDescription() }}</p>
     </div>
+    }
   </section>
 
   <div class="dashboard-page__stats">
+    @if (statsLoading()) {
+    @for (tile of skeletonStats; track tile) {
+    <app-offer-tile [loading]="true" />
+    }
+    } @else {
     <app-offer-tile [title]="'dashboard.stats.totalRedemptions.title' | translate" [value]="dashboardStats().totalRedemptions"
       [subtitle]="'dashboard.stats.totalRedemptions.subtitle' | translate" icon="pi pi-chart-line"
       iconColor="var(--app-primary)" iconContainerBg="var(--app-primary-soft)" [trendUp]="true" />
@@ -23,6 +37,7 @@
       [subtitle]="'dashboard.stats.expiringSoon.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-expiring-soon-offer.svg" iconColor="#dc2626"
       iconContainerBg="rgba(239, 68, 68, 0.16)" [trendUp]="false" (tileClick)="goToOffers()" />
+    }
   </div>
 
   <app-vendor-quick-actions (createOffer)="goToCreateOffer()" (editProfile)="goToEditProfile()"
@@ -72,7 +87,20 @@
       <h2 class="dashboard-page__panel-title dashboard-page__panel-title--spaced">
         {{ 'dashboard.pendingRequests' | translate }}
       </h2>
-      @if (dashboardStats().pendingRequests === 0) {
+      @if (pendingRequestsLoading()) {
+      <div class="dashboard-page__activity-list">
+        @for (row of skeletonPendingRows; track row) {
+        <div class="dashboard-page__activity">
+          <span class="app-skeleton dashboard-page__activity-icon"></span>
+          <div class="dashboard-page__activity-body">
+            <span class="app-skeleton dashboard-page__skeleton-title"></span>
+            <span class="app-skeleton dashboard-page__skeleton-desc"></span>
+          </div>
+          <span class="app-skeleton dashboard-page__skeleton-time"></span>
+        </div>
+        }
+      </div>
+      } @else if (dashboardStats().pendingRequests === 0) {
       <div class="dashboard-page__empty-state">
         <div class="dashboard-page__empty-icon" aria-hidden="true">
           <i class="pi pi-check"></i>

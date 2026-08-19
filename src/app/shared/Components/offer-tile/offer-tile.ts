@@ -12,6 +12,7 @@ import { PrimeUIModules } from '../../../core/prime.import';
 export class OfferTile {
   private readonly document = inject(DOCUMENT);
 
+  loading = input<boolean>(false);
   title = input<string>('');
   value = input<string | number>('');
   subtitle = input<string>('');

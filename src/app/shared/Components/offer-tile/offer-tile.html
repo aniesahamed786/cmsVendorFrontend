@@ -1,4 +1,12 @@
-<div class="offer-tile" (click)="tileClick.emit()">
+<div class="offer-tile" [class.offer-tile--clickable]="!loading()" (click)="!loading() && tileClick.emit()">
+  @if (loading()) {
+  <div class="offer-tile__main offer-tile__main--skeleton">
+    <span class="app-skeleton offer-tile__skeleton-icon"></span>
+    <span class="app-skeleton offer-tile__skeleton-value"></span>
+    <span class="app-skeleton offer-tile__skeleton-title"></span>
+    <span class="app-skeleton offer-tile__skeleton-subtitle"></span>
+  </div>
+  } @else {
   <div class="offer-tile__main">
     <div
       class="offer-tile__icon-box"
@@ -44,5 +52,6 @@
     ></i>
     {{ trendLabel() }}
   </span>
+  }
   }
 </div>
