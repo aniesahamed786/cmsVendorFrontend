@@ -142,11 +142,14 @@ export class Redemption implements OnInit {
   readonly listLoading = signal(true);
   readonly pageSize = signal(10);
 
+  /** While loading, feed the table falsy rows so PrimeNG renders the skeleton body. */
   readonly redemptionRows = computed(() =>
-    this.redemptions().map((r) => ({
-      ...r,
-      offer: this.localized(r.offerTitle, r.offerTitleAr),
-    })),
+    this.listLoading()
+      ? new Array(this.pageSize()).fill(null)
+      : this.redemptions().map((r) => ({
+          ...r,
+          offer: this.localized(r.offerTitle, r.offerTitleAr),
+        })),
   );
 
   constructor() {

@@ -153,7 +153,7 @@
     </div>
 
     <p-table [value]="redemptionRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
-      [loading]="listLoading()" [paginator]="true" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [paginator]="true" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]"
       paginatorDropdownAppendTo="body" styleClass="redemption-table">
       <ng-template pTemplate="header">
         <tr>
@@ -173,6 +173,19 @@
           <td>{{ item.currency }} {{ item.amountSaved }}</td>
         </tr>
       </ng-template>
+
+      <!-- PrimeNG renders this for every falsy entry in [value] — the placeholder rows
+           redemptionRows() feeds while listLoading(). -->
+      <ng-template pTemplate="loadingbody">
+        <tr class="redemption-table__row--skeleton">
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--id"></span></td>
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--wide"></span></td>
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
+        </tr>
+      </ng-template>
+
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="5" class="redemption-table__empty">{{ 'redemption.empty' | translate }}</td>

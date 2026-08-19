@@ -195,3 +195,21 @@ section.redemption-card {
   margin: 0 -1.5rem -1.5rem;
 }
 
+/* Table skeleton cells (.app-skeleton owns fill + pulse; these own size) */
+.redemption-table__skeleton-cell {
+  display: inline-block;
+  height: 1rem;
+}
+
+.redemption-table__skeleton-cell--id {
+  width: 6.5rem;
+}
+
+.redemption-table__skeleton-cell--wide {
+  width: 10rem;
+}
+
+.redemption-table__skeleton-cell--text {
+  width: 5rem;
+}
+
