@@ -185,17 +185,31 @@
 
           <section class="request-detail__card">
             <div class="request-detail__section-header">
-              <span class="request-detail__section-icon"><i class="pi pi-thumbs-up"></i></span>
+              <span class="request-detail__section-icon">
+                <span class="app-svg-icon request-detail__section-icon-svg"
+                  [style.webkitMaskImage]="getVendorIconMask('ic-Social-Media.svg')"
+                  [style.maskImage]="getVendorIconMask('ic-Social-Media.svg')"></span>
+              </span>
               <h3 class="request-detail__section-title">{{ 'profile.socialMedia' | translate }}</h3>
               @if (isEdited('socialLinks')) { <span class="request-detail__edited-badge request-detail__edited-badge--field">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
             </div>
             @if (profile.socialLinks.length) {
             <div class="request-detail__profile-list">
-              @for (link of profile.socialLinks; track link.url) {
-              <div class="request-detail__profile-item">
-                <i class="pi pi-link"></i>
-                <span>{{ link.platform || link.accountName || link.url }}</span>
-              </div>
+              @for (link of profile.socialLinks; track $index) {
+                @if (getSocialLinkUrl(link)) {
+                <a class="request-detail__profile-item request-detail__profile-item--link"
+                  [href]="getExternalLinkHref(link)" target="_blank" rel="noopener noreferrer">
+                  @if (getSocialLinkIconPath(link); as socialIconPath) {
+                  <span class="app-svg-icon request-detail__social-icon"
+                    [class.request-detail__social-icon--linkedin]="getSocialPlatform(link) === 'linkedin'"
+                    [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                    [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                  } @else {
+                  <i class="pi pi-link"></i>
+                  }
+                  <span class="request-detail__social-text">{{ formatSocialLinkLabel(link) }}</span>
+                </a>
+                }
               }
             </div>
             } @else {

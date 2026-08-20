@@ -212,10 +212,45 @@
   gap: 0.75rem;
 }
 
+.vendor-profile-page__contact-item--link {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.vendor-profile-page__contact-item--link:hover {
+  color: var(--app-primary);
+}
+
 .vendor-profile-page__contact-item i {
   width: 1rem;
   text-align: center;
   color: var(--app-muted);
+}
+
+.vendor-profile-page__card-icon-svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.vendor-profile-page__social-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--app-muted);
+  flex-shrink: 0;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.vendor-profile-page__social-icon--linkedin {
+  -webkit-mask-size: 1.2rem 1.2rem;
+  mask-size: 1.2rem 1.2rem;
+}
+
+.vendor-profile-page__social-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .vendor-profile-page__empty-text {

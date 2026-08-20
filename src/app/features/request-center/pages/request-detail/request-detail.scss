@@ -282,6 +282,41 @@
       font-size: 0.9rem;
       flex-shrink: 0;
     }
+
+    &--link {
+      text-decoration: none;
+      color: var(--app-text);
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: var(--app-primary);
+      }
+    }
+  }
+
+  &__section-icon-svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &__social-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--app-muted);
+    flex-shrink: 0;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    &--linkedin {
+      -webkit-mask-size: 1.1rem 1.1rem;
+      mask-size: 1.1rem 1.1rem;
+    }
+  }
+
+  &__social-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__profile-images {

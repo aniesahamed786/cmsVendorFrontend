@@ -185,21 +185,35 @@
 
         <div class="vendor-profile-page__card">
           <div class="vendor-profile-page__card-header">
-            <div class="vendor-profile-page__card-icon"><i class="pi pi-thumbs-up"></i></div> {{ 'profile.socialMedia' | translate }}
+            <div class="vendor-profile-page__card-icon">
+              <span class="app-svg-icon vendor-profile-page__card-icon-svg"
+                [style.webkitMaskImage]="getVendorIconMask('ic-Social-Media.svg')"
+                [style.maskImage]="getVendorIconMask('ic-Social-Media.svg')"></span>
+            </div>
+            <span>{{ 'profile.socialMedia' | translate }}</span>
           </div>
-          <p class="vendor-profile-page__empty-text">@if (vendor.socialLinks?.length) {
-  @for (link of vendor.socialLinks; track link.platform) {
-    <div class="vendor-profile-page__contact-item">
-      <span>{{ link.platform }}</span>
-      <span>{{ link.accountName }}</span>
-      <span>{{link.url}}</span>
-    </div>
-  }
-} @else {
-  <p class="vendor-profile-page__empty-text">
-    {{ 'profile.noSocialLinks' | translate }}
-  </p>
-}</p>
+          <div class="vendor-profile-page__contact-list">
+            @for (link of vendor.socialLinks; track $index) {
+              @if (getSocialLinkUrl(link)) {
+              <a class="vendor-profile-page__contact-item vendor-profile-page__contact-item--link"
+                [href]="getExternalLinkHref(link)" target="_blank" rel="noopener noreferrer">
+                @if (getSocialLinkIconPath(link); as socialIconPath) {
+                <span class="app-svg-icon vendor-profile-page__social-icon"
+                  [class.vendor-profile-page__social-icon--linkedin]="getSocialPlatform(link) === 'linkedin'"
+                  [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                  [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                } @else {
+                <i class="pi pi-link"></i>
+                }
+                <span class="vendor-profile-page__social-text">{{ formatSocialLinkLabel(link) }}</span>
+              </a>
+              }
+            } @empty {
+            <p class="vendor-profile-page__empty-text">
+              {{ 'profile.noSocialLinks' | translate }}
+            </p>
+            }
+          </div>
         </div>
       </div>
 
@@ -252,6 +266,7 @@
   [email]="vendor.businessContact.email[0]"
   [website]="'www.lumee.com'"
   [offers]="vendor.offers"
+  [socialLinks]="vendor.socialLinks || []"
   [locations]="vendor.locations">
 </app-vendor-preview>
     </div>
