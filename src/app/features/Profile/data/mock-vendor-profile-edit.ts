@@ -14,10 +14,10 @@ export const MOCK_VENDOR_PROFILE_EDIT: VendorProfileEditData = {
   repPhone: '+966 55 987 6543',
   repEmail: 'john.doe@lumeestreet.com',
   socialLinks: [
-    'https://instagram.com/lumeestreet',
-    'https://facebook.com/lumeestreet',
-    'https://x.com/lumeestreet',
-    'https://wa.me/966501234567',
+    { platform: 'instagram', accountName: 'lumeestreet', url: 'https://instagram.com/lumeestreet' },
+    { platform: 'facebook', accountName: 'lumeestreet', url: 'https://facebook.com/lumeestreet' },
+    { platform: 'x', accountName: 'lumeestreet', url: 'https://x.com/lumeestreet' },
+    { platform: 'whatsapp', accountName: 'Lumee Support', url: 'https://wa.me/966501234567' },
   ],
   locations: [
     {

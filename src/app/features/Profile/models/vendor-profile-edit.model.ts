@@ -1,3 +1,5 @@
+import { VendorSocialLink } from '../../vendors/models/createNewVendor';
+
 export interface VendorProfileEditLocation {
   id: string;
   nameEn: string;
@@ -23,9 +25,10 @@ export interface VendorProfileEditData {
   repFullName: string;
   repPhone: string;
   repEmail: string;
-  socialLinks: string[];
+  socialLinks: VendorSocialLink[];
   locations: VendorProfileEditLocation[];
   logo?: string | File | null;
   coverMobile?: string | File | null;
   coverDesktop?: string | File | null;
 }
+

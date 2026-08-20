@@ -1,4 +1,6 @@
 import { VendorProfileEditData } from './vendor-profile-edit.model';
+import { normalizeVendorSocialLinks } from '../../vendors/models/vendordetails';
+import { VendorSocialLink } from '../../vendors/models/createNewVendor';
 
 /** Shape of GET /cmsVendor/vendorProfile (VendorCmsProfileResponseDto). */
 export interface VendorProfileApi {
@@ -42,7 +44,7 @@ export function toVendorProfileEditData(
     repFullName: api?.representativeName ?? '',
     repPhone: api?.representativeContact ?? '',
     repEmail: api?.representativeEmail ?? '',
-    socialLinks: (api?.socialLinks ?? []).map((link) => link?.url).filter((url): url is string => !!url),
+    socialLinks: normalizeVendorSocialLinks(api?.socialLinks),
     locations,
     logo: api?.vendorLogo || null,
     coverMobile: api?.coverImage || null,
@@ -72,7 +74,21 @@ export function toVendorSchemaPayload(data: VendorProfileEditData): Record<strin
     smePhone: data.repPhone ?? '',
     email: data.businessEmail ? [data.businessEmail] : [],
     mobile: data.businessPhone ? [data.businessPhone] : [],
-    socialLinks: (data.socialLinks ?? []).filter(Boolean).map((url) => ({ url })),
+    socialLinks: (data.socialLinks ?? [])
+      .filter((link) => {
+        const item = link as unknown;
+        if (typeof item === 'string') return !!item.trim();
+        return !!(link?.url && typeof link.url === 'string' && link.url.trim());
+      })
+      .map((link) => {
+        const item = link as unknown;
+        if (typeof item === 'string') return { url: item.trim() };
+        return {
+          url: link.url.trim(),
+          ...(link.platform ? { platform: link.platform } : {}),
+          ...(link.accountName ? { accountName: link.accountName } : {}),
+        };
+      }),
   };
 
   // Only include the fields the profile API cannot round-trip when the vendor filled them in,

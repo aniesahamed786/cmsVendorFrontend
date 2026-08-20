@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   DestroyRef,
@@ -11,18 +11,22 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { Button } from '../../../../shared/Components/button/button';
+import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
 import { MOCK_VENDOR_PROFILE_EDIT } from '../../data/mock-vendor-profile-edit';
 import {
   VendorProfileEditData,
   VendorProfileEditLocation,
 } from '../../models/vendor-profile-edit.model';
+import { VendorSocialLink } from '../../../vendors/models/createNewVendor';
 import { toVendorSchemaPayload } from '../../models/vendor-profile-request.mapper';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
+import { resolveAssetUrl, resolveMaskImageStyle } from '../../../../shared/utils/resolve-asset-url';
 
 export interface VendorProfilePreviewData {
   nameEn: string;
@@ -39,16 +43,26 @@ export interface VendorProfilePreviewData {
 
 /** Which image slot the crop dialog is currently editing. */
 type CropTarget = 'logo' | 'coverMobile' | 'coverDesktop';
+export type SocialLinkType = 'instagram' | 'whatsapp' | 'tiktok' | 'x' | 'snapchat' | 'linkedin' | 'facebook' | 'youtube' | 'other';
 
 @Component({
   selector: 'app-vendor-profile-edit-form',
-  imports: [CommonModule, ReactiveFormsModule, PrimeUIModules, TranslatePipe, ImageCropperComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    PrimeUIModules,
+    TranslatePipe,
+    ImageCropperComponent,
+    Button,
+    CancelButton,
+  ],
   templateUrl: './vendor-profile-edit-form.html',
   styleUrl: './vendor-profile-edit-form.css',
 })
 export class VendorProfileEditForm implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject(DOCUMENT);
 
   initialData = input<VendorProfileEditData>(MOCK_VENDOR_PROFILE_EDIT);
   isLoading = input(false);
@@ -69,13 +83,31 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     logo: null,
     cover: null,
   });
-  readonly previewSocialLinks = signal<string[]>([]);
+  readonly previewSocialLinks = signal<VendorSocialLink[]>([]);
   /**
    * Locations are not editable here — branches are their own STORE entity and a PROFILE
    * request cannot carry them. The signal stays so the loaded profile's branches can still
    * feed the live preview read-only; nothing in this form writes to it.
    */
   readonly savedLocations = signal<VendorProfileEditLocation[]>([]);
+
+  // ── Social Media State ──
+  editingLinkIndex = signal<number | null>(null);
+  editingLinkValue = signal('');
+  editingLinkAccountName = signal('');
+  selectedSocialLinkType = signal<SocialLinkType | null>(null);
+
+  readonly socialLinkTypes: Array<{ key: SocialLinkType; label: string }> = [
+    { key: 'instagram', label: 'Instagram' },
+    { key: 'whatsapp', label: 'WhatsApp' },
+    { key: 'tiktok', label: 'TikTok' },
+    { key: 'x', label: 'X' },
+    { key: 'snapchat', label: 'Snapchat' },
+    { key: 'linkedin', label: 'LinkedIn' },
+    { key: 'facebook', label: 'Facebook' },
+    { key: 'youtube', label: 'YouTube' },
+    { key: 'other', label: 'Other' },
+  ];
 
   // ── Branding image previews (blob/object URLs shown in the form + live preview) ──
   readonly logoPreview = signal<string | null>(null);
@@ -124,6 +156,9 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     repFullName: ['', Validators.required],
     repPhone: ['', Validators.required],
     repEmail: ['', [Validators.required, Validators.email]],
+    accountNameInput: [''],
+    linkinput: ['', Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})[\/\w \.@?&=%_+!~*\'()#,:;-]*\/?$/)],
+    socialLinks: this.fb.array<FormControl<VendorSocialLink | null>>([]),
     logo: [null as string | File | null, Validators.required],
     coverMobile: [null as string | File | null, Validators.required],
     coverDesktop: [null as string | File | null, Validators.required],
@@ -157,7 +192,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       repFullName: value.repFullName ?? '',
       repPhone: value.repPhone ?? '',
       repEmail: value.repEmail ?? '',
-      socialLinks: this.previewSocialLinks(),
+      socialLinks: this.getRawSocialLinks(),
       locations: this.savedLocations(),
       logo: value.logo ?? null,
       coverMobile: value.coverMobile ?? null,
@@ -178,10 +213,14 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   /** Drives the parent's Save-as-draft / Update-changes buttons. */
   readonly hasChanges = computed(() => Object.keys(this.changedFields()).length > 0);
 
+  get socialLinks(): FormArray {
+    return this.profileForm.get('socialLinks') as FormArray;
+  }
+
   ngOnInit(): void {
     this.patchForm(this.initialData());
     this.savedLocations.set([...this.initialData().locations]);
-    this.previewSocialLinks.set([...this.initialData().socialLinks]);
+    this.previewSocialLinks.set(this.getRawSocialLinks());
     this.formValue.set(this.profileForm.getRawValue());
     this.baselineData.set(this.currentData());
     this.syncPreview();
@@ -201,7 +240,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   reset(data: VendorProfileEditData): void {
     this.patchForm(data);
     this.savedLocations.set([...data.locations]);
-    this.previewSocialLinks.set([...data.socialLinks]);
+    this.previewSocialLinks.set(this.getRawSocialLinks());
     this.formValue.set(this.profileForm.getRawValue());
     this.baselineData.set(this.currentData());
     this.profileForm.markAsPristine();
@@ -221,10 +260,30 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       repFullName: data.repFullName,
       repPhone: data.repPhone,
       repEmail: data.repEmail,
+      accountNameInput: '',
+      linkinput: '',
       logo: data.logo ?? null,
       coverMobile: data.coverMobile ?? null,
       coverDesktop: data.coverDesktop ?? null,
     });
+
+    this.socialLinks.clear();
+    const links = data.socialLinks || [];
+    for (const item of links) {
+      const url = this.getSocialLinkUrl(item);
+      if (url) {
+        const platform = this.getSocialLinkPlatform(item);
+        const accountName = this.getSocialLinkAccountName(item);
+        this.socialLinks.push(
+          new FormControl<VendorSocialLink>({
+            url,
+            ...(platform ? { platform } : {}),
+            ...(accountName ? { accountName } : {}),
+          }),
+        );
+      }
+    }
+
     // Seed previews for any images that arrive as ready-made URLs. Stored paths are unscoped
     // (`/api/v1/media/...`) and only servable off the vendor media proxy — the form controls above
     // keep the raw value so the saved payload stays unchanged.
@@ -235,6 +294,8 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
 
   private syncPreview(): void {
     const value = this.profileForm.getRawValue();
+    const links = this.getRawSocialLinks();
+    this.previewSocialLinks.set(links);
     this.previewData.set({
       nameEn: value.nameEn ?? '',
       nameAr: value.nameAr ?? '',
@@ -247,6 +308,329 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       logo: this.logoPreview(),
       cover: this.coverMobilePreview() ?? this.coverDesktopPreview(),
     });
+  }
+
+  getRawSocialLinks(): VendorSocialLink[] {
+    const rawLinks = this.socialLinks?.getRawValue?.();
+    if (!Array.isArray(rawLinks)) return [];
+
+    return rawLinks
+      .map((value: unknown): VendorSocialLink | null => {
+        const url = this.getSocialLinkUrl(value);
+        if (!url) return null;
+        const platform = this.getSocialLinkPlatform(value);
+        const accountName = this.getSocialLinkAccountName(value);
+        return {
+          url,
+          ...(platform ? { platform } : {}),
+          ...(accountName ? { accountName } : {}),
+        };
+      })
+      .filter((item): item is VendorSocialLink => item !== null);
+  }
+
+  // ── Social Media Management Methods ──
+
+  addLink(): void {
+    const selectedType = this.selectedSocialLinkType();
+    const value = this.profileForm.get('linkinput')?.value;
+    const accountNameValue = this.profileForm.get('accountNameInput')?.value;
+    if (!selectedType || !value?.trim()) return;
+
+    this.socialLinks.push(
+      new FormControl<VendorSocialLink>({
+        url: value.trim(),
+        ...(selectedType ? { platform: selectedType } : {}),
+        ...(typeof accountNameValue === 'string' && accountNameValue.trim()
+          ? { accountName: accountNameValue.trim() }
+          : {}),
+      }),
+    );
+
+    this.profileForm.get('accountNameInput')?.reset('');
+    this.profileForm.get('linkinput')?.reset('');
+    this.profileForm.markAsDirty();
+    this.formValue.set(this.profileForm.getRawValue());
+    this.syncPreview();
+  }
+
+  selectSocialLinkType(type: SocialLinkType): void {
+    this.selectedSocialLinkType.update((currentType) => (currentType === type ? null : type));
+  }
+
+  getSocialLinkPlaceholder(): string {
+    const selectedType = this.selectedSocialLinkType();
+    switch (selectedType) {
+      case 'instagram':
+        return 'Add Instagram link';
+      case 'whatsapp':
+        return 'Add WhatsApp link';
+      case 'tiktok':
+        return 'Add TikTok link';
+      case 'x':
+        return 'Add X link';
+      case 'snapchat':
+        return 'Add Snapchat link';
+      case 'linkedin':
+        return 'Add LinkedIn link';
+      case 'facebook':
+        return 'Add Facebook link';
+      case 'youtube':
+        return 'Add YouTube link';
+      case 'other':
+        return 'Add other social media link';
+      default:
+        return 'Select a social media type first';
+    }
+  }
+
+  formatSocialLinkLabel(value: unknown): string {
+    const accountName = this.getSocialLinkAccountName(value);
+    if (accountName) {
+      return accountName;
+    }
+
+    const trimmedValue = this.getSocialLinkUrl(value);
+    if (!trimmedValue) {
+      return '';
+    }
+    const withoutQuery = trimmedValue.split('?')[0];
+    const normalizedValue = /^https?:\/\//i.test(withoutQuery) ? withoutQuery : `https://${withoutQuery}`;
+
+    try {
+      const url = new URL(normalizedValue);
+      const path = url.pathname.replace(/^\/+|\/+$/g, '');
+      const pathParts = path.split('/').filter(Boolean);
+      const hostname = url.hostname.replace(/^www\./, '');
+
+      if (hostname.includes('linkedin.com') && pathParts[0]?.toLowerCase() === 'in' && pathParts[1]) {
+        return pathParts[1];
+      }
+
+      if (hostname.includes('tiktok.com')) {
+        const username = pathParts.find((p) => p.startsWith('@'));
+        if (username) return username;
+      }
+
+      if (hostname.includes('snapchat.com') && pathParts[0]?.toLowerCase() === 'add' && pathParts[1]) {
+        return pathParts[1];
+      }
+
+      return pathParts[pathParts.length - 1] || hostname;
+    } catch {
+      const fallbackParts = withoutQuery
+        .replace(/^https?:\/\/(www\.)?/i, '')
+        .replace(/^\/+|\/+$/g, '')
+        .split('/')
+        .filter(Boolean);
+
+      return fallbackParts[fallbackParts.length - 1] || withoutQuery;
+    }
+  }
+
+  getSocialLinkInputIconPath(): string | null {
+    return this.resolveSocialIconPathFromType(this.selectedSocialLinkType());
+  }
+
+  getSocialTypeIconPath(type: SocialLinkType): string | null {
+    return this.resolveSocialIconPathFromType(type);
+  }
+
+  getSocialLinkPlatformLabel(value: unknown): string {
+    const platform = this.getSocialLinkPlatform(value);
+    switch (platform) {
+      case 'x':
+        return 'X (Twitter)';
+      case 'linkedin':
+        return 'LinkedIn';
+      case 'tiktok':
+        return 'TikTok';
+      case 'youtube':
+        return 'YouTube';
+      case 'whatsapp':
+        return 'WhatsApp';
+      case 'facebook':
+        return 'Facebook';
+      case 'snapchat':
+        return 'Snapchat';
+      case 'instagram':
+        return 'Instagram';
+      default:
+        return 'social media';
+    }
+  }
+
+  getSocialLinkAccountHelper(value: unknown): string {
+    return `This is your ${this.getSocialLinkPlatformLabel(value)} username`;
+  }
+
+  getSocialLinkUrlHelper(value: unknown): string {
+    return `Add the link to your ${this.getSocialLinkPlatformLabel(value)} profile`;
+  }
+
+  getSocialLinkIconPath(value: unknown, _index?: number): string | null {
+    const explicitType = this.getSocialLinkPlatform(value);
+    if (explicitType) {
+      return this.resolveSocialIconPathFromType(explicitType);
+    }
+    return null;
+  }
+
+  getSocialLinkIconClass(value: unknown, _index?: number): string {
+    const linkType = this.getSocialLinkPlatform(value);
+    if (linkType !== 'linkedin') {
+      return 'vendor-form-social-icon';
+    }
+    return 'vendor-form-social-icon vendor-form-social-icon--linkedin';
+  }
+
+  private getSocialLinkUrl(value: unknown): string {
+    if (typeof value === 'string') {
+      return value.trim();
+    }
+    if (value && typeof value === 'object' && typeof (value as VendorSocialLink).url === 'string') {
+      return (value as VendorSocialLink).url.trim();
+    }
+    return '';
+  }
+
+  private getSocialLinkPlatform(value: unknown): SocialLinkType | null {
+    if (value && typeof value === 'object') {
+      const socialLink = value as VendorSocialLink & Record<string, unknown>;
+      const candidatePlatform =
+        typeof socialLink.platform === 'string'
+          ? socialLink.platform
+          : typeof socialLink['type'] === 'string'
+            ? (socialLink['type'] as string)
+            : typeof socialLink['platformType'] === 'string'
+              ? (socialLink['platformType'] as string)
+              : typeof socialLink['socialMediaType'] === 'string'
+                ? (socialLink['socialMediaType'] as string)
+                : '';
+
+      return this.normalizeSocialLinkType(candidatePlatform.trim().toLowerCase());
+    }
+    if (typeof value === 'string') {
+      const lower = value.toLowerCase();
+      if (lower.includes('instagram.com')) return 'instagram';
+      if (lower.includes('facebook.com') || lower.includes('fb.com')) return 'facebook';
+      if (lower.includes('x.com') || lower.includes('twitter.com')) return 'x';
+      if (lower.includes('whatsapp') || lower.includes('wa.me')) return 'whatsapp';
+      if (lower.includes('tiktok.com')) return 'tiktok';
+      if (lower.includes('linkedin.com')) return 'linkedin';
+      if (lower.includes('youtube.com') || lower.includes('youtu.be')) return 'youtube';
+      if (lower.includes('snapchat.com')) return 'snapchat';
+    }
+    return null;
+  }
+
+  private getSocialLinkAccountName(value: unknown): string {
+    if (value && typeof value === 'object' && typeof (value as VendorSocialLink).accountName === 'string') {
+      return (value as VendorSocialLink).accountName!.trim();
+    }
+    return '';
+  }
+
+  private resolveSocialIconPathFromType(type: SocialLinkType | null): string | null {
+    switch (type) {
+      case 'instagram':
+        return this.resolveSocialAsset('ic-instagram.svg');
+      case 'linkedin':
+        return this.resolveSocialAsset('linkedin.svg');
+      case 'facebook':
+        return this.resolveSocialAsset('ic-facebook.svg');
+      case 'tiktok':
+        return this.resolveSocialAsset('tiktok.svg');
+      case 'youtube':
+        return this.resolveSocialAsset('youtube.svg');
+      case 'snapchat':
+        return this.resolveSocialAsset('ic-snapchat.svg');
+      case 'whatsapp':
+        return this.resolveSocialAsset('whatspp.svg');
+      case 'x':
+        return this.resolveSocialAsset('X.svg');
+      default:
+        return null;
+    }
+  }
+
+  private normalizeSocialLinkType(value: string): SocialLinkType | null {
+    switch (value) {
+      case 'instagram':
+      case 'whatsapp':
+      case 'tiktok':
+      case 'x':
+      case 'snapchat':
+      case 'linkedin':
+      case 'facebook':
+      case 'youtube':
+      case 'other':
+        return value;
+      case 'twitter':
+        return 'x';
+      default:
+        return null;
+    }
+  }
+
+  removeLink(index: number): void {
+    this.socialLinks.removeAt(index);
+    if (this.editingLinkIndex() === index) {
+      this.cancelEditLink();
+    }
+    this.profileForm.markAsDirty();
+    this.formValue.set(this.profileForm.getRawValue());
+    this.syncPreview();
+  }
+
+  editLink(index: number): void {
+    const value = this.socialLinks.at(index)?.value;
+    this.editingLinkIndex.set(index);
+    this.editingLinkValue.set(this.getSocialLinkUrl(value));
+    this.editingLinkAccountName.set(this.getSocialLinkAccountName(value));
+  }
+
+  updateEditingLinkValue(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.editingLinkValue.set(input.value);
+  }
+
+  updateEditingLinkAccountName(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.editingLinkAccountName.set(input.value);
+  }
+
+  saveEditLink(index: number): void {
+    const value = this.editingLinkValue().trim();
+    if (!value) return;
+
+    const existingValue = this.socialLinks.at(index)?.value;
+    const platform = this.getSocialLinkPlatform(existingValue) || 'other';
+    const accountName = this.editingLinkAccountName().trim();
+
+    this.socialLinks.at(index)?.setValue({
+      url: value,
+      ...(platform ? { platform } : {}),
+      ...(accountName ? { accountName } : {}),
+    });
+    this.cancelEditLink();
+    this.profileForm.markAsDirty();
+    this.formValue.set(this.profileForm.getRawValue());
+    this.syncPreview();
+  }
+
+  cancelEditLink(): void {
+    this.editingLinkIndex.set(null);
+    this.editingLinkValue.set('');
+    this.editingLinkAccountName.set('');
+  }
+
+  getVendorIconMask(iconName: string): string {
+    return resolveMaskImageStyle(this.document, `svg/vendors/add-vendor/${iconName}`);
+  }
+
+  private resolveSocialAsset(iconFile: string): string {
+    return resolveAssetUrl(this.document, `svg/social-media/${iconFile}`);
   }
 
   private buildPayload(): VendorProfileEditData {
@@ -343,14 +727,14 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     input.value = '';
   }
 
-  recropCover(tab: 'mobile' | 'desktop'): void {
+  recropCover(target: 'mobile' | 'desktop'): void {
     if (!this.coverSource) return;
     this.chainToDesktopCrop = false;
-    this.openCropper(tab === 'mobile' ? 'coverMobile' : 'coverDesktop', this.coverSource);
+    this.openCropper(target === 'mobile' ? 'coverMobile' : 'coverDesktop', this.coverSource);
   }
 
-  removeCover(tab: 'mobile' | 'desktop'): void {
-    if (tab === 'mobile') {
+  removeCover(target: 'mobile' | 'desktop'): void {
+    if (target === 'mobile') {
       this.revoke(this.coverMobilePreview());
       this.coverMobilePreview.set(null);
       this.setImage('coverMobile', null);
@@ -358,10 +742,6 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       this.revoke(this.coverDesktopPreview());
       this.coverDesktopPreview.set(null);
       this.setImage('coverDesktop', null);
-    }
-    if (!this.coverMobilePreview() && !this.coverDesktopPreview()) {
-      this.revoke(this.coverSource);
-      this.coverSource = null;
     }
   }
 
@@ -382,8 +762,11 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   applyCrop(): void {
     if (!this.cropBlob) return;
     const target = this.cropperTarget();
-    const file = new File([this.cropBlob], `${this.pendingCropName}-${target}.png`, { type: 'image/png' });
-    const url = URL.createObjectURL(file);
+    const ext = this.cropBlob.type === 'image/jpeg' ? 'jpg' : 'png';
+    const file = new File([this.cropBlob], `${this.pendingCropName}-${target}.${ext}`, {
+      type: this.cropBlob.type || 'image/png',
+    });
+    const url = URL.createObjectURL(this.cropBlob);
 
     if (target === 'logo') {
       this.revoke(this.logoPreview());
@@ -397,6 +780,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       this.revoke(this.coverMobilePreview());
       this.coverMobilePreview.set(url);
       this.setImage('coverMobile', file);
+
       // Fresh upload flow: after the mobile crop, chain into the desktop crop
       // of the same source so one upload yields both ratios.
       if (this.chainToDesktopCrop && this.coverSource) {

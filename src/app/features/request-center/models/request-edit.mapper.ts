@@ -1,6 +1,7 @@
 import { BranchFormModel, BranchFormSubmit, GeoPoint } from '../../Branches/pages/branch-form/branch-form';
 import { VendorProfileEditData } from '../../Profile/models/vendor-profile-edit.model';
 import { toVendorMediaUrl } from '../../../shared/utils/media-url';
+import { normalizeVendorSocialLinks } from '../../vendors/models/vendordetails';
 
 /**
  * Adapters between a pending request's proposed entity (see buildProposedEntity) and the
@@ -144,9 +145,7 @@ export function fromBranchFormSubmit(submit: BranchFormSubmit): Record<string, u
  * same keys `requestData` already stores.
  */
 export function toProfileEditData(proposed: Record<string, unknown>): VendorProfileEditData {
-  const socialLinks = (Array.isArray(proposed['socialLinks']) ? proposed['socialLinks'] : [])
-    .map((link) => (typeof link === 'string' ? link : asText((link as Record<string, unknown>)?.['url'])))
-    .filter((url): url is string => !!url);
+  const socialLinks = normalizeVendorSocialLinks(proposed['socialLinks']);
 
   return {
     nameEn: asText(proposed['name']),

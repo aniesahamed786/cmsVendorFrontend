@@ -10,6 +10,7 @@ import {
 import { resolveAssetUrl } from '../../../../shared/utils/resolve-asset-url';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { VendorSocialLink } from '../../../vendors/models/createNewVendor';
 
 @Component({
   selector: 'app-vendor-preview',
@@ -33,7 +34,7 @@ export class VendorPreview implements OnChanges {
   @Input() website: string | null = null;
   @Input() offers: unknown[] = [];
   @Input() locations: any[] = [];
-  @Input() socialLinks: string[] = [];
+  @Input() socialLinks: (string | VendorSocialLink)[] = [];
 
   language = signal<'en' | 'ar'>('en');
   bannerImageFailed = signal(false);
@@ -115,32 +116,71 @@ export class VendorPreview implements OnChanges {
     return Array.isArray(this.locations) ? this.locations : [];
   }
 
-  getSocialLinks(): string[] {
-    return (this.socialLinks ?? []).filter((link) => !!link?.trim());
+  getSocialLinks(): VendorSocialLink[] {
+    return (this.socialLinks ?? [])
+      .map((item) => {
+        if (typeof item === 'string') {
+          const trimmed = item.trim();
+          return trimmed ? { url: trimmed } : null;
+        }
+        if (item && typeof item === 'object' && typeof (item as VendorSocialLink).url === 'string') {
+          const url = (item as VendorSocialLink).url.trim();
+          if (!url) return null;
+          return {
+            url,
+            ...((item as VendorSocialLink).platform ? { platform: (item as VendorSocialLink).platform } : {}),
+            ...((item as VendorSocialLink).accountName ? { accountName: (item as VendorSocialLink).accountName } : {}),
+          };
+        }
+        return null;
+      })
+      .filter((l): l is VendorSocialLink => l !== null);
   }
 
-  getSocialLinkHref(value: string): string {
+  getSocialLinkHref(link: string | VendorSocialLink): string {
+    const value = typeof link === 'string' ? link : link?.url ?? '';
     return /^https?:\/\//i.test(value) ? value : `https://${value}`;
   }
 
-  getSocialLinkIconPath(value: string): string | null {
+  getSocialLinkIconPath(link: string | VendorSocialLink): string | null {
+    const platform = typeof link === 'object' ? link?.platform?.toLowerCase() : null;
+    if (platform) {
+      const path = this.resolveSocialIconPathFromType(platform);
+      if (path) return path;
+    }
+    const value = typeof link === 'string' ? link : link?.url ?? '';
     const lowerValue = value.toLowerCase();
-    if (lowerValue.includes('instagram.com')) {
-      return this.resolveSocialAsset('ic-instagram.svg');
-    }
-    if (lowerValue.includes('facebook.com') || lowerValue.includes('fb.com')) {
-      return this.resolveSocialAsset('ic-facebook.svg');
-    }
-    if (lowerValue.includes('x.com') || lowerValue.includes('twitter.com')) {
-      return this.resolveSocialAsset('X.svg');
-    }
-    if (lowerValue.includes('whatsapp') || lowerValue.includes('wa.me')) {
-      return this.resolveSocialAsset('whatspp.svg');
-    }
+    if (lowerValue.includes('instagram.com')) return this.resolveSocialAsset('ic-instagram.svg');
+    if (lowerValue.includes('facebook.com') || lowerValue.includes('fb.com')) return this.resolveSocialAsset('ic-facebook.svg');
+    if (lowerValue.includes('x.com') || lowerValue.includes('twitter.com')) return this.resolveSocialAsset('X.svg');
+    if (lowerValue.includes('whatsapp') || lowerValue.includes('wa.me')) return this.resolveSocialAsset('whatspp.svg');
+    if (lowerValue.includes('tiktok.com')) return this.resolveSocialAsset('tiktok.svg');
+    if (lowerValue.includes('linkedin.com')) return this.resolveSocialAsset('linkedin.svg');
+    if (lowerValue.includes('youtube.com') || lowerValue.includes('youtu.be')) return this.resolveSocialAsset('youtube.svg');
+    if (lowerValue.includes('snapchat.com')) return this.resolveSocialAsset('ic-snapchat.svg');
     return null;
   }
 
-  getSocialLinkIconClass(_value?: unknown): string {
+  private resolveSocialIconPathFromType(type: string): string | null {
+    switch (type) {
+      case 'instagram': return this.resolveSocialAsset('ic-instagram.svg');
+      case 'linkedin': return this.resolveSocialAsset('linkedin.svg');
+      case 'facebook': return this.resolveSocialAsset('ic-facebook.svg');
+      case 'tiktok': return this.resolveSocialAsset('tiktok.svg');
+      case 'youtube': return this.resolveSocialAsset('youtube.svg');
+      case 'snapchat': return this.resolveSocialAsset('ic-snapchat.svg');
+      case 'whatsapp': return this.resolveSocialAsset('whatspp.svg');
+      case 'x':
+      case 'twitter': return this.resolveSocialAsset('X.svg');
+      default: return null;
+    }
+  }
+
+  getSocialLinkIconClass(link?: unknown): string {
+    const platform = typeof link === 'object' && link ? (link as VendorSocialLink).platform?.toLowerCase() : null;
+    if (platform === 'linkedin') {
+      return 'vendor-preview__social-icon vendor-preview__social-icon--linkedin';
+    }
     return 'vendor-preview__social-icon';
   }
 

@@ -74,6 +74,128 @@
     </div>
   </div>
 
+  <!-- Social Media Accounts -->
+  <div class="profile-form-section">
+    <div class="profile-form-section__header">
+      <div class="profile-form-section__icon">
+        <span class="app-svg-icon vendor-form__icon-h5w5"
+          [style.webkitMaskImage]="getVendorIconMask('ic-Social-Media.svg')"
+          [style.maskImage]="getVendorIconMask('ic-Social-Media.svg')"></span>
+      </div>
+      <h2>
+        {{ 'profile.socialMedia' | translate }}
+      </h2>
+    </div>
+
+    <div class="vendor-form__grid-1">
+      <div>
+        <div class="vendor-form-social-type-grid">
+          @for (socialType of socialLinkTypes; track socialType.key) {
+          <button type="button" class="vendor-form-social-type-button"
+            [class.vendor-form-social-type-button--active]="selectedSocialLinkType() === socialType.key"
+            (click)="selectSocialLinkType(socialType.key)">
+            @if (getSocialTypeIconPath(socialType.key); as socialTypeIconPath) {
+            <span class="app-svg-icon vendor-form-social-icon"
+              [class.vendor-form-social-icon--linkedin]="socialType.key === 'linkedin'"
+              [style.webkitMaskImage]="'url(' + socialTypeIconPath + ')'"
+              [style.maskImage]="'url(' + socialTypeIconPath + ')'"></span>
+            } @else {
+            <i class="pi pi-link vendor-form__icon-sm"></i>
+            }
+            {{ socialType.label }}
+          </button>
+          }
+        </div>
+        @if (selectedSocialLinkType()) {
+        <div class="vendor-form__flex-center-gap3">
+          <input formControlName="accountNameInput" pInputText class="vendor-form__input-flex-bg"
+            placeholder="Account name" />
+          <div class="vendor-form__relative-flex1-minw0">
+            @if (getSocialLinkInputIconPath(); as socialInputIconPath) {
+            <span
+              class="app-svg-icon vendor-form-social-icon vendor-form-social-icon--input vendor-form__icon-absolute-left"
+              [class]="getSocialLinkIconClass(profileForm.get('linkinput')?.value)"
+              [style.webkitMaskImage]="'url(' + socialInputIconPath + ')'"
+              [style.maskImage]="'url(' + socialInputIconPath + ')'"></span>
+            } @else {
+            <i class="pi pi-link vendor-form__icon-absolute-left"></i>
+            }
+            <input formControlName="linkinput" pInputText class="vendor-form__input-pl10-bg"
+              [placeholder]="getSocialLinkPlaceholder()" />
+          </div>
+          <p-button icon="pi pi-plus" (click)="addLink()"
+            [disabled]="!selectedSocialLinkType() || !profileForm.get('accountNameInput')?.value?.trim() || !profileForm.get('linkinput')?.value?.trim() || profileForm.get('linkinput')?.invalid"></p-button>
+        </div>
+        @if (profileForm.get('linkinput')?.invalid && profileForm.get('linkinput')?.touched) {
+        <p class="vendor-form__error-text">Please enter a valid URL.</p>
+        }
+        }
+        <div formArrayName="socialLinks" class="vendor-form__social-actions-col">
+          @for(item of socialLinks.controls; track item; let i = $index) {
+          <div class="vendor-form__social-preview-box">
+            @if (editingLinkIndex() === i) {
+            <div class="vendor-form-social-edit-row">
+              <div class="vendor-form-social-edit-icon-column">
+                <div class="vendor-form-social-edit-icon-shell">
+                  @if (getSocialLinkIconPath(item.value, i); as socialIconPath) {
+                  <span class="app-svg-icon vendor-form__icon-26-dark" [class]="getSocialLinkIconClass(item.value, i)"
+                    [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                    [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                  } @else {
+                  <i class="pi pi-link vendor-form__icon-xl-dark"></i>
+                  }
+                </div>
+              </div>
+
+              <div class="vendor-form-social-edit-fields">
+                <div>
+                  <label class="vendor-form__label">Username</label>
+                  <input pInputText class="vendor-form__input" [value]="editingLinkAccountName()"
+                    (input)="updateEditingLinkAccountName($event)" placeholder="Enter username" />
+                  <p class="vendor-form__help-text-mt2">{{ getSocialLinkAccountHelper(item.value) }}</p>
+                </div>
+
+                <div>
+                  <label class="vendor-form__label">Profile URL</label>
+                  <input pInputText class="vendor-form__input" [value]="editingLinkValue()"
+                    (input)="updateEditingLinkValue($event)" placeholder="https://example.com/profile" />
+                  <p class="vendor-form__help-text-mt2">{{ getSocialLinkUrlHelper(item.value) }}</p>
+                </div>
+              </div>
+
+              <div class="vendor-form-social-edit-actions">
+                <app-button [disabled]="!editingLinkValue().trim()" (click)="saveEditLink(i)">Save</app-button>
+                <app-cancel-button (click)="cancelEditLink()" />
+              </div>
+            </div>
+            } @else {
+            <div class="vendor-form__flex-between-gap6">
+              <div class="vendor-form__social-info-flex">
+                @if (getSocialLinkIconPath(item.value, i); as socialIconPath) {
+                <span class="app-svg-icon vendor-form__icon-18-gray" [class]="getSocialLinkIconClass(item.value, i)"
+                  [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                  [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                } @else {
+                <i class="pi pi-link vendor-form__icon-sm-gray"></i>
+                }
+                <span class="vendor-form__social-title">
+                  {{ formatSocialLinkLabel(item.value) }}
+                </span>
+              </div>
+
+              <div class="vendor-form__flex-center-gap5-text-sm">
+                <app-button variant="ghost" (click)="editLink(i)">{{ 'profile.edit' | translate }}</app-button>
+                <app-button variant="danger" (click)="removeLink(i)">{{ 'common.delete' | translate }}</app-button>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Branding -->
   <div class="profile-form-section">
     <div class="profile-form-section__header">
