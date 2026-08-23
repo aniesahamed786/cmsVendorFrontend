@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   ViewChild,
   computed,
   inject,
@@ -24,8 +25,6 @@ export class AppSearch {
   private readonly i18n = inject(I18nService);
 
   value = model<string>('');
-
-  /** Leave unset for the shared "Search" placeholder; pass a translated string to override. */
   placeholder = input<string>('');
 
   readonly resolvedPlaceholder = computed(() => {
@@ -35,13 +34,14 @@ export class AppSearch {
 
   isMobileExpanded = signal(false);
 
-  @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('mobileInput') mobileInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('desktopInput') desktopInput?: ElementRef<HTMLInputElement>;
 
   openMobileSearch(): void {
     this.isMobileExpanded.set(true);
     setTimeout(() => {
-      this.searchInput?.nativeElement?.focus();
-    }, 100);
+      this.mobileInput?.nativeElement?.focus();
+    }, 60);
   }
 
   closeMobileSearch(): void {
@@ -53,6 +53,14 @@ export class AppSearch {
       event.stopPropagation();
     }
     this.value.set('');
-    this.searchInput?.nativeElement?.focus();
+    this.mobileInput?.nativeElement?.focus();
+    this.desktopInput?.nativeElement?.focus();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isMobileExpanded()) {
+      this.closeMobileSearch();
+    }
   }
 }

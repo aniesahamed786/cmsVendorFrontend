@@ -1,4 +1,19 @@
-<!-- Mobile Icon Trigger Button (Visible only on mobile when not expanded) -->
+<!-- Desktop Search Bar (Visible >= 768px) -->
+<div class="app-search app-search--desktop">
+  <i class="pi pi-search app-search__icon"></i>
+  <input #desktopInput type="text"
+    [placeholder]="resolvedPlaceholder()"
+    [ngModel]="value()"
+    (ngModelChange)="value.set($event)" />
+
+  @if (value()) {
+  <button type="button" class="app-search__clear-btn" (click)="clearSearch($event)" [attr.aria-label]="'common.clear' | translate">
+    <i class="pi pi-times"></i>
+  </button>
+  }
+</div>
+
+<!-- Mobile Compact Icon Trigger Button (Visible < 768px) -->
 <button type="button" class="app-search__mobile-trigger"
   [class.has-value]="!!value()"
   [attr.aria-label]="resolvedPlaceholder()"
@@ -9,23 +24,29 @@
   }
 </button>
 
-<!-- Full Search Bar (Always visible on desktop, conditionally visible/expanded on mobile) -->
-<div class="app-search" [class.is-mobile-expanded]="isMobileExpanded()">
-  <i class="pi pi-search app-search__icon"></i>
-  <input #searchInput type="text"
-    [placeholder]="resolvedPlaceholder()"
-    [ngModel]="value()"
-    (ngModelChange)="value.set($event)"
-    (keydown.escape)="closeMobileSearch()" />
+<!-- Mobile Full-Width Search Header Overlay (When open on mobile) -->
+@if (isMobileExpanded()) {
+<div class="app-search-mobile-overlay">
+  <button type="button" class="app-search-mobile-overlay__back" (click)="closeMobileSearch()" [attr.aria-label]="'common.back' | translate">
+    <i class="pi pi-arrow-left"></i>
+  </button>
 
-  @if (value()) {
-  <button type="button" class="app-search__clear-btn" (click)="clearSearch($event)" [attr.aria-label]="'common.clear' | translate">
+  <div class="app-search-mobile-overlay__input-wrap">
+    <i class="pi pi-search app-search-mobile-overlay__icon"></i>
+    <input #mobileInput type="text"
+      [placeholder]="resolvedPlaceholder()"
+      [ngModel]="value()"
+      (ngModelChange)="value.set($event)"
+      (keydown.escape)="closeMobileSearch()" />
+    @if (value()) {
+    <button type="button" class="app-search-mobile-overlay__clear" (click)="clearSearch($event)" [attr.aria-label]="'common.clear' | translate">
+      <i class="pi pi-times-circle"></i>
+    </button>
+    }
+  </div>
+
+  <button type="button" class="app-search-mobile-overlay__close-btn" (click)="closeMobileSearch()" [attr.aria-label]="'common.close' | translate">
     <i class="pi pi-times"></i>
   </button>
-  }
-
-  <!-- Mobile Close/Collapse Button -->
-  <button type="button" class="app-search__mobile-close" (click)="closeMobileSearch()" [attr.aria-label]="'common.close' | translate">
-    <i class="pi pi-check"></i>
-  </button>
 </div>
+}
