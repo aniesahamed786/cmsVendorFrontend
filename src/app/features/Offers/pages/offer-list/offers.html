@@ -107,19 +107,19 @@
         <label class="app-filter-label">{{ 'offers.filter.discountType' | translate }}</label>
         <p-select [options]="discountTypeOptions()" [ngModel]="discountType()"
           (ngModelChange)="discountType.set($event)" optionLabel="label" optionValue="value"
-          [placeholder]="'offers.filter.discountType' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" appendTo="body" />
+          [showClear]="true" [placeholder]="'offers.filter.discountType' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" appendTo="body" />
       </div>
       <div class="app-filter-group">
         <label class="app-filter-label">{{ 'offers.filter.status' | translate }}</label>
         <p-select [options]="statusOptions()" [ngModel]="status()" (ngModelChange)="status.set($event)"
-          optionLabel="label" optionValue="value" [placeholder]="'offers.filter.status' | translate" styleClass="offers__filter"
+          optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'offers.filter.status' | translate" styleClass="offers__filter"
           panelStyleClass="offers__overlay-panel" appendTo="body" />
       </div>
       <div class="app-filter-group">
         <label class="app-filter-label">{{ 'offers.filter.availability' | translate }}</label>
         <p-select [options]="availabilityOptions()" [ngModel]="availability()"
           (ngModelChange)="availability.set($event)" optionLabel="label" optionValue="value"
-          [placeholder]="'offers.filter.availability' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" appendTo="body" />
+          [showClear]="true" [placeholder]="'offers.filter.availability' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" appendTo="body" />
       </div>
       <div class="app-filter-group">
         <label class="app-filter-label">{{ 'offers.filter.period' | translate }}</label>
@@ -132,7 +132,7 @@
         <label class="app-filter-label">{{ 'offers.filter.customRange' | translate }}</label>
         <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event)" selectionMode="range"
           [readonlyInput]="true" [placeholder]="'offers.filter.selectDates' | translate" dateFormat="yy-mm-dd" appendTo="body"
-          styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
+          [showClear]="true" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
       </div>
       }
     </app-bottom-sheet>

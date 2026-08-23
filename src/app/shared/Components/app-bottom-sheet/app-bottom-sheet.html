@@ -26,9 +26,16 @@
         <span class="app-bottom-sheet__badge">{{ activeFilterCount() }}</span>
         }
       </div>
-      <button type="button" class="app-bottom-sheet__close-btn" (click)="close()" [attr.aria-label]="'common.close' | translate">
-        <i class="pi pi-times"></i>
-      </button>
+      <div class="app-bottom-sheet__header-actions">
+        @if (activeFilterCount() > 0) {
+        <button type="button" class="app-bottom-sheet__clear-link" (click)="onClear()">
+          {{ resolvedClearLabel() }}
+        </button>
+        }
+        <button type="button" class="app-bottom-sheet__close-btn" (click)="close()" [attr.aria-label]="'common.close' | translate">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Sheet Body (Scrollable Filters) -->
@@ -36,17 +43,15 @@
       <ng-content></ng-content>
     </div>
 
-    <!-- Sheet Footer (Actions) -->
+    <!-- Sheet Footer (Clear All if active filters exist) -->
+    @if (activeFilterCount() > 0) {
     <div class="app-bottom-sheet__footer">
-      @if (showClear()) {
       <app-button variant="outline" (click)="onClear()">
-        {{ resolvedClearLabel() }}
-      </app-button>
-      }
-      <app-button variant="primary" (click)="onApply()">
-        {{ resolvedApplyLabel() }}
+        <i class="pi pi-trash"></i>
+        <span>{{ resolvedClearLabel() }} ({{ activeFilterCount() }})</span>
       </app-button>
     </div>
+    }
   </div>
 </div>
 }

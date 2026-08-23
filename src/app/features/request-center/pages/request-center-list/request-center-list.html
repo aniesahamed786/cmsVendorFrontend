@@ -100,7 +100,7 @@
       <div class="app-filter-group">
         <label class="app-filter-label">{{ 'requestCenter.filter.status' | translate }}</label>
         <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
-          optionLabel="label" optionValue="value" [placeholder]="'requestCenter.filter.status' | translate"
+          optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'requestCenter.filter.status' | translate"
           styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" appendTo="body" />
       </div>
 

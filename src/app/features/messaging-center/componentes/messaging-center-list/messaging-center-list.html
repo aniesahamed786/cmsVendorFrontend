@@ -38,14 +38,14 @@
     <div class="app-filter-group">
       <label class="app-filter-label">{{ 'messaging.label.type' | translate }}</label>
       <p-select [options]="typeOptions()" [ngModel]="selectedType()" (ngModelChange)="onTypeChange($event)"
-        optionLabel="label" optionValue="value" [placeholder]="'messaging.placeholder.type' | translate" styleClass="mc-list__select"
+        optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'messaging.placeholder.type' | translate" styleClass="mc-list__select"
         panelStyleClass="mc-list__panel" appendTo="body"></p-select>
     </div>
 
     <div class="app-filter-group">
       <label class="app-filter-label">{{ 'messaging.label.status' | translate }}</label>
       <p-select [options]="statusOptions()" [ngModel]="selectedStatus()" (ngModelChange)="onStatusChange($event)"
-        optionLabel="label" optionValue="value" [placeholder]="'messaging.placeholder.status' | translate" styleClass="mc-list__select"
+        optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'messaging.placeholder.status' | translate" styleClass="mc-list__select"
         panelStyleClass="mc-list__panel" appendTo="body"></p-select>
     </div>
   </app-bottom-sheet>

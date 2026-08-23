@@ -52,13 +52,13 @@
         <label class="app-filter-label">Type</label>
         <p-select [options]="entityTypeOptions" [ngModel]="entityType()"
           (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
-          placeholder="Type" styleClass="recent-activities__filter" appendTo="body" />
+          [showClear]="true" placeholder="Type" styleClass="recent-activities__filter" appendTo="body" />
       </div>
 
       <div class="app-filter-group">
         <label class="app-filter-label">Action</label>
         <p-select [options]="actionOptions" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
-          optionLabel="label" optionValue="value" placeholder="Action"
+          optionLabel="label" optionValue="value" [showClear]="true" placeholder="Action"
           styleClass="recent-activities__filter" appendTo="body" />
       </div>
 
@@ -73,7 +73,7 @@
       <div class="app-filter-group">
         <label class="app-filter-label">Custom Dates</label>
         <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
-          selectionMode="range" [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy"
+          selectionMode="range" [readonlyInput]="true" [showClear]="true" placeholder="Select dates" dateFormat="M d, yy"
           appendTo="body" styleClass="recent-activities__filter" />
       </div>
       }
