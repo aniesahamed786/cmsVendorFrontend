@@ -12,6 +12,18 @@
   overflow: hidden;
 
   // ---- Search ----
+  &__search-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1rem 0;
+
+    .mc-list__search {
+      flex: 1;
+      padding: 0;
+    }
+  }
+
   &__search {
     padding: 1rem 1rem 0;
 

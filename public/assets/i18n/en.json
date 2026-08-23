@@ -479,7 +479,13 @@
     "cancel": "Cancel",
     "edit": "Edit",
     "delete": "Delete",
-    "back": "Back"
+    "back": "Back",
+    "filters": "Filters",
+    "filter": "Filter",
+    "apply": "Apply",
+    "clear": "Clear",
+    "reset": "Reset",
+    "close": "Close"
   },
   "offerForm": {
     "backToOffers": "Back to Offers",

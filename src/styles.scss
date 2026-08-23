@@ -505,11 +505,14 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-autocomplete-overlay,
 .p-datepicker-panel,
 .p-dropdown-panel,
+.p-popover,
+.p-menu,
 .p-select-list-container {
   background: var(--app-surface) !important;
   color: var(--app-text) !important;
   border: 1px solid var(--field-border) !important;
   border-radius: 0 !important;
+  z-index: 2200 !important;
 }
 
 /* In-overlay search boxes (multiselect filter, select filter) are fields too */
@@ -730,27 +733,76 @@ html body [data-pc-name="toggleswitch"],
   gap: 0;
 }
 
-/* Background, border, height and focus ring come from the unified field rules above */
-.app-search {
-  display: inline-flex;
+/* Mobile Filter Trigger Button */
+.app-filter-trigger-btn {
+  display: none;
   align-items: center;
-  gap: 0.5rem;
-  width: 16rem;
-  height: var(--field-height) !important;
-  min-height: var(--field-height) !important;
-  padding-block: 0 !important;
+  gap: 0.45rem;
+  height: var(--field-height, 2.75rem);
+  padding: 0 0.85rem;
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0;
   box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 
   i {
     font-size: 0.95rem;
-    display: inline-flex;
-    align-items: center;
+    color: var(--app-muted);
   }
 
-  input {
-    flex: 1;
-    height: 100%;
-    outline: none;
+  &:hover {
+    background: color-mix(in srgb, var(--app-surface) 80%, var(--app-border) 20%);
+    border-color: var(--app-primary);
+
+    i {
+      color: var(--app-primary);
+    }
+  }
+
+  &.has-active {
+    border-color: var(--app-primary);
+    background: var(--app-primary-soft);
+    color: var(--app-primary);
+
+    i {
+      color: var(--app-primary);
+    }
+  }
+}
+
+.app-filter-trigger-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  padding: 0 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+  background: var(--app-primary);
+  color: #ffffff;
+  margin-inline-start: 0.2rem;
+}
+
+@media (max-width: 767px) {
+  .app-desktop-filters {
+    display: none !important;
+  }
+
+  .app-filter-trigger-btn {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-mobile-only {
+    display: none !important;
   }
 }
 

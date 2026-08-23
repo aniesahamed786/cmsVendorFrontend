@@ -6,6 +6,8 @@ import { TableLazyLoadEvent } from 'primeng/table';
 import { Subject, debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { PrimeUIModules } from '../../core/prime.import';
 import { AppSearch } from '../../shared/Components/app-search/app-search';
+import { AppBottomSheet } from '../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { TranslatePipe } from '../../shared/i18n/translate.pipe';
 import { ApiRequestEntityType } from '../request-center/models/request-api.model';
 import { ActivityRow, toActivityPage } from './models/system-log.mapper';
 import { SystemLogAction, SystemLogSortOrder } from './models/system-log.model';
@@ -14,12 +16,14 @@ import { SystemLogService } from './services/system-log.service';
 @Component({
   selector: 'app-recent-activities',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, AppSearch],
+  imports: [CommonModule, FormsModule, PrimeUIModules, AppSearch, AppBottomSheet, TranslatePipe],
   templateUrl: './recent-activities.html',
   styleUrl: './recent-activities.scss',
 })
 export class RecentActivities implements OnInit {
   private readonly api = inject(SystemLogService);
+
+  showMobileFilters = signal(false);
 
   readonly entityTypeOptions = [
     { label: 'All types', value: null },
@@ -120,6 +124,14 @@ export class RecentActivities implements OnInit {
     this.search.set('');
     this.reload();
   }
+
+  readonly activeFilterCount = computed(() => {
+    let count = 0;
+    if (this.entityType()) count++;
+    if (this.action()) count++;
+    if (this.period() !== 'all') count++;
+    return count;
+  });
 
   readonly hasActiveFilters = computed(
     () =>

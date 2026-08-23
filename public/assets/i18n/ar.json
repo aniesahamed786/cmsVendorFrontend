@@ -479,7 +479,13 @@
     "cancel": "إلغاء",
     "edit": "تعديل",
     "delete": "حذف",
-    "back": "رجوع"
+    "back": "رجوع",
+    "filters": "الفلاتر",
+    "filter": "فلترة",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "reset": "إعادة ضبط",
+    "close": "إغلاق"
   },
   "offerForm": {
     "backToOffers": "العودة إلى العروض",

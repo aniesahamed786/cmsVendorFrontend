@@ -1,12 +1,22 @@
 <div class="mc-list">
-  <!-- Search -->
-  <div class="mc-list__search">
-    <app-search [value]="searchText()" (valueChange)="onSearchChange($event)"
-      [placeholder]="'messaging.search' | translate"></app-search>
+  <!-- Search & Mobile Filter Controls -->
+  <div class="mc-list__search-row">
+    <div class="mc-list__search">
+      <app-search [value]="searchText()" (valueChange)="onSearchChange($event)"
+        [placeholder]="'messaging.search' | translate"></app-search>
+    </div>
+    <button type="button" class="app-filter-trigger-btn" [class.has-active]="activeFilterCount() > 0"
+      (click)="showMobileFilters.set(true)">
+      <i class="pi pi-filter"></i>
+      <span>{{ 'common.filters' | translate }}</span>
+      @if (activeFilterCount() > 0) {
+      <span class="app-filter-trigger-badge">{{ activeFilterCount() }}</span>
+      }
+    </button>
   </div>
 
-  <!-- Filters -->
-  <div class="mc-list__filters">
+  <!-- Desktop Filters -->
+  <div class="mc-list__filters app-desktop-filters">
     <div class="mc-list__field">
       <label class="mc-list__label">{{ 'messaging.label.type' | translate }}</label>
       <p-select [options]="typeOptions()" [ngModel]="selectedType()" (ngModelChange)="onTypeChange($event)"
@@ -21,6 +31,24 @@
         panelStyleClass="mc-list__panel" appendTo="body"></p-select>
     </div>
   </div>
+
+  <!-- Mobile Draggable Bottom Sheet Filters -->
+  <app-bottom-sheet [(visible)]="showMobileFilters" [title]="'common.filters' | translate"
+    [activeFilterCount]="activeFilterCount()" (cleared)="clearFilters()">
+    <div class="app-filter-group">
+      <label class="app-filter-label">{{ 'messaging.label.type' | translate }}</label>
+      <p-select [options]="typeOptions()" [ngModel]="selectedType()" (ngModelChange)="onTypeChange($event)"
+        optionLabel="label" optionValue="value" [placeholder]="'messaging.placeholder.type' | translate" styleClass="mc-list__select"
+        panelStyleClass="mc-list__panel" appendTo="body"></p-select>
+    </div>
+
+    <div class="app-filter-group">
+      <label class="app-filter-label">{{ 'messaging.label.status' | translate }}</label>
+      <p-select [options]="statusOptions()" [ngModel]="selectedStatus()" (ngModelChange)="onStatusChange($event)"
+        optionLabel="label" optionValue="value" [placeholder]="'messaging.placeholder.status' | translate" styleClass="mc-list__select"
+        panelStyleClass="mc-list__panel" appendTo="body"></p-select>
+    </div>
+  </app-bottom-sheet>
 
   <!-- Tabs -->
   <div class="mc-list__tabs">

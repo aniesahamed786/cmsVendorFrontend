@@ -1,4 +1,31 @@
-<span class="app-search">
+<!-- Mobile Icon Trigger Button (Visible only on mobile when not expanded) -->
+<button type="button" class="app-search__mobile-trigger"
+  [class.has-value]="!!value()"
+  [attr.aria-label]="resolvedPlaceholder()"
+  (click)="openMobileSearch()">
   <i class="pi pi-search"></i>
-  <input type="text" [placeholder]="resolvedPlaceholder()" [ngModel]="value()" (ngModelChange)="value.set($event)" />
-</span>
+  @if (value()) {
+  <span class="app-search__dot"></span>
+  }
+</button>
+
+<!-- Full Search Bar (Always visible on desktop, conditionally visible/expanded on mobile) -->
+<div class="app-search" [class.is-mobile-expanded]="isMobileExpanded()">
+  <i class="pi pi-search app-search__icon"></i>
+  <input #searchInput type="text"
+    [placeholder]="resolvedPlaceholder()"
+    [ngModel]="value()"
+    (ngModelChange)="value.set($event)"
+    (keydown.escape)="closeMobileSearch()" />
+
+  @if (value()) {
+  <button type="button" class="app-search__clear-btn" (click)="clearSearch($event)" [attr.aria-label]="'common.clear' | translate">
+    <i class="pi pi-times"></i>
+  </button>
+  }
+
+  <!-- Mobile Close/Collapse Button -->
+  <button type="button" class="app-search__mobile-close" (click)="closeMobileSearch()" [attr.aria-label]="'common.close' | translate">
+    <i class="pi pi-check"></i>
+  </button>
+</div>

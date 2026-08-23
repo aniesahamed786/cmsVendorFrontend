@@ -7,6 +7,7 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import { RequestRow, RequestStats, RequestStatus } from '../../models/request.model';
@@ -18,7 +19,7 @@ type TabKey = 'all' | 'completed' | 'incomplete';
 @Component({
   selector: 'app-request-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp, AppBottomSheet],
   templateUrl: './request-center-list.html',
   styleUrl: './request-center-list.scss',
 })
@@ -27,6 +28,8 @@ export class RequestCenterList {
   private readonly i18n = inject(I18nService);
   private readonly requestCenterService = inject(RequestCenterService);
   private readonly api = inject(RequestCenterApiService);
+
+  showMobileFilters = signal(false);
 
   // KPI cards are fed by GET /cmsVendor/requests/metrics; the cards skeleton while it loads.
   readonly stats = signal<RequestStats>({ pendingOffer: 0, pendingStore: 0, pendingProfile: 0, rejected: 0 });
@@ -146,6 +149,18 @@ export class RequestCenterList {
 
   readonly statusFilter = signal<RequestStatus | null>(null);
   readonly sortBy = signal<'newest' | 'oldest'>('newest');
+
+  readonly activeFilterCount = computed(() => {
+    let count = 0;
+    if (this.statusFilter()) count++;
+    if (this.sortBy() !== 'newest') count++;
+    return count;
+  });
+
+  clearFilters(): void {
+    this.statusFilter.set(null);
+    this.sortBy.set('newest');
+  }
 
   readonly rows = computed(() => {
     const tab = this.activeTab();
