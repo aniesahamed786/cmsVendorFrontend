@@ -1135,9 +1135,8 @@
     },
     "type": {
       "technical": "تقني",
-      "billing": "الفوترة",
-      "general": "عام",
-      "account": "الحساب"
+      "suggestion": "اقتراح",
+      "vendorIssue": "مشكلة تاجر"
     },
     "status": {
       "new": "جديدة",
@@ -1180,20 +1179,32 @@
       "sendTo": "إرسال إلى",
       "ticketTitle": "عنوان التذكرة",
       "ticketType": "نوع التذكرة",
+      "category": "الفئة",
       "linkedItem": "العرض المرتبط",
       "description": "وصف التذكرة",
       "attachments": "المرفقات",
       "placeholder": {
         "sendTo": "اختر بائعاً...",
         "title": "أدخل عنواناً مختصراً للتذكرة",
-        "ticketType": "اختر الفئة",
+        "ticketType": "اختر نوع التذكرة",
+        "category": "اختر الفئة",
         "linkedItem": "ابحث عن عرض أو بائع أو قسم في التطبيق...",
         "description": "أدخل الرسالة الأساسية أو وصف المشكلة..."
       },
       "dropzone": "اسحب الملفات وأفلتها هنا، أو",
       "dropzoneLink": "انقر للتصفح",
       "dropzoneHelp": "الصيغ المدعومة: JPG وPNG وPDF وDOC وDOCX (بحد أقصى 10 ميجابايت لكل ملف)",
-      "submit": "إرسال التذكرة"
+      "submit": "إرسال التذكرة",
+      "error": {
+        "titleRequired": "عنوان التذكرة مطلوب",
+        "ticketTypeRequired": "نوع التذكرة مطلوب",
+        "categoryRequired": "الفئة مطلوبة للاقتراح",
+        "descriptionRequired": "وصف التذكرة مطلوب"
+      },
+      "toast": {
+        "failedSummary": "لم يتم إنشاء التذكرة",
+        "failedDetail": "حدث خطأ أثناء إنشاء التذكرة. يرجى المحاولة مرة أخرى."
+      }
     }
   },
   "branchForm": {

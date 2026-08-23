@@ -14,15 +14,35 @@
                 </label>
                 <input pInputText class="create-ticket__control" [(ngModel)]="title"
                     [placeholder]="'messaging.create.placeholder.title' | translate" />
+                @if (submitted() && titleMissing()) {
+                <p class="create-ticket__error">{{ 'messaging.create.error.titleRequired' | translate }}</p>
+                }
             </div>
 
             <!-- Row 3 -->
             <div class="create-ticket__field">
                 <label class="create-ticket__label">{{ 'messaging.create.ticketType' | translate }}<span class="create-ticket__required">*</span></label>
-                <p-select class="create-ticket__control" [options]="categoryOptions()" optionLabel="label"
-                    optionValue="value" [(ngModel)]="ticketType" [placeholder]="'messaging.create.placeholder.ticketType' | translate"
+                <p-select class="create-ticket__control" [options]="ticketTypeOptions()" optionLabel="label"
+                    optionValue="value" [ngModel]="ticketType()" (ngModelChange)="onTicketTypeChange($event)"
+                    [placeholder]="'messaging.create.placeholder.ticketType' | translate"
                     panelStyleClass="create-ticket__panel"></p-select>
+                @if (submitted() && typeMissing()) {
+                <p class="create-ticket__error">{{ 'messaging.create.error.ticketTypeRequired' | translate }}</p>
+                }
             </div>
+
+            @if (showCategory()) {
+            <div class="create-ticket__field">
+                <label class="create-ticket__label">{{ 'messaging.create.category' | translate }}<span class="create-ticket__required">*</span></label>
+                <p-select class="create-ticket__control" [options]="categoryOptions()" optionLabel="label"
+                    optionValue="value" [(ngModel)]="categoryId" [loading]="categoriesLoading()"
+                    [placeholder]="'messaging.create.placeholder.category' | translate"
+                    panelStyleClass="create-ticket__panel"></p-select>
+                @if (submitted() && categoryMissing()) {
+                <p class="create-ticket__error">{{ 'messaging.create.error.categoryRequired' | translate }}</p>
+                }
+            </div>
+            }
 
             <div class="create-ticket__field">
                 <label class="create-ticket__label">
@@ -40,6 +60,9 @@
                         class="create-ticket__required">*</span></label>
                 <textarea class="create-ticket__textarea p-textarea" [(ngModel)]="description" rows="6"
                     [placeholder]="'messaging.create.placeholder.description' | translate"></textarea>
+                @if (submitted() && descriptionMissing()) {
+                <p class="create-ticket__error">{{ 'messaging.create.error.descriptionRequired' | translate }}</p>
+                }
             </div>
 
             <!-- Attachments -->
@@ -69,8 +92,8 @@
         </div>
 
         <div class="create-ticket__actions">
-            <app-cancel-button (click)="onCancel()" />
-            <app-button (click)="onSubmit()">{{ 'messaging.create.submit' | translate }}</app-button>
+            <app-cancel-button [disabled]="saving()" (click)="onCancel()" />
+            <app-button [loading]="saving()" (click)="onSubmit()">{{ 'messaging.create.submit' | translate }}</app-button>
         </div>
     </div>
 </div>

@@ -1133,9 +1133,8 @@
     },
     "type": {
       "technical": "Technical",
-      "billing": "Billing",
-      "general": "General",
-      "account": "Account"
+      "suggestion": "Suggestion",
+      "vendorIssue": "Vendor Issue"
     },
     "status": {
       "new": "New",
@@ -1178,20 +1177,32 @@
       "sendTo": "Send To",
       "ticketTitle": "Ticket Title",
       "ticketType": "Ticket Type",
+      "category": "Category",
       "linkedItem": "Linked Item",
       "description": "Ticket Description",
       "attachments": "File Attachments",
       "placeholder": {
         "sendTo": "Select a vendor...",
         "title": "Enter a short subject line for the ticket",
-        "ticketType": "Select a category",
+        "ticketType": "Select a ticket type",
+        "category": "Select a category",
         "linkedItem": "Search for offer, vendor, or app section...",
         "description": "Enter the main message or issue description..."
       },
       "dropzone": "Drag and drop files here, or",
       "dropzoneLink": "click to browse",
       "dropzoneHelp": "Supported formats: JPG, PNG, PDF, DOC, DOCX (Max 10MB each)",
-      "submit": "Submit Ticket"
+      "submit": "Submit Ticket",
+      "error": {
+        "titleRequired": "Ticket title is required",
+        "ticketTypeRequired": "Ticket type is required",
+        "categoryRequired": "Category is required for a suggestion",
+        "descriptionRequired": "Ticket description is required"
+      },
+      "toast": {
+        "failedSummary": "Ticket not created",
+        "failedDetail": "Something went wrong while creating the ticket. Please try again."
+      }
     }
   },
   "branchForm": {

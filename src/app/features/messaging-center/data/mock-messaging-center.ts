@@ -11,9 +11,8 @@ export const CURRENT_AGENT = 'Anies Ahamed';
 export const TICKET_TYPE_OPTIONS: MessagingFilterOption[] = [
   { label: 'All', value: null },
   { label: 'Technical', value: 'Technical' },
-  { label: 'Billing', value: 'Billing' },
-  { label: 'General', value: 'General' },
-  { label: 'Account', value: 'Account' },
+  { label: 'Suggestion', value: 'Suggestion' },
+  { label: 'VendorIssue', value: 'VendorIssue' },
 ];
 
 export const TICKET_STATUS_OPTIONS: MessagingFilterOption[] = [
@@ -49,9 +48,8 @@ export const VENDOR_OPTIONS: SelectOption[] = [
 
 export const TICKET_CATEGORY_OPTIONS: SelectOption[] = [
   { label: 'Technical', value: 'Technical' },
-  { label: 'Billing', value: 'Billing' },
-  { label: 'General', value: 'General' },
-  { label: 'Account', value: 'Account' },
+  { label: 'Suggestion', value: 'Suggestion' },
+  { label: 'VendorIssue', value: 'VendorIssue' },
 ];
 
 export const LINKED_ITEM_OPTIONS: SelectOption[] = [

@@ -1,4 +1,4 @@
-export type TicketCategory = 'Technical' | 'Billing' | 'General' | 'Account';
+export type TicketCategory = 'Technical' | 'Suggestion' | 'VendorIssue';
 
 export type TicketStatus = 'New' | 'In Progress' | 'Open' | 'Closed';
 
@@ -16,9 +16,8 @@ export type SortOrder = 'newest' | 'oldest';
  */
 export const TICKET_CATEGORY_KEYS: Record<TicketCategory, string> = {
   Technical: 'messaging.type.technical',
-  Billing: 'messaging.type.billing',
-  General: 'messaging.type.general',
-  Account: 'messaging.type.account',
+  Suggestion: 'messaging.type.suggestion',
+  VendorIssue: 'messaging.type.vendorIssue',
 };
 
 export const TICKET_STATUS_KEYS: Record<TicketStatus, string> = {
@@ -102,6 +101,7 @@ export interface CreateTicketForm {
   sendTo: string | null;
   title: string;
   ticketType: TicketCategory | null;
+  categoryId: string | null;
   linkedItem: string | null;
   description: string;
   attachments?: File[];

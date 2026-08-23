@@ -2,7 +2,10 @@
   <app-messaging-center-create-ticket
     [participantTypeOptions]="participantTypeOptions()"
     [vendorOptions]="vendorOptions"
+    [ticketTypeOptions]="ticketTypeOptions()"
     [categoryOptions]="categoryOptions()"
+    [categoriesLoading]="categoriesLoading()"
+    [saving]="saving()"
     [linkedItemOptions]="linkedItemOptions"
     (submitTicket)="onSubmit($event)"
     (cancel)="onCancel()"

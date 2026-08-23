@@ -13,7 +13,7 @@
       <img [src]="vendorLogo()" [alt]="vendorName()" class="dashboard-page__logo-image" />
     </div>
     } @else {
-    <div class="dashboard-page__logo">{{ vendorName() ? (vendorName().length > 6 ? vendorName().substring(0, 6).toUpperCase() : vendorName().toUpperCase()) : 'LUMEE' }}</div>
+    <div class="dashboard-page__logo">{{ vendorInitials() }}</div>
     }
     <div class="dashboard-page__intro">
       <h1 class="dashboard-page__title">{{ vendorName() }}</h1>

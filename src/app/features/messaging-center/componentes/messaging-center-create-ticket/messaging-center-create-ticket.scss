@@ -50,6 +50,12 @@
     margin-inline-start: 0.15rem;
   }
 
+  &__error {
+    margin: 0.25rem 0 0;
+    font-size: 0.75rem;
+    color: #dc2626;
+  }
+
   // Shared field control (input + select host)
   &__control {
     width: 100%;

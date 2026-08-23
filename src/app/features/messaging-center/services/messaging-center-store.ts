@@ -8,13 +8,14 @@ import {
   TicketTabKey,
 } from '../models/messaging-center.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { finalize } from 'rxjs';
+import { Observable, finalize, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 
 // Socket
 import { MessagingSocketService } from '../services/messaging-socket.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 /**
  * In-memory store for the messaging center. Mirrors the admin app's
@@ -47,6 +48,7 @@ export class MessagingCenterStore {
   // Socket Injection
   private readonly socketService = inject(MessagingSocketService);
   private readonly i18n = inject(I18nService);
+  private readonly auth = inject(AuthService);
 
   isLoadingTickets = signal(false);
   isLoadingMessages = signal(false);
@@ -259,12 +261,22 @@ export class MessagingCenterStore {
     this.updateStatus(ticketId, 'Closed');
   }
 
-  createTicket(form: CreateTicketForm): void {
+  createTicket(form: CreateTicketForm): Observable<any> {
     const formData = new FormData();
     formData.append('title', form.title);
     formData.append('description', form.description);
-    formData.append('ticketType', form.ticketType ?? 'Technical');
+    const ticketType = form.ticketType ?? 'Technical';
+    formData.append('ticketType', ticketType);
     formData.append('status', 'new');
+
+    if (ticketType === 'Suggestion' && form.categoryId) {
+      formData.append('category', form.categoryId);
+    }
+
+    if (ticketType === 'VendorIssue') {
+      const vendorId = this.auth.getVendorId();
+      if (vendorId) formData.append('vendorId', vendorId);
+    }
 
     // Optional attachments
     if (form.attachments?.length) {
@@ -273,27 +285,18 @@ export class MessagingCenterStore {
       });
     }
 
-    this.http.post<any>(
-      `${this.baseUrl}/messaging-center/tickets`,
-      formData,
-    ).subscribe({
-      next: (response) => {
-        console.log('Ticket created successfully', response);
-
-        // Reload tickets
-        // this.loadTickets();
-
-        if (response?.data?.ticketId) {
-          this.socketService.joinTicketRoom(response.data.ticketId);
-        }
-
-        // Optionally select the newly created ticket if API returns it
-        this.selectedTicketId.set(response.data.id);
-      },
-      error: (error) => {
-        console.error('Failed to create ticket', error);
-      }
-    });
+    return this.http
+      .post<any>(`${this.baseUrl}/messaging-center/tickets`, formData)
+      .pipe(
+        tap((response) => {
+          if (response?.data?.ticketId) {
+            this.socketService.joinTicketRoom(response.data.ticketId);
+          }
+          if (response?.data?.id) {
+            this.selectedTicketId.set(response.data.id);
+          }
+        }),
+      );
   }
 
   // --- Helpers ---------------------------------------------------------------

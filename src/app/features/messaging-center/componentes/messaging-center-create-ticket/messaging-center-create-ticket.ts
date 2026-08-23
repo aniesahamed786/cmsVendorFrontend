@@ -23,8 +23,11 @@ import { CancelButton } from '../../../../shared/Components/cancel-button/cancel
 export class MessagingCenterCreateTicket {
   readonly participantTypeOptions = input<SelectOption[]>([]);
   readonly vendorOptions = input<SelectOption[]>([]);
+  readonly ticketTypeOptions = input<SelectOption[]>([]);
   readonly categoryOptions = input<SelectOption[]>([]);
+  readonly categoriesLoading = input<boolean>(false);
   readonly linkedItemOptions = input<SelectOption[]>([]);
+  readonly saving = input<boolean>(false);
 
   readonly submitTicket = output<CreateTicketForm>();
   readonly cancel = output<void>();
@@ -34,33 +37,50 @@ export class MessagingCenterCreateTicket {
   readonly sendTo = signal<string | null>('Admin');
   readonly title = signal<string>('');
   readonly ticketType = signal<TicketCategory | null>(null);
+  readonly categoryId = signal<string | null>(null);
   readonly linkedItem = signal<string | null>(null);
   readonly description = signal<string>('');
 
-  // readonly attachmentNames = signal<string[]>([]);
   readonly attachments = signal<File[]>([]);
   readonly attachmentNames = signal<string[]>([]);
 
-  // readonly form = computed<CreateTicketForm>(() => ({
-  //   participantType: this.participantType(),
-  //   sendTo: this.sendTo(),
-  //   title: this.title(),
-  //   ticketType: this.ticketType(),
-  //   linkedItem: this.linkedItem(),
-  //   description: this.description(),
-  // }));
+  readonly showCategory = computed(() => this.ticketType() === 'Suggestion');
+  readonly submitted = signal(false);
+  readonly titleMissing = computed(() => !this.title().trim());
+  readonly typeMissing = computed(() => !this.ticketType());
+  readonly categoryMissing = computed(() => this.showCategory() && !this.categoryId());
+  readonly descriptionMissing = computed(() => !this.description().trim());
+
+  readonly invalid = computed(
+    () =>
+      this.titleMissing() ||
+      this.typeMissing() ||
+      this.categoryMissing() ||
+      this.descriptionMissing(),
+  );
+
+  onTicketTypeChange(value: TicketCategory | null): void {
+    this.ticketType.set(value);
+    if (value !== 'Suggestion') {
+      this.categoryId.set(null);
+    }
+  }
 
   readonly form = computed<CreateTicketForm>(() => ({
     participantType: this.participantType(),
     sendTo: this.sendTo(),
     title: this.title(),
     ticketType: this.ticketType(),
+    categoryId: this.showCategory() ? this.categoryId() : null,
     linkedItem: this.linkedItem(),
     description: this.description(),
     attachments: this.attachments(),
   }));
 
   onSubmit(): void {
+    if (this.saving()) return;
+    this.submitted.set(true);
+    if (this.invalid()) return;
     this.submitTicket.emit(this.form());
   }
 
@@ -71,12 +91,6 @@ export class MessagingCenterCreateTicket {
   onBack(): void {
     this.back.emit();
   }
-
-  // onFilesSelected(event: Event): void {
-  //   const input = event.target as HTMLInputElement;
-  //   const files = input.files ? Array.from(input.files) : [];
-  //   this.attachmentNames.set(files.map((f) => f.name));
-  // }
 
   onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
