@@ -79,14 +79,14 @@
         <div class="request-center__toolbar-controls app-desktop-filters">
           <div class="app-filter-group">
             <label class="app-filter-label">{{ 'requestCenter.filter.status' | translate }}</label>
-            <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+            <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="onStatusFilterChange($event)"
               optionLabel="label" optionValue="value" [placeholder]="'requestCenter.filter.status' | translate"
               styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
           </div>
 
           <div class="app-filter-group">
             <label class="app-filter-label">{{ 'requestCenter.sort.label' | translate }}</label>
-            <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)"
+            <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="onSortByChange($event)"
               optionLabel="label" optionValue="value"
               styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
           </div>
@@ -99,72 +99,130 @@
       [activeFilterCount]="activeFilterCount()" (cleared)="clearFilters()">
       <div class="app-filter-group">
         <label class="app-filter-label">{{ 'requestCenter.filter.status' | translate }}</label>
-        <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+        <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="onStatusFilterChange($event)"
           optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'requestCenter.filter.status' | translate"
           styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" appendTo="body" />
       </div>
 
       <div class="app-filter-group">
         <label class="app-filter-label">{{ 'requestCenter.sort.label' | translate }}</label>
-        <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)"
+        <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="onSortByChange($event)"
           optionLabel="label" optionValue="value"
           styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" appendTo="body" />
       </div>
     </app-bottom-sheet>
 
-    <p-table [value]="tableRows()" [paginator]="!tableLoading()" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
-      paginatorDropdownAppendTo="body" styleClass="request-center__table">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>{{ 'requestCenter.column.requestId' | translate }}</th>
-          <th>{{ 'requestCenter.column.requestType' | translate }}</th>
-          <th pSortableColumn="actionType">{{ 'requestCenter.column.actionType' | translate }} <p-sortIcon field="actionType" /></th>
-          <th>{{ 'requestCenter.column.targetEntity' | translate }}</th>
-          <th pSortableColumn="date">{{ 'requestCenter.column.timestamp' | translate }} <p-sortIcon field="date" /></th>
-          <th>{{ 'requestCenter.column.status' | translate }}</th>
-          <th>{{ 'requestCenter.column.action' | translate }}</th>
-        </tr>
-      </ng-template>
+    <!-- Desktop View: Table (matches Offers/Branches/Activities standard) -->
+    <div class="request-center__desktop-view">
+      <p-table [value]="tableRows()" [paginator]="!tableLoading()" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+        paginatorDropdownAppendTo="body" styleClass="request-center__table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>{{ 'requestCenter.column.requestId' | translate }}</th>
+            <th>{{ 'requestCenter.column.requestType' | translate }}</th>
+            <th pSortableColumn="actionType">{{ 'requestCenter.column.actionType' | translate }} <p-sortIcon field="actionType" /></th>
+            <th>{{ 'requestCenter.column.targetEntity' | translate }}</th>
+            <th pSortableColumn="date">{{ 'requestCenter.column.timestamp' | translate }} <p-sortIcon field="date" /></th>
+            <th>{{ 'requestCenter.column.status' | translate }}</th>
+            <th>{{ 'requestCenter.column.action' | translate }}</th>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="body" let-row>
-        <tr [routerLink]="['/request-center', row.rowKey]">
-          <td>{{ row.id }}</td>
-          <td>{{ typeKey(row.type) | translate }}</td>
-          <td>{{ actionTypeKey(row.actionType) | translate }}</td>
-          <td>{{ row.targetEntity }}</td>
-          <td>{{ row.timestamp }}</td>
-          <td><span [class]="statusClass(row.status)">{{ statusKey(row.status) | translate }}</span></td>
-          <td>
-            <button type="button" class="request-center__row-action"
-              [attr.aria-label]="'requestCenter.rowActionsAria' | translate"
-              (click)="activeRow = row; menu.toggle($event); $event.stopPropagation()">
-              <i class="pi pi-ellipsis-h"></i>
-            </button>
-            <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
-          </td>
-        </tr>
-      </ng-template>
+        <ng-template pTemplate="body" let-row>
+          <tr [routerLink]="['/request-center', row.rowKey]">
+            <td>{{ row.id }}</td>
+            <td>{{ typeKey(row.type) | translate }}</td>
+            <td>{{ actionTypeKey(row.actionType) | translate }}</td>
+            <td>{{ row.targetEntity }}</td>
+            <td>{{ row.timestamp }}</td>
+            <td><span [class]="statusClass(row.status)">{{ statusKey(row.status) | translate }}</span></td>
+            <td>
+              <button type="button" class="request-center__row-action"
+                [attr.aria-label]="'requestCenter.rowActionsAria' | translate"
+                (click)="activeRow = row; menu.toggle($event); $event.stopPropagation()">
+                <i class="pi pi-ellipsis-h"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
 
-      <!-- PrimeNG renders this for every falsy entry in [value] — the placeholder rows in
-           tableRows() while tableLoading() is true. -->
-      <ng-template pTemplate="loadingbody">
-        <tr class="request-center__row--skeleton">
-          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--id"></span></td>
-          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--text"></span></td>
-          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--text"></span></td>
-          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--wide"></span></td>
-          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--date"></span></td>
-          <td><span class="app-skeleton app-skeleton--pill request-center__skeleton-cell request-center__skeleton-cell--pill"></span></td>
-          <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--action"></span></td>
-        </tr>
-      </ng-template>
+        <ng-template pTemplate="loadingbody">
+          <tr class="request-center__row--skeleton">
+            <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--id"></span></td>
+            <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--text"></span></td>
+            <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--text"></span></td>
+            <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--wide"></span></td>
+            <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--date"></span></td>
+            <td><span class="app-skeleton app-skeleton--pill request-center__skeleton-cell request-center__skeleton-cell--pill"></span></td>
+            <td><span class="app-skeleton request-center__skeleton-cell request-center__skeleton-cell--action"></span></td>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="7" class="request-center__empty">{{ 'requestCenter.empty' | translate }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="request-center__empty">{{ 'requestCenter.empty' | translate }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Mobile View: Ticket Cards (like Messaging Center, without status line/color) -->
+    <div class="request-center__mobile-view">
+      <div class="request-center__tickets">
+        @if (tableLoading()) {
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="request-center__ticket request-center__ticket--skeleton">
+          <div class="request-center__ticket-top">
+            <div class="request-center__ticket-meta">
+              <span class="app-skeleton app-skeleton--pill request-center__skeleton-badge"></span>
+              <span class="app-skeleton request-center__skeleton-ref"></span>
+            </div>
+            <span class="app-skeleton request-center__skeleton-category"></span>
+          </div>
+          <span class="app-skeleton request-center__skeleton-title"></span>
+          <span class="app-skeleton request-center__skeleton-time"></span>
+        </div>
+        }
+        } @else {
+        @for (row of pagedRows(); track row.rowKey) {
+        <div class="request-center__ticket" [routerLink]="['/request-center', row.rowKey]">
+          <div class="request-center__ticket-top">
+            <div class="request-center__ticket-meta">
+              <span [class]="statusClass(row.status)">{{ statusKey(row.status) | translate }}</span>
+              <span class="request-center__ticket-ref">{{ row.id }}</span>
+            </div>
+            <div class="request-center__ticket-right">
+              <span class="request-center__ticket-category">{{ typeKey(row.type) | translate }} • {{ actionTypeKey(row.actionType) | translate }}</span>
+              <button type="button" class="request-center__row-action"
+                [attr.aria-label]="'requestCenter.rowActionsAria' | translate"
+                (click)="activeRow = row; menu.toggle($event); $event.stopPropagation()">
+                <i class="pi pi-ellipsis-h"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="request-center__ticket-title">{{ row.targetEntity }}</div>
+          <div class="request-center__ticket-time">{{ row.timestamp }}</div>
+        </div>
+        } @empty {
+        <div class="request-center__empty">
+          <i class="pi pi-inbox"></i>
+          <span>{{ 'requestCenter.empty' | translate }}</span>
+        </div>
+        }
+        }
+      </div>
+
+      @if (!tableLoading() && rows().length > 0) {
+      <div class="request-center__paginator-wrapper">
+        <p-paginator [first]="first()" [rows]="pageRows()" [totalRecords]="rows().length"
+          [rowsPerPageOptions]="[5, 10, 20, 50]" (onPageChange)="onPageChange($event)"
+          paginatorDropdownAppendTo="body" />
+      </div>
+      }
+    </div>
+
+    <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
   </section>
 </div>
 

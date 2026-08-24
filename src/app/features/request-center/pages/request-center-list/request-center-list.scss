@@ -192,12 +192,6 @@
     flex-wrap: wrap;
   }
 
-  &__empty {
-    text-align: center;
-    color: var(--app-muted);
-    padding: 1.5rem 0;
-  }
-
   &__row-action {
     background: transparent;
     border: none;
@@ -210,10 +204,16 @@
     }
   }
 
-  // ---- Status pills (rounded lozenge — justified: status indicator) ----
-  // Colors map to state families: success (green), danger (red), primary (blue),
-  // warning (amber). The green/red/amber are sanctioned literals — no
-  // --app-success/--app-warning tokens exist yet (same gap as Offers/recent-activities).
+  // ---- Desktop vs Mobile view visibility ----
+  &__desktop-view {
+    display: block;
+  }
+
+  &__mobile-view {
+    display: none;
+  }
+
+  // ---- Status pills for desktop table (rounded lozenge — justified: status indicator) ----
   &__status {
     display: inline-block;
     font-size: 0.72rem;
@@ -257,6 +257,127 @@
     &--pill { width: 4.5rem; }
     &--action { width: 1.25rem; }
   }
+
+  // ---- Ticket cards (Mobile view) ----
+  &__tickets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  &__ticket {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    text-align: start;
+    padding: 0.875rem 1rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+
+    &:hover {
+      background: var(--app-primary-hover-soft);
+      border-color: var(--app-primary);
+    }
+
+    &--skeleton {
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+
+  &__ticket-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.15rem;
+  }
+
+  &__ticket-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__ticket-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__ticket-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.2rem 0.5rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+  }
+
+  &__ticket-ref {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--app-muted);
+  }
+
+  &__ticket-category {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+  }
+
+  &__ticket-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--app-text);
+    margin-top: 0.15rem;
+  }
+
+  &__ticket-time {
+    font-size: 0.75rem;
+    color: var(--app-muted);
+  }
+
+  // ---- Ticket skeletons (.app-skeleton owns fill + pulse; these own size) ----
+  &__skeleton-badge { width: 4.5rem; height: 1.1rem; }
+  &__skeleton-ref { width: 5rem; height: 0.85rem; }
+  &__skeleton-category { width: 6rem; height: 0.85rem; }
+  &__skeleton-title { width: 45%; height: 1rem; margin-top: 0.25rem; }
+  &__skeleton-time { width: 8rem; height: 0.8rem; margin-top: 0.25rem; }
+
+  &__paginator-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--app-border);
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 3rem 1rem;
+    color: var(--app-muted);
+    font-size: 0.875rem;
+
+    i {
+      font-size: 1.75rem;
+    }
+  }
 }
 
 @media (max-width: 1024px) {
@@ -265,7 +386,17 @@
   }
 }
 
-// Full-bleed table sides & bottom inside the card
+@media (max-width: 767px) {
+  .request-center__desktop-view {
+    display: none !important;
+  }
+
+  .request-center__mobile-view {
+    display: block !important;
+  }
+}
+
+// Full-bleed table sides & bottom inside the card for desktop view
 ::ng-deep .request-center__table {
   margin: 0 -1.5rem -1.25rem;
 }

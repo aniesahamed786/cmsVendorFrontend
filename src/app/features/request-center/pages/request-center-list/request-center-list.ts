@@ -99,9 +99,25 @@ export class RequestCenterList {
   // ---- Tabs / filters / sort ------------------------------------------------
   readonly activeTab = signal<TabKey>('incomplete');
 
+  readonly statusFilter = signal<RequestStatus | null>(null);
+  readonly sortBy = signal<'newest' | 'oldest'>('newest');
+  readonly first = signal(0);
+  readonly pageRows = signal(10);
+
   setTab(tab: TabKey): void {
     this.activeTab.set(tab);
     this.statusFilter.set(null);
+    this.first.set(0);
+  }
+
+  onStatusFilterChange(val: RequestStatus | null): void {
+    this.statusFilter.set(val);
+    this.first.set(0);
+  }
+
+  onSortByChange(val: 'newest' | 'oldest'): void {
+    this.sortBy.set(val);
+    this.first.set(0);
   }
 
   private options<T>(entries: [key: string, value: T][]) {
@@ -147,9 +163,6 @@ export class RequestCenterList {
     ['requestCenter.sort.oldest', 'oldest'],
   ]);
 
-  readonly statusFilter = signal<RequestStatus | null>(null);
-  readonly sortBy = signal<'newest' | 'oldest'>('newest');
-
   readonly activeFilterCount = computed(() => {
     let count = 0;
     if (this.statusFilter()) count++;
@@ -160,6 +173,12 @@ export class RequestCenterList {
   clearFilters(): void {
     this.statusFilter.set(null);
     this.sortBy.set('newest');
+    this.first.set(0);
+  }
+
+  onPageChange(event: { first?: number; rows?: number }): void {
+    this.first.set(event.first ?? 0);
+    this.pageRows.set(event.rows ?? 10);
   }
 
   readonly rows = computed(() => {
@@ -179,7 +198,11 @@ export class RequestCenterList {
     );
   });
 
-  /** While loading, feed the table 5 falsy rows so PrimeNG renders the skeleton body. */
+  readonly pagedRows = computed(() =>
+    this.rows().slice(this.first(), this.first() + this.pageRows()),
+  );
+
+  /** While loading, feed the desktop table 5 falsy rows so PrimeNG renders the skeleton body. */
   readonly tableRows = computed(() => (this.tableLoading() ? new Array(5).fill(null) : this.rows()));
 
   // ---- Row actions (3-dot menu) ---------------------------------------------
