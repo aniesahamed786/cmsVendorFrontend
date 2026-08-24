@@ -328,6 +328,8 @@
         "requestId": "معرف الطلب",
         "status": "الحالة",
         "type": "النوع",
+        "requestType": "نوع الطلب",
+        "actionType": "نوع الإجراء",
         "createdBy": "تم الإنشاء بواسطة",
         "assignedTo": "تم التعيين إلى",
         "createdDate": "تاريخ الإنشاء",

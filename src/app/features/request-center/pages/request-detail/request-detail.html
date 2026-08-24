@@ -385,9 +385,16 @@
           </div>
 
           <div class="request-detail__summary-item">
-            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.type' | translate }}</span>
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.requestType' | translate }}</span>
             <span class="request-detail__summary-value request-detail__summary-value--bold">
-              {{ summaryRequestType() }}
+              {{ summaryEntityType() }}
+            </span>
+          </div>
+
+          <div class="request-detail__summary-item">
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.actionType' | translate }}</span>
+            <span class="request-detail__summary-value request-detail__summary-value--bold">
+              {{ summaryActionType() }}
             </span>
           </div>
 

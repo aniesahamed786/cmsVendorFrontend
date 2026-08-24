@@ -291,7 +291,24 @@ export class RequestDetail {
     return `${datePart} • ${timePart}`;
   });
 
-  readonly summaryRequestType = computed(() => {
+  readonly summaryEntityType = computed(() => {
+    this.i18n.loadSeq();
+    const entity = this.details()?.entityType ?? this.row()?.type?.toUpperCase();
+    switch (entity) {
+      case 'OFFER':
+        return this.i18n.t('requestCenter.type.offer');
+      case 'STORE':
+        return this.i18n.t('requestCenter.type.store');
+      case 'PROFILE':
+        return this.i18n.t('requestCenter.type.profile');
+      case 'HIGHLIGHT':
+        return this.i18n.t('requestCenter.type.highlight');
+      default:
+        return this.row()?.type || '—';
+    }
+  });
+
+  readonly summaryActionType = computed(() => {
     this.i18n.loadSeq();
     const type = this.details()?.requestType ?? (this.row()?.actionType === 'Created' ? 'CREATE' : 'UPDATE');
     if (type === 'CREATE') {
@@ -299,6 +316,8 @@ export class RequestDetail {
     }
     return this.i18n.t('requestCenter.actionType.updated');
   });
+
+  readonly summaryRequestType = this.summaryActionType;
 
   constructor() {
     this.loadDetails();

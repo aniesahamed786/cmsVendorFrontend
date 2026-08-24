@@ -328,6 +328,8 @@
         "requestId": "Request ID",
         "status": "Status",
         "type": "Type",
+        "requestType": "Request Type",
+        "actionType": "Action Type",
         "createdBy": "Created By",
         "assignedTo": "Assigned To",
         "createdDate": "Created Date",
