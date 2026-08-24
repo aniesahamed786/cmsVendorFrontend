@@ -1,10 +1,14 @@
-@use '../../../../shared/styles/mobile-preview-mockup' as *;
+:host {
+  display: block;
+  width: 100%;
+}
 
 .offer-page-header {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
+  width: 100%;
 
   @media (min-width: 640px) {
     flex-direction: row;
@@ -306,6 +310,7 @@
 .offer-details-layout {
   overflow: visible;
   margin-top: 1.5rem;
+  width: 100%;
 }
 
 .offer-tabs-header {
@@ -363,17 +368,20 @@
   flex-direction: column;
   gap: 2rem;
   padding-top: 2rem;
-  align-items: flex-start;
+  align-items: stretch;
+  width: 100%;
   overflow: visible;
 
   @media (min-width: 1280px) {
     flex-direction: row;
+    align-items: flex-start;
   }
 }
 
 .offer-tab-panel__main {
   flex: 1;
   min-width: 0;
+  width: 100%;
 }
 
 .offer-tab-panel__sidebar {
