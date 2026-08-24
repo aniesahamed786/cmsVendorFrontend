@@ -303,6 +303,11 @@
       "recall": "Recall Request",
       "delete": "Delete Request"
     },
+    "submitConfirm": {
+      "title": "Submit Request",
+      "message": "Are you sure you want to submit this request for review?",
+      "confirm": "Submit Request"
+    },
     "recallConfirm": {
       "title": "Recall Request",
       "message": "Are you sure you want to recall this request? It will be withdrawn from the review queue.",
@@ -333,13 +338,23 @@
       "viewOffers": "View Offers",
       "viewStores": "View Stores",
       "viewProfile": "View Profile",
+      "submitRequest": "Submit Request",
       "recallRequest": "Recall Request",
       "resubmitRequest": "Resubmit",
       "cancelRequest": "Cancel Request",
       "editRequest": "Edit Request",
       "tab": {
         "details": "Request Details",
-        "changes": "Changes"
+        "changes": "Changes",
+        "history": "History"
+      },
+      "history": {
+        "title": "Request History",
+        "action": "Action",
+        "performedBy": "Performed By",
+        "remarks": "Remarks / Comments",
+        "time": "Date & Time",
+        "noHistory": "No history records found for this request."
       },
       "diff": {
         "previous": "Previous value",
@@ -438,6 +453,7 @@
       },
       "timeline": {
         "title": "Request Timeline",
+        "viewAll": "View All",
         "submitted": {
           "title": "Submitted",
           "description": "The request has been successfully submitted and is awaiting initial screening by the operations team."

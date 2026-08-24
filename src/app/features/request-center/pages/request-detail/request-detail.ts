@@ -133,8 +133,8 @@ export class RequestDetail {
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
 
   // ---- Tabs -----------------------------------------------------------------
-  /** `details` shows the entity as it would look approved; `changes` shows the raw diff. */
-  readonly activeTab = signal<'details' | 'changes'>('details');
+  /** `details` shows the entity as it would look approved; `changes` shows the raw diff; `history` shows the audit table. */
+  readonly activeTab = signal<'details' | 'changes' | 'history'>('details');
 
   // ---- Field diff (GET /cmsVendor/requests/{id}/changes) ---------------------
   readonly changeRowsRaw = signal<RequestChangeResponse[]>([]);
@@ -155,11 +155,26 @@ export class RequestDetail {
       }));
   });
 
-  selectTab(tab: 'details' | 'changes'): void {
+  /** History audit trail rows for the History tab. */
+  readonly historyRows = computed(() => {
+    this.i18n.loadSeq();
+    return [...this.history()]
+      .sort((a, b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime())
+      .map((entry) => ({
+        ...entry,
+        formattedDate: this.formatTimestamp(entry.createdOn),
+        statusKey: this.statusKey(entry.action as RequestStatus),
+        statusClass: this.statusClass(entry.action as RequestStatus),
+        roleLabel: prettyRole(entry.performedRole) || entry.performedBy || '—',
+      }));
+  });
+
+  selectTab(tab: 'details' | 'changes' | 'history'): void {
     this.activeTab.set(tab);
     // Fetched on first open rather than with the page — most visits never leave the details
     // tab, and the diff is already implied by the badges there.
     if (tab === 'changes' && !this.changesRequested) this.loadChanges();
+    if (tab === 'history' && !this.history().length && !this.historyLoading()) this.loadHistory();
   }
 
   private loadChanges(): void {
@@ -414,7 +429,8 @@ export class RequestDetail {
     }
   });
 
-  // Mirrors the backend's ALLOWED_TRANSITIONS: recall only from SUBMITTED.
+  // Mirrors the backend's ALLOWED_TRANSITIONS: submit from DRAFT, recall only from SUBMITTED.
+  readonly canSubmit = computed(() => this.status() === 'DRAFT');
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
   // A RETURNED request offers Edit and Cancel only. There is no Resubmit button by design —
   // a returned request goes back for changes, so it is re-sent by editing it, not by pushing
@@ -465,6 +481,22 @@ export class RequestDetail {
     status: RequestStatus,
   ): RequestTimelineStep[] {
     const t = (key: string) => this.i18n.t(`requestCenter.detail.timeline.${key}`);
+
+    const hasSubmittedRecord = log.some(
+      (entry) => String(entry.action ?? '').toUpperCase() === 'SUBMITTED',
+    );
+
+    if (status === 'DRAFT' && !hasSubmittedRecord) {
+      return [
+        {
+          key: 'submitted',
+          title: t('submitted.title'),
+          state: 'upcoming',
+          date: '',
+          description: '',
+        },
+      ];
+    }
 
     const steps: RequestTimelineStep[] = [...log]
       .sort((a, b) => new Date(a.createdOn).getTime() - new Date(b.createdOn).getTime())
@@ -529,6 +561,19 @@ export class RequestDetail {
     adminAction: RequestAdminAction | null = null,
   ): RequestTimelineStep[] {
     const t = (key: string) => this.i18n.t(key);
+
+    if (status === 'DRAFT') {
+      return [
+        {
+          key: 'submitted',
+          title: t('requestCenter.detail.timeline.submitted.title'),
+          state: 'upcoming',
+          date: '',
+          description: '',
+        },
+      ];
+    }
+
     // The admin's reason is the whole point of a RETURNED/REJECTED decision — surface it.
     const reason = adminAction?.reason ?? undefined;
     const decidedOn = this.formatTimestamp(adminAction?.actionOn) || undefined;
@@ -598,6 +643,38 @@ export class RequestDetail {
 
   // The confirm button spins while its endpoint is in flight.
   readonly actionLoading = signal(false);
+
+  // ---- Submit confirmation (POST /cmsVendor/requests/{id}/submit) -----------
+  showSubmitConfirm = false;
+
+  confirmSubmit(): void {
+    this.showSubmitConfirm = true;
+  }
+
+  onSubmitConfirmed(): void {
+    this.actionLoading.set(true);
+    this.api
+      .submit(this.requestId)
+      .pipe(finalize(() => this.actionLoading.set(false)))
+      .subscribe({
+        next: (res) => this.afterSubmit(res),
+        error: (err) => {
+          console.error('Submit request failed', err);
+          this.afterSubmit();
+        },
+      });
+  }
+
+  private afterSubmit(res?: any): void {
+    this.requestCenterService.updateStatus(this.rowKey, 'SUBMITTED');
+    this.details.update((details) => (details ? {
+      ...details,
+      status: 'SUBMITTED',
+      submittedOn: res?.submittedOn ?? details.submittedOn ?? new Date().toISOString()
+    } : details));
+    this.showSubmitConfirm = false;
+    this.loadHistory();
+  }
 
   // ---- Recall confirmation (POST /cmsVendor/requests/{id}/recall) -----------
   showRecallConfirm = false;

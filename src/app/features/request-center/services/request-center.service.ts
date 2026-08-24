@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { RequestRow, TERMINAL_STATUSES } from '../models/request.model';
+import { RequestRow, RequestStatus, TERMINAL_STATUSES } from '../models/request.model';
 
 /**
  * Holds the request rows fetched from GET /cmsVendor/requests so both the list page (table +
@@ -39,6 +39,14 @@ export class RequestCenterService {
     this.rows.update((rows) =>
       rows.map((r) =>
         r.rowKey === rowKey ? { ...r, status: 'RECALLED', completed: TERMINAL_STATUSES.includes('RECALLED') } : r,
+      ),
+    );
+  }
+
+  updateStatus(rowKey: string, status: RequestStatus): void {
+    this.rows.update((rows) =>
+      rows.map((r) =>
+        r.rowKey === rowKey ? { ...r, status, completed: TERMINAL_STATUSES.includes(status) } : r,
       ),
     );
   }

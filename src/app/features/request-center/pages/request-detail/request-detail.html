@@ -16,6 +16,11 @@
         {{ 'requestCenter.detail.editRequest' | translate }}
       </app-button>
       }
+      @if (canSubmit()) {
+      <app-button variant="primary" (click)="confirmSubmit()">
+        {{ 'requestCenter.detail.submitRequest' | translate }}
+      </app-button>
+      }
       @if (canRecall()) {
       <app-button variant="primary" (click)="confirmRecall()">
         {{ 'requestCenter.detail.recallRequest' | translate }}
@@ -54,11 +59,83 @@
       [attr.aria-selected]="activeTab() === 'changes'" (click)="selectTab('changes')">
       {{ 'requestCenter.detail.tab.changes' | translate }}
     </button>
+    <button type="button" role="tab" class="request-detail__tab"
+      [class.request-detail__tab--active]="activeTab() === 'history'"
+      [attr.aria-selected]="activeTab() === 'history'" (click)="selectTab('history')">
+      {{ 'requestCenter.detail.tab.history' | translate }}
+    </button>
   </div>
 
   <div class="request-detail__layout">
     <div class="request-detail__main">
-      @if (activeTab() === 'changes') {
+      @if (activeTab() === 'history') {
+      <section class="request-detail__card request-detail__history-card">
+        <div class="request-detail__section-header">
+          <span class="request-detail__section-icon"><i class="pi pi-history"></i></span>
+          <h3 class="request-detail__section-title">{{ 'requestCenter.detail.history.title' | translate }}</h3>
+        </div>
+
+        @if (historyLoading()) {
+        <div class="request-detail__history-table-wrapper">
+          <table class="p-datatable-table request-detail__history-skeleton-table">
+            <thead>
+              <tr>
+                <th>{{ 'requestCenter.detail.history.action' | translate }}</th>
+                <th>{{ 'requestCenter.detail.history.performedBy' | translate }}</th>
+                <th>{{ 'requestCenter.detail.history.remarks' | translate }}</th>
+                <th>{{ 'requestCenter.detail.history.time' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of [1, 2, 3, 4]; track row) {
+              <tr>
+                <td><span class="app-skeleton app-skeleton--pill request-detail__skeleton-pill"></span></td>
+                <td><span class="app-skeleton request-detail__skeleton-role"></span></td>
+                <td><span class="app-skeleton request-detail__skeleton-remarks"></span></td>
+                <td><span class="app-skeleton request-detail__skeleton-date"></span></td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        } @else if (!historyRows().length) {
+        <p class="request-detail__empty">{{ 'requestCenter.detail.history.noHistory' | translate }}</p>
+        } @else {
+        <div class="request-detail__history-table-wrapper">
+          <p-table [value]="historyRows()" styleClass="request-detail__history-table">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ 'requestCenter.detail.history.action' | translate }}</th>
+                <th>{{ 'requestCenter.detail.history.performedBy' | translate }}</th>
+                <th>{{ 'requestCenter.detail.history.remarks' | translate }}</th>
+                <th>{{ 'requestCenter.detail.history.time' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>
+                  <span [class]="row.statusClass">
+                    {{ row.statusKey | translate }}
+                  </span>
+                </td>
+                <td>
+                  <span class="request-detail__history-role">{{ row.roleLabel }}</span>
+                </td>
+                <td>
+                  <span class="request-detail__history-remarks" [class.request-detail__history-remarks--empty]="!row.remarks">
+                    {{ row.remarks || '—' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="request-detail__history-date">{{ row.formattedDate || '—' }}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        }
+      </section>
+      } @else if (activeTab() === 'changes') {
       <section class="request-detail__card">
         <div class="request-detail__section-header">
           <span class="request-detail__section-icon"><i class="pi pi-arrow-right-arrow-left"></i></span>
@@ -66,12 +143,21 @@
         </div>
 
         @if (changesTabLoading()) {
-        @for (line of [1, 2, 3]; track line) {
-        <div class="request-detail__field">
-          <span class="app-skeleton request-detail__skeleton-label"></span>
-          <span class="app-skeleton request-detail__skeleton-value"></span>
+        <div class="request-detail__diff">
+          <div class="request-detail__diff-head">{{ 'requestCenter.detail.diff.previous' | translate }}</div>
+          <div class="request-detail__diff-head">{{ 'requestCenter.detail.diff.updated' | translate }}</div>
+
+          @for (line of [1, 2, 3, 4]; track line) {
+          <div class="request-detail__diff-cell">
+            <span class="app-skeleton request-detail__skeleton-diff-label"></span>
+            <span class="app-skeleton request-detail__skeleton-diff-value"></span>
+          </div>
+          <div class="request-detail__diff-cell request-detail__diff-cell--new">
+            <span class="app-skeleton request-detail__skeleton-diff-label"></span>
+            <span class="app-skeleton request-detail__skeleton-diff-value"></span>
+          </div>
+          }
         </div>
-        }
         } @else if (!changeRows().length) {
         <p class="request-detail__empty">{{ 'requestCenter.detail.diff.empty' | translate }}</p>
         } @else {
@@ -97,20 +183,24 @@
       } @else {
       @if (changesLoading()) {
       <!-- Mirrors the real card shape so the layout doesn't jump when the data lands. -->
-      @for (block of [1, 2]; track block) {
-      <section class="request-detail__card">
-        <div class="request-detail__section-header">
-          <span class="app-skeleton request-detail__skeleton-icon"></span>
-          <span class="app-skeleton request-detail__skeleton-title"></span>
+      <section class="request-detail__card request-detail__branch-card">
+        <div class="request-detail__branch-head">
+          <span class="app-skeleton request-detail__skeleton-branch-icon"></span>
+          <div class="request-detail__branch-head-text">
+            <span class="app-skeleton request-detail__skeleton-branch-title"></span>
+            <span class="app-skeleton request-detail__skeleton-branch-sub"></span>
+          </div>
         </div>
-        @for (line of [1, 2, 3]; track line) {
-        <div class="request-detail__field">
-          <span class="app-skeleton request-detail__skeleton-label"></span>
-          <span class="app-skeleton request-detail__skeleton-value"></span>
+
+        <div class="request-detail__branch-grid">
+          @for (field of [1, 2, 3, 4, 5, 6, 7]; track field) {
+          <div class="request-detail__branch-field" [class.request-detail__branch-field--full]="field >= 6">
+            <span class="app-skeleton request-detail__skeleton-field-label"></span>
+            <span class="app-skeleton request-detail__skeleton-field-value" [class.request-detail__skeleton-field-value--full]="field >= 6"></span>
+          </div>
+          }
         </div>
-        }
       </section>
-      }
       } @else if (changesError(); as error) {
       <section class="request-detail__card">
         <p class="request-detail__error">{{ error }}</p>
@@ -321,12 +411,25 @@
         <!-- Built from the request's own status, so it works on a deep link/refresh — it must
              not depend on the session-only list row. -->
         @if (changesLoading() || historyLoading()) {
-        @for (line of [1, 2, 3]; track line) {
-        <div class="request-detail__field">
-          <span class="app-skeleton request-detail__skeleton-label"></span>
-          <span class="app-skeleton request-detail__skeleton-value"></span>
+        <div class="request-detail__skeleton-timeline">
+          @for (step of [1, 2]; track step) {
+          <div class="request-detail__skeleton-timeline-item">
+            <div class="request-detail__skeleton-timeline-sep">
+              <span class="app-skeleton app-skeleton--circle request-detail__skeleton-timeline-marker"></span>
+              @if (step === 1) {
+              <div class="request-detail__skeleton-timeline-connector"></div>
+              }
+            </div>
+            <div class="request-detail__skeleton-timeline-content">
+              <div class="request-detail__skeleton-timeline-row">
+                <span class="app-skeleton request-detail__skeleton-timeline-title"></span>
+                <span class="app-skeleton request-detail__skeleton-timeline-date"></span>
+              </div>
+              <span class="app-skeleton request-detail__skeleton-timeline-desc"></span>
+            </div>
+          </div>
+          }
         </div>
-        }
         } @else if (!timeline().length) {
         <p class="request-detail__empty">{{ 'requestCenter.detail.timelineUnavailable' | translate }}</p>
         } @else {
@@ -372,6 +475,13 @@
             </div>
           </ng-template>
         </p-timeline>
+
+        <div class="request-detail__timeline-footer">
+          <button type="button" class="request-detail__timeline-view-all" (click)="selectTab('history')">
+            <span>{{ 'requestCenter.detail.timeline.viewAll' | translate }}</span>
+            <i class="pi pi-arrow-right request-detail__timeline-view-all-icon"></i>
+          </button>
+        </div>
         }
       </section>
 
@@ -437,6 +547,12 @@
     </aside>
   </div>
 </div>
+
+<app-confirmation-pop-up [visible]="showSubmitConfirm" [title]="'requestCenter.submitConfirm.title' | translate"
+  [message]="'requestCenter.submitConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.submitConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
+  [loading]="actionLoading()" (confirm)="onSubmitConfirmed()" (cancel)="showSubmitConfirm = false">
+</app-confirmation-pop-up>
 
 <app-confirmation-pop-up [visible]="showRecallConfirm" [title]="'requestCenter.recallConfirm.title' | translate"
   [message]="'requestCenter.recallConfirm.message' | translate"
