@@ -305,7 +305,12 @@
 }
 
 .vendor-profile-page__image-box--mobile {
-  min-height: auto;
+  aspect-ratio: 2.39 / 1;
+}
+
+.vendor-profile-page__image-box--mobile .vendor-profile-page__image {
+  height: 100%;
+  object-fit: cover;
 }
 
 .vendor-profile-page__image-box--desktop {
