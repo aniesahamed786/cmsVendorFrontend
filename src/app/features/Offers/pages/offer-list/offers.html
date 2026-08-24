@@ -153,7 +153,7 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-row>
-        <tr [routerLink]="[row.id]">
+        <tr class="is-clickable" [routerLink]="[row.id]">
           <td>
             <div class="offers__title-cell">
               @if (row.offerLogo) {

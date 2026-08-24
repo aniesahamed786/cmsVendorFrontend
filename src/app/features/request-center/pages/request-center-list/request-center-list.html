@@ -129,7 +129,7 @@
         </ng-template>
 
         <ng-template pTemplate="body" let-row>
-          <tr [routerLink]="['/request-center', row.rowKey]">
+          <tr class="is-clickable" [routerLink]="['/request-center', row.rowKey]">
             <td>{{ row.id }}</td>
             <td>{{ typeKey(row.type) | translate }}</td>
             <td>{{ actionTypeKey(row.actionType) | translate }}</td>

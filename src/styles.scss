@@ -875,6 +875,10 @@ html body [data-pc-name="toggleswitch"],
       text-align: start !important;
       transition: background-color 160ms ease;
     }
+
+    &.is-clickable {
+      cursor: pointer;
+    }
   }
 
   /* Row Hover (Desktop only): 4-part effect (Lift + Accent Bar + Subtle Cell Tint + Title Recolor) */
