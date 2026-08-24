@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
@@ -99,6 +101,7 @@ export class RequestDetail {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly i18n = inject(I18nService);
+  private readonly messageService = inject(MessageService);
   private readonly requestCenterService = inject(RequestCenterService);
   private readonly api = inject(RequestCenterApiService);
   private readonly branchesService = inject(BranchesService);
@@ -684,10 +687,30 @@ export class RequestDetail {
       .submit(this.requestId)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: (res) => this.afterSubmit(res),
-        error: (err) => {
+        next: (res) => {
+          this.toast('success', 'requestCenter.detail.submitSuccessSummary', 'requestCenter.detail.submitSuccessDetail');
+          this.afterSubmit(res);
+        },
+        error: (err: HttpErrorResponse) => {
           console.error('Submit request failed', err);
-          this.afterSubmit();
+          this.showSubmitConfirm = false;
+          if (err?.status === 400) {
+            this.messageService.add({
+              severity: 'error',
+              summary: this.i18n.t('requestCenter.detail.submitMissingFieldsSummary'),
+              detail: this.i18n.t('requestCenter.detail.submitMissingFieldsDetail'),
+              life: 8000,
+              closable: true,
+            });
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: this.i18n.t('requestCenter.detail.submitFailedSummary'),
+              detail: extractApiErrorMessage(err) ?? this.i18n.t('requestCenter.detail.submitFailedDetail'),
+              life: 8000,
+              closable: true,
+            });
+          }
         },
       });
   }
@@ -716,10 +739,20 @@ export class RequestDetail {
       .recall(this.requestId)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterRecall(),
-        error: (err) => {
-          console.error('Recall request failed', err);
+        next: () => {
+          this.toast('success', 'requestCenter.detail.recallSuccessSummary', 'requestCenter.detail.recallSuccessDetail');
           this.afterRecall();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Recall request failed', err);
+          this.showRecallConfirm = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: this.i18n.t('requestCenter.detail.recallFailedSummary'),
+            detail: extractApiErrorMessage(err) ?? this.i18n.t('requestCenter.detail.recallFailedDetail'),
+            life: 8000,
+            closable: true,
+          });
         },
       });
   }
@@ -743,10 +776,20 @@ export class RequestDetail {
       .cancel(this.requestId)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterCancel(),
-        error: (err) => {
-          console.error('Cancel request failed', err);
+        next: () => {
+          this.toast('success', 'requestCenter.detail.cancelSuccessSummary', 'requestCenter.detail.cancelSuccessDetail');
           this.afterCancel();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Cancel request failed', err);
+          this.showCancelConfirm = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: this.i18n.t('requestCenter.detail.cancelFailedSummary'),
+            detail: extractApiErrorMessage(err) ?? this.i18n.t('requestCenter.detail.cancelFailedDetail'),
+            life: 8000,
+            closable: true,
+          });
         },
       });
   }
@@ -755,5 +798,15 @@ export class RequestDetail {
     this.requestCenterService.remove(this.rowKey);
     this.showCancelConfirm = false;
     this.goBack();
+  }
+
+  private toast(severity: 'success' | 'error' | 'info' | 'warn', summaryKey: string, detailKey: string): void {
+    this.messageService.add({
+      severity,
+      summary: this.i18n.t(summaryKey),
+      detail: this.i18n.t(detailKey),
+      life: 5000,
+      closable: true,
+    });
   }
 }

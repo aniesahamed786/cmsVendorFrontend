@@ -74,7 +74,12 @@
         @for (activity of recentActivities(); track $index) {
         <div class="dashboard-page__activity">
           <div class="dashboard-page__activity-icon" [ngClass]="activity.iconClass">
-            <i [class]="activity.icon"></i>
+            <span
+              class="dashboard-page__icon-mask"
+              [style.webkitMaskImage]="'url(' + activity.icon + ')'"
+              [style.maskImage]="'url(' + activity.icon + ')'"
+              role="img"
+            ></span>
           </div>
           <div class="dashboard-page__activity-body">
             <p class="dashboard-page__activity-title">{{ activity.title }}</p>
@@ -90,9 +95,13 @@
     </section>
 
     <section class="dashboard-page__panel">
-      <h2 class="dashboard-page__panel-title dashboard-page__panel-title--spaced">
-        {{ 'dashboard.pendingRequests' | translate }}
-      </h2>
+      <div class="dashboard-page__panel-head">
+        <h2 class="dashboard-page__panel-title">{{ 'dashboard.pendingRequests' | translate }}</h2>
+        <button type="button" class="dashboard-page__link" (click)="goToRequestCenter()">
+          {{ 'dashboard.viewHistory' | translate }}
+        </button>
+      </div>
+
       @if (pendingRequestsLoading()) {
       <div class="dashboard-page__activity-list">
         @for (row of skeletonPendingRows; track row) {
@@ -106,15 +115,38 @@
         </div>
         }
       </div>
-      } @else if (dashboardStats().pendingRequests === 0) {
-      <div class="dashboard-page__empty-state">
-        <div class="dashboard-page__empty-icon" aria-hidden="true">
-          <i class="pi pi-check"></i>
+      } @else {
+      <div class="dashboard-page__activity-list">
+        @for (req of pendingRequests(); track req.id) {
+        <div class="dashboard-page__activity is-clickable" (click)="goToRequestDetails(req.id)">
+          <div class="dashboard-page__activity-icon" [ngClass]="req.iconClass">
+            <span
+              class="dashboard-page__icon-mask"
+              [style.webkitMaskImage]="'url(' + req.icon + ')'"
+              [style.maskImage]="'url(' + req.icon + ')'"
+              role="img"
+            ></span>
+          </div>
+          <div class="dashboard-page__activity-body">
+            <p class="dashboard-page__activity-title">{{ req.title }}</p>
+            <p class="dashboard-page__activity-desc">{{ req.subtitle }}</p>
+          </div>
+          <div class="dashboard-page__activity-side">
+            <span [class]="statusClass(req.status)">{{ statusKey(req.status) | translate }}</span>
+            <span class="dashboard-page__activity-time">{{ req.time }}</span>
+          </div>
         </div>
-        <p class="dashboard-page__empty-title">{{ 'dashboard.noPendingRequests' | translate }}</p>
-        <p class="dashboard-page__empty-description">
-          {{ 'dashboard.noPendingRequestsDescription' | translate }}
-        </p>
+        } @empty {
+        <div class="dashboard-page__empty-state">
+          <div class="dashboard-page__empty-icon" aria-hidden="true">
+            <i class="pi pi-check"></i>
+          </div>
+          <p class="dashboard-page__empty-title">{{ 'dashboard.noPendingRequests' | translate }}</p>
+          <p class="dashboard-page__empty-description">
+            {{ 'dashboard.noPendingRequestsDescription' | translate }}
+          </p>
+        </div>
+        }
       </div>
       }
     </section>

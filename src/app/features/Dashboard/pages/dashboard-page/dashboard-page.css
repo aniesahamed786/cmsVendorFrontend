@@ -184,8 +184,59 @@
   border-bottom: 1px solid var(--app-border);
 }
 
+.dashboard-page__activity.is-clickable {
+  cursor: pointer;
+  padding: 0.75rem 0.5rem;
+  margin: 0 -0.5rem;
+  transition: background-color 160ms ease;
+}
+
+.dashboard-page__activity.is-clickable:hover {
+  background-color: var(--app-primary-hover-soft);
+}
+
 .dashboard-page__activity:last-child {
   border-bottom: 0;
+}
+
+.dashboard-page__activity-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.dashboard-page__status {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+}
+
+.dashboard-page__status--submitted,
+.dashboard-page__status--approved {
+  background: rgba(34, 197, 94, 0.16);
+  color: #16a34a;
+}
+
+.dashboard-page__status--rejected,
+.dashboard-page__status--cancelled {
+  background: rgba(239, 68, 68, 0.16);
+  color: #dc2626;
+}
+
+.dashboard-page__status--recalled {
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+}
+
+.dashboard-page__status--returned,
+.dashboard-page__status--draft {
+  background: rgba(245, 158, 11, 0.16);
+  color: #d97706;
 }
 
 .dashboard-page__activity-icon {
@@ -197,26 +248,54 @@
   justify-content: center;
 }
 
-/* Activity status variants. Brand/neutral track the theme tokens;
-   warning/success keep their semantic status hues. */
+.dashboard-page__icon-mask {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Activity icon background matching status */
+.dashboard-page__activity-icon--submitted,
+.dashboard-page__activity-icon--approved,
+.dashboard-page__activity-icon--success {
+  background: rgba(34, 197, 94, 0.16);
+  color: #16a34a;
+}
+
+.dashboard-page__activity-icon--rejected,
+.dashboard-page__activity-icon--cancelled,
+.dashboard-page__activity-icon--danger {
+  background: rgba(239, 68, 68, 0.16);
+  color: #dc2626;
+}
+
+.dashboard-page__activity-icon--recalled,
 .dashboard-page__activity-icon--brand {
   background: var(--app-primary-soft);
   color: var(--app-primary);
 }
 
-.dashboard-page__activity-icon--neutral {
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  color: var(--app-muted);
-}
-
+.dashboard-page__activity-icon--returned,
+.dashboard-page__activity-icon--draft,
+.dashboard-page__activity-icon--pending,
 .dashboard-page__activity-icon--warning {
   background: rgba(245, 158, 11, 0.16);
   color: #d97706;
 }
 
-.dashboard-page__activity-icon--success {
-  background: rgba(34, 197, 94, 0.16);
-  color: #16a34a;
+/* White background when not related to status */
+.dashboard-page__activity-icon--white,
+.dashboard-page__activity-icon--default {
+  background: #ffffff;
+  color: var(--app-primary);
+  border: 1px solid var(--app-border);
 }
 
 .dashboard-page__activity-body {
