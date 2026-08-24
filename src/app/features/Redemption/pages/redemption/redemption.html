@@ -193,4 +193,10 @@
       </ng-template>
     </p-table>
   </section>
+
+  <app-redemption-upload-preview [visible]="previewVisible()" [drafts]="previewDrafts()"
+    [catalogue]="previewCatalogue()" [errors]="previewErrors()" [serverErrors]="previewServerErrors()"
+    [branchesLoading]="previewBranchesLoading()"
+    [submitting]="uploading()" [fileName]="previewFileName()" (patch)="onPreviewPatch($event)"
+    (removeRow)="onPreviewRemoveRow($event)" (submitRows)="submitPreview()" (cancel)="cancelPreview()" />
 </div>

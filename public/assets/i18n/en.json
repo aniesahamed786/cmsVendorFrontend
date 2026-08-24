@@ -1078,9 +1078,11 @@
       "uploadInvalidDetail": "Nothing was uploaded. Fix the listed rows and try again.",
       "uploadSuccessSummary": "Redemptions uploaded",
       "uploadSuccessDetail": "{{count}} redemption(s) were uploaded successfully.",
-      "uploadStaleSummary": "Template is out of date",
-      "uploadStaleDetail": "Some offers or branches in this file have changed. Nothing was uploaded — download a fresh template.",
-      "dateRangeInvalidDetail": "End date cannot be before the start date."
+      "dateRangeInvalidDetail": "End date cannot be before the start date.",
+      "uploadPartialSummary": "Partially uploaded",
+      "uploadPartialDetail": "The upload was not all-or-nothing: the server saved {{inserted}} row(s) and rejected {{failed}}. The saved rows are already recorded — check the list below before retrying the rest.",
+      "uploadRejectedSummary": "Nothing was uploaded",
+      "uploadRejectedDetail": "All {{failed}} row(s) were rejected. Each row shows why — fix them and submit again."
     },
     "emptyOffers": "No active in-store offers available.",
     "emptyBranches": "No branches available for this offer.",
@@ -1104,20 +1106,26 @@
       "unknownBranch": "Branch \"{{value}}\" is not valid for the selected offer.",
       "required": "{{field}} is required.",
       "notANumber": "{{field}} must be a number.",
-      "invalidDate": "Transaction Date is not a valid date.",
+      "invalidDate": "This is not a valid date.",
       "invalidMembershipId": "Membership ID must be a positive number.",
       "negativeAmount": "{{field}} cannot be negative.",
-      "invalidTransactionType": "\"{{value}}\" is not a valid transaction type. Use SINGLE or COLLECTIVE.",
-      "offerNoLongerActive": "Offer \"{{value}}\" is no longer active. Download a fresh template.",
-      "branchNoLongerAvailable": "Branch \"{{value}}\" is no longer available for this offer. Download a fresh template.",
       "startDateRequired": "Start Date is required for collective rows.",
       "endDateRequired": "End Date is required for collective rows.",
       "endBeforeStart": "End Date cannot be before Start Date.",
-      "transactionDateNotAllowed": "Transaction Date does not apply to collective rows — use Start/End Date.",
-      "datesNotAllowed": "Start/End Date only apply to collective rows — use Transaction Date."
+      "outsideOfferWindow": "{{field}} must fall between {{start}} and {{end}} (the offer’s active period)."
     },
     "error": {
       "endBeforeStart": "End date cannot be before the start date."
+    },
+    "preview": {
+      "title": "Review before uploading",
+      "subtitle": "Check the rows below and correct anything highlighted, then submit.",
+      "invalidBanner": "Some rows need attention before they can be uploaded",
+      "readyBanner": "All rows are ready to upload",
+      "removeRow": "Remove this row",
+      "noRows": "No rows left to upload.",
+      "submit": "Submit",
+      "rejectedBanner": "The server rejected these rows — fix them and submit again"
     }
   },
   "messaging": {

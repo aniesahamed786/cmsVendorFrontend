@@ -16,6 +16,19 @@ export interface OfferLocation {
   countryAr: string;
 }
 
+export interface BulkUploadRowResult {
+  index: number;
+  success: boolean;
+  error?: string;
+}
+
+export interface BulkUploadResponse {
+  totalRows: number;
+  insertedCount: number;
+  failedCount: number;
+  results: BulkUploadRowResult[];
+}
+
 export type RedemptionTransactionType = 'SINGLE' | 'COLLECTIVE';
 interface RedemptionPayloadBase {
   offerId: string;

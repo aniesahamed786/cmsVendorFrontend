@@ -1,0 +1,216 @@
+<p-dialog [visible]="visible()" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false"
+  styleClass="upload-preview__dialog" [style]="{ width: '78vw', maxWidth: '1080px' }">
+
+  <ng-template pTemplate="header">
+    <div class="upload-preview__header">
+      <h2 class="upload-preview__title">{{ 'redemption.preview.title' | translate }}</h2>
+      <p class="upload-preview__subtitle">
+        {{ 'redemption.preview.subtitle' | translate }}
+        @if (fileName()) { <span class="upload-preview__file">{{ fileName() }}</span> }
+      </p>
+    </div>
+  </ng-template>
+
+  <div class="upload-preview__body">
+    @if (rejectedCount()) {
+    <div class="upload-preview__banner upload-preview__banner--error">
+      <i class="pi pi-times-circle"></i>
+      <span>
+        {{ 'redemption.preview.rejectedBanner' | translate }}
+        ({{ rejectedCount() }}/{{ drafts().length }})
+      </span>
+    </div>
+    } @else if (invalidCount()) {
+    <div class="upload-preview__banner upload-preview__banner--warn">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>
+        {{ 'redemption.preview.invalidBanner' | translate }}
+        ({{ invalidCount() }}/{{ drafts().length }})
+      </span>
+    </div>
+    } @else {
+    <div class="upload-preview__banner upload-preview__banner--ok">
+      <i class="pi pi-check-circle"></i>
+      <span>
+        {{ 'redemption.preview.readyBanner' | translate }} ({{ drafts().length }})
+      </span>
+    </div>
+    }
+
+    <p-table [value]="drafts()" [paginator]="drafts().length > 10" [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]" paginatorDropdownAppendTo="body" dataKey="id"
+      [rowTrackBy]="trackDraftById" [scrollable]="true" scrollHeight="44vh"
+      styleClass="upload-preview__table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="upload-preview__col-info"></th>
+          <th class="upload-preview__col-type">{{ 'redemption.label.transactionType' | translate }}</th>
+          <th class="upload-preview__col-id">{{ 'redemption.label.membershipId' | translate }}</th>
+          <th class="upload-preview__col-id">{{ 'redemption.label.mobileNumber' | translate }}</th>
+          <th class="upload-preview__col-wide">{{ 'redemption.label.offer' | translate }}</th>
+          <th class="upload-preview__col-wide">{{ 'redemption.label.branch' | translate }}</th>
+          <th class="upload-preview__col-date">{{ 'redemption.label.transactionDate' | translate }}</th>
+          <th class="upload-preview__col-date">{{ 'redemption.label.startDate' | translate }}</th>
+          <th class="upload-preview__col-date">{{ 'redemption.label.endDate' | translate }}</th>
+          <th class="upload-preview__col-amount">{{ 'redemption.label.totalInvoiceAmount' | translate }}</th>
+          <th class="upload-preview__col-amount">{{ 'redemption.label.totalAmountPaid' | translate }}</th>
+          <th class="upload-preview__col-currency">{{ 'redemption.label.currency' | translate }}</th>
+          <th class="upload-preview__col-amount">{{ 'redemption.label.discountAmount' | translate }}</th>
+          <th class="upload-preview__col-actions"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-draft>
+        <tr [class.upload-preview__row--invalid]="hasRowError(draft)">
+          <td class="upload-preview__col-info">
+            @if (hasRowError(draft)) {
+            <i class="pi pi-info-circle upload-preview__row-flag" [pTooltip]="rowErrorSummary(draft)"
+              tooltipPosition="right" tooltipStyleClass="upload-preview__tooltip"></i>
+            }
+          </td>
+
+          <td>
+            <p-select [options]="transactionTypeOptions" optionLabel="label" optionValue="value"
+              [ngModel]="draft.transactionType" (ngModelChange)="onEdit(draft, 'transactionType', $event)"
+              appendTo="body" styleClass="upload-preview__control"
+              panelStyleClass="upload-preview__panel"></p-select>
+          </td>
+
+          <td>
+            <input pInputText type="text" inputmode="numeric" class="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'membershipId')"
+              [pTooltip]="errorFor(draft, 'membershipId') || ''" [tooltipDisabled]="!errorFor(draft, 'membershipId')"
+              [ngModel]="draft.membershipId" (ngModelChange)="onEdit(draft, 'membershipId', $event)" />
+          </td>
+
+          <td>
+            <input pInputText type="tel" class="upload-preview__control" [ngModel]="draft.mobileNumber"
+              (ngModelChange)="onEdit(draft, 'mobileNumber', $event)" />
+          </td>
+
+          <td>
+            <p-select [options]="offerOptions()" optionLabel="label" optionValue="value" [filter]="true"
+              filterBy="label" [ngModel]="draft.offerId" (ngModelChange)="onEdit(draft, 'offerId', $event)"
+              [placeholder]="draft.offerText || ('redemption.placeholder.offer' | translate)"
+              [emptyMessage]="'redemption.emptyOffers' | translate" appendTo="body"
+              styleClass="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'offerId')"
+              [pTooltip]="errorFor(draft, 'offerId') || ''" [tooltipDisabled]="!errorFor(draft, 'offerId')"
+              panelStyleClass="upload-preview__panel"></p-select>
+          </td>
+
+          <td>
+            <p-select [options]="branchOptionsFor(draft)" optionLabel="label" optionValue="value" [showClear]="true"
+              [loading]="isBranchLoading(draft)" [ngModel]="draft.branchId"
+              (ngModelChange)="onEdit(draft, 'branchId', $event)"
+              [placeholder]="draft.branchText || ((draft.offerId
+                  ? 'redemption.placeholder.branch'
+                  : 'redemption.placeholder.branchNeedsOffer') | translate)"
+              [emptyMessage]="'redemption.emptyBranches' | translate" appendTo="body"
+              styleClass="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'branchId')"
+              [pTooltip]="errorFor(draft, 'branchId') || ''" [tooltipDisabled]="!errorFor(draft, 'branchId')"
+              panelStyleClass="upload-preview__panel"></p-select>
+          </td>
+
+          <td>
+            @if (draft.transactionType === 'SINGLE') {
+            <p-datepicker [ngModel]="draft.transactionDate" (ngModelChange)="onEdit(draft, 'transactionDate', $event)"
+              appendTo="body" styleClass="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'transactionDate')"
+              [pTooltip]="errorFor(draft, 'transactionDate') || ''"
+              [tooltipDisabled]="!errorFor(draft, 'transactionDate')"
+              panelStyleClass="upload-preview__panel" />
+            } @else {
+            <span class="upload-preview__na">—</span>
+            }
+          </td>
+
+          <td>
+            @if (draft.transactionType === 'COLLECTIVE') {
+            <p-datepicker [ngModel]="draft.startDate" (ngModelChange)="onEdit(draft, 'startDate', $event)"
+              appendTo="body" styleClass="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'startDate')"
+              [pTooltip]="errorFor(draft, 'startDate') || ''" [tooltipDisabled]="!errorFor(draft, 'startDate')"
+              panelStyleClass="upload-preview__panel" />
+            } @else {
+            <span class="upload-preview__na">—</span>
+            }
+          </td>
+
+          <td>
+            @if (draft.transactionType === 'COLLECTIVE') {
+            <p-datepicker [ngModel]="draft.endDate" (ngModelChange)="onEdit(draft, 'endDate', $event)" appendTo="body"
+              styleClass="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'endDate')"
+              [pTooltip]="errorFor(draft, 'endDate') || ''" [tooltipDisabled]="!errorFor(draft, 'endDate')"
+              panelStyleClass="upload-preview__panel" />
+            } @else {
+            <span class="upload-preview__na">—</span>
+            }
+          </td>
+
+          <td>
+            <input pInputText type="text" inputmode="decimal" class="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'totalAmountIncVat')"
+              [pTooltip]="errorFor(draft, 'totalAmountIncVat') || ''"
+              [tooltipDisabled]="!errorFor(draft, 'totalAmountIncVat')" [ngModel]="draft.totalAmountIncVat"
+              (ngModelChange)="onEdit(draft, 'totalAmountIncVat', $event)" />
+          </td>
+
+          <td>
+            <input pInputText type="text" inputmode="decimal" class="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'totalAmountPaid')"
+              [pTooltip]="errorFor(draft, 'totalAmountPaid') || ''"
+              [tooltipDisabled]="!errorFor(draft, 'totalAmountPaid')" [ngModel]="draft.totalAmountPaid"
+              (ngModelChange)="onEdit(draft, 'totalAmountPaid', $event)" />
+          </td>
+
+          <td>
+            <input pInputText type="text" class="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'currency')"
+              [pTooltip]="errorFor(draft, 'currency') || ''" [tooltipDisabled]="!errorFor(draft, 'currency')"
+              [ngModel]="draft.currency" (ngModelChange)="onEdit(draft, 'currency', $event)" />
+          </td>
+
+          <td>
+            <input pInputText type="text" inputmode="decimal" class="upload-preview__control"
+              [class.upload-preview__control--invalid]="errorFor(draft, 'discountAmount')"
+              [pTooltip]="errorFor(draft, 'discountAmount') || ''"
+              [tooltipDisabled]="!errorFor(draft, 'discountAmount')" [ngModel]="draft.discountAmount"
+              (ngModelChange)="onEdit(draft, 'discountAmount', $event)" />
+          </td>
+
+          <td class="upload-preview__col-actions">
+            <button type="button" class="upload-preview__remove" (click)="onRemove(draft)"
+              [pTooltip]="'redemption.preview.removeRow' | translate" tooltipPosition="left"
+              [attr.aria-label]="'redemption.preview.removeRow' | translate">
+              <i class="pi pi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="14" class="upload-preview__empty">
+            {{ 'redemption.preview.noRows' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="upload-preview__footer">
+      <app-button variant="outline" [disabled]="submitting()" (click)="onCancel()">
+        {{ 'common.cancel' | translate }}
+      </app-button>
+      <app-button variant="primary" icon="pi pi-upload" [loading]="submitting()" [disabled]="!canSubmit()"
+        (click)="onSubmit()">
+        {{ 'redemption.preview.submit' | translate }}
+      </app-button>
+    </div>
+  </ng-template>
+</p-dialog>

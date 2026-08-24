@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   ActiveStoreOffer,
+  BulkUploadResponse,
   OfferLocation,
   RecordRedemptionPayload,
   RedemptionListResponse,
@@ -26,8 +27,8 @@ export class RedemptionService {
     return this.http.post(`${this.baseUrl}/recordRedemption`, payload);
   }
 
-  uploadBulkRedemptions(payloads: RecordRedemptionPayload[]): Observable<unknown> {
-    return this.http.post(`${this.baseUrl}/uploadBulkRedemptions`, payloads);
+  uploadBulkRedemptions(payloads: RecordRedemptionPayload[]): Observable<BulkUploadResponse> {
+    return this.http.post<BulkUploadResponse>(`${this.baseUrl}/uploadBulkRedemptions`, payloads);
   }
 
   getRedemptions(page: number, pageSize: number): Observable<RedemptionListResponse> {

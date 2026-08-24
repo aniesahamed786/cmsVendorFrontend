@@ -1,0 +1,261 @@
+:host {
+  display: contents;
+}
+
+.upload-preview {
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--app-muted);
+  }
+
+  &__file {
+    margin-inline-start: 0.35rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  &__banner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.85rem;
+    border: 1px solid var(--app-border);
+
+    &--warn {
+      border-color: #f59e0b;
+      background: color-mix(in srgb, #f59e0b 12%, var(--app-surface));
+      color: var(--app-text);
+    }
+
+    &--error {
+      border-color: #dc2626;
+      background: color-mix(in srgb, #dc2626 10%, var(--app-surface));
+      color: var(--app-text);
+    }
+
+    &--ok {
+      border-color: var(--app-primary);
+      background: var(--app-primary-soft);
+      color: var(--app-primary);
+    }
+  }
+
+  &__col-info {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    text-align: center;
+  }
+
+  &__col-type {
+    width: 10rem;
+    min-width: 10rem;
+  }
+
+  &__col-id {
+    width: 8rem;
+    min-width: 8rem;
+  }
+
+  &__col-wide {
+    width: 13rem;
+    min-width: 13rem;
+  }
+
+  &__col-date {
+    width: 10rem;
+    min-width: 10rem;
+  }
+
+  &__col-amount {
+    width: 8rem;
+    min-width: 8rem;
+  }
+
+  &__col-currency {
+    width: 6rem;
+    min-width: 6rem;
+  }
+
+  &__col-actions {
+    width: 4.5rem;
+    min-width: 4.5rem;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  &__row-flag {
+    color: #dc2626;
+    cursor: help;
+    vertical-align: middle;
+    font-size: 1rem;
+  }
+
+  &__row--invalid > td {
+    background: color-mix(in srgb, #dc2626 6%, transparent);
+  }
+
+  &__na {
+    color: var(--app-muted);
+  }
+
+  &__control {
+    width: 100%;
+    min-height: 2.25rem;
+    font-size: 0.85rem;
+  }
+
+  input.upload-preview__control {
+    display: block;
+    padding: 0 0.5rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+
+    &:focus {
+      outline: none;
+      border-color: var(--app-primary);
+      box-shadow: none;
+    }
+  }
+
+  &__control--invalid,
+  input.upload-preview__control--invalid {
+    border-color: #dc2626;
+  }
+
+  &__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--app-muted);
+    cursor: pointer;
+
+    &:hover {
+      color: #dc2626;
+      border-color: var(--app-border);
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--app-muted);
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+}
+
+:host ::ng-deep {
+  .upload-preview__dialog {
+    border-radius: 0;
+
+    .p-dialog-content {
+      padding-block: 0.75rem;
+    }
+  }
+
+  .upload-preview__control.p-select,
+  .upload-preview__control.p-datepicker {
+    width: 100%;
+    min-height: 2.25rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .upload-preview__control.p-select {
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    display: flex;
+    align-items: center;
+
+    .p-select-label {
+      padding: 0 0.5rem;
+      font-size: 0.85rem;
+      color: var(--app-text);
+      display: flex;
+      align-items: center;
+    }
+
+    .p-select-label.p-placeholder {
+      color: var(--app-muted);
+      opacity: 1;
+    }
+  }
+
+  .upload-preview__control--invalid.p-select,
+  .upload-preview__control--invalid .p-inputtext {
+    border-color: #dc2626;
+  }
+
+  .upload-preview__control.p-datepicker .p-inputtext {
+    width: 100%;
+    min-height: 2.25rem;
+    padding: 0 0.5rem;
+    font-size: 0.85rem;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+  }
+
+  .upload-preview__table {
+    .p-datatable-tbody > tr > td {
+      padding: 0.35rem 0.4rem;
+    }
+
+    .p-datatable-thead > tr > th {
+      padding: 0.5rem 0.4rem;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+  }
+}
+
+::ng-deep .upload-preview__tooltip .p-tooltip-text {
+  white-space: pre-line;
+  max-width: 22rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+::ng-deep .upload-preview__panel.p-select-overlay {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 0;
+
+  .p-select-option {
+    font-size: 0.85rem;
+    border-radius: 0;
+  }
+}

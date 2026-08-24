@@ -1080,9 +1080,11 @@
       "uploadInvalidDetail": "لم يتم رفع أي بيانات. صحّح الصفوف المذكورة ثم أعد المحاولة.",
       "uploadSuccessSummary": "تم رفع الاستردادات",
       "uploadSuccessDetail": "تم رفع {{count}} عملية استرداد بنجاح.",
-      "uploadStaleSummary": "النموذج قديم",
-      "uploadStaleDetail": "تغيّرت بعض العروض أو الفروع في هذا الملف. لم يتم رفع أي بيانات — الرجاء تنزيل نموذج جديد.",
-      "dateRangeInvalidDetail": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
+      "dateRangeInvalidDetail": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية.",
+      "uploadPartialSummary": "تم الرفع جزئياً",
+      "uploadPartialDetail": "لم يكن الرفع كاملاً أو لا شيء: حفظ الخادم {{inserted}} صفاً ورفض {{failed}}. الصفوف المحفوظة مسجّلة بالفعل — راجع القائمة أدناه قبل إعادة إرسال الباقي.",
+      "uploadRejectedSummary": "لم يتم رفع أي بيانات",
+      "uploadRejectedDetail": "تم رفض جميع الصفوف ({{failed}}). يوضّح كل صف سبب الرفض — صحّحها ثم أعد الإرسال."
     },
     "emptyOffers": "لا توجد عروض نشطة في المتجر.",
     "emptyBranches": "لا توجد فروع متاحة لهذا العرض.",
@@ -1106,20 +1108,26 @@
       "unknownBranch": "الفرع \"{{value}}\" غير صالح للعرض المحدد.",
       "required": "{{field}} مطلوب.",
       "notANumber": "يجب أن يكون {{field}} رقماً.",
-      "invalidDate": "تاريخ العملية غير صالح.",
+      "invalidDate": "هذا التاريخ غير صالح.",
       "invalidMembershipId": "يجب أن يكون رقم العضوية رقماً موجباً.",
       "negativeAmount": "لا يمكن أن يكون {{field}} بالسالب.",
-      "invalidTransactionType": "\"{{value}}\" ليس نوع عملية صالحاً. استخدم SINGLE أو COLLECTIVE.",
-      "offerNoLongerActive": "العرض \"{{value}}\" لم يعد نشطاً. الرجاء تنزيل نموذج جديد.",
-      "branchNoLongerAvailable": "الفرع \"{{value}}\" لم يعد متاحاً لهذا العرض. الرجاء تنزيل نموذج جديد.",
       "startDateRequired": "تاريخ البداية مطلوب للصفوف الجماعية.",
       "endDateRequired": "تاريخ النهاية مطلوب للصفوف الجماعية.",
       "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية.",
-      "transactionDateNotAllowed": "تاريخ العملية لا ينطبق على الصفوف الجماعية — استخدم تاريخ البداية/النهاية.",
-      "datesNotAllowed": "تاريخ البداية/النهاية ينطبق على الصفوف الجماعية فقط — استخدم تاريخ العملية."
+      "outsideOfferWindow": "يجب أن يقع {{field}} بين {{start}} و {{end}} (فترة سريان العرض)."
     },
     "error": {
       "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
+    },
+    "preview": {
+      "title": "المراجعة قبل الرفع",
+      "subtitle": "راجع الصفوف أدناه وصحّح ما هو مُعلَّم، ثم أرسل.",
+      "invalidBanner": "بعض الصفوف تحتاج إلى تصحيح قبل الرفع",
+      "readyBanner": "جميع الصفوف جاهزة للرفع",
+      "removeRow": "حذف هذا الصف",
+      "noRows": "لا توجد صفوف للرفع.",
+      "submit": "إرسال",
+      "rejectedBanner": "رفض الخادم هذه الصفوف — صحّحها ثم أعد الإرسال"
     }
   },
   "messaging": {
