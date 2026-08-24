@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 2rem;
   min-width: 0;
+  container-type: inline-size;
 }
 
 .offer-card {
@@ -10,12 +11,14 @@
   padding: 1.5rem;
   /* Removed rounded borders and shadow based on golden rules */
   border: 1px solid var(--app-border);
+  min-width: 0;
 
   &__header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 1rem;
+    min-width: 0;
   }
 
   &__icon-wrap {
@@ -39,6 +42,7 @@
     font-weight: 600;
     color: var(--app-primary);
     margin: 0;
+    min-width: 0;
   }
 
   &__grid-2 {
@@ -115,8 +119,14 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
 
-  @media (min-width: 1024px) {
+  @container (min-width: 820px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  @supports not (container-type: inline-size) {
+    @media (min-width: 1280px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 }
 

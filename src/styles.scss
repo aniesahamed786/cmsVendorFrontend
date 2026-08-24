@@ -214,6 +214,14 @@ body {
   border-color: var(--app-border) !important;
 }
 
+.dark-mode .offer-form__suffix-icon {
+  filter: brightness(0) invert(1);
+}
+
+.invert-white {
+  filter: brightness(0) invert(1) !important;
+}
+
 .p-button,
 .app-btn {
   height: var(--field-height) !important;

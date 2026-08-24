@@ -5,6 +5,7 @@
 :host {
   display: block;
   width: 100%;
+  direction: ltr !important;
 }
 
 /* Hero section — moved verbatim from offer-details.scss when this was extracted, so the
@@ -15,6 +16,7 @@
   border-radius: 0 !important;
   background: var(--app-primary-gradient, linear-gradient(91.48deg, var(--app-primary) 10%, var(--app-primary-700) 90%)) !important;
   color: #ffffff; /* on-primary contrast — hero sits on the primary gradient in both themes */
+  direction: ltr !important;
 }
 
 /* The card's inner wrappers must pass the full width through, otherwise the flex row inside
@@ -25,11 +27,13 @@
 :host ::ng-deep .offer-hero-card.p-card .p-card-content {
   width: 100%;
   display: block;
+  direction: ltr !important;
 }
 
 .offer-hero-card {
   display: block;
   width: 100%;
+  direction: ltr !important;
 
   &__content {
     display: flex;
@@ -41,6 +45,7 @@
     // the full width — relying on the PrimeNG card body to hand it down left the Arabic
     // column sitting beside the English one instead of at the opposite edge.
     width: 100%;
+    direction: ltr !important;
 
     @media (min-width: 768px) {
       flex-wrap: nowrap;
@@ -53,6 +58,7 @@
     gap: 0.75rem;
     min-width: 0;
     width: 100%;
+    direction: ltr;
 
     @media (min-width: 768px) {
       // Each language takes half the row, so the two headlines sit at opposite edges no
@@ -71,6 +77,7 @@
     text-align: right;
     min-width: 0;
     width: 100%;
+    direction: rtl;
 
     @media (min-width: 768px) {
       flex: 1 1 0;
@@ -142,6 +149,7 @@
     width: 1.875rem;
     height: 1.875rem;
     object-fit: contain;
+    filter: brightness(0) invert(1) !important;
 
     @media (min-width: 768px) {
       width: 2.25rem;
@@ -167,6 +175,10 @@
       text-transform: capitalize;
     }
   }
+}
+
+.invert-white {
+  filter: brightness(0) invert(1) !important;
 }
 
 /* Status Tag — PrimeNG 21 applies .p-tag to the <p-tag> host element itself */
@@ -199,4 +211,33 @@
 
 :host ::ng-deep p-tag.offer-status-tag--inactive {
   background: #F97316 !important;
+}
+
+/* Skeletons — fill, pulse and soft corners come from the global .app-skeleton
+   (+ --on-primary on the gradient hero, --pill for the tag). These carry size only. */
+.skeleton-avatar {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+}
+
+.skeleton-text {
+  height: 1rem;
+  width: 10rem;
+}
+
+.skeleton-title {
+  height: 2.25rem;
+  width: 16rem;
+  max-width: 100%;
+}
+
+.skeleton-tag {
+  height: 1.75rem;
+  width: 5rem;
+}
+
+.skeleton-badge {
+  height: 2rem;
+  width: 7rem;
 }

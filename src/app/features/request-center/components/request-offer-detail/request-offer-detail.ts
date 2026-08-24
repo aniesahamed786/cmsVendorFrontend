@@ -11,7 +11,8 @@ import { OfferHeroCard, OfferHeroVendor } from '../../../Offers/Components/offer
   styleUrl: './request-offer-detail.scss',
 })
 export class RequestOfferDetail {
-  readonly offer = input.required<any>();
+  readonly offer = input<any>(null);
   readonly vendor = input<OfferHeroVendor>({ name: '', nameAr: '', logo: '' });
   readonly locations = input<Record<string, unknown>[]>([]);
+  readonly loading = input<boolean>(false);
 }

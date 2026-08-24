@@ -1,6 +1,27 @@
-@if (offer(); as offer) {
-<p-card class="offer-hero-card">
-  <div class="offer-hero-card__content">
+@if (loading()) {
+<p-card class="offer-hero-card" dir="ltr">
+  <div class="offer-hero-card__content" dir="ltr">
+    <div class="offer-hero-card__left" dir="ltr">
+      <div class="offer-hero-card__vendor-row">
+        <div class="skeleton-avatar app-skeleton app-skeleton--on-primary"></div>
+        <div class="skeleton-text app-skeleton app-skeleton--on-primary"></div>
+      </div>
+      <div class="skeleton-title app-skeleton app-skeleton--on-primary"></div>
+      <div class="skeleton-tag app-skeleton app-skeleton--on-primary app-skeleton--pill"></div>
+      <div class="skeleton-badge app-skeleton app-skeleton--on-primary"></div>
+    </div>
+    <div class="offer-hero-card__right" dir="rtl">
+      <div class="offer-hero-card__vendor-row">
+        <div class="skeleton-avatar app-skeleton app-skeleton--on-primary"></div>
+        <div class="skeleton-text app-skeleton app-skeleton--on-primary"></div>
+      </div>
+      <div class="skeleton-title app-skeleton app-skeleton--on-primary"></div>
+    </div>
+  </div>
+</p-card>
+} @else if (offer(); as offer) {
+<p-card class="offer-hero-card" dir="ltr">
+  <div class="offer-hero-card__content" dir="ltr">
     <!-- LEFT: English -->
     @if (offer.title || vendorName()) {
     <div class="offer-hero-card__left" dir="ltr">
