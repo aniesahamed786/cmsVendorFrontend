@@ -303,6 +303,11 @@
       "recall": "Recall Request",
       "delete": "Delete Request"
     },
+    "submitConfirm": {
+      "title": "Submit Request",
+      "message": "Are you sure you want to submit this request for review?",
+      "confirm": "Submit Request"
+    },
     "recallConfirm": {
       "title": "Recall Request",
       "message": "Are you sure you want to recall this request? It will be withdrawn from the review queue.",
@@ -318,17 +323,40 @@
       "confirm": "Delete Request"
     },
     "detail": {
+      "summary": {
+        "title": "Request Details",
+        "requestId": "Request ID",
+        "status": "Status",
+        "type": "Type",
+        "requestType": "Request Type",
+        "actionType": "Action Type",
+        "createdBy": "Created By",
+        "assignedTo": "Assigned To",
+        "createdDate": "Created Date",
+        "lastUpdated": "Last Updated",
+        "needBackend": "Need backend"
+      },
       "backToRequestCenter": "Back to Request Center",
       "viewOffers": "View Offers",
       "viewStores": "View Stores",
       "viewProfile": "View Profile",
+      "submitRequest": "Submit Request",
       "recallRequest": "Recall Request",
       "resubmitRequest": "Resubmit",
       "cancelRequest": "Cancel Request",
       "editRequest": "Edit Request",
       "tab": {
         "details": "Request Details",
-        "changes": "Changes"
+        "changes": "Changes",
+        "history": "History"
+      },
+      "history": {
+        "title": "Request History",
+        "action": "Action",
+        "performedBy": "Performed By",
+        "remarks": "Remarks / Comments",
+        "time": "Date & Time",
+        "noHistory": "No history records found for this request."
       },
       "diff": {
         "previous": "Previous value",
@@ -354,7 +382,9 @@
         "requestedChanges": "Requested Changes",
         "otherChanges": "Other Changes",
         "whatChanged": "What Changed",
-        "branchDetails": "Branch Details"
+        "branchDetails": "Branch Details",
+        "locationDetails": "Branch Details",
+        "branchSubtitle": "The branch this request is about"
       },
       "field": {
         "offerTitle": "Offer Title",
@@ -418,11 +448,14 @@
         "region": "Region",
         "city": "City",
         "address": "Address",
-        "mapLink": "Map Link",
+        "mapLink": "Google Map Link",
+        "branchRepName": "Branch Representative Name",
+        "branchPhone": "Branch Phone Number",
         "coordinates": "Coordinates (lat, lng)"
       },
       "timeline": {
         "title": "Request Timeline",
+        "viewAll": "View All",
         "submitted": {
           "title": "Submitted",
           "description": "The request has been successfully submitted and is awaiting initial screening by the operations team."
@@ -430,7 +463,7 @@
         "underReview": {
           "title": "Under Review",
           "badge": "Pending Review",
-          "description": "Once verified, the request will move to the internal approval workflow."
+          "description": "no comment yet"
         },
         "approved": {
           "title": "Approved",
@@ -479,7 +512,13 @@
     "cancel": "Cancel",
     "edit": "Edit",
     "delete": "Delete",
-    "back": "Back"
+    "back": "Back",
+    "filters": "Filters",
+    "filter": "Filter",
+    "apply": "Apply",
+    "clear": "Clear",
+    "reset": "Reset",
+    "close": "Close"
   },
   "offerForm": {
     "backToOffers": "Back to Offers",

@@ -45,6 +45,12 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => inject(I18nService).init()),
     providePrimeNG({
       ripple: true,
+      zIndex: {
+        modal: 2100,
+        overlay: 2200,
+        menu: 2200,
+        tooltip: 2300,
+      },
       theme: {
         preset: BluePreset,
         options: {

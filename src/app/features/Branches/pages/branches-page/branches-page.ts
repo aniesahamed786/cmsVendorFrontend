@@ -5,6 +5,7 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 import { BranchesService, BranchKPIs, TopPerformer, BranchRow } from '../../services/branches.service';
 import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
+import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
 import { ThemeService } from '../../../../shared/services/theme.service';
 import { environment } from '../../../../../environments/environment';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
@@ -16,7 +17,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-branches-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, TranslatePipe, RouterLink],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, AppBottomSheet, TranslatePipe, RouterLink],
   templateUrl: './branches-page.html',
   styleUrl: './branches-page.scss'
 })
@@ -43,6 +44,21 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   selectedRegion = signal<string | null>(null);
   selectedManager = signal<string | null>(null);
   searchQuery = signal<string>('');
+  showMobileFilters = signal(false);
+
+  readonly activeFilterCount = computed(() => {
+    let count = 0;
+    if (this.selectedStatus()) count++;
+    if (this.selectedRegion()) count++;
+    if (this.selectedManager()) count++;
+    return count;
+  });
+
+  clearFilters(): void {
+    this.selectedStatus.set(null);
+    this.selectedRegion.set(null);
+    this.selectedManager.set(null);
+  }
 
   // Sort
   sortField = signal<keyof BranchRow | null>('locationName');

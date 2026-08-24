@@ -26,6 +26,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { inject } from '@angular/core';
 import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
+import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { OfferListService } from '../../services/offer-list.service';
@@ -36,7 +37,7 @@ import { createCountUp } from '../../../../shared/animation/count-up';
 @Component({
   selector: 'app-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch, TranslatePipe],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch, AppBottomSheet, TranslatePipe],
   templateUrl: './offers.html',
   styleUrl: './offers.scss',
 })
@@ -46,6 +47,8 @@ export class Offers implements OnInit {
   private readonly i18n = inject(I18nService);
   private readonly offersService = inject(OffersService);
   private readonly offerListService = inject(OfferListService);
+
+  readonly showMobileFilters = signal(false);
 
   // ponytail: in-memory dummy data; swap for a service feed when the API exists
   // private readonly offers: Offer[] = this.buildRows();
@@ -142,6 +145,23 @@ export class Offers implements OnInit {
   readonly customRange = signal<Date[] | null>(null);
   readonly sort = signal<string>('newest');
   readonly search = signal<string>('');
+
+  readonly activeFilterCount = computed(() => {
+    let count = 0;
+    if (this.status()) count++;
+    if (this.availability()) count++;
+    if (this.discountType()) count++;
+    if (this.period() !== 'all') count++;
+    return count;
+  });
+
+  clearFilters(): void {
+    this.status.set(null);
+    this.availability.set(null);
+    this.discountType.set(null);
+    this.period.set('all');
+    this.customRange.set(null);
+  }
 
   activeOffer: Offer | null = null;
 

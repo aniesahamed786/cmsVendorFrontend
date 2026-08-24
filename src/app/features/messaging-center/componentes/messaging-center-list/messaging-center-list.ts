@@ -20,11 +20,12 @@ import { MessagingCenterStore } from '../../services/messaging-center-store';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
+import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
 
 @Component({
   selector: 'app-messaging-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe, AppSearch],
+  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe, AppSearch, AppBottomSheet],
   templateUrl: './messaging-center-list.html',
   styleUrl: './messaging-center-list.scss',
 })
@@ -33,7 +34,18 @@ export class MessagingCenterList {
   private readonly i18n = inject(I18nService);
   createTicket = output<void>();
 
-  constructor() {
+  showMobileFilters = signal(false);
+
+  readonly activeFilterCount = computed(() => {
+    let count = 0;
+    if (this.selectedType()) count++;
+    if (this.selectedStatus()) count++;
+    return count;
+  });
+
+  clearFilters(): void {
+    this.store.setType(null);
+    this.store.setStatus(null);
   }
 
   // p-select renders plain strings, so the labels have to be recomputed on a

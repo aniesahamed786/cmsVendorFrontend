@@ -303,6 +303,11 @@
       "recall": "سحب الطلب",
       "delete": "حذف الطلب"
     },
+    "submitConfirm": {
+      "title": "إرسال الطلب",
+      "message": "هل أنت متأكد من رغبتك في إرسال هذا الطلب للمراجعة؟",
+      "confirm": "إرسال الطلب"
+    },
     "recallConfirm": {
       "title": "سحب الطلب",
       "message": "هل أنت متأكد من رغبتك في سحب هذا الطلب؟ سيتم سحبه من قائمة المراجعة.",
@@ -318,17 +323,40 @@
       "confirm": "حذف الطلب"
     },
     "detail": {
+      "summary": {
+        "title": "تفاصيل الطلب",
+        "requestId": "معرف الطلب",
+        "status": "الحالة",
+        "type": "النوع",
+        "requestType": "نوع الطلب",
+        "actionType": "نوع الإجراء",
+        "createdBy": "تم الإنشاء بواسطة",
+        "assignedTo": "تم التعيين إلى",
+        "createdDate": "تاريخ الإنشاء",
+        "lastUpdated": "آخر تحديث",
+        "needBackend": "بانتظار النظام"
+      },
       "backToRequestCenter": "العودة إلى مركز الطلبات",
       "viewOffers": "عرض العروض",
       "viewStores": "عرض المتاجر",
       "viewProfile": "عرض الملف الشخصي",
+      "submitRequest": "إرسال الطلب",
       "recallRequest": "سحب الطلب",
       "resubmitRequest": "إعادة الإرسال",
       "cancelRequest": "إلغاء الطلب",
       "editRequest": "تعديل الطلب",
       "tab": {
         "details": "تفاصيل الطلب",
-        "changes": "التغييرات"
+        "changes": "التغييرات",
+        "history": "السجل"
+      },
+      "history": {
+        "title": "سجل الطلب",
+        "action": "الإجراء",
+        "performedBy": "بواسطة",
+        "remarks": "الملاحظات / التعليقات",
+        "time": "التاريخ والوقت",
+        "noHistory": "لا توجد سجلات سابقة لهذا الطلب."
       },
       "diff": {
         "previous": "القيمة السابقة",
@@ -354,7 +382,9 @@
         "requestedChanges": "التغييرات المطلوبة",
         "otherChanges": "تغييرات أخرى",
         "whatChanged": "التغييرات",
-        "branchDetails": "تفاصيل الفرع"
+        "branchDetails": "تفاصيل الفرع",
+        "locationDetails": "تفاصيل الفرع",
+        "branchSubtitle": "الفرع الذي يخصه هذا الطلب"
       },
       "field": {
         "offerTitle": "عنوان العرض",
@@ -418,11 +448,14 @@
         "region": "المنطقة",
         "city": "المدينة",
         "address": "العنوان",
-        "mapLink": "رابط الخريطة",
+        "mapLink": "رابط خرائط جوجل",
+        "branchRepName": "اسم ممثل الفرع",
+        "branchPhone": "رقم هاتف الفرع",
         "coordinates": "الإحداثيات (خط العرض، خط الطول)"
       },
       "timeline": {
         "title": "الجدول الزمني للطلب",
+        "viewAll": "عرض الكل",
         "submitted": {
           "title": "تم الإرسال",
           "description": "تم إرسال الطلب بنجاح وهو في انتظار الفحص الأولي من قبل فريق العمليات."
@@ -430,7 +463,7 @@
         "underReview": {
           "title": "قيد المراجعة",
           "badge": "قيد المراجعة",
-          "description": "بعد التحقق، سينتقل الطلب إلى مسار الموافقة الداخلي."
+          "description": "لا يوجد تعليق بعد"
         },
         "approved": {
           "title": "تمت الموافقة",
@@ -479,7 +512,13 @@
     "cancel": "إلغاء",
     "edit": "تعديل",
     "delete": "حذف",
-    "back": "رجوع"
+    "back": "رجوع",
+    "filters": "الفلاتر",
+    "filter": "فلترة",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "reset": "إعادة ضبط",
+    "close": "إغلاق"
   },
   "offerForm": {
     "backToOffers": "العودة إلى العروض",

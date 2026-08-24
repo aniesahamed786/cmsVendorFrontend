@@ -28,8 +28,9 @@ export interface OfferHeroVendor {
   styleUrl: './offer-hero-card.scss',
 })
 export class OfferHeroCard {
-  offer = input.required<any>();
+  offer = input<any>(null);
   vendor = input<OfferHeroVendor>({ name: '', nameAr: '', logo: '' });
+  loading = input<boolean>(false);
 
   private readonly logoFailed = signal(false);
 

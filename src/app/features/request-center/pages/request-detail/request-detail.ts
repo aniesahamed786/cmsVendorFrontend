@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -25,12 +25,9 @@ import {
   toOfferDetailsView,
   toProfileRequestView,
 } from '../../models/request-entity-view.mapper';
-import { OfferDetails } from '../../../Offers/Components/offer-details/offer-details';
-import { OfferHeroCard, OfferHeroVendor } from '../../../Offers/Components/offer-hero-card/offer-hero-card';
+import { OfferHeroVendor } from '../../../Offers/Components/offer-hero-card/offer-hero-card';
 import { BranchesService } from '../../../Branches/services/branches.service';
-import { VendorHeroCard } from '../../../Profile/components/vendor-hero-card/vendor-hero-card';
 import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
-import { environment } from '../../../../../environments/environment';
 import {
   RequestAdminAction,
   RequestChangeResponse,
@@ -38,7 +35,9 @@ import {
   RequestHistoryResponse,
 } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
-import { resolveAssetUrl, resolveMaskImageStyle } from '../../../../shared/utils/resolve-asset-url';
+import { RequestOfferDetail } from '../../components/request-offer-detail/request-offer-detail';
+import { RequestProfileDetail } from '../../components/request-profile-detail/request-profile-detail';
+import { RequestBranchDetail } from '../../components/request-branch-detail/request-branch-detail';
 
 /**
  * Location ids as stored on an offer, which vary by source: plain strings in a request
@@ -81,7 +80,18 @@ function prettyRole(role: string | null | undefined): string {
 @Component({
   selector: 'app-request-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, PrimeUIModules, TranslatePipe, BackButton, Button, ConfirmationPopUp, OfferDetails, OfferHeroCard, VendorHeroCard],
+  imports: [
+    CommonModule,
+    RouterLink,
+    PrimeUIModules,
+    TranslatePipe,
+    BackButton,
+    Button,
+    ConfirmationPopUp,
+    RequestOfferDetail,
+    RequestProfileDetail,
+    RequestBranchDetail,
+  ],
   templateUrl: './request-detail.html',
   styleUrl: './request-detail.scss',
 })
@@ -93,7 +103,6 @@ export class RequestDetail {
   private readonly api = inject(RequestCenterApiService);
   private readonly branchesService = inject(BranchesService);
   private readonly vendorProfileService = inject(VendorProfileService);
-  private readonly document = inject(DOCUMENT);
 
   private readonly rowKey = this.route.snapshot.paramMap.get('id') ?? '';
   readonly row = this.requestCenterService.getRow(this.rowKey);
@@ -129,12 +138,17 @@ export class RequestDetail {
   // as a branch card. The generic field list stays as the fallback for anything else.
   private readonly proposedEntity = computed(() => buildProposedEntity(this.details()));
 
-  readonly entityType = computed(() => this.details()?.entityType ?? null);
+  readonly entityType = computed(() => {
+    const fromDetails = this.details()?.entityType;
+    if (fromDetails) return fromDetails;
+    const rowType = this.row()?.type?.toUpperCase();
+    return rowType ?? null;
+  });
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
 
   // ---- Tabs -----------------------------------------------------------------
-  /** `details` shows the entity as it would look approved; `changes` shows the raw diff. */
-  readonly activeTab = signal<'details' | 'changes'>('details');
+  /** `details` shows the entity as it would look approved; `changes` shows the raw diff; `history` shows the audit table. */
+  readonly activeTab = signal<'details' | 'changes' | 'history'>('details');
 
   // ---- Field diff (GET /cmsVendor/requests/{id}/changes) ---------------------
   readonly changeRowsRaw = signal<RequestChangeResponse[]>([]);
@@ -155,11 +169,26 @@ export class RequestDetail {
       }));
   });
 
-  selectTab(tab: 'details' | 'changes'): void {
+  /** History audit trail rows for the History tab. */
+  readonly historyRows = computed(() => {
+    this.i18n.loadSeq();
+    return [...this.history()]
+      .sort((a, b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime())
+      .map((entry) => ({
+        ...entry,
+        formattedDate: this.formatTimestamp(entry.createdOn),
+        statusKey: this.statusKey(entry.action as RequestStatus),
+        statusClass: this.statusClass(entry.action as RequestStatus),
+        roleLabel: prettyRole(entry.performedRole) || entry.performedBy || '—',
+      }));
+  });
+
+  selectTab(tab: 'details' | 'changes' | 'history'): void {
     this.activeTab.set(tab);
     // Fetched on first open rather than with the page — most visits never leave the details
     // tab, and the diff is already implied by the badges there.
     if (tab === 'changes' && !this.changesRequested) this.loadChanges();
+    if (tab === 'history' && !this.history().length && !this.historyLoading()) this.loadHistory();
   }
 
   private loadChanges(): void {
@@ -208,12 +237,6 @@ export class RequestDetail {
   readonly profileView = computed(() => toProfileRequestView(this.proposedEntity()));
   readonly branchView = computed(() => toBranchView(this.proposedEntity()));
 
-  /** Same media-path rewrite the vendor profile page uses. */
-  imageUrl(path: string): string {
-    if (!path) return '';
-    return environment.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
-  }
-
   /**
    * Field names this request edits. Fields stay in the entity's natural order and are simply
    * marked in place — no separate "what changed" list, which pulled edits out of context.
@@ -240,6 +263,66 @@ export class RequestDetail {
   );
 
   readonly requestTitle = computed(() => this.details()?.title ?? this.row()?.targetEntity ?? '');
+
+  readonly summaryCreatedDate = computed(() => {
+    this.i18n.loadSeq();
+    const raw = this.details()?.createdOn ?? this.row()?.date ?? '';
+    if (!raw) return '—';
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return String(raw);
+    return date.toLocaleDateString(this.i18n.lang() === 'ar' ? 'ar-SA' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  });
+
+  readonly summaryLastUpdated = computed(() => {
+    this.i18n.loadSeq();
+    const raw = this.details()?.updatedOn ?? this.row()?.timestamp ?? this.details()?.createdOn ?? '';
+    if (!raw) return '—';
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return String(raw);
+    const datePart = date.toLocaleDateString(this.i18n.lang() === 'ar' ? 'ar-SA' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    const timePart = date.toLocaleTimeString(this.i18n.lang() === 'ar' ? 'ar-SA' : 'en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    return `${datePart} • ${timePart}`;
+  });
+
+  readonly summaryEntityType = computed(() => {
+    this.i18n.loadSeq();
+    const entity = this.details()?.entityType ?? this.row()?.type?.toUpperCase();
+    switch (entity) {
+      case 'OFFER':
+        return this.i18n.t('requestCenter.type.offer');
+      case 'STORE':
+        return this.i18n.t('requestCenter.type.store');
+      case 'PROFILE':
+        return this.i18n.t('requestCenter.type.profile');
+      case 'HIGHLIGHT':
+        return this.i18n.t('requestCenter.type.highlight');
+      default:
+        return this.row()?.type || '—';
+    }
+  });
+
+  readonly summaryActionType = computed(() => {
+    this.i18n.loadSeq();
+    const type = this.details()?.requestType ?? (this.row()?.actionType === 'Created' ? 'CREATE' : 'UPDATE');
+    if (type === 'CREATE') {
+      return this.i18n.t('requestCenter.actionType.created');
+    }
+    return this.i18n.t('requestCenter.actionType.updated');
+  });
+
+  readonly summaryRequestType = this.summaryActionType;
 
   constructor() {
     this.loadDetails();
@@ -373,7 +456,8 @@ export class RequestDetail {
     }
   });
 
-  // Mirrors the backend's ALLOWED_TRANSITIONS: recall only from SUBMITTED.
+  // Mirrors the backend's ALLOWED_TRANSITIONS: submit from DRAFT, recall only from SUBMITTED.
+  readonly canSubmit = computed(() => this.status() === 'DRAFT');
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
   // A RETURNED request offers Edit and Cancel only. There is no Resubmit button by design —
   // a returned request goes back for changes, so it is re-sent by editing it, not by pushing
@@ -425,31 +509,46 @@ export class RequestDetail {
   ): RequestTimelineStep[] {
     const t = (key: string) => this.i18n.t(`requestCenter.detail.timeline.${key}`);
 
+    const hasSubmittedRecord = log.some(
+      (entry) => String(entry.action ?? '').toUpperCase() === 'SUBMITTED',
+    );
+
+    if (status === 'DRAFT' && !hasSubmittedRecord) {
+      return [
+        {
+          key: 'submitted',
+          title: t('submitted.title'),
+          state: 'upcoming',
+          date: '',
+          description: '',
+        },
+      ];
+    }
+
     const steps: RequestTimelineStep[] = [...log]
       .sort((a, b) => new Date(a.createdOn).getTime() - new Date(b.createdOn).getTime())
       .map((entry, index) => {
         const meta = ACTION_META[String(entry.action ?? '').toUpperCase()];
+        const isSubmitted = String(entry.action ?? '').toUpperCase() === 'SUBMITTED';
         return {
           key: `${entry.action}-${index}`,
           title: meta ? t(meta.titleKey) : prettyRole(entry.action),
-          description: meta ? t(meta.descriptionKey) : '',
+          description: isSubmitted ? '' : (meta ? t(meta.descriptionKey) : ''),
           state: 'done' as const,
           tone: meta?.tone,
           date: this.formatTimestamp(entry.createdOn),
           // The admin's note is the vendor's only guidance on a rejection or return.
           reason: entry.remarks ?? undefined,
-          actor: prettyRole(entry.performedRole),
+          actor: isSubmitted ? undefined : prettyRole(entry.performedRole),
         };
       });
 
-    // Awaiting a decision — say so, rather than ending on "Submitted" with no sense of what
-    // happens next.
+    // Only on "SUBMITTED" the "Under Review" shows. Otherwise it should not come.
     if (status === 'SUBMITTED') {
       steps.push({
         key: 'underReview',
         title: t('underReview.title'),
-        state: 'active',
-        badge: t('underReview.badge'),
+        state: 'upcoming',
         description: t('underReview.description'),
       });
     }
@@ -457,19 +556,30 @@ export class RequestDetail {
     return steps;
   }
 
-  /** Timestamps arrive as ISO strings; the timeline is read by people. */
+  /** Timestamps arrive as ISO strings; formatted like "Aug. 18, 2026 | 1:04 pm". */
   private formatTimestamp(value: string | null | undefined): string {
     if (!value) return '';
     const date = new Date(value);
-    return Number.isNaN(date.getTime())
-      ? String(value)
-      : date.toLocaleString(this.i18n.lang() === 'ar' ? 'ar' : 'en', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        });
+    if (Number.isNaN(date.getTime())) return String(value);
+    if (this.i18n.lang() === 'ar') {
+      const datePart = date.toLocaleDateString('ar-SA', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+      const timePart = date.toLocaleTimeString('ar-SA', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+      return `${datePart} | ${timePart}`;
+    }
+    const datePart = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const timePart = date
+      .toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+      .toLowerCase();
+    const formattedDate = datePart.replace(/^(\w{3}) /, '$1. ');
+    return `${formattedDate} | ${timePart}`;
   }
 
   private buildTimeline(
@@ -478,6 +588,19 @@ export class RequestDetail {
     adminAction: RequestAdminAction | null = null,
   ): RequestTimelineStep[] {
     const t = (key: string) => this.i18n.t(key);
+
+    if (status === 'DRAFT') {
+      return [
+        {
+          key: 'submitted',
+          title: t('requestCenter.detail.timeline.submitted.title'),
+          state: 'upcoming',
+          date: '',
+          description: '',
+        },
+      ];
+    }
+
     // The admin's reason is the whole point of a RETURNED/REJECTED decision — surface it.
     const reason = adminAction?.reason ?? undefined;
     const decidedOn = this.formatTimestamp(adminAction?.actionOn) || undefined;
@@ -488,48 +611,36 @@ export class RequestDetail {
       title: t('requestCenter.detail.timeline.submitted.title'),
       state: 'done',
       date: submittedAt,
-      description: t('requestCenter.detail.timeline.submitted.description'),
-    };
-    const reviewed: RequestTimelineStep = {
-      key: 'underReview',
-      title: t('requestCenter.detail.timeline.underReview.title'),
-      state: 'done',
-      description: t('requestCenter.detail.timeline.underReview.description'),
+      description: '',
     };
 
-    // Terminal outcomes render a resolved third step; anything still in flight shows the
-    // active "Under Review" + upcoming "Approved" steps.
+    // Terminal outcomes render a resolved second step (no Under Review step).
     const finalStep: Partial<Record<RequestStatus, RequestTimelineStep>> = {
       APPROVED: { key: 'final', title: t('requestCenter.detail.timeline.approved.title'), state: 'done', date: decidedOn, description: t('requestCenter.detail.timeline.approved.description') },
       REJECTED: { key: 'final', title: t('requestCenter.detail.timeline.rejected.title'), state: 'done', tone: 'danger', date: decidedOn, reason, description: t('requestCenter.detail.timeline.rejected.description') },
       RECALLED: { key: 'final', title: t('requestCenter.detail.timeline.recalled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.recalled.description') },
       CANCELLED: { key: 'final', title: t('requestCenter.detail.timeline.cancelled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.cancelled.description') },
-      // RETURNED is not "still under review" — the admin has acted and handed it back, so it
-      // gets its own resolved step carrying the reason the vendor must address.
       RETURNED: { key: 'final', title: t('requestCenter.detail.timeline.returned.title'), state: 'done', tone: 'warning', date: decidedOn, reason, description: t('requestCenter.detail.timeline.returned.description') },
     };
 
     if (finalStep[status]) {
-      return [submitted, reviewed, finalStep[status]!];
+      return [submitted, finalStep[status]!];
     }
 
-    // DRAFT / SUBMITTED / RETURNED — still in flight.
-    return [
-      submitted,
-      {
-        key: 'underReview',
-        title: t('requestCenter.detail.timeline.underReview.title'),
-        state: 'active',
-        badge: t('requestCenter.detail.timeline.underReview.badge'),
-        description: t('requestCenter.detail.timeline.underReview.description'),
-      },
-      {
-        key: 'final',
-        title: t('requestCenter.detail.timeline.approved.title'),
-        state: 'upcoming',
-        description: t('requestCenter.detail.timeline.approved.description'),
-      },
-    ];
+    // Only on "SUBMITTED" the "Under Review" shows. Otherwise it should not come.
+    if (status === 'SUBMITTED') {
+      return [
+        submitted,
+        {
+          key: 'underReview',
+          title: t('requestCenter.detail.timeline.underReview.title'),
+          state: 'upcoming',
+          description: t('requestCenter.detail.timeline.underReview.description'),
+        },
+      ];
+    }
+
+    return [submitted];
   }
 
   markerModifier(step: RequestTimelineStep): 'done' | 'active' | 'upcoming' | 'danger' | 'muted' | 'warning' {
@@ -560,6 +671,38 @@ export class RequestDetail {
   // The confirm button spins while its endpoint is in flight.
   readonly actionLoading = signal(false);
 
+  // ---- Submit confirmation (POST /cmsVendor/requests/{id}/submit) -----------
+  showSubmitConfirm = false;
+
+  confirmSubmit(): void {
+    this.showSubmitConfirm = true;
+  }
+
+  onSubmitConfirmed(): void {
+    this.actionLoading.set(true);
+    this.api
+      .submit(this.requestId)
+      .pipe(finalize(() => this.actionLoading.set(false)))
+      .subscribe({
+        next: (res) => this.afterSubmit(res),
+        error: (err) => {
+          console.error('Submit request failed', err);
+          this.afterSubmit();
+        },
+      });
+  }
+
+  private afterSubmit(res?: any): void {
+    this.requestCenterService.updateStatus(this.rowKey, 'SUBMITTED');
+    this.details.update((details) => (details ? {
+      ...details,
+      status: 'SUBMITTED',
+      submittedOn: res?.submittedOn ?? details.submittedOn ?? new Date().toISOString()
+    } : details));
+    this.showSubmitConfirm = false;
+    this.loadHistory();
+  }
+
   // ---- Recall confirmation (POST /cmsVendor/requests/{id}/recall) -----------
   showRecallConfirm = false;
 
@@ -581,11 +724,6 @@ export class RequestDetail {
       });
   }
 
-  /**
-   * Reflect the recall locally. The list row only exists in the session store (empty after a
-   * refresh), so the loaded details are updated too — otherwise a deep-linked page would keep
-   * showing the Recall button after a successful recall.
-   */
   private afterRecall(): void {
     this.requestCenterService.recall(this.rowKey);
     this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
@@ -617,91 +755,5 @@ export class RequestDetail {
     this.requestCenterService.remove(this.rowKey);
     this.showCancelConfirm = false;
     this.goBack();
-  }
-
-  getVendorIconMask(iconName: string): string {
-    return resolveMaskImageStyle(this.document, `svg/vendors/add-vendor/${iconName}`);
-  }
-
-  getSocialLinkUrl(value: unknown): string {
-    if (typeof value === 'string') return value.trim();
-    if (value && typeof value === 'object' && typeof (value as any).url === 'string') {
-      return (value as any).url.trim();
-    }
-    return '';
-  }
-
-  getExternalLinkHref(value: unknown): string {
-    const url = this.getSocialLinkUrl(value);
-    if (!url) return '#';
-    return /^https?:\/\//i.test(url) ? url : `https://${url}`;
-  }
-
-  getSocialPlatform(value: unknown): string {
-    if (value && typeof value === 'object') {
-      const link = value as Record<string, unknown>;
-      const p = String(link['platform'] ?? link['type'] ?? link['platformType'] ?? '').trim().toLowerCase();
-      if (p) return p === 'twitter' ? 'x' : p;
-    }
-    const url = this.getSocialLinkUrl(value).toLowerCase();
-    if (url.includes('instagram.com')) return 'instagram';
-    if (url.includes('facebook.com') || url.includes('fb.com')) return 'facebook';
-    if (url.includes('x.com') || url.includes('twitter.com')) return 'x';
-    if (url.includes('whatsapp') || url.includes('wa.me')) return 'whatsapp';
-    if (url.includes('tiktok.com')) return 'tiktok';
-    if (url.includes('linkedin.com')) return 'linkedin';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
-    if (url.includes('snapchat.com')) return 'snapchat';
-    return '';
-  }
-
-  getSocialLinkIconPath(value: unknown): string | null {
-    const platform = this.getSocialPlatform(value);
-    switch (platform) {
-      case 'instagram': return resolveAssetUrl(this.document, 'svg/social-media/ic-instagram.svg');
-      case 'linkedin': return resolveAssetUrl(this.document, 'svg/social-media/linkedin.svg');
-      case 'facebook': return resolveAssetUrl(this.document, 'svg/social-media/ic-facebook.svg');
-      case 'tiktok': return resolveAssetUrl(this.document, 'svg/social-media/tiktok.svg');
-      case 'youtube': return resolveAssetUrl(this.document, 'svg/social-media/youtube.svg');
-      case 'snapchat': return resolveAssetUrl(this.document, 'svg/social-media/ic-snapchat.svg');
-      case 'whatsapp': return resolveAssetUrl(this.document, 'svg/social-media/whatspp.svg');
-      case 'x': return resolveAssetUrl(this.document, 'svg/social-media/X.svg');
-      default: return null;
-    }
-  }
-
-  formatSocialLinkLabel(value: unknown): string {
-    if (value && typeof value === 'object' && typeof (value as any).accountName === 'string' && (value as any).accountName.trim()) {
-      return (value as any).accountName.trim();
-    }
-    const url = this.getSocialLinkUrl(value);
-    if (!url) return '';
-    const withoutQuery = url.split('?')[0];
-    const normalizedValue = /^https?:\/\//i.test(withoutQuery) ? withoutQuery : `https://${withoutQuery}`;
-    try {
-      const parsed = new URL(normalizedValue);
-      const path = parsed.pathname.replace(/^\/+|\/+$/g, '');
-      const pathParts = path.split('/').filter(Boolean);
-      const hostname = parsed.hostname.replace(/^www\./, '');
-
-      if (hostname.includes('linkedin.com') && pathParts[0]?.toLowerCase() === 'in' && pathParts[1]) {
-        return pathParts[1];
-      }
-      if (hostname.includes('tiktok.com')) {
-        const username = pathParts.find((p) => p.startsWith('@'));
-        if (username) return username;
-      }
-      if (hostname.includes('snapchat.com') && pathParts[0]?.toLowerCase() === 'add' && pathParts[1]) {
-        return pathParts[1];
-      }
-      return pathParts[pathParts.length - 1] || hostname;
-    } catch {
-      const fallbackParts = withoutQuery
-        .replace(/^https?:\/\/(www\.)?/i, '')
-        .replace(/^\/+|\/+$/g, '')
-        .split('/')
-        .filter(Boolean);
-      return fallbackParts[fallbackParts.length - 1] || withoutQuery;
-    }
   }
 }

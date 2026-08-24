@@ -1,4 +1,52 @@
-<span class="app-search">
+<!-- Desktop Search Bar (Visible >= 768px) -->
+<div class="app-search app-search--desktop">
+  <i class="pi pi-search app-search__icon"></i>
+  <input #desktopInput type="text"
+    [placeholder]="resolvedPlaceholder()"
+    [ngModel]="value()"
+    (ngModelChange)="value.set($event)" />
+
+  @if (value()) {
+  <button type="button" class="app-search__clear-btn" (click)="clearSearch($event)" [attr.aria-label]="'common.clear' | translate">
+    <i class="pi pi-times"></i>
+  </button>
+  }
+</div>
+
+<!-- Mobile Compact Icon Trigger Button (Visible < 768px) -->
+<button type="button" class="app-search__mobile-trigger"
+  [class.has-value]="!!value()"
+  [attr.aria-label]="resolvedPlaceholder()"
+  (click)="openMobileSearch()">
   <i class="pi pi-search"></i>
-  <input type="text" [placeholder]="resolvedPlaceholder()" [ngModel]="value()" (ngModelChange)="value.set($event)" />
-</span>
+  @if (value()) {
+  <span class="app-search__dot"></span>
+  }
+</button>
+
+<!-- Mobile Full-Width Search Header Overlay (When open on mobile) -->
+@if (isMobileExpanded()) {
+<div class="app-search-mobile-overlay">
+  <button type="button" class="app-search-mobile-overlay__back" (click)="closeMobileSearch()" [attr.aria-label]="'common.back' | translate">
+    <i class="pi pi-arrow-left"></i>
+  </button>
+
+  <div class="app-search-mobile-overlay__input-wrap">
+    <i class="pi pi-search app-search-mobile-overlay__icon"></i>
+    <input #mobileInput type="text"
+      [placeholder]="resolvedPlaceholder()"
+      [ngModel]="value()"
+      (ngModelChange)="value.set($event)"
+      (keydown.escape)="closeMobileSearch()" />
+    @if (value()) {
+    <button type="button" class="app-search-mobile-overlay__clear" (click)="clearSearch($event)" [attr.aria-label]="'common.clear' | translate">
+      <i class="pi pi-times-circle"></i>
+    </button>
+    }
+  </div>
+
+  <button type="button" class="app-search-mobile-overlay__close-btn" (click)="closeMobileSearch()" [attr.aria-label]="'common.close' | translate">
+    <i class="pi pi-times"></i>
+  </button>
+</div>
+}

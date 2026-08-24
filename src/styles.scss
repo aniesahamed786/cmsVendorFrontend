@@ -214,6 +214,14 @@ body {
   border-color: var(--app-border) !important;
 }
 
+.dark-mode .offer-form__suffix-icon {
+  filter: brightness(0) invert(1);
+}
+
+.invert-white {
+  filter: brightness(0) invert(1) !important;
+}
+
 .p-button,
 .app-btn {
   height: var(--field-height) !important;
@@ -505,11 +513,14 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-autocomplete-overlay,
 .p-datepicker-panel,
 .p-dropdown-panel,
+.p-popover,
+.p-menu,
 .p-select-list-container {
   background: var(--app-surface) !important;
   color: var(--app-text) !important;
   border: 1px solid var(--field-border) !important;
   border-radius: 0 !important;
+  z-index: 2200 !important;
 }
 
 /* In-overlay search boxes (multiselect filter, select filter) are fields too */
@@ -730,27 +741,76 @@ html body [data-pc-name="toggleswitch"],
   gap: 0;
 }
 
-/* Background, border, height and focus ring come from the unified field rules above */
-.app-search {
-  display: inline-flex;
+/* Mobile Filter Trigger Button */
+.app-filter-trigger-btn {
+  display: none;
   align-items: center;
-  gap: 0.5rem;
-  width: 16rem;
-  height: var(--field-height) !important;
-  min-height: var(--field-height) !important;
-  padding-block: 0 !important;
+  gap: 0.45rem;
+  height: var(--field-height, 2.75rem);
+  padding: 0 0.85rem;
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0;
   box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 
   i {
     font-size: 0.95rem;
-    display: inline-flex;
-    align-items: center;
+    color: var(--app-muted);
   }
 
-  input {
-    flex: 1;
-    height: 100%;
-    outline: none;
+  &:hover {
+    background: color-mix(in srgb, var(--app-surface) 80%, var(--app-border) 20%);
+    border-color: var(--app-primary);
+
+    i {
+      color: var(--app-primary);
+    }
+  }
+
+  &.has-active {
+    border-color: var(--app-primary);
+    background: var(--app-primary-soft);
+    color: var(--app-primary);
+
+    i {
+      color: var(--app-primary);
+    }
+  }
+}
+
+.app-filter-trigger-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  padding: 0 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+  background: var(--app-primary);
+  color: #ffffff;
+  margin-inline-start: 0.2rem;
+}
+
+@media (max-width: 767px) {
+  .app-desktop-filters {
+    display: none !important;
+  }
+
+  .app-filter-trigger-btn {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-mobile-only {
+    display: none !important;
   }
 }
 
@@ -817,18 +877,20 @@ html body [data-pc-name="toggleswitch"],
     }
   }
 
-  /* Row Hover: 4-part effect (Lift + Accent Bar + Subtle Cell Tint + Title Recolor) */
-  .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover {
-    transform: translateY(-1px);
-    box-shadow: inset 3px 0 0 var(--table-row-hover-bar);
+  /* Row Hover (Desktop only): 4-part effect (Lift + Accent Bar + Subtle Cell Tint + Title Recolor) */
+  @media (min-width: 768px) {
+    .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover {
+      transform: translateY(-1px);
+      box-shadow: inset 3px 0 0 var(--table-row-hover-bar);
 
-    >td {
-      background: var(--table-row-hover-bg) !important;
-    }
+      >td {
+        background: var(--table-row-hover-bg) !important;
+      }
 
-    .app-table__title,
-    [class*="__row-title"] {
-      color: var(--app-primary);
+      .app-table__title,
+      [class*="__row-title"] {
+        color: var(--app-primary);
+      }
     }
   }
 
@@ -938,4 +1000,193 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
+}
+
+/* ---------------------------------------------------------------------------
+ * Default Mobile Table Layout (Card / Ticket Style for < 768px screens)
+ * ------------------------------------------------------------------------ */
+@media (max-width: 767px) {
+  /* Reset full-bleed negative margins so mobile cards do not stick to outer container borders */
+  .p-datatable,
+  .app-table,
+  [class*="__table"],
+  .p-datatable[class*="__table"],
+  div[class*="__table"] {
+    margin: 1rem 0 0 0 !important;
+  }
+
+  .p-datatable,
+  .app-table {
+    .p-datatable-thead {
+      display: none !important;
+    }
+
+    .p-datatable-table-container,
+    .p-datatable-table {
+      display: block !important;
+      width: 100% !important;
+      overflow: visible !important;
+    }
+
+    .p-datatable-tbody {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.75rem !important;
+      width: 100% !important;
+    }
+
+    .p-datatable-tbody > tr {
+      position: relative !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.35rem !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0.875rem 1rem !important;
+      padding-inline-end: 2.75rem !important;
+      margin: 0 !important;
+      background: var(--app-surface) !important;
+      border: 1px solid var(--app-border) !important;
+      border-radius: 0 !important;
+      transform: none !important;
+      box-shadow: none !important;
+      transition: background-color 160ms ease, border-color 160ms ease;
+
+      &:hover,
+      &:focus,
+      &:active {
+        background: var(--app-surface) !important;
+        border-color: var(--app-border) !important;
+        transform: none !important;
+        box-shadow: none !important;
+
+        > td {
+          background: transparent !important;
+        }
+      }
+
+      > td {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0.2rem 0 !important;
+        border: none !important;
+        padding-inline-start: 0 !important;
+        padding-inline-end: 0 !important;
+        font-size: 0.875rem !important;
+        background: transparent !important;
+      }
+
+      /* Quick actions button positioned at the top right of the record card */
+      > td:last-child:has(button),
+      > td:has([class*="__row-action"]),
+      > td:has(button[class*="action"]),
+      > td:has(.pi-ellipsis-h),
+      > td:has(.pi-ellipsis-v) {
+        position: absolute !important;
+        top: 0.65rem !important;
+        inset-inline-end: 0.75rem !important;
+        inset-inline-start: auto !important;
+        width: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        z-index: 2;
+        background: transparent !important;
+      }
+
+      &.p-datatable-emptymessage {
+        padding-inline-end: 1rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 2.5rem 1rem !important;
+        text-align: center !important;
+        border: 1px dashed var(--app-border) !important;
+
+        > td {
+          justify-content: center !important;
+          color: var(--app-muted) !important;
+        }
+      }
+    }
+
+    .p-paginator {
+      margin-top: 1rem !important;
+      padding-top: 1rem !important;
+      border-top: 1px solid var(--app-border) !important;
+    }
+  }
+
+  /* Shared Ticket Cards helper classes for mobile views */
+  .app-ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .app-ticket {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    text-align: start;
+    padding: 0.875rem 1rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    cursor: pointer;
+
+    &--skeleton {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    &__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.15rem;
+    }
+
+    &__meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    &__right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    &__ref {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--app-muted);
+    }
+
+    &__category {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--app-muted);
+    }
+
+    &__title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--app-text);
+      margin-top: 0.15rem;
+    }
+
+    &__time {
+      font-size: 0.75rem;
+      color: var(--app-muted);
+    }
+  }
 }

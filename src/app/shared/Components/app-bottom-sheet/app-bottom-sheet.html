@@ -1,0 +1,57 @@
+@if (visible()) {
+<div class="app-bottom-sheet-overlay" [class.is-closing]="isClosing()" (click)="onBackdropClick($event)">
+  <div #sheetEl class="app-bottom-sheet"
+    [class.is-dragging]="isDragging()"
+    [class.is-closing]="isClosing()"
+    [style.max-height]="maxHeight()"
+    [style.transform]="'translateY(' + dragTranslateY() + 'px)'">
+
+    <!-- Drag Handle Area -->
+    <div class="app-bottom-sheet__drag-zone"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd()"
+      (mousedown)="onMouseDown($event)">
+      <div class="app-bottom-sheet__drag-handle"></div>
+    </div>
+
+    <!-- Sheet Header -->
+    <div class="app-bottom-sheet__header"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd()">
+      <div class="app-bottom-sheet__title-wrap">
+        <h3 class="app-bottom-sheet__title">{{ resolvedTitle() }}</h3>
+        @if (activeFilterCount() > 0) {
+        <span class="app-bottom-sheet__badge">{{ activeFilterCount() }}</span>
+        }
+      </div>
+      <div class="app-bottom-sheet__header-actions">
+        @if (activeFilterCount() > 0) {
+        <button type="button" class="app-bottom-sheet__clear-link" (click)="onClear()">
+          {{ resolvedClearLabel() }}
+        </button>
+        }
+        <button type="button" class="app-bottom-sheet__close-btn" (click)="close()" [attr.aria-label]="'common.close' | translate">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sheet Body (Scrollable Filters) -->
+    <div class="app-bottom-sheet__body">
+      <ng-content></ng-content>
+    </div>
+
+    <!-- Sheet Footer (Clear All if active filters exist) -->
+    @if (activeFilterCount() > 0) {
+    <div class="app-bottom-sheet__footer">
+      <app-button variant="outline" (click)="onClear()">
+        <i class="pi pi-trash"></i>
+        <span>{{ resolvedClearLabel() }} ({{ activeFilterCount() }})</span>
+      </app-button>
+    </div>
+    }
+  </div>
+</div>
+}

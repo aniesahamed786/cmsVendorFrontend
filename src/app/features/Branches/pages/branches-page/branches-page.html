@@ -133,11 +133,19 @@
         <h2 class="insight-card-title branches-page__toolbar-title">{{ 'branches.title' | translate }}</h2>
         <div class="branches-page__controls">
           <app-search [value]="searchQuery()" (valueChange)="searchQuery.set($event)"></app-search>
+          <button type="button" class="app-filter-trigger-btn" [class.has-active]="activeFilterCount() > 0"
+            (click)="showMobileFilters.set(true)">
+            <i class="pi pi-filter"></i>
+            <span>{{ 'common.filters' | translate }}</span>
+            @if (activeFilterCount() > 0) {
+            <span class="app-filter-trigger-badge">{{ activeFilterCount() }}</span>
+            }
+          </button>
           <app-button variant="primary" icon="pi pi-download" (click)="exportTable()">{{ 'branches.export' | translate }}</app-button>
         </div>
       </div>
 
-      <div class="app-filters-row">
+      <div class="app-filters-row app-desktop-filters">
         <div class="app-filter-group">
           <label class="app-filter-label">{{ 'branches.filter.status' | translate }}</label>
           <p-select [options]="statusOptions()" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)"
@@ -151,15 +159,26 @@
             optionLabel="label" optionValue="value" [placeholder]="'branches.filter.region' | translate" styleClass="branches-page__filter-select"
             panelStyleClass="branches-page__filter-panel"></p-select>
         </div>
-
-        <!-- <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'branches.filter.manager' | translate }}</label>
-          <p-select [options]="managerOptions()" [ngModel]="selectedManager()"
-            (ngModelChange)="selectedManager.set($event)" optionLabel="label" optionValue="value" [placeholder]="'branches.filter.manager' | translate"
-            styleClass="branches-page__filter-select" panelStyleClass="branches-page__filter-panel"></p-select>
-        </div> -->
       </div>
     </div>
+
+    <!-- Mobile Draggable Bottom Sheet Filters -->
+    <app-bottom-sheet [(visible)]="showMobileFilters" [title]="'common.filters' | translate"
+      [activeFilterCount]="activeFilterCount()" (cleared)="clearFilters()">
+      <div class="app-filter-group">
+        <label class="app-filter-label">{{ 'branches.filter.status' | translate }}</label>
+        <p-select [options]="statusOptions()" [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)"
+          optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'branches.filter.status' | translate" styleClass="branches-page__filter-select"
+          panelStyleClass="branches-page__filter-panel" appendTo="body"></p-select>
+      </div>
+
+      <div class="app-filter-group">
+        <label class="app-filter-label">{{ 'branches.filter.region' | translate }}</label>
+        <p-select [options]="regionOptions()" [ngModel]="selectedRegion()" (ngModelChange)="selectedRegion.set($event)"
+          optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'branches.filter.region' | translate" styleClass="branches-page__filter-select"
+          panelStyleClass="branches-page__filter-panel" appendTo="body"></p-select>
+      </div>
+    </app-bottom-sheet>
 
     <!-- Table -->
     <div class="branches-page__table-wrapper">
@@ -183,7 +202,7 @@
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.representativeName }}</td>
             <td class="branches-page__td-center">
               <button class="branches-page__action-btn" type="button" (click)="selectedRow.set(branch); menu.toggle($event)">
-                <i class="pi pi-ellipsis-h"></i>
+                <i class="pi pi-ellipsis-v"></i>
               </button>
               <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
             </td>
