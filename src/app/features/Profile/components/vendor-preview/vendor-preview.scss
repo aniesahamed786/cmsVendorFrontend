@@ -1,11 +1,9 @@
-@use '../../../../shared/styles/mobile-preview-mockup' as *;
+:host {
+  display: block;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
-/* The phone mockup mirrors the consumer app. Colours are expressed as --app-*
-   tokens (not raw greys) so the preview follows the admin's active mode/accent —
-   the same token bridge offer-details uses, now written as real BEM instead of a
-   utility remap. bg-white → --app-surface; bg-gray-50/100 → surface/border mix;
-   text-gray-700/800 → --app-text; text-gray-300–600 → --app-muted;
-   border-gray-50/100 → --app-border; the two brand hexes → --app-primary. */
 .vendor-preview {
   width: 100%;
   flex-shrink: 0;
@@ -26,61 +24,6 @@
 
   &__wrapper--relative {
     position: relative;
-  }
-
-  &__statusbar {
-    width: 100%;
-    height: 3rem;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-inline: 2rem;
-    padding-top: 1.5rem;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--app-text);
-    z-index: 30;
-  }
-
-  &__statusbar-icons {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-  }
-
-  &__battery {
-    transform: rotate(90deg);
-  }
-
-  &__topbar {
-    width: 100%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-inline: 1.25rem;
-    padding-block: 0.5rem;
-    z-index: 30;
-  }
-
-  &__topbar-icon {
-    color: var(--app-muted);
-
-    &--lg {
-      font-size: 1.125rem;
-    }
-  }
-
-  &__topbar-actions {
-    display: flex;
-    gap: 1rem;
-  }
-
-  &__screen {
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 5rem;
   }
 
   &__hero {
@@ -106,33 +49,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    color: var(--app-muted);
   }
 
   &__banner-fallback-icon {
     font-size: 3rem;
-    color: var(--app-muted);
-    opacity: 0.5;
   }
 
   &__logo {
     position: absolute;
-    bottom: -2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5rem;
-    height: 5rem;
-    padding: 0.5rem;
+    bottom: -1.5rem;
+    inset-inline-start: 1rem;
+    inset-inline-end: auto;
+    width: 70px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--app-surface);
-    border: 1px solid var(--app-border);
+    background: var(--app-surface);
+    border: 2px solid var(--app-border);
+    padding: 0.25rem;
   }
 
   &__logo-img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 
@@ -142,55 +83,58 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    color: var(--app-muted);
   }
 
   &__logo-fallback-icon {
-    font-size: 1.875rem;
-    color: var(--app-muted);
+    font-size: 1.5rem;
   }
 
   &__identity {
-    margin-top: 3rem;
-    padding-inline: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  &__name {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--app-text);
-    text-align: center;
-    line-height: 1.25;
-    margin: 0 0 1.5rem;
-  }
-
-  &__contact {
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.875rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--app-muted);
+    flex-shrink: 0;
+    padding-inline: 1.25rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-top: 1rem;
+    border-bottom: 8px solid color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  }
+
+  &__name {
+    margin-bottom: 1.25rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--app-text);
+  }
+
+  &__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
   }
 
   &__contact-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--app-muted);
 
     &--desc {
       align-items: flex-start;
-      margin-top: 0.25rem;
       line-height: 1.625;
     }
   }
 
   &__contact-icon {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--app-muted);
 
     &--top {
       margin-top: 0.125rem;
@@ -198,51 +142,41 @@
   }
 
   &__phone {
-    direction: ltr;
-    unicode-bidi: isolate;
+    font-weight: 500;
   }
 
   &__social {
-    width: 100%;
-    margin-top: 2rem;
-    margin-bottom: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 1.25rem;
+    border-top: 1px solid var(--app-border);
   }
 
   &__social-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    width: 100%;
-    max-width: 12rem;
-    margin: 0 auto;
-    color: var(--app-muted);
+    gap: 1rem;
   }
 
   &__social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    flex: 0 0 1.5rem;
-    text-decoration: none;
     color: var(--app-muted);
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--app-primary);
+    }
   }
 
   &__social-icon {
     display: inline-block;
-    width: 0.95rem;
-    height: 0.95rem;
-    color: var(--app-muted);
+    width: 1rem;
+    height: 1rem;
     background-color: currentColor;
-    mask-repeat: no-repeat;
-    mask-position: center;
     mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
+    mask-position: center;
+    mask-repeat: no-repeat;
     -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
   }
 
   &__social-fallback-icon {
@@ -253,11 +187,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3rem;
-    width: 100%;
-    margin-bottom: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--app-border);
+    gap: 3.5rem;
+    padding-top: 0.5rem;
     color: var(--app-muted);
   }
 
@@ -265,38 +196,43 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
-    cursor: pointer;
+    gap: 0.375rem;
+    cursor: default;
+    transition: color 0.2s;
 
     &:hover {
-      color: var(--app-primary);
+      color: var(--app-text);
     }
   }
 
   &__action-icon {
-    font-size: 1.125rem;
+    font-size: 1.5rem;
     font-weight: 300;
   }
 
   &__action-label {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 500;
   }
 
   &__offers {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
     padding-inline: 1.25rem;
-    padding-block: 1rem;
-    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    padding-block: 1.5rem;
+    border-bottom: 8px solid color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
   }
 
   &__section-title {
-    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--app-text);
-    margin: 0 0 1rem;
 
     &--branches {
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.75rem;
     }
   }
 
@@ -311,7 +247,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem;
-    background-color: var(--app-surface);
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
     border: 1px solid var(--app-border);
   }
 
@@ -324,21 +260,22 @@
   &__offer-icon {
     width: 2.5rem;
     height: 2.5rem;
-    padding: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    flex-shrink: 0;
   }
 
   &__offer-icon-img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    opacity: 0.8;
   }
 
   &__offer-icon-placeholder {
+    font-size: 1.125rem;
     color: var(--app-muted);
   }
 
@@ -348,16 +285,15 @@
   }
 
   &__offer-name {
-    font-size: 0.875rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--app-text);
   }
 
   &__offer-meta {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   &__offer-fav {
@@ -366,11 +302,20 @@
   }
 
   &__offer-tag {
-    font-size: 0.55rem;
+    padding-inline: 0.5rem;
+    padding-block: 0.25rem;
+    font-size: 0.65rem;
+    font-weight: 500;
     color: var(--app-muted);
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
   }
 
   &__branches {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
     padding-inline: 1.25rem;
     padding-block: 1.5rem;
   }
@@ -378,32 +323,28 @@
   &__branch-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 
   &__branch {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--app-border);
-
-    &:last-child {
-      padding-bottom: 0;
-      border-bottom: 0;
-    }
+    padding: 0.75rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
   }
 
   &__branch-info {
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   &__branch-icon {
     font-size: 1.125rem;
     color: var(--app-muted);
-    margin-top: 0.125rem;
   }
 
   &__branch-text {
@@ -413,77 +354,36 @@
 
   &__branch-name {
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--app-text);
-    line-height: 1.25;
   }
 
   &__branch-city {
     font-size: 0.65rem;
-    font-weight: 500;
     color: var(--app-muted);
   }
 
   &__branches-button {
     width: 100%;
-    margin-top: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    padding-block: 0.625rem;
     font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--app-primary);
-    background: transparent;
-    border: none;
+    font-weight: 600;
+    color: var(--app-text);
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.2s;
 
     &:hover {
-      opacity: 0.8;
+      background: color-mix(in srgb, var(--app-surface) 75%, var(--app-border) 25%);
     }
   }
 
   &__branches-button-icon {
-    font-size: 1.125rem;
-  }
-
-  &__bottom-nav {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 4rem;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding-bottom: 0.5rem;
-    font-size: 0.55rem;
-    color: var(--app-muted);
-    background-color: var(--app-surface);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid var(--app-border);
-    z-index: 30;
-  }
-
-  &__nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.375rem;
-  }
-
-  &__nav-icon {
-    font-size: 1.1rem;
-  }
-
-  &__nav-label {
-    transform: scale(0.9);
-    opacity: 0.8;
-
-    &--active {
-      font-weight: 700;
-    }
+    font-size: 0.875rem;
   }
 }

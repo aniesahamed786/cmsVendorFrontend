@@ -16,19 +16,58 @@
 
       <!-- Scrollable Content Container -->
       <div class="mobile-preview__screen custom-scrollbar" [attr.dir]="language() === 'ar' ? 'rtl' : 'ltr'">
-        <!-- Top Actions Bar -->
-        @if (showTopBar()) {
-          <div class="mobile-preview__app-bar">
-            <i class="pi pi-chevron-left mobile-preview__app-bar-icon"></i>
-            <div class="mobile-preview__app-bar-actions">
-              <i class="pi pi-bell"></i>
-              <i class="pi pi-map-marker"></i>
+        @if (loading()) {
+          <!-- Skeleton Loading State -->
+          <div class="mobile-preview__skeleton">
+            @if (showTopBar()) {
+              <div class="mobile-preview__skeleton-topbar">
+                <div class="mobile-preview__skeleton-icon app-skeleton"></div>
+                <div class="mobile-preview__skeleton-actions">
+                  <div class="mobile-preview__skeleton-icon app-skeleton"></div>
+                  <div class="mobile-preview__skeleton-icon app-skeleton"></div>
+                </div>
+              </div>
+            }
+
+            <div class="mobile-preview__skeleton-hero-frame">
+              <div class="mobile-preview__skeleton-banner app-skeleton"></div>
+              <div class="mobile-preview__skeleton-logo app-skeleton"></div>
+            </div>
+
+            <div class="mobile-preview__skeleton-body">
+              <div class="mobile-preview__skeleton-line mobile-preview__skeleton-line--title app-skeleton"></div>
+              <div class="mobile-preview__skeleton-line mobile-preview__skeleton-line--subtitle app-skeleton"></div>
+              <div class="mobile-preview__skeleton-line mobile-preview__skeleton-line--text app-skeleton"></div>
+              <div class="mobile-preview__skeleton-line mobile-preview__skeleton-line--text-short app-skeleton"></div>
+              <div class="mobile-preview__skeleton-line mobile-preview__skeleton-line--date app-skeleton"></div>
+              <div class="mobile-preview__skeleton-button app-skeleton"></div>
+              <div class="mobile-preview__skeleton-row">
+                <div class="mobile-preview__skeleton-action app-skeleton"></div>
+                <div class="mobile-preview__skeleton-action app-skeleton"></div>
+              </div>
+            </div>
+
+            <div class="mobile-preview__skeleton-section">
+              <div class="mobile-preview__skeleton-line mobile-preview__skeleton-line--section-title app-skeleton"></div>
+              <div class="mobile-preview__skeleton-card app-skeleton"></div>
+              <div class="mobile-preview__skeleton-card app-skeleton"></div>
             </div>
           </div>
-        }
+        } @else {
+          <!-- Top Actions Bar -->
+          @if (showTopBar()) {
+            <div class="mobile-preview__app-bar">
+              <i class="pi pi-chevron-left mobile-preview__app-bar-icon"></i>
+              <div class="mobile-preview__app-bar-actions">
+                <i class="pi pi-bell"></i>
+                <i class="pi pi-map-marker"></i>
+              </div>
+            </div>
+          }
 
-        <!-- Inner Content handled by consuming page/component -->
-        <ng-content></ng-content>
+          <!-- Inner Content handled by consuming page/component -->
+          <ng-content></ng-content>
+        }
 
         <!-- Bottom nav footer -->
         @if (showBottomNav()) {
@@ -69,10 +108,14 @@
     <!-- Toggle Controls -->
     @if (showLanguageToggle()) {
       <div class="language-toggle-container">
-        <button (click)="toggleLanguage()" class="toggle-button" type="button">
-          <i class="pi pi-language"></i>
-          {{ language() === 'en' ? 'Switch to Arabic Preview' : 'Switch to English Preview' }}
-        </button>
+        @if (loading()) {
+          <div class="mobile-preview__skeleton-toggle app-skeleton"></div>
+        } @else {
+          <button (click)="toggleLanguage()" class="toggle-button" type="button">
+            <i class="pi pi-language"></i>
+            {{ language() === 'en' ? 'Switch to Arabic Preview' : 'Switch to English Preview' }}
+          </button>
+        }
       </div>
     }
   </div>
