@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorQuickActions } from '../../components/vendor-quick-actions/vendor-quick-actions';
 import { DashboardService } from '../../services/dashboard.service';
-import { OnInit, inject } from '@angular/core';
 import { toActivityRow } from '../../../recent-activities/models/system-log.mapper';
 import { SystemLogService } from '../../../recent-activities/services/system-log.service';
 import { createCountUp } from '../../../../shared/animation/count-up';
@@ -14,6 +13,9 @@ import { environment } from '../../../../../environments/environment';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
 import { VendorProfileApi } from '../../../Profile/models/vendor-profile-request.mapper';
+import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
+import { INCOMPLETE_STATUSES, RequestStatus } from '../../../request-center/models/request.model';
+import { toRequestRow } from '../../../request-center/models/request.mapper';
 
 interface RecentActivityItem {
   icon: string;
@@ -23,21 +25,38 @@ interface RecentActivityItem {
   time: string;
 }
 
+interface PendingRequestItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  status: RequestStatus;
+  time: string;
+  icon: string;
+  iconClass: string;
+}
+
 const ACTIVITY_ICONS: Record<string, string> = {
-  OFFER: 'pi pi-tag',
-  STORE: 'pi pi-building',
-  PROFILE: 'pi pi-user-edit',
-  HIGHLIGHT: 'pi pi-star',
+  OFFER: 'assets/svg/Navbar/ic-offer.svg',
+  STORE: 'assets/svg/Navbar/ic-vendor.svg',
+  BRANCH: 'assets/svg/Navbar/ic-vendor.svg',
+  PROFILE: 'assets/svg/Navbar/ic-vendor.svg',
+  VENDOR: 'assets/svg/Navbar/ic-vendor.svg',
+  HIGHLIGHT: 'assets/svg/Navbar/ic-highlights.svg',
+  BANNER: 'assets/svg/Navbar/ic-banner.svg',
+  NOTIFICATION: 'assets/svg/Navbar/ic-notification.svg',
+  REQUEST: 'assets/svg/Navbar/ic-requests.svg',
+  DEFAULT: 'assets/svg/Navbar/ic-log.svg',
 };
 
 const ACTIVITY_ICON_CLASSES: Record<string, string> = {
-  APPROVED: 'dashboard-page__activity-icon--success',
-  SUBMITTED: 'dashboard-page__activity-icon--warning',
-  PENDING: 'dashboard-page__activity-icon--warning',
-  RETURNED: 'dashboard-page__activity-icon--neutral',
-  REJECTED: 'dashboard-page__activity-icon--neutral',
-  RECALLED: 'dashboard-page__activity-icon--neutral',
-  CANCELLED: 'dashboard-page__activity-icon--neutral',
+  APPROVED: 'dashboard-page__activity-icon--approved',
+  SUBMITTED: 'dashboard-page__activity-icon--submitted',
+  PENDING: 'dashboard-page__activity-icon--pending',
+  DRAFT: 'dashboard-page__activity-icon--draft',
+  RETURNED: 'dashboard-page__activity-icon--returned',
+  REJECTED: 'dashboard-page__activity-icon--rejected',
+  RECALLED: 'dashboard-page__activity-icon--recalled',
+  CANCELLED: 'dashboard-page__activity-icon--cancelled',
 };
 
 @Component({
@@ -72,6 +91,9 @@ export class DashboardPage implements OnInit {
   readonly skeletonStats = [0, 1, 2, 3];
   readonly skeletonPendingRows = [0, 1, 2];
 
+  // Incomplete requests fetched for the Pending Requests panel
+  pendingRequests = signal<PendingRequestItem[]>([]);
+
   // ponytail: server copy is English-only; times stay absolute like the
   // recent-activities table. Relative "2 mins ago" wants Intl.RelativeTimeFormat.
   recentActivities = signal<RecentActivityItem[]>([]);
@@ -81,29 +103,24 @@ export class DashboardPage implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly systemLogs = inject(SystemLogService);
   private readonly vendorProfileService = inject(VendorProfileService);
+  private readonly requestCenterApi = inject(RequestCenterApiService);
   private readonly i18n = inject(I18nService);
 
   constructor(private readonly router: Router) {}
 
   ngOnInit(): void {
     this.loadVendorProfile();
+    this.loadPendingRequests();
 
     this.statsLoading.set(true);
-    this.pendingRequestsLoading.set(true);
     this.dashboardService
       .getDashboardStats()
-      .pipe(
-        finalize(() => {
-          this.statsLoading.set(false);
-          this.pendingRequestsLoading.set(false);
-        }),
-      )
+      .pipe(finalize(() => this.statsLoading.set(false)))
       .subscribe({
         next: (stats) => {
           this.dashboardStats.set(stats);
           this.animateTo('totalRedemptions', stats?.totalRedemptions ?? 0);
           this.animateTo('activeOffers', stats?.activeOffers ?? 0);
-          this.animateTo('pendingRequests', stats?.pendingRequests ?? 0);
           this.animateTo('expiringSoonOffers', stats?.expiringSoonOffers ?? 0);
         },
         error: (err) => {
@@ -111,26 +128,65 @@ export class DashboardPage implements OnInit {
         },
       });
 
-  this.systemLogs.getSystemLogs({ page: 1, pageSize: 5, sortOrder: 'desc' })
-    .pipe(finalize(() => this.activityLoading.set(false)))
-    .subscribe({
-    next: (res) =>
-      this.recentActivities.set(
-        (res?.data ?? []).map((entry) => {
-          const row = toActivityRow(entry);
-          return {
-            icon: ACTIVITY_ICONS[entry.entityType] ?? 'pi pi-clock',
-            iconClass:
-              ACTIVITY_ICON_CLASSES[entry.status] ?? 'dashboard-page__activity-icon--brand',
-            title: row.actionType,
-            description: row.targetEntity,
-            time: row.timestamp,
-          };
-        }),
-      ),
-    error: () => this.recentActivities.set([]),
-  });
-}
+    this.systemLogs.getSystemLogs({ page: 1, pageSize: 5, sortOrder: 'desc' })
+      .pipe(finalize(() => this.activityLoading.set(false)))
+      .subscribe({
+        next: (res) =>
+          this.recentActivities.set(
+            (res?.data ?? []).map((entry) => {
+              const row = toActivityRow(entry);
+              const statusKey = String(entry.status ?? '').toUpperCase();
+              return {
+                icon: ACTIVITY_ICONS[String(entry.entityType ?? '').toUpperCase()] ?? 'assets/svg/Navbar/ic-log.svg',
+                iconClass:
+                  ACTIVITY_ICON_CLASSES[statusKey] ?? 'dashboard-page__activity-icon--white',
+                title: row.actionType,
+                description: row.targetEntity,
+                time: row.timestamp,
+              };
+            }),
+          ),
+        error: () => this.recentActivities.set([]),
+      });
+  }
+
+  private loadPendingRequests(): void {
+    this.pendingRequestsLoading.set(true);
+    this.requestCenterApi
+      .list({
+        page: 1,
+        pageSize: 5,
+        sortBy: 'updatedOn',
+        sortOrder: 'desc',
+        status: INCOMPLETE_STATUSES,
+      })
+      .pipe(finalize(() => this.pendingRequestsLoading.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.animateTo('pendingRequests', res.total);
+          this.pendingRequests.set(
+            (res.data ?? []).map((summary) => {
+              const row = toRequestRow(summary);
+              const statusKey = String(row.status ?? '').toUpperCase();
+              return {
+                id: row.rowKey,
+                title: row.targetEntity,
+                subtitle: `${this.i18n.t(`requestCenter.type.${row.type.toLowerCase()}`)} • ${this.i18n.t(`requestCenter.actionType.${row.actionType.toLowerCase()}`)}`,
+                status: row.status,
+                time: row.timestamp,
+                icon: ACTIVITY_ICONS[String(summary.entityType ?? '').toUpperCase()] ?? 'assets/svg/Navbar/ic-requests.svg',
+                iconClass:
+                  ACTIVITY_ICON_CLASSES[statusKey] ?? 'dashboard-page__activity-icon--white',
+              };
+            }),
+          );
+        },
+        error: (err) => {
+          console.error('Failed to load pending requests for dashboard', err);
+          this.pendingRequests.set([]);
+        },
+      });
+  }
 
   private loadVendorProfile(): void {
     this.headerLoading.set(true);
@@ -184,5 +240,17 @@ export class DashboardPage implements OnInit {
 
   goToContactSupport(): void {
     this.router.navigate(['/messaging-center']);
+  }
+
+  goToRequestDetails(rowKey: string): void {
+    this.router.navigate(['/request-center', rowKey]);
+  }
+
+  statusClass(status: RequestStatus): string {
+    return `dashboard-page__status dashboard-page__status--${status.toLowerCase()}`;
+  }
+
+  statusKey(status: RequestStatus): string {
+    return `requestCenter.value.${status.toLowerCase()}`;
   }
 }
