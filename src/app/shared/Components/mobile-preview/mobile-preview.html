@@ -1,0 +1,79 @@
+<!-- mobile-style preview frame -->
+<aside class="mobile-preview" [attr.aria-label]="ariaLabel()">
+  <div class="preview-wrapper">
+    <!-- Mobile Device Mockup Container -->
+    <div class="phone-mockup">
+      <!-- App Header / Status Bar -->
+      @if (showStatusBar()) {
+        <div class="mobile-preview__status-bar">
+          <span>{{ time() }}</span>
+          <div class="mobile-preview__status-icons">
+            <i class="pi pi-wifi"></i>
+            <i class="pi pi-battery"></i>
+          </div>
+        </div>
+      }
+
+      <!-- Scrollable Content Container -->
+      <div class="mobile-preview__screen custom-scrollbar" [attr.dir]="language() === 'ar' ? 'rtl' : 'ltr'">
+        <!-- Top Actions Bar -->
+        @if (showTopBar()) {
+          <div class="mobile-preview__app-bar">
+            <i class="pi pi-chevron-left mobile-preview__app-bar-icon"></i>
+            <div class="mobile-preview__app-bar-actions">
+              <i class="pi pi-bell"></i>
+              <i class="pi pi-map-marker"></i>
+            </div>
+          </div>
+        }
+
+        <!-- Inner Content handled by consuming page/component -->
+        <ng-content></ng-content>
+
+        <!-- Bottom nav footer -->
+        @if (showBottomNav()) {
+          <div class="mobile-preview__bottom-nav" [attr.dir]="language() === 'ar' ? 'rtl' : 'ltr'">
+            <div
+              class="mobile-preview__nav-item"
+              [class.mobile-preview__nav-item--active]="activeNav() === 'near-you'"
+            >
+              <i class="pi pi-map-marker"></i>
+              <span>{{ language() === 'en' ? 'Near You' : 'بالقرب منك' }}</span>
+            </div>
+            <div
+              class="mobile-preview__nav-item"
+              [class.mobile-preview__nav-item--active]="activeNav() === 'home'"
+            >
+              <i class="pi pi-home"></i>
+              <span>{{ language() === 'en' ? 'Home' : 'الرئيسية' }}</span>
+            </div>
+            <div
+              class="mobile-preview__nav-item"
+              [class.mobile-preview__nav-item--active]="activeNav() === 'search'"
+            >
+              <i class="pi pi-search"></i>
+              <span>{{ language() === 'en' ? 'Search' : 'بحث' }}</span>
+            </div>
+            <div
+              class="mobile-preview__nav-item"
+              [class.mobile-preview__nav-item--active]="activeNav() === 'profile'"
+            >
+              <i class="pi pi-user"></i>
+              <span>{{ language() === 'en' ? 'Profile' : 'الملف الشخصي' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Toggle Controls -->
+    @if (showLanguageToggle()) {
+      <div class="language-toggle-container">
+        <button (click)="toggleLanguage()" class="toggle-button" type="button">
+          <i class="pi pi-language"></i>
+          {{ language() === 'en' ? 'Switch to Arabic Preview' : 'Switch to English Preview' }}
+        </button>
+      </div>
+    }
+  </div>
+</aside>

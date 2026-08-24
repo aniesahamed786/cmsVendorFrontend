@@ -1,75 +1,10 @@
-@use '../../../../shared/styles/mobile-preview-mockup' as *;
+:host {
+  display: block;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
-:host { display: block; word-break: break-word; overflow-wrap: break-word; }
-
-/* Token bridge: this phone mockup mirrors the consumer app's mobile screen, so
-   every colour is an --app-* token — the preview follows the active mode/accent
-   exactly like offer-details. Layout is plain SCSS; no utilities in the markup. */
 .preview-offer-details {
-  display: none;
-  width: 100%;
-  flex-shrink: 0;
-
-  @media (min-width: 1024px) {
-    display: block;
-    flex: none;
-  }
-
-  /* ---- App status bar ---- */
-  &__statusbar {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-inline: 1.5rem;
-    padding-top: 1rem;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--app-text);
-  }
-
-  &__statusbar-icons {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-  }
-
-  /* ---- Top actions bar ---- */
-  &__topbar {
-    position: relative;
-    z-index: 30;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-inline: 1.25rem;
-    padding-block: 0.5rem;
-    flex-shrink: 0;
-  }
-
-  &__topbar-back {
-    font-size: 1.125rem;
-    color: var(--app-muted);
-  }
-
-  &__topbar-actions {
-    display: flex;
-    gap: 1rem;
-
-    i { color: var(--app-muted); }
-  }
-
-  /* ---- Scrollable screen ---- */
-  &__screen {
-    position: relative;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    background: var(--app-surface);
-    pointer-events: auto;
-  }
-
   /* ---- Image section ---- */
   &__image-section {
     width: 100%;
@@ -82,7 +17,7 @@
   &__image-frame {
     position: relative;
     width: 100%;
-    height: 190px;
+    aspect-ratio: 2.39 / 1;
   }
 
   &__image {
@@ -104,7 +39,9 @@
   &__img-fallback-icon {
     font-size: 3rem;
 
-    &--sm { font-size: 1.5rem; }
+    &--sm {
+      font-size: 1.5rem;
+    }
   }
 
   &__vendor-logo {
@@ -153,7 +90,9 @@
     font-weight: 300;
   }
 
-  &__mode-badge-text { font-weight: 500; }
+  &__mode-badge-text {
+    font-weight: 500;
+  }
 
   /* ---- Main info ---- */
   &__main {
@@ -231,13 +170,15 @@
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.025em;
-    color: #ffffff; /* on-primary contrast — button fill is the primary token */
+    color: #ffffff;
     background: var(--app-primary);
     border: none;
     cursor: pointer;
     transition: background-color 0.2s;
 
-    &:hover { background: var(--app-primary-700); }
+    &:hover {
+      background: var(--app-primary-700);
+    }
   }
 
   &__actions {
@@ -247,7 +188,9 @@
     gap: 3.5rem;
     color: var(--app-muted);
 
-    &--rtl { flex-direction: row-reverse; }
+    &--rtl {
+      flex-direction: row-reverse;
+    }
   }
 
   &__action {
@@ -258,7 +201,9 @@
     cursor: default;
     transition: color 0.2s;
 
-    &:hover { color: var(--app-text); }
+    &:hover {
+      color: var(--app-text);
+    }
   }
 
   &__action-icon {
@@ -298,7 +243,9 @@
     font-weight: 700;
     color: var(--app-text);
 
-    &--tight { margin-bottom: 0.5rem; }
+    &--tight {
+      margin-bottom: 0.5rem;
+    }
   }
 
   &__room-list {
@@ -308,64 +255,64 @@
   }
 
   &__room-card {
-    padding: 1rem;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    padding: 0.75rem;
+    background: var(--app-surface);
     border: 1px solid var(--app-border);
   }
 
   &__room-name {
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
-    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--app-text);
   }
 
   &__room-rates {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.375rem;
   }
 
   &__amenity-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
   }
 
   &__amenity {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    color: var(--app-muted);
+    gap: 0.5rem;
   }
 
   &__amenity-icon-wrap {
+    width: 2rem;
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 0.125rem;
     background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
   }
 
   &__amenity-icon {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
     color: var(--app-muted);
   }
 
   &__amenity-label {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    color: var(--app-text);
   }
 
   &__tax-value {
-    font-size: 0.85rem;
-    line-height: 1.625;
-    color: var(--app-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--app-text);
   }
 
-  /* ---- Locations ---- */
+  /* ---- Locations section ---- */
   &__locations {
     width: 100%;
     flex-shrink: 0;
@@ -374,136 +321,120 @@
   }
 
   &__locations-heading {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 700;
     color: var(--app-text);
   }
 
   &__location-list {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 
   &__location-row {
     display: flex;
-    align-items: flex-start;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--app-border);
-
-    &:last-child {
-      padding-bottom: 0;
-      border-bottom: 0;
-    }
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
 
     &--rtl {
-      justify-content: flex-end;
-      text-align: right;
+      flex-direction: row-reverse;
     }
   }
 
   &__location-content {
     display: flex;
-    width: 100%;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
 
     &--rtl {
       flex-direction: row-reverse;
       text-align: right;
-
-      .preview-offer-details__location-icon { order: 2; }
-      .preview-offer-details__location-text {
-        order: 1;
-        align-items: flex-end;
-      }
     }
   }
 
   &__location-icon {
-    order: 1;
-    margin-top: 0.125rem;
     font-size: 1.25rem;
-    font-weight: 300;
     color: var(--app-muted);
   }
 
   &__location-text {
-    order: 2;
     display: flex;
-    flex: 1;
     flex-direction: column;
-    margin-top: 0.125rem;
   }
 
   &__location-title {
-    width: 100%;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: -0.025em;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--app-text);
-    text-align: start;
   }
 
   &__location-subtitle {
-    width: 100%;
-    margin-top: 0.125rem;
-    font-size: 0.8rem;
-    letter-spacing: -0.025em;
+    font-size: 0.65rem;
     color: var(--app-muted);
-    text-align: start;
   }
 
   &__locations-empty {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: var(--app-muted);
+    font-style: italic;
   }
 
   &__branches-button {
     width: 100%;
-    margin-top: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    padding-block: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: var(--app-primary);
-    background: transparent;
-    border: none;
+    color: var(--app-text);
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.2s;
 
-    &:hover { color: var(--app-primary-700); }
+    &:hover {
+      background: color-mix(in srgb, var(--app-surface) 75%, var(--app-border) 25%);
+    }
 
-    &--rtl { flex-direction: row-reverse; }
+    &--rtl {
+      flex-direction: row-reverse;
+    }
   }
 
   &__branches-icon {
-    font-size: 1.125rem;
-    font-weight: 300;
+    font-size: 0.875rem;
   }
 
-  /* ---- Tabs ---- */
+  /* ---- Tabs section ---- */
   &__tabs {
     width: 100%;
     flex-shrink: 0;
     padding-inline: 1.25rem;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
+    padding-block: 1.5rem;
   }
 
   &__tab-list {
     display: flex;
-    width: 100%;
     border-bottom: 1px solid var(--app-border);
 
-    /* Arabic reading order: feedback, contact, avail (right→left via inherited dir) */
     &--rtl {
-      .preview-offer-details__tab-button--avail { order: 3; }
-      .preview-offer-details__tab-button--contact { order: 2; }
-      .preview-offer-details__tab-button--feedback { order: 1; }
+      .preview-offer-details__tab-button--avail {
+        order: 3;
+      }
+      .preview-offer-details__tab-button--contact {
+        order: 2;
+      }
+      .preview-offer-details__tab-button--feedback {
+        order: 1;
+      }
     }
   }
 
@@ -528,7 +459,9 @@
     &--sm-only {
       display: none;
 
-      @media (min-width: 640px) { display: block; }
+      @media (min-width: 640px) {
+        display: block;
+      }
     }
   }
 
@@ -557,47 +490,14 @@
     font-size: 0.75rem;
     color: var(--app-muted);
 
-    &--rtl { flex-direction: row-reverse; }
-  }
-
-  &__contact-icon { color: var(--app-muted); }
-
-  /* ---- Bottom nav ---- */
-  /* ponytail: original markup had both `absolute` and `sticky` position utilities;
-     sticky is the effective one (nav pins to the scroll container's bottom edge). */
-  &__bottom-nav {
-    position: sticky;
-    bottom: 0;
-    z-index: 20;
-    width: 100%;
-    height: 3.5rem;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding-bottom: 0.25rem;
-    font-size: 0.55rem;
-    color: var(--app-muted);
-    background: var(--app-surface);
-    border-top: 1px solid var(--app-border);
-    pointer-events: auto;
-  }
-
-  &__nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-
-    i { font-size: 0.875rem; }
-
-    &--home {
-      color: var(--app-text);
-      font-weight: 700;
+    &--rtl {
+      flex-direction: row-reverse;
     }
   }
 
-  &__nav-item-home-icon { font-size: 1rem; }
+  &__contact-icon {
+    color: var(--app-muted);
+  }
 
   &__text-wrap {
     min-width: 0;
@@ -606,8 +506,10 @@
   }
 }
 
-/* dark:invert on the SAR glyph — dark mode is a `.dark-mode` ancestor (see tailwind.css) */
-:host-context(.dark-mode) .preview-offer-details__riyal-icon { filter: invert(1); }
+/* dark:invert on the SAR glyph */
+:host-context(.dark-mode) .preview-offer-details__riyal-icon {
+  filter: invert(1);
+}
 
 /* Dotted line separator for room rates */
 .rate-item {
@@ -618,12 +520,17 @@
   font-size: 0.8rem;
   color: var(--app-muted);
 }
-.rate-label { white-space: nowrap; }
+
+.rate-label {
+  white-space: nowrap;
+}
+
 .rate-dots {
   flex: 1;
   border-bottom: 1px dotted color-mix(in srgb, var(--app-border) 85%, var(--app-muted) 15%);
   margin-bottom: 4px;
 }
+
 .rate-value {
   display: flex;
   align-items: center;
