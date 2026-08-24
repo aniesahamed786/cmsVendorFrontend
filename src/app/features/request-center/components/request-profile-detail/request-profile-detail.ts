@@ -16,10 +16,11 @@ import { resolveAssetUrl, resolveMaskImageStyle } from '../../../../shared/utils
 export class RequestProfileDetail {
   private readonly document = inject(DOCUMENT);
 
-  readonly profile = input.required<ProfileRequestView>();
+  readonly profile = input<ProfileRequestView | null>(null);
+  readonly loading = input<boolean>(false);
 
   /** Same media-path rewrite the vendor profile page uses. */
-  imageUrl(path: string): string {
+  imageUrl(path?: string): string {
     if (!path) return '';
     return environment.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }

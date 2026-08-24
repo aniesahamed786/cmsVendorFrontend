@@ -180,6 +180,9 @@
       } @else {
       @if (changesLoading()) {
       <!-- Mirrors the real card shape so the layout doesn't jump when the data lands. -->
+      @if (entityType() === 'PROFILE') {
+      <app-request-profile-detail [loading]="true" />
+      } @else {
       <section class="request-detail__card request-detail__branch-card">
         <div class="request-detail__branch-head">
           <span class="app-skeleton request-detail__skeleton-branch-icon"></span>
@@ -198,6 +201,7 @@
           }
         </div>
       </section>
+      }
       } @else if (changesError(); as error) {
       <section class="request-detail__card">
         <p class="request-detail__error">{{ error }}</p>

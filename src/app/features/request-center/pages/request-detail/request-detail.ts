@@ -138,7 +138,12 @@ export class RequestDetail {
   // as a branch card. The generic field list stays as the fallback for anything else.
   private readonly proposedEntity = computed(() => buildProposedEntity(this.details()));
 
-  readonly entityType = computed(() => this.details()?.entityType ?? null);
+  readonly entityType = computed(() => {
+    const fromDetails = this.details()?.entityType;
+    if (fromDetails) return fromDetails;
+    const rowType = this.row()?.type?.toUpperCase();
+    return rowType ?? null;
+  });
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
 
   // ---- Tabs -----------------------------------------------------------------

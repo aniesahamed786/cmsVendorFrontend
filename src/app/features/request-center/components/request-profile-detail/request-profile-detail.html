@@ -1,17 +1,37 @@
 <div class="request-profile-detail">
   <!-- Same banner the vendor profile page shows, so a request is reviewed against the
        profile exactly as it will appear once approved. -->
-  <app-vendor-hero-card [name]="profile().name" [nameAr]="profile().nameAr" [logo]="profile().logo" />
+  <app-vendor-hero-card
+    [name]="profile()?.name || ''"
+    [nameAr]="profile()?.nameAr || ''"
+    [logo]="profile()?.logo || ''"
+    [loading]="loading()"
+  />
 
   <section class="request-profile-detail__card">
     <div class="request-profile-detail__section-header">
       <span class="request-profile-detail__section-icon"><i class="pi pi-info-circle"></i></span>
       <h3 class="request-profile-detail__section-title">{{ 'profile.description' | translate }}</h3>
     </div>
+    @if (loading()) {
     <div class="request-profile-detail__descriptions">
-      <p class="request-profile-detail__text">{{ profile().description }}</p>
-      <p class="request-profile-detail__text" dir="rtl">{{ profile().descriptionAr }}</p>
+      <div class="request-profile-detail__skeleton-text-col">
+        <span class="app-skeleton request-profile-detail__skeleton-line"></span>
+        <span class="app-skeleton request-profile-detail__skeleton-line"></span>
+        <span class="app-skeleton request-profile-detail__skeleton-line request-profile-detail__skeleton-line--short"></span>
+      </div>
+      <div class="request-profile-detail__skeleton-text-col">
+        <span class="app-skeleton request-profile-detail__skeleton-line"></span>
+        <span class="app-skeleton request-profile-detail__skeleton-line"></span>
+        <span class="app-skeleton request-profile-detail__skeleton-line request-profile-detail__skeleton-line--short"></span>
+      </div>
     </div>
+    } @else {
+    <div class="request-profile-detail__descriptions">
+      <p class="request-profile-detail__text">{{ profile()?.description }}</p>
+      <p class="request-profile-detail__text" dir="rtl">{{ profile()?.descriptionAr }}</p>
+    </div>
+    }
   </section>
 
   <div class="request-profile-detail__grid">
@@ -20,11 +40,28 @@
         <span class="request-profile-detail__section-icon"><i class="pi pi-user"></i></span>
         <h3 class="request-profile-detail__section-title">{{ 'profile.representativeInformation' | translate }}</h3>
       </div>
+      @if (loading()) {
       <div class="request-profile-detail__list">
-        <div class="request-profile-detail__item"><i class="pi pi-user"></i><span>{{ profile().representativeName }}</span></div>
-        <div class="request-profile-detail__item"><i class="pi pi-phone"></i><span dir="ltr">{{ profile().representativeContact }}</span></div>
-        <div class="request-profile-detail__item"><i class="pi pi-envelope"></i><span>{{ profile().representativeEmail }}</span></div>
+        <div class="request-profile-detail__item">
+          <span class="app-skeleton request-profile-detail__skeleton-item-icon"></span>
+          <span class="app-skeleton request-profile-detail__skeleton-item-text"></span>
+        </div>
+        <div class="request-profile-detail__item">
+          <span class="app-skeleton request-profile-detail__skeleton-item-icon"></span>
+          <span class="app-skeleton request-profile-detail__skeleton-item-text"></span>
+        </div>
+        <div class="request-profile-detail__item">
+          <span class="app-skeleton request-profile-detail__skeleton-item-icon"></span>
+          <span class="app-skeleton request-profile-detail__skeleton-item-text"></span>
+        </div>
       </div>
+      } @else {
+      <div class="request-profile-detail__list">
+        <div class="request-profile-detail__item"><i class="pi pi-user"></i><span>{{ profile()?.representativeName }}</span></div>
+        <div class="request-profile-detail__item"><i class="pi pi-phone"></i><span dir="ltr">{{ profile()?.representativeContact }}</span></div>
+        <div class="request-profile-detail__item"><i class="pi pi-envelope"></i><span>{{ profile()?.representativeEmail }}</span></div>
+      </div>
+      }
     </section>
 
     <section class="request-profile-detail__card">
@@ -32,10 +69,23 @@
         <span class="request-profile-detail__section-icon"><i class="pi pi-id-card"></i></span>
         <h3 class="request-profile-detail__section-title">{{ 'profile.businessContactDetails' | translate }}</h3>
       </div>
+      @if (loading()) {
       <div class="request-profile-detail__list">
-        <div class="request-profile-detail__item"><i class="pi pi-phone"></i><span dir="ltr">{{ profile().businessPhone }}</span></div>
-        <div class="request-profile-detail__item"><i class="pi pi-envelope"></i><span>{{ profile().businessEmail }}</span></div>
+        <div class="request-profile-detail__item">
+          <span class="app-skeleton request-profile-detail__skeleton-item-icon"></span>
+          <span class="app-skeleton request-profile-detail__skeleton-item-text"></span>
+        </div>
+        <div class="request-profile-detail__item">
+          <span class="app-skeleton request-profile-detail__skeleton-item-icon"></span>
+          <span class="app-skeleton request-profile-detail__skeleton-item-text"></span>
+        </div>
       </div>
+      } @else {
+      <div class="request-profile-detail__list">
+        <div class="request-profile-detail__item"><i class="pi pi-phone"></i><span dir="ltr">{{ profile()?.businessPhone }}</span></div>
+        <div class="request-profile-detail__item"><i class="pi pi-envelope"></i><span>{{ profile()?.businessEmail }}</span></div>
+      </div>
+      }
     </section>
 
     <section class="request-profile-detail__card">
@@ -47,9 +97,20 @@
         </span>
         <h3 class="request-profile-detail__section-title">{{ 'profile.socialMedia' | translate }}</h3>
       </div>
-      @if (profile().socialLinks.length) {
+      @if (loading()) {
       <div class="request-profile-detail__list">
-        @for (link of profile().socialLinks; track $index) {
+        <div class="request-profile-detail__item">
+          <span class="app-skeleton request-profile-detail__skeleton-item-icon"></span>
+          <span class="app-skeleton request-profile-detail__skeleton-item-text request-profile-detail__skeleton-item-text--full"></span>
+        </div>
+        <div class="request-profile-detail__item">
+          <span class="app-skeleton request-profile-detail__skeleton-item-icon"></span>
+          <span class="app-skeleton request-profile-detail__skeleton-item-text request-profile-detail__skeleton-item-text--full"></span>
+        </div>
+      </div>
+      } @else if (profile()?.socialLinks?.length) {
+      <div class="request-profile-detail__list">
+        @for (link of profile()?.socialLinks; track $index) {
           @if (getSocialLinkUrl(link)) {
           <a class="request-profile-detail__item request-profile-detail__item--link"
             [href]="getExternalLinkHref(link)" target="_blank" rel="noopener noreferrer">
@@ -77,23 +138,40 @@
       <span class="request-profile-detail__section-icon"><i class="pi pi-image"></i></span>
       <h3 class="request-profile-detail__section-title">{{ 'profile.inspirationalImages' | translate }}</h3>
     </div>
+    @if (loading()) {
+    <div class="request-profile-detail__images">
+      <div class="request-profile-detail__image-col">
+        <span class="app-skeleton request-profile-detail__skeleton-image-label"></span>
+        <div class="request-profile-detail__image-box">
+          <span class="app-skeleton request-profile-detail__skeleton-img"></span>
+        </div>
+      </div>
+      <div class="request-profile-detail__image-col">
+        <span class="app-skeleton request-profile-detail__skeleton-image-label"></span>
+        <div class="request-profile-detail__image-box">
+          <span class="app-skeleton request-profile-detail__skeleton-img"></span>
+        </div>
+      </div>
+    </div>
+    } @else {
     <div class="request-profile-detail__images">
       <div class="request-profile-detail__image-col">
         <span class="request-profile-detail__image-label">{{ 'profile.imageMobile' | translate }}</span>
         <div class="request-profile-detail__image-box">
-          @if (profile().coverImage) {
-          <img [src]="imageUrl(profile().coverImage)" alt="" class="request-profile-detail__image" />
+          @if (profile()?.coverImage) {
+          <img [src]="imageUrl(profile()!.coverImage)" alt="" class="request-profile-detail__image" />
           } @else { <i class="pi pi-image"></i> }
         </div>
       </div>
       <div class="request-profile-detail__image-col">
         <span class="request-profile-detail__image-label">{{ 'profile.imageDesktop' | translate }}</span>
         <div class="request-profile-detail__image-box">
-          @if (profile().coverImageLandscape) {
-          <img [src]="imageUrl(profile().coverImageLandscape)" alt="" class="request-profile-detail__image" />
+          @if (profile()?.coverImageLandscape) {
+          <img [src]="imageUrl(profile()!.coverImageLandscape)" alt="" class="request-profile-detail__image" />
           } @else { <i class="pi pi-image"></i> }
         </div>
       </div>
     </div>
+    }
   </section>
 </div>
