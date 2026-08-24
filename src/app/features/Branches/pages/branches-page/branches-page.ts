@@ -13,6 +13,7 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { createCountUp } from '../../../../shared/animation/count-up';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
 
 @Component({
   selector: 'app-branches-page',
@@ -97,6 +98,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private pendingRender = false;
   private mapsInitPromise: Promise<void> | null = null;
   private zoomListener: any | null = null;
+  private vendorLogo = '';
   private mapContainer?: ElementRef<HTMLElement>;
 
   debug = { scriptLoaded: false, mapsAvailable: false, mapCreated: false };
@@ -197,11 +199,13 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       this.animateTo('totalRedemptions', data.totalRedemptions);
       this.animateTo('pendingRequests', data.pendingRequests);
     });
-    this.branchesService.getBranches().subscribe(data => {
-      this.allBranches.set(data);
+    this.branchesService.getBranches().subscribe(response => {
+      const branches = response.locations ?? [];
+      this.vendorLogo = toVendorMediaUrl(response.vendorLogo);
+      this.allBranches.set(branches);
       this.branchesLoading.set(false);
 
-      const performers: TopPerformer[] = data.map(branch => ({
+      const performers: TopPerformer[] = branches.map(branch => ({
         id: branch.locationId,
         name: branch.locationName,
         redemptions: 0,
@@ -416,6 +420,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private createBranchMapMarker(position: { lat: number; lng: number }, loc: BranchRow): any {
     const google = (window as any).google;
     const markerTitle = loc.locationName ?? loc.locationName ?? '';
+    const logo = this.vendorLogo;
     // Fallback here is a JS-level guard on a getComputedStyle() read, not a CSS
     // var() fallback — --app-primary always resolves from :root, but kept in
     // case this runs before global styles are attached. Left as-is (styling
@@ -425,9 +430,14 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     class BranchMapMarker extends google.maps.OverlayView {
       private div: HTMLDivElement | null = null;
       private textDiv: HTMLDivElement | null = null;
+      private image: HTMLElement | null = null;
       private compact = true;
 
-      constructor(private markerPosition: { lat: number; lng: number }, private title: string) {
+      constructor(
+        private markerPosition: { lat: number; lng: number },
+        private title: string,
+        private imageUrl: string,
+      ) {
         super();
       }
 
@@ -437,42 +447,84 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
         wrapper.style.transform = 'translate(-50%, calc(-100% - 12px))';
         wrapper.style.display = 'flex';
         wrapper.style.alignItems = 'center';
-        wrapper.style.justifyContent = 'center';
-        wrapper.style.gap = '8px';
-        wrapper.style.minWidth = '32px';
+        wrapper.style.gap = '12px';
+        wrapper.style.minWidth = '260px';
         wrapper.style.maxWidth = '420px';
-        wrapper.style.height = '32px';
-        wrapper.style.padding = '4px 12px';
+        wrapper.style.height = '68px';
+        wrapper.style.padding = '8px 18px 8px 8px';
         wrapper.style.background = markerColor;
         wrapper.style.color = '#ffffff'; // sanctioned: on-primary contrast over the brand-fill pin
-        wrapper.style.borderRadius = '16px';
-        wrapper.style.boxShadow = '0 4px 12px rgba(15, 23, 42, 0.22)';
+        wrapper.style.boxShadow = '0 8px 18px rgba(15, 23, 42, 0.22)';
         wrapper.style.cursor = 'pointer';
         wrapper.style.userSelect = 'none';
         wrapper.style.zIndex = '10';
-        wrapper.style.whiteSpace = 'nowrap';
-        wrapper.style.fontWeight = '600';
-        wrapper.style.fontSize = '14px';
+
+        const makePlaceholder = () => {
+          const box = document.createElement('div');
+          box.style.width = '52px';
+          box.style.height = '52px';
+          box.style.flex = '0 0 52px';
+          box.style.display = 'flex';
+          box.style.alignItems = 'center';
+          box.style.justifyContent = 'center';
+          box.style.background = 'color-mix(in srgb, var(--app-surface) 88%, var(--app-border) 12%)';
+          box.style.color = 'var(--app-muted)';
+          box.style.border = '2px solid #ffffff';
+          box.style.fontSize = '22px';
+          box.innerHTML = '<i class="pi pi-image"></i>';
+          return box;
+        };
+
+        let media: HTMLElement;
+        if (this.imageUrl) {
+          const image = document.createElement('img');
+          image.src = this.imageUrl;
+          image.alt = `${this.title} logo`;
+          image.style.width = '52px';
+          image.style.height = '52px';
+          image.style.flex = '0 0 52px';
+          image.style.objectFit = 'cover';
+          image.style.background = '#ffffff';
+          image.style.border = '2px solid #ffffff';
+          image.onerror = () => {
+            const box = makePlaceholder();
+            image.replaceWith(box);
+            this.image = box;
+            this.applyCompactState();
+          };
+          media = image;
+        } else {
+          media = makePlaceholder();
+        }
+
+        const text = document.createElement('div');
+        text.textContent = this.title;
+        text.style.minWidth = '0';
+        text.style.overflow = 'hidden';
+        text.style.textOverflow = 'ellipsis';
+        text.style.whiteSpace = 'nowrap';
+        text.style.fontSize = '22px';
+        text.style.lineHeight = '1.15';
+        text.style.fontWeight = '500';
 
         const pointer = document.createElement('div');
         pointer.style.position = 'absolute';
         pointer.style.left = '50%';
-        pointer.style.bottom = '-8px';
+        pointer.style.bottom = '-13px';
         pointer.style.width = '0';
         pointer.style.height = '0';
         pointer.style.transform = 'translateX(-50%)';
-        pointer.style.borderLeft = '8px solid transparent';
-        pointer.style.borderRight = '8px solid transparent';
-        pointer.style.borderTop = `8px solid ${markerColor}`;
+        pointer.style.borderLeft = '13px solid transparent';
+        pointer.style.borderRight = '13px solid transparent';
+        pointer.style.borderTop = `13px solid ${markerColor}`;
 
-        const text = document.createElement('div');
-        text.textContent = this.title;
-
+        wrapper.appendChild(media);
         wrapper.appendChild(text);
         wrapper.appendChild(pointer);
 
         this.div = wrapper;
         this.textDiv = text;
+        this.image = media;
         this.applyCompactState();
 
         (this as any).getPanes()?.overlayMouseTarget.appendChild(wrapper);
@@ -499,26 +551,34 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       }
 
       private applyCompactState() {
-        if (!this.div || !this.textDiv) return;
+        if (!this.div || !this.textDiv || !this.image) return;
         if (this.compact) {
+          this.div.style.width = '68px';
+          this.div.style.minWidth = '68px';
+          this.div.style.maxWidth = '68px';
+          this.div.style.height = '68px';
+          this.div.style.padding = '8px';
+          this.div.style.gap = '0';
           this.textDiv.style.display = 'none';
-          this.div.style.padding = '0';
-          this.div.style.width = '16px';
-          this.div.style.minWidth = '16px';
-          this.div.style.height = '16px';
-          this.div.style.borderRadius = '50%';
+          this.image.style.width = '52px';
+          this.image.style.height = '52px';
+          this.image.style.flex = '0 0 52px';
         } else {
           this.textDiv.style.display = 'block';
           this.div.style.width = 'auto';
-          this.div.style.minWidth = '32px';
-          this.div.style.height = '32px';
-          this.div.style.padding = '4px 12px';
-          this.div.style.borderRadius = '16px';
+          this.div.style.minWidth = '260px';
+          this.div.style.maxWidth = '420px';
+          this.div.style.height = '68px';
+          this.div.style.padding = '8px 18px 8px 8px';
+          this.div.style.gap = '12px';
+          this.image.style.width = '52px';
+          this.image.style.height = '52px';
+          this.image.style.flex = '0 0 52px';
         }
       }
     }
 
-    const marker = new BranchMapMarker(position, markerTitle);
+    const marker = new BranchMapMarker(position, markerTitle, logo);
     marker['setMap'](this.map);
     return marker;
   }

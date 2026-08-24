@@ -24,9 +24,14 @@ export interface BranchRow {
   totalOffers: number;
   representativeName: string;
   representativeNameAr: string;
-  latitude: string;
-  longitude: string;
+  latitude: string | number;
+  longitude: string | number;
   status: string;
+}
+
+export interface BranchesResponse {
+  vendorLogo: string;
+  locations: BranchRow[];
 }
 
 @Injectable({
@@ -39,8 +44,8 @@ export class BranchesService {
     return this.http.get<BranchKPIs>('/api/v1/cmsVendor/location-stats');
   }
 
-  getBranches(): Observable<BranchRow[]> {
-    return this.http.get<BranchRow[]>('/api/v1/cmsVendor/locations');
+  getBranches(): Observable<BranchesResponse> {
+    return this.http.get<BranchesResponse>('/api/v1/cmsVendor/locations');
   }
 }
 

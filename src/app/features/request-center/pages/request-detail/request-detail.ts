@@ -408,9 +408,9 @@ export class RequestDetail {
 
   private loadVendorLocations(): void {
     this.branchesService.getBranches().subscribe({
-      next: (rows) =>
+      next: (response) =>
         this.vendorLocations.set(
-          (rows ?? []).map((row) => ({
+          (response.locations ?? []).map((row) => ({
             id: row?.locationId ?? '',
             branch_name: row?.locationName ?? '',
             branch_name_ar: row?.locationNameAr ?? '',

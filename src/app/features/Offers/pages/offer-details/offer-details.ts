@@ -310,9 +310,9 @@ export class OfferDetailsPage {
             this.offerLocations.set(res.locations);
           } else if (locationIds.length > 0) {
             this.branchesService.getBranches().subscribe({
-              next: (branches) => {
+              next: (response) => {
                 const idSet = new Set(locationIds.map((id) => String(id)));
-                const matched = (branches ?? [])
+                const matched = (response.locations ?? [])
                   .filter((b) => idSet.has(String(b.locationId)))
                   .map((b) => ({
                     id: b.locationId,
