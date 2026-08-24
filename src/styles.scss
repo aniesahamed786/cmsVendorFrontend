@@ -917,22 +917,26 @@ html body [data-pc-name="toggleswitch"],
   .p-sortable-column.p-highlight .p-sorticon {
     color: var(--app-primary) !important;
   }
+}
 
-  /* Paginator — single straight border-bottom from the row above, borderless & square paginator */
-  .p-paginator,
-  .p-datatable-paginator-bottom,
-  .p-datatable-paginator-top {
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: 0.75rem !important;
-    justify-content: center;
-    gap: 0.25rem;
-    min-height: 0 !important;
-    box-shadow: none !important;
-  }
+/* ---------------------------------------------------------------------------
+ * Unified Paginator (Standalone & In-Table)
+ * ------------------------------------------------------------------------ */
+.p-paginator,
+.p-datatable-paginator-bottom,
+.p-datatable-paginator-top {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.25rem !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
 
-  .p-paginator .p-select {
+  .p-select {
     width: auto !important;
     min-width: 4rem;
     height: 1.85rem !important;
@@ -940,29 +944,63 @@ html body [data-pc-name="toggleswitch"],
     font-size: 0.8125rem;
   }
 
-  .p-paginator .p-paginator-page,
-  .p-paginator .p-paginator-first,
-  .p-paginator .p-paginator-prev,
-  .p-paginator .p-paginator-next,
-  .p-paginator .p-paginator-last {
+  .p-paginator-page,
+  .p-paginator-first,
+  .p-paginator-prev,
+  .p-paginator-next,
+  .p-paginator-last {
     color: var(--app-muted) !important;
     background: transparent !important;
-    border-radius: 0 !important;
-    min-width: 1.85rem;
-    height: 1.85rem;
-    font-size: 0.8125rem;
+    border-radius: 50% !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: 2rem !important;
+    font-size: 0.8125rem !important;
     padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    cursor: pointer;
+    transition: background-color 160ms ease, color 160ms ease;
+
+    &:hover {
+      background: var(--app-primary-hover-soft) !important;
+      color: var(--app-text) !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    &:focus,
+    &:focus-visible {
+      border-radius: 50% !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
   }
 
-  .p-paginator .p-paginator-page.p-highlight {
+  /* Selected page: clean filled primary circle */
+  .p-paginator-page.p-highlight,
+  .p-paginator-page.p-paginator-page-selected,
+  .p-paginator-page-selected,
+  .p-paginator-page[aria-selected="true"],
+  .p-paginator-page[data-p-selected="true"],
+  .p-paginator-page[data-p-highlight="true"] {
     background: var(--app-primary) !important;
     color: #ffffff !important;
-    border-radius: 999px !important;
-  }
+    border-radius: 50% !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
+    outline: none !important;
 
-  .p-paginator .p-paginator-page:not(.p-highlight):hover {
-    background: var(--app-primary-hover-soft) !important;
-    color: var(--app-text) !important;
+    &:hover {
+      background: var(--app-primary-700) !important;
+      color: #ffffff !important;
+      border-radius: 50% !important;
+    }
   }
 }
 
