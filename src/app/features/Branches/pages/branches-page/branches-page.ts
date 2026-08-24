@@ -129,7 +129,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     this.mapContainer = ref;
     if (ref) {
       this.prepareMapContainer();
-      this.ensureMapReady();
     }
   }
 
@@ -217,7 +216,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.ensureMapReady();
+    setTimeout(() => this.ensureMapReady());
   }
 
   ngOnDestroy() {
