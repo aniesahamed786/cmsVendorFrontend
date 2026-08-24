@@ -127,15 +127,13 @@
       </section>
       } @else {
 
-      <!-- The entity in its own detail design, showing how it will look once approved.
-           Edited fields keep their natural position and are simply marked in place. -->
+      <!-- The entity in its own detail design, showing how it will look once approved. -->
       @switch (entityType()) {
         @case ('OFFER') {
         <!-- Same header the offer detail page shows, so a request is reviewed against the
              offer exactly as it will appear once approved. -->
         <app-offer-hero-card [offer]="offerView()" [vendor]="heroVendor()" />
-        <app-offer-details [offer]="offerView()" [locations]="offerLocations()"
-          [editedFields]="editedFieldSet()"></app-offer-details>
+        <app-offer-details [offer]="offerView()" [locations]="offerLocations()"></app-offer-details>
         }
         @case ('PROFILE') {
         <!-- Mirrors the vendor profile detail page: hero, description, the three contact
@@ -149,7 +147,6 @@
           <div class="request-detail__section-header">
             <span class="request-detail__section-icon"><i class="pi pi-info-circle"></i></span>
             <h3 class="request-detail__section-title">{{ 'profile.description' | translate }}</h3>
-            @if (isEdited('description','description_ar')) { <span class="request-detail__edited-badge request-detail__edited-badge--field">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
           </div>
           <div class="request-detail__profile-descriptions">
             <p class="request-detail__profile-text">{{ profile.description }}</p>
@@ -162,7 +159,6 @@
             <div class="request-detail__section-header">
               <span class="request-detail__section-icon"><i class="pi pi-user"></i></span>
               <h3 class="request-detail__section-title">{{ 'profile.representativeInformation' | translate }}</h3>
-              @if (isEdited('smeName','smePhone','smeEmail')) { <span class="request-detail__edited-badge request-detail__edited-badge--field">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
             </div>
             <div class="request-detail__profile-list">
               <div class="request-detail__profile-item"><i class="pi pi-user"></i><span>{{ profile.representativeName }}</span></div>
@@ -175,7 +171,6 @@
             <div class="request-detail__section-header">
               <span class="request-detail__section-icon"><i class="pi pi-id-card"></i></span>
               <h3 class="request-detail__section-title">{{ 'profile.businessContactDetails' | translate }}</h3>
-              @if (isEdited('mobile','email','telephone')) { <span class="request-detail__edited-badge request-detail__edited-badge--field">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
             </div>
             <div class="request-detail__profile-list">
               <div class="request-detail__profile-item"><i class="pi pi-phone"></i><span dir="ltr">{{ profile.businessPhone }}</span></div>
@@ -191,7 +186,6 @@
                   [style.maskImage]="getVendorIconMask('ic-Social-Media.svg')"></span>
               </span>
               <h3 class="request-detail__section-title">{{ 'profile.socialMedia' | translate }}</h3>
-              @if (isEdited('socialLinks')) { <span class="request-detail__edited-badge request-detail__edited-badge--field">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
             </div>
             @if (profile.socialLinks.length) {
             <div class="request-detail__profile-list">
@@ -222,7 +216,6 @@
           <div class="request-detail__section-header">
             <span class="request-detail__section-icon"><i class="pi pi-image"></i></span>
             <h3 class="request-detail__section-title">{{ 'profile.inspirationalImages' | translate }}</h3>
-            @if (isEdited('coverImage','coverImageLandscape','logo')) { <span class="request-detail__edited-badge request-detail__edited-badge--field">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
           </div>
           <div class="request-detail__profile-images">
             <div class="request-detail__profile-image-col">
@@ -246,28 +239,39 @@
         }
         }
         @case ('STORE') {
-        <section class="request-detail__card">
-          <div class="request-detail__section-header">
+        <section class="request-detail__card request-detail__branch-card">
+          <div class="request-detail__branch-head">
             <span class="request-detail__section-icon"><i class="pi pi-map-marker"></i></span>
-            <h3 class="request-detail__section-title">
-              {{ 'requestCenter.detail.section.branchDetails' | translate }}
-            </h3>
+            <div class="request-detail__branch-head-text">
+              <h3 class="request-detail__branch-title">
+                {{ 'requestCenter.detail.section.branchDetails' | translate }}
+              </h3>
+              <p class="request-detail__branch-subtitle">
+                {{ 'requestCenter.detail.section.branchSubtitle' | translate }}
+              </p>
+            </div>
           </div>
-          <div class="request-detail__fields">
+
+          <div class="request-detail__branch-grid">
             @for (field of branchView(); track field.key) {
-            <div class="request-detail__field" [class.request-detail__field--edited]="isEdited(field.key)">
-              <div class="request-detail__field-head">
-                <label class="request-detail__field-label">{{ field.labelKey | translate }}</label>
-                @if (isEdited(field.key)) {
-                <span class="request-detail__edited-badge request-detail__edited-badge--field">
-                  {{ 'requestCenter.detail.editedBadge' | translate }}
-                </span>
-                }
+            <div class="request-detail__branch-field"
+              [class.request-detail__branch-field--full]="isFullWidthField(field.key)">
+              <div class="request-detail__branch-field-head">
+                <span class="request-detail__branch-label">{{ field.labelKey | translate }}</span>
               </div>
-              <div class="request-detail__field-value" [attr.dir]="field.rtl ? 'rtl' : null">
-                @if (field.value) { {{ field.value }} }
-                @else { <span class="request-detail__field-value-empty">{{ 'requestCenter.detail.emptyValue' | translate }}</span> }
-              </div>
+
+              @if (field.key === 'link' && field.value) {
+              <a [href]="getExternalLinkHref(field.value)" target="_blank" rel="noopener noreferrer"
+                class="request-detail__branch-link">
+                {{ field.value }}
+              </a>
+              } @else {
+              <p class="request-detail__branch-value"
+                [class.request-detail__branch-value--arabic]="field.rtl"
+                [attr.dir]="field.rtl ? 'rtl' : null">
+                {{ field.value || '—' }}
+              </p>
+              }
             </div>
             }
           </div>
@@ -280,28 +284,17 @@
         <div class="request-detail__section-header">
           <span class="request-detail__section-icon"><i [class]="section.icon"></i></span>
           <h3 class="request-detail__section-title">{{ section.titleKey | translate }}</h3>
-          @if (section.edited) {
-          <span class="request-detail__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span>
-          }
         </div>
 
         <div class="request-detail__fields">
           @for (field of section.fields; track field.key) {
-          <!-- Every field of the entity renders, showing the value it will have if approved.
-               Only the ones this request touches get the accent bar + Edited chip. -->
-          <div class="request-detail__field" [class.request-detail__field--edited]="field.edited">
+          <div class="request-detail__field">
             <div class="request-detail__field-head">
               <label class="request-detail__field-label">{{ field.labelKey | translate }}</label>
-              @if (field.edited) {
-              <span class="request-detail__edited-badge request-detail__edited-badge--field">
-                {{ 'requestCenter.detail.editedBadge' | translate }}
-              </span>
-              }
             </div>
 
             <div
               class="request-detail__field-value"
-              [class.request-detail__field-value--new]="field.edited"
               [class.request-detail__field-value--multiline]="field.multiline"
               [attr.dir]="field.rtl ? 'rtl' : null">
               @if (field.value) { {{ field.value }} }
@@ -379,6 +372,66 @@
             </div>
           </ng-template>
         </p-timeline>
+        }
+      </section>
+
+      <section class="request-detail__card request-detail__summary-card">
+        <div class="request-detail__section-header">
+          <span class="request-detail__section-icon"><i class="pi pi-info-circle"></i></span>
+          <h3 class="request-detail__section-title">{{ 'requestCenter.detail.summary.title' | translate }}</h3>
+        </div>
+
+        @if (changesLoading()) {
+        <div class="request-detail__summary-list">
+          @for (line of [1, 2, 3, 4, 5, 6, 7]; track line) {
+          <div class="request-detail__summary-item">
+            <span class="app-skeleton request-detail__skeleton-label"></span>
+            <span class="app-skeleton request-detail__skeleton-summary-value"></span>
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="request-detail__summary-list">
+          <div class="request-detail__summary-item">
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.requestId' | translate }}</span>
+            <span class="request-detail__summary-value request-detail__summary-value--bold">
+              {{ requestIdParam || details()?.requestId || row()?.id }}
+            </span>
+          </div>
+
+          <div class="request-detail__summary-item">
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.status' | translate }}</span>
+            <div class="request-detail__summary-status">
+              @if (status(); as currentStatus) {
+              <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
+              } @else {
+              <span class="request-detail__summary-dash">--</span>
+              }
+            </div>
+          </div>
+
+          <div class="request-detail__summary-item">
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.type' | translate }}</span>
+            <span class="request-detail__summary-value request-detail__summary-value--bold">
+              {{ summaryRequestType() }}
+            </span>
+          </div>
+
+          <div class="request-detail__summary-item">
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.createdDate' | translate }}</span>
+            <div class="request-detail__summary-date">
+              <i class="pi pi-calendar"></i>
+              <span>{{ summaryCreatedDate() }}</span>
+            </div>
+          </div>
+
+          <div class="request-detail__summary-item">
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.lastUpdated' | translate }}</span>
+            <span class="request-detail__summary-value request-detail__summary-value--bold">
+              {{ summaryLastUpdated() }}
+            </span>
+          </div>
+        </div>
         }
       </section>
     </aside>

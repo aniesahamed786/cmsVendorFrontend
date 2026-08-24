@@ -241,6 +241,47 @@ export class RequestDetail {
 
   readonly requestTitle = computed(() => this.details()?.title ?? this.row()?.targetEntity ?? '');
 
+  readonly summaryCreatedDate = computed(() => {
+    this.i18n.loadSeq();
+    const raw = this.details()?.createdOn ?? this.row()?.date ?? '';
+    if (!raw) return '—';
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return String(raw);
+    return date.toLocaleDateString(this.i18n.lang() === 'ar' ? 'ar-SA' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  });
+
+  readonly summaryLastUpdated = computed(() => {
+    this.i18n.loadSeq();
+    const raw = this.details()?.updatedOn ?? this.row()?.timestamp ?? this.details()?.createdOn ?? '';
+    if (!raw) return '—';
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return String(raw);
+    const datePart = date.toLocaleDateString(this.i18n.lang() === 'ar' ? 'ar-SA' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    const timePart = date.toLocaleTimeString(this.i18n.lang() === 'ar' ? 'ar-SA' : 'en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    return `${datePart} • ${timePart}`;
+  });
+
+  readonly summaryRequestType = computed(() => {
+    this.i18n.loadSeq();
+    const type = this.details()?.requestType ?? (this.row()?.actionType === 'Created' ? 'CREATE' : 'UPDATE');
+    if (type === 'CREATE') {
+      return this.i18n.t('requestCenter.actionType.created');
+    }
+    return this.i18n.t('requestCenter.actionType.updated');
+  });
+
   constructor() {
     this.loadDetails();
     this.loadHistory();
@@ -429,27 +470,26 @@ export class RequestDetail {
       .sort((a, b) => new Date(a.createdOn).getTime() - new Date(b.createdOn).getTime())
       .map((entry, index) => {
         const meta = ACTION_META[String(entry.action ?? '').toUpperCase()];
+        const isSubmitted = String(entry.action ?? '').toUpperCase() === 'SUBMITTED';
         return {
           key: `${entry.action}-${index}`,
           title: meta ? t(meta.titleKey) : prettyRole(entry.action),
-          description: meta ? t(meta.descriptionKey) : '',
+          description: isSubmitted ? '' : (meta ? t(meta.descriptionKey) : ''),
           state: 'done' as const,
           tone: meta?.tone,
           date: this.formatTimestamp(entry.createdOn),
           // The admin's note is the vendor's only guidance on a rejection or return.
           reason: entry.remarks ?? undefined,
-          actor: prettyRole(entry.performedRole),
+          actor: isSubmitted ? undefined : prettyRole(entry.performedRole),
         };
       });
 
-    // Awaiting a decision — say so, rather than ending on "Submitted" with no sense of what
-    // happens next.
+    // Only on "SUBMITTED" the "Under Review" shows. Otherwise it should not come.
     if (status === 'SUBMITTED') {
       steps.push({
         key: 'underReview',
         title: t('underReview.title'),
-        state: 'active',
-        badge: t('underReview.badge'),
+        state: 'upcoming',
         description: t('underReview.description'),
       });
     }
@@ -457,19 +497,30 @@ export class RequestDetail {
     return steps;
   }
 
-  /** Timestamps arrive as ISO strings; the timeline is read by people. */
+  /** Timestamps arrive as ISO strings; formatted like "Aug. 18, 2026 | 1:04 pm". */
   private formatTimestamp(value: string | null | undefined): string {
     if (!value) return '';
     const date = new Date(value);
-    return Number.isNaN(date.getTime())
-      ? String(value)
-      : date.toLocaleString(this.i18n.lang() === 'ar' ? 'ar' : 'en', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        });
+    if (Number.isNaN(date.getTime())) return String(value);
+    if (this.i18n.lang() === 'ar') {
+      const datePart = date.toLocaleDateString('ar-SA', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+      const timePart = date.toLocaleTimeString('ar-SA', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+      return `${datePart} | ${timePart}`;
+    }
+    const datePart = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const timePart = date
+      .toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+      .toLowerCase();
+    const formattedDate = datePart.replace(/^(\w{3}) /, '$1. ');
+    return `${formattedDate} | ${timePart}`;
   }
 
   private buildTimeline(
@@ -488,48 +539,36 @@ export class RequestDetail {
       title: t('requestCenter.detail.timeline.submitted.title'),
       state: 'done',
       date: submittedAt,
-      description: t('requestCenter.detail.timeline.submitted.description'),
-    };
-    const reviewed: RequestTimelineStep = {
-      key: 'underReview',
-      title: t('requestCenter.detail.timeline.underReview.title'),
-      state: 'done',
-      description: t('requestCenter.detail.timeline.underReview.description'),
+      description: '',
     };
 
-    // Terminal outcomes render a resolved third step; anything still in flight shows the
-    // active "Under Review" + upcoming "Approved" steps.
+    // Terminal outcomes render a resolved second step (no Under Review step).
     const finalStep: Partial<Record<RequestStatus, RequestTimelineStep>> = {
       APPROVED: { key: 'final', title: t('requestCenter.detail.timeline.approved.title'), state: 'done', date: decidedOn, description: t('requestCenter.detail.timeline.approved.description') },
       REJECTED: { key: 'final', title: t('requestCenter.detail.timeline.rejected.title'), state: 'done', tone: 'danger', date: decidedOn, reason, description: t('requestCenter.detail.timeline.rejected.description') },
       RECALLED: { key: 'final', title: t('requestCenter.detail.timeline.recalled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.recalled.description') },
       CANCELLED: { key: 'final', title: t('requestCenter.detail.timeline.cancelled.title'), state: 'done', tone: 'muted', date: decidedOn, description: t('requestCenter.detail.timeline.cancelled.description') },
-      // RETURNED is not "still under review" — the admin has acted and handed it back, so it
-      // gets its own resolved step carrying the reason the vendor must address.
       RETURNED: { key: 'final', title: t('requestCenter.detail.timeline.returned.title'), state: 'done', tone: 'warning', date: decidedOn, reason, description: t('requestCenter.detail.timeline.returned.description') },
     };
 
     if (finalStep[status]) {
-      return [submitted, reviewed, finalStep[status]!];
+      return [submitted, finalStep[status]!];
     }
 
-    // DRAFT / SUBMITTED / RETURNED — still in flight.
-    return [
-      submitted,
-      {
-        key: 'underReview',
-        title: t('requestCenter.detail.timeline.underReview.title'),
-        state: 'active',
-        badge: t('requestCenter.detail.timeline.underReview.badge'),
-        description: t('requestCenter.detail.timeline.underReview.description'),
-      },
-      {
-        key: 'final',
-        title: t('requestCenter.detail.timeline.approved.title'),
-        state: 'upcoming',
-        description: t('requestCenter.detail.timeline.approved.description'),
-      },
-    ];
+    // Only on "SUBMITTED" the "Under Review" shows. Otherwise it should not come.
+    if (status === 'SUBMITTED') {
+      return [
+        submitted,
+        {
+          key: 'underReview',
+          title: t('requestCenter.detail.timeline.underReview.title'),
+          state: 'upcoming',
+          description: t('requestCenter.detail.timeline.underReview.description'),
+        },
+      ];
+    }
+
+    return [submitted];
   }
 
   markerModifier(step: RequestTimelineStep): 'done' | 'active' | 'upcoming' | 'danger' | 'muted' | 'warning' {
@@ -579,6 +618,10 @@ export class RequestDetail {
           this.afterRecall();
         },
       });
+  }
+
+  isFullWidthField(key: string): boolean {
+    return ['address', 'link', 'branchRepresentativeName', 'branchPhoneNumber'].includes(key);
   }
 
   /**

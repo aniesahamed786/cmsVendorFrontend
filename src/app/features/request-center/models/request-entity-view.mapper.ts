@@ -274,17 +274,25 @@ export interface BranchViewField {
 export function toBranchView(proposed: Record<string, unknown>): BranchViewField[] {
   const L = 'requestCenter.detail.field.';
 
-  // Kept to the fields the branch form/list actually work with. `geoPoint` and
-  // `settingsLocationId` are internal plumbing and are intentionally not shown.
+  const branchName = asString(proposed['branch_name'] ?? proposed['locationNameEn'] ?? proposed['locationName'] ?? proposed['name']);
+  const branchNameAr = asString(proposed['branch_name_ar'] ?? proposed['locationNameAr'] ?? proposed['nameAr']);
+  const country = asString(proposed['country']);
+  const region = asString(proposed['region']);
+  const city = asString(proposed['city']);
+  const address = asString(proposed['address']);
+  const link = asString(proposed['link'] ?? proposed['googleMapLink'] ?? proposed['mapLink']);
+  const representativeName = asString(proposed['branchRepresentativeName'] ?? proposed['representativeName'] ?? proposed['repName']);
+  const phoneNumber = asString(proposed['branchPhoneNumber'] ?? proposed['phoneNumber'] ?? proposed['phone'] ?? proposed['repPhone']);
+
   return [
-    { key: 'branch_name', labelKey: L + 'branchName', value: asString(proposed['branch_name']) },
-    { key: 'branch_name_ar', labelKey: L + 'branchNameAr', value: asString(proposed['branch_name_ar']), rtl: true },
-    { key: 'country', labelKey: L + 'country', value: asString(proposed['country']) },
-    { key: 'region', labelKey: L + 'region', value: asString(proposed['region']) },
-    { key: 'city', labelKey: L + 'city', value: asString(proposed['city']) },
-    { key: 'address', labelKey: L + 'address', value: asString(proposed['address']) },
-    { key: 'link', labelKey: L + 'mapLink', value: asString(proposed['link']) },
-    { key: 'branchRepresentativeName', labelKey: L + 'repName', value: asString(proposed['branchRepresentativeName']) },
-    { key: 'branchPhoneNumber', labelKey: L + 'phone', value: asString(proposed['branchPhoneNumber']) },
+    { key: 'branch_name', labelKey: L + 'branchName', value: branchName },
+    { key: 'branch_name_ar', labelKey: L + 'branchNameAr', value: branchNameAr, rtl: true },
+    { key: 'country', labelKey: L + 'country', value: country },
+    { key: 'region', labelKey: L + 'region', value: region },
+    { key: 'city', labelKey: L + 'city', value: city },
+    { key: 'address', labelKey: L + 'address', value: address },
+    { key: 'link', labelKey: L + 'mapLink', value: link },
+    { key: 'branchRepresentativeName', labelKey: L + 'branchRepName', value: representativeName },
+    { key: 'branchPhoneNumber', labelKey: L + 'branchPhone', value: phoneNumber },
   ];
 }
