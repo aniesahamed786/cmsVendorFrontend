@@ -178,10 +178,9 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const dark = this.themeService.isDarkMode();
+      this.themeService.isDarkMode();
       if (!this.map) return;
-      this.map.setOptions({ styles: this.getMapStyles(dark) });
-      this.scheduleJsMapRender();
+      void this.initMap(true);
     });
 
     // We also want to re-render pins if filteredBranches change
@@ -326,7 +325,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     return this.mapsInitPromise;
   }
 
-  private async initMap() {
+  private async initMap(recreate = false) {
     if (!this.mapContainer?.nativeElement) {
       setTimeout(() => void this.initMap(), 100);
       return;
@@ -334,9 +333,19 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
     const google = (window as any).google;
     if (!google?.maps) return;
-    if (this.map) {
+    if (this.map && !recreate) {
       this.scheduleJsMapRender();
       return;
+    }
+
+    if (recreate) {
+      for (const marker of this.markers) {
+        try { marker.setMap(null); } catch {}
+      }
+      this.markers = [];
+      try { this.zoomListener?.remove?.(); } catch {}
+      this.zoomListener = null;
+      this.map = null;
     }
 
     const center = { lat: 24.7136, lng: 46.6753 }; // Riyadh default
@@ -344,11 +353,8 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       const mapOptions: any = {
         center,
         zoom: 5,
-        styles: this.getMapStyles(),
+        colorScheme: this.themeService.isDarkMode() ? 'DARK' : 'LIGHT',
       };
-      if ((environment as any).googleMapId) {
-        mapOptions.mapId = (environment as any).googleMapId;
-      }
       this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
       this.zoomListener = this.map.addListener('zoom_changed', () => this.updateMarkerZoomState());
       this.debug.mapCreated = true;
@@ -521,24 +527,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private getThemeColor(variableName: string, fallback: string): string {
     const value = getComputedStyle(this.document.documentElement).getPropertyValue(variableName).trim();
     return value || fallback;
-  }
-
-  private getMapStyles(dark = this.themeService.isDarkMode()): any[] {
-    const base = [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }];
-    if (!dark) return base;
-    // Google Maps JS API style array — plain data consumed by the Maps
-    // renderer, not CSS. It cannot take `var(--app-*)` custom properties, so
-    // these hexes are a deliberate one-off dark palette, left untouched.
-    return [
-      ...base,
-      { elementType: 'geometry', stylers: [{ color: '#0f1b3d' }] },
-      { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-      { elementType: 'labels.text.fill', stylers: [{ color: '#8295c4' }] },
-      { elementType: 'labels.text.stroke', stylers: [{ color: '#0f1b3d' }] },
-      { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#2a3a66' }] },
-      { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#1c2c54' }] },
-      { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#070f29' }] },
-    ];
   }
 
   navigateBranchDetail(id:any){
