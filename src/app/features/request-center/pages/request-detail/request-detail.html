@@ -41,9 +41,6 @@
     @if (status(); as currentStatus) {
     <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
     }
-    @if (requestTitle()) {
-    <span class="request-detail__meta-title">{{ requestTitle() }}</span>
-    }
   </div>
 
   <!-- Two views of the same request: the entity as it would look approved, and the raw

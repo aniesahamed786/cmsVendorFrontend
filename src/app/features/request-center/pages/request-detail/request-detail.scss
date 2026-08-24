@@ -29,8 +29,9 @@
   }
 
   &__meta-id {
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.25;
     color: var(--app-text);
   }
 
@@ -1120,7 +1121,7 @@
     border-collapse: collapse;
   }
 
-  .p-datatable-thead > tr > th {
+  .p-datatable-thead>tr>th {
     background: color-mix(in srgb, var(--app-surface) 92%, var(--app-border) 8%);
     color: var(--app-muted);
     font-size: 0.8rem;
@@ -1132,7 +1133,7 @@
     white-space: nowrap;
   }
 
-  .p-datatable-tbody > tr > td {
+  .p-datatable-tbody>tr>td {
     padding: 1rem 1.25rem;
     color: var(--app-text);
     font-size: 0.9rem;
@@ -1140,11 +1141,11 @@
     vertical-align: middle;
   }
 
-  .p-datatable-tbody > tr:last-child > td {
+  .p-datatable-tbody>tr:last-child>td {
     border-bottom: none;
   }
 
-  .p-datatable-tbody > tr:hover {
+  .p-datatable-tbody>tr:hover {
     background: color-mix(in srgb, var(--app-surface) 96%, var(--app-primary) 4%);
   }
 }
