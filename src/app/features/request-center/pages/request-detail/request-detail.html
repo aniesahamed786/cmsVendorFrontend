@@ -217,152 +217,19 @@
       <!-- The entity in its own detail design, showing how it will look once approved. -->
       @switch (entityType()) {
         @case ('OFFER') {
-        <!-- Same header the offer detail page shows, so a request is reviewed against the
-             offer exactly as it will appear once approved. -->
-        <app-offer-hero-card [offer]="offerView()" [vendor]="heroVendor()" />
-        <app-offer-details [offer]="offerView()" [locations]="offerLocations()"></app-offer-details>
+        <app-request-offer-detail
+          [offer]="offerView()"
+          [vendor]="heroVendor()"
+          [locations]="offerLocations()"
+        />
         }
         @case ('PROFILE') {
-        <!-- Mirrors the vendor profile detail page: hero, description, the three contact
-             cards, then the cover images — same fields, same order. -->
         @if (profileView(); as profile) {
-        <!-- Same banner the vendor profile page shows, so a request is reviewed against the
-             profile exactly as it will appear once approved. -->
-        <app-vendor-hero-card [name]="profile.name" [nameAr]="profile.nameAr" [logo]="profile.logo" />
-
-        <section class="request-detail__card">
-          <div class="request-detail__section-header">
-            <span class="request-detail__section-icon"><i class="pi pi-info-circle"></i></span>
-            <h3 class="request-detail__section-title">{{ 'profile.description' | translate }}</h3>
-          </div>
-          <div class="request-detail__profile-descriptions">
-            <p class="request-detail__profile-text">{{ profile.description }}</p>
-            <p class="request-detail__profile-text" dir="rtl">{{ profile.descriptionAr }}</p>
-          </div>
-        </section>
-
-        <div class="request-detail__profile-grid">
-          <section class="request-detail__card">
-            <div class="request-detail__section-header">
-              <span class="request-detail__section-icon"><i class="pi pi-user"></i></span>
-              <h3 class="request-detail__section-title">{{ 'profile.representativeInformation' | translate }}</h3>
-            </div>
-            <div class="request-detail__profile-list">
-              <div class="request-detail__profile-item"><i class="pi pi-user"></i><span>{{ profile.representativeName }}</span></div>
-              <div class="request-detail__profile-item"><i class="pi pi-phone"></i><span dir="ltr">{{ profile.representativeContact }}</span></div>
-              <div class="request-detail__profile-item"><i class="pi pi-envelope"></i><span>{{ profile.representativeEmail }}</span></div>
-            </div>
-          </section>
-
-          <section class="request-detail__card">
-            <div class="request-detail__section-header">
-              <span class="request-detail__section-icon"><i class="pi pi-id-card"></i></span>
-              <h3 class="request-detail__section-title">{{ 'profile.businessContactDetails' | translate }}</h3>
-            </div>
-            <div class="request-detail__profile-list">
-              <div class="request-detail__profile-item"><i class="pi pi-phone"></i><span dir="ltr">{{ profile.businessPhone }}</span></div>
-              <div class="request-detail__profile-item"><i class="pi pi-envelope"></i><span>{{ profile.businessEmail }}</span></div>
-            </div>
-          </section>
-
-          <section class="request-detail__card">
-            <div class="request-detail__section-header">
-              <span class="request-detail__section-icon">
-                <span class="app-svg-icon request-detail__section-icon-svg"
-                  [style.webkitMaskImage]="getVendorIconMask('ic-Social-Media.svg')"
-                  [style.maskImage]="getVendorIconMask('ic-Social-Media.svg')"></span>
-              </span>
-              <h3 class="request-detail__section-title">{{ 'profile.socialMedia' | translate }}</h3>
-            </div>
-            @if (profile.socialLinks.length) {
-            <div class="request-detail__profile-list">
-              @for (link of profile.socialLinks; track $index) {
-                @if (getSocialLinkUrl(link)) {
-                <a class="request-detail__profile-item request-detail__profile-item--link"
-                  [href]="getExternalLinkHref(link)" target="_blank" rel="noopener noreferrer">
-                  @if (getSocialLinkIconPath(link); as socialIconPath) {
-                  <span class="app-svg-icon request-detail__social-icon"
-                    [class.request-detail__social-icon--linkedin]="getSocialPlatform(link) === 'linkedin'"
-                    [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
-                    [style.maskImage]="'url(' + socialIconPath + ')'"></span>
-                  } @else {
-                  <i class="pi pi-link"></i>
-                  }
-                  <span class="request-detail__social-text">{{ formatSocialLinkLabel(link) }}</span>
-                </a>
-                }
-              }
-            </div>
-            } @else {
-            <p class="request-detail__empty">{{ 'profile.noSocialLinks' | translate }}</p>
-            }
-          </section>
-        </div>
-
-        <section class="request-detail__card">
-          <div class="request-detail__section-header">
-            <span class="request-detail__section-icon"><i class="pi pi-image"></i></span>
-            <h3 class="request-detail__section-title">{{ 'profile.inspirationalImages' | translate }}</h3>
-          </div>
-          <div class="request-detail__profile-images">
-            <div class="request-detail__profile-image-col">
-              <span class="request-detail__profile-image-label">{{ 'profile.imageMobile' | translate }}</span>
-              <div class="request-detail__profile-image-box">
-                @if (profile.coverImage) {
-                <img [src]="imageUrl(profile.coverImage)" alt="" class="request-detail__profile-image" />
-                } @else { <i class="pi pi-image"></i> }
-              </div>
-            </div>
-            <div class="request-detail__profile-image-col">
-              <span class="request-detail__profile-image-label">{{ 'profile.imageDesktop' | translate }}</span>
-              <div class="request-detail__profile-image-box">
-                @if (profile.coverImageLandscape) {
-                <img [src]="imageUrl(profile.coverImageLandscape)" alt="" class="request-detail__profile-image" />
-                } @else { <i class="pi pi-image"></i> }
-              </div>
-            </div>
-          </div>
-        </section>
+        <app-request-profile-detail [profile]="profile" />
         }
         }
         @case ('STORE') {
-        <section class="request-detail__card request-detail__branch-card">
-          <div class="request-detail__branch-head">
-            <span class="request-detail__section-icon"><i class="pi pi-map-marker"></i></span>
-            <div class="request-detail__branch-head-text">
-              <h3 class="request-detail__branch-title">
-                {{ 'requestCenter.detail.section.branchDetails' | translate }}
-              </h3>
-              <p class="request-detail__branch-subtitle">
-                {{ 'requestCenter.detail.section.branchSubtitle' | translate }}
-              </p>
-            </div>
-          </div>
-
-          <div class="request-detail__branch-grid">
-            @for (field of branchView(); track field.key) {
-            <div class="request-detail__branch-field"
-              [class.request-detail__branch-field--full]="isFullWidthField(field.key)">
-              <div class="request-detail__branch-field-head">
-                <span class="request-detail__branch-label">{{ field.labelKey | translate }}</span>
-              </div>
-
-              @if (field.key === 'link' && field.value) {
-              <a [href]="getExternalLinkHref(field.value)" target="_blank" rel="noopener noreferrer"
-                class="request-detail__branch-link">
-                {{ field.value }}
-              </a>
-              } @else {
-              <p class="request-detail__branch-value"
-                [class.request-detail__branch-value--arabic]="field.rtl"
-                [attr.dir]="field.rtl ? 'rtl' : null">
-                {{ field.value || '—' }}
-              </p>
-              }
-            </div>
-            }
-          </div>
-        </section>
+        <app-request-branch-detail [fields]="branchView()" />
         }
         @default {
         <!-- Unknown entity type — fall back to the generic labelled field list. -->

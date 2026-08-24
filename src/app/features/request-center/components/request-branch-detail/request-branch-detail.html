@@ -1,0 +1,37 @@
+<section class="request-branch-detail">
+  <div class="request-branch-detail__head">
+    <span class="request-branch-detail__section-icon"><i class="pi pi-map-marker"></i></span>
+    <div class="request-branch-detail__head-text">
+      <h3 class="request-branch-detail__title">
+        {{ 'requestCenter.detail.section.branchDetails' | translate }}
+      </h3>
+      <p class="request-branch-detail__subtitle">
+        {{ 'requestCenter.detail.section.branchSubtitle' | translate }}
+      </p>
+    </div>
+  </div>
+
+  <div class="request-branch-detail__grid">
+    @for (field of fields(); track field.key) {
+    <div class="request-branch-detail__field"
+      [class.request-branch-detail__field--full]="isFullWidthField(field.key)">
+      <div class="request-branch-detail__field-head">
+        <span class="request-branch-detail__label">{{ field.labelKey | translate }}</span>
+      </div>
+
+      @if (field.key === 'link' && field.value) {
+      <a [href]="getExternalLinkHref(field.value)" target="_blank" rel="noopener noreferrer"
+        class="request-branch-detail__link">
+        {{ field.value }}
+      </a>
+      } @else {
+      <p class="request-branch-detail__value"
+        [class.request-branch-detail__value--arabic]="field.rtl"
+        [attr.dir]="field.rtl ? 'rtl' : null">
+        {{ field.value || '—' }}
+      </p>
+      }
+    </div>
+    }
+  </div>
+</section>
