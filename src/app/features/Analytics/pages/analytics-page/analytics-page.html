@@ -69,8 +69,12 @@
       @if (loading() || (redemptionChartMode() === 'day' && dayLoading())) {
       <span class="app-skeleton chart-skeleton"></span>
       } @else {
-      <p-chart styleClass="redemption-chart" type="bar" height="18rem" [data]="redemptionChartData()"
-        [options]="redemptionChartOptions()" [ariaLabel]="'analytics.location.chartLabel' | translate" />
+      <div class="chart-scroll-wrapper">
+        <div class="chart-container" [style.min-width]="chartMinWidth()">
+          <p-chart styleClass="redemption-chart" type="bar" height="18rem" [data]="redemptionChartData()"
+            [options]="redemptionChartOptions()" [ariaLabel]="'analytics.location.chartLabel' | translate" />
+        </div>
+      </div>
       }
     </section>
 
@@ -179,23 +183,59 @@
 
       <ng-template pTemplate="body" let-offer>
         <tr [class.is-clickable]="offer.id" (click)="viewOfferDetails(offer)">
-          <td><span class="analytics-table__row-title">{{ offer.title }}</span></td>
-          <td>{{ offer.discount }}</td>
-          <td>{{ offerTypeLabel(offer.type) }}</td>
-          <td>{{ offer.shares | number: '1.0-0':i18n.numberLocale }}</td>
-          <td>{{ offer.redemptions | number: '1.0-0':i18n.numberLocale }}</td>
-          <td>{{ offer.views | number: '1.0-0':i18n.numberLocale }}</td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.table.offer' | translate }}</span>
+            <span class="analytics-table__row-title">{{ offer.title }}</span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.table.discount' | translate }}</span>
+            <span class="analytics-table__cell-value">{{ offer.discount }}</span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.table.type' | translate }}</span>
+            <span class="analytics-table__cell-value">{{ offerTypeLabel(offer.type) }}</span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.common.shares' | translate }}</span>
+            <span class="analytics-table__cell-value">{{ offer.shares | number: '1.0-0':i18n.numberLocale }}</span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.common.redemptions' | translate }}</span>
+            <span class="analytics-table__cell-value">{{ offer.redemptions | number: '1.0-0':i18n.numberLocale }}</span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.common.views' | translate }}</span>
+            <span class="analytics-table__cell-value">{{ offer.views | number: '1.0-0':i18n.numberLocale }}</span>
+          </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="loadingbody">
         <tr class="analytics-table__row--skeleton">
-          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--title"></span></td>
-          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--discount"></span></td>
-          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--type"></span></td>
-          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span></td>
-          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span></td>
-          <td><span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span></td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.table.offer' | translate }}</span>
+            <span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--title"></span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.table.discount' | translate }}</span>
+            <span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--discount"></span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.table.type' | translate }}</span>
+            <span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--type"></span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.common.shares' | translate }}</span>
+            <span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.common.redemptions' | translate }}</span>
+            <span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span>
+          </td>
+          <td>
+            <span class="analytics-table__cell-label">{{ 'analytics.common.views' | translate }}</span>
+            <span class="app-skeleton analytics-table__skeleton-cell analytics-table__skeleton-cell--num"></span>
+          </td>
         </tr>
       </ng-template>
 

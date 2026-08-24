@@ -181,6 +181,35 @@
   }
 }
 
+.chart-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.25rem;
+
+  &::-webkit-scrollbar {
+    height: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--app-border);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--app-muted);
+  }
+}
+
+.chart-container {
+  min-width: 100%;
+  height: 18rem;
+  position: relative;
+}
+
 .redemption-chart {
   position: relative;
   display: block;
@@ -334,8 +363,17 @@
 ::ng-deep .analytics-table {
   margin: 0 -1.5rem -1.5rem;
 
-  .p-datatable-table {
-    min-width: 52rem;
+  .analytics-table__row-title {
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  .analytics-table__cell-label {
+    display: none;
+  }
+
+  .analytics-table__cell-value {
+    color: var(--app-text);
   }
 
   .analytics-table__row--skeleton {
@@ -365,6 +403,14 @@
   }
 }
 
+@media (min-width: 768px) {
+  ::ng-deep .analytics-table {
+    .p-datatable-table {
+      min-width: 48rem;
+    }
+  }
+}
+
 @media (max-width: 1100px) {
   .kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -373,6 +419,28 @@
   .analytics-grid--primary,
   .analytics-grid--secondary {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  ::ng-deep .analytics-table {
+    margin: 1rem 0 0 0 !important;
+
+    .p-datatable-table {
+      min-width: 0 !important;
+      width: 100% !important;
+    }
+
+    .analytics-table__cell-label {
+      display: inline-block;
+      font-size: 0.8125rem;
+      color: var(--app-muted);
+      font-weight: 500;
+    }
+
+    .analytics-table__row-title {
+      font-weight: 700;
+    }
   }
 }
 
@@ -409,20 +477,6 @@
 
     &__metric {
       grid-column: 2;
-    }
-  }
-
-  ::ng-deep .analytics-table {
-    margin: 0 -1.1rem -1.1rem;
-
-    .p-datatable-thead > tr > th:first-child,
-    .p-datatable-tbody > tr > td:first-child {
-      padding-inline-start: 1.1rem;
-    }
-
-    .p-datatable-thead > tr > th:last-child,
-    .p-datatable-tbody > tr > td:last-child {
-      padding-inline-end: 1.1rem;
     }
   }
 }

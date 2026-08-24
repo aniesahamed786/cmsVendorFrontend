@@ -54,6 +54,14 @@ export class AnalyticsPage implements OnInit {
   readonly animatedCount = this.countUp.animatedCount;
   private readonly animateTo = this.countUp.animateTo;
 
+  readonly chartMinWidth = computed(() => {
+    const count = this.redemptionChartMode() === 'day'
+      ? this.redemptionsByDay().length
+      : this.redemptionsByLocation().length;
+    if (count <= 0) return '100%';
+    return `max(100%, ${count * 4.75}rem)`;
+  });
+
   readonly redemptionChartData = computed<ChartData<'bar'>>(() => {
     this.i18n.loadSeq();
     const dark = this.theme.isDarkMode();
@@ -83,9 +91,9 @@ export class AnalyticsPage implements OnInit {
         backgroundColor: palette[600],
         hoverBackgroundColor: palette[500],
         borderRadius: 2,
-        maxBarThickness: 56,
-        categoryPercentage: 0.65,
-        barPercentage: 0.75,
+        maxBarThickness: 36,
+        categoryPercentage: 0.55,
+        barPercentage: 0.65,
       }],
     };
   });
@@ -130,7 +138,11 @@ export class AnalyticsPage implements OnInit {
           reverse: this.i18n.isRtl(),
           border: { display: false },
           grid: { display: false },
-          ticks: { color: surfaces.muted, font: { family: 'var(--font-family)', size: 13 } },
+          ticks: {
+            color: surfaces.muted,
+            font: { family: 'var(--font-family)', size: 12 },
+            autoSkip: false,
+          },
         },
         y: {
           beginAtZero: true,
