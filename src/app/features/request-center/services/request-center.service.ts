@@ -1,5 +1,11 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { RequestRow, RequestStatus, TERMINAL_STATUSES } from '../models/request.model';
+import {
+  COMPLETED_STATUSES,
+  INCOMPLETE_STATUSES,
+  RequestRow,
+  RequestStatus,
+  TERMINAL_STATUSES,
+} from '../models/request.model';
 
 /**
  * Holds the request rows fetched from GET /cmsVendor/requests so both the list page (table +
@@ -15,12 +21,16 @@ import { RequestRow, RequestStatus, TERMINAL_STATUSES } from '../models/request.
 export class RequestCenterService {
   private readonly rows = signal<RequestRow[]>([]);
 
-  /** Tab counts derived from the loaded rows: All / Completed (terminal) / Incomplete (in-flight). */
-  readonly tabCounts = computed(() => {
-    const all = this.rows();
-    const completed = all.filter((r) => r.completed).length;
-    return { all: all.length, completed, incomplete: all.length - completed };
+  /** Tab counts from server: All / Completed ("APPROVED", "REJECTED", "RECALLED", "CANCELLED") / Incomplete ("DRAFT", "SUBMITTED", "RETURNED"). */
+  readonly tabCounts = signal<{ all: number; completed: number; incomplete: number }>({
+    all: 0,
+    completed: 0,
+    incomplete: 0,
   });
+
+  setTabCounts(counts: { all: number; completed: number; incomplete: number }): void {
+    this.tabCounts.set(counts);
+  }
 
   setRows(rows: RequestRow[]): void {
     this.rows.set(rows);

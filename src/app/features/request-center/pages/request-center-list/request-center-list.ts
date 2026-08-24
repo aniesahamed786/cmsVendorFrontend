@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
+import { TableLazyLoadEvent } from 'primeng/table';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -10,7 +11,14 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
-import { RequestRow, RequestStats, RequestStatus } from '../../models/request.model';
+import {
+  COMPLETED_STATUSES,
+  INCOMPLETE_STATUSES,
+  RequestRow,
+  RequestStats,
+  RequestStatus,
+} from '../../models/request.model';
+import { ApiRequestStatus } from '../../models/request-api.model';
 import { toRequestRow } from '../../models/request.mapper';
 import { createCountUp } from '../../../../shared/animation/count-up';
 
@@ -36,7 +44,7 @@ export class RequestCenterList {
   readonly statsLoading = signal(true);
 
   readonly tabCounts = this.requestCenterService.tabCounts;
-  private readonly allRows = this.requestCenterService.getRows();
+  readonly rows = this.requestCenterService.getRows();
 
   // ---- Count-up stats (shared/animation/count-up.ts) -----------------------
   private readonly countUp = createCountUp();
@@ -51,18 +59,28 @@ export class RequestCenterList {
     this.animateTo('rejected', s.rejected);
   }
 
-  // The table skeletons while the list request is in flight (same pattern as Offers).
+  // The table skeletons while the list request is in flight.
   readonly tableLoading = signal(true);
+
+  // ---- Pagination / Sorting / Filtering state ------------------------------
+  readonly activeTab = signal<TabKey>('incomplete');
+  readonly statusFilter = signal<RequestStatus | null>(null);
+  readonly sortDropdown = signal<'newest' | 'oldest'>('newest');
+  readonly sortBy = signal<'requestId' | 'entityType' | 'requestType' | 'title' | 'status' | 'updatedOn'>('updatedOn');
+  readonly sortOrder = signal<'asc' | 'desc'>('desc');
+  readonly first = signal(0);
+  readonly pageSize = signal(10);
+  readonly totalRecords = signal(0);
 
   constructor() {
     this.loadMetrics();
+    this.loadTabCounts();
     this.loadRequests();
   }
 
   /**
    * Fetch the KPI counts. The cards skeleton while this is in flight (statsLoading), then the
-   * numbers count up once the data lands — the skeleton covers the fetch, the count-up covers
-   * the arrival, exactly as the Offers stat cards do.
+   * numbers count up once the data lands.
    */
   private loadMetrics(): void {
     this.statsLoading.set(true);
@@ -79,45 +97,100 @@ export class RequestCenterList {
   }
 
   /**
-   * Load the vendor's requests (GET /cmsVendor/requests) and hand them to the shared store.
-   * Tabs / status filter / sort / paging then run client-side over the loaded set — the
-   * table skeletons while the request is in flight.
+   * Fetch tab totals from the server for all 3 tabs so the counts stay accurate.
    */
-  private loadRequests(): void {
-    this.tableLoading.set(true);
-    // pageSize 100 (the backend cap) is ample for a single vendor's request history; move to
-    // server-side paging here if a vendor ever exceeds it.
-    this.api
-      .list({ pageSize: 100, sortBy: 'updatedOn', sortOrder: 'desc' })
-      .pipe(finalize(() => this.tableLoading.set(false)))
-      .subscribe({
-        next: (res) => this.requestCenterService.setRows(res.data.map(toRequestRow)),
-        error: (err) => console.error('Failed to load requests', err),
-      });
+  private loadTabCounts(): void {
+    forkJoin({
+      incomplete: this.api.list({ pageSize: 1, status: INCOMPLETE_STATUSES }),
+      completed: this.api.list({ pageSize: 1, status: COMPLETED_STATUSES }),
+      all: this.api.list({ pageSize: 1 }),
+    }).subscribe({
+      next: ({ incomplete, completed, all }) => {
+        this.requestCenterService.setTabCounts({
+          incomplete: incomplete.total,
+          completed: completed.total,
+          all: all.total,
+        });
+      },
+      error: (err) => console.error('Failed to load tab counts', err),
+    });
   }
 
-  // ---- Tabs / filters / sort ------------------------------------------------
-  readonly activeTab = signal<TabKey>('incomplete');
+  /**
+   * Fetch paginated requests from GET /api/v1/cmsVendor/requests according to the active tab,
+   * status filter, sort field, sort order, and page offset.
+   */
+  loadRequests(): void {
+    this.tableLoading.set(true);
 
-  readonly statusFilter = signal<RequestStatus | null>(null);
-  readonly sortBy = signal<'newest' | 'oldest'>('newest');
-  readonly first = signal(0);
-  readonly pageRows = signal(10);
+    const tab = this.activeTab();
+    const filter = this.statusFilter();
+
+    let statusQuery: ApiRequestStatus[] | ApiRequestStatus | undefined;
+    if (filter) {
+      statusQuery = filter;
+    } else if (tab === 'incomplete') {
+      statusQuery = INCOMPLETE_STATUSES;
+    } else if (tab === 'completed') {
+      statusQuery = COMPLETED_STATUSES;
+    } else {
+      statusQuery = undefined;
+    }
+
+    const page = Math.floor(this.first() / this.pageSize()) + 1;
+
+    this.api
+      .list({
+        page,
+        pageSize: this.pageSize(),
+        sortBy: this.sortBy(),
+        sortOrder: this.sortOrder(),
+        status: statusQuery,
+      })
+      .pipe(finalize(() => this.tableLoading.set(false)))
+      .subscribe({
+        next: (res) => {
+          const mapped = res.data.map(toRequestRow);
+          this.requestCenterService.setRows(mapped);
+          this.totalRecords.set(res.total);
+
+          // If no sub-filter is applied, synchronize active tab count
+          if (!filter) {
+            this.tabCounts.update((counts) => {
+              if (tab === 'incomplete') return { ...counts, incomplete: res.total };
+              if (tab === 'completed') return { ...counts, completed: res.total };
+              if (tab === 'all') return { ...counts, all: res.total };
+              return counts;
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load requests', err);
+          this.requestCenterService.setRows([]);
+          this.totalRecords.set(0);
+        },
+      });
+  }
 
   setTab(tab: TabKey): void {
     this.activeTab.set(tab);
     this.statusFilter.set(null);
     this.first.set(0);
+    this.loadRequests();
   }
 
   onStatusFilterChange(val: RequestStatus | null): void {
     this.statusFilter.set(val);
     this.first.set(0);
+    this.loadRequests();
   }
 
   onSortByChange(val: 'newest' | 'oldest'): void {
-    this.sortBy.set(val);
+    this.sortDropdown.set(val);
+    this.sortBy.set('updatedOn');
+    this.sortOrder.set(val === 'newest' ? 'desc' : 'asc');
     this.first.set(0);
+    this.loadRequests();
   }
 
   private options<T>(entries: [key: string, value: T][]) {
@@ -136,22 +209,26 @@ export class RequestCenterList {
 
     if (tab === 'incomplete') {
       entries.push(
+        ['requestCenter.value.draft', 'DRAFT'],
         ['requestCenter.value.submitted', 'SUBMITTED'],
         ['requestCenter.value.returned', 'RETURNED'],
-        ['requestCenter.value.draft', 'DRAFT'],
       );
     } else if (tab === 'completed') {
       entries.push(
         ['requestCenter.value.approved', 'APPROVED'],
         ['requestCenter.value.rejected', 'REJECTED'],
+        ['requestCenter.value.recalled', 'RECALLED'],
+        ['requestCenter.value.cancelled', 'CANCELLED'],
       );
     } else {
       entries.push(
+        ['requestCenter.value.draft', 'DRAFT'],
         ['requestCenter.value.submitted', 'SUBMITTED'],
         ['requestCenter.value.returned', 'RETURNED'],
-        ['requestCenter.value.draft', 'DRAFT'],
         ['requestCenter.value.approved', 'APPROVED'],
         ['requestCenter.value.rejected', 'REJECTED'],
+        ['requestCenter.value.recalled', 'RECALLED'],
+        ['requestCenter.value.cancelled', 'CANCELLED'],
       );
     }
 
@@ -166,41 +243,50 @@ export class RequestCenterList {
   readonly activeFilterCount = computed(() => {
     let count = 0;
     if (this.statusFilter()) count++;
-    if (this.sortBy() !== 'newest') count++;
+    if (this.sortDropdown() !== 'newest') count++;
     return count;
   });
 
   clearFilters(): void {
     this.statusFilter.set(null);
-    this.sortBy.set('newest');
+    this.sortDropdown.set('newest');
+    this.sortBy.set('updatedOn');
+    this.sortOrder.set('desc');
     this.first.set(0);
+    this.loadRequests();
   }
 
-  onPageChange(event: { first?: number; rows?: number }): void {
+  onLazyLoad(event: TableLazyLoadEvent): void {
+    const rows = event.rows ?? this.pageSize();
+    const first = event.first ?? 0;
+    this.pageSize.set(rows);
+    this.first.set(first);
+
+    if (event.sortField) {
+      const sortFieldKey = Array.isArray(event.sortField) ? event.sortField[0] : event.sortField;
+      const fieldMap: Record<string, 'requestId' | 'entityType' | 'requestType' | 'title' | 'status' | 'updatedOn'> = {
+        requestId: 'requestId',
+        entityType: 'entityType',
+        requestType: 'requestType',
+        actionType: 'requestType',
+        title: 'title',
+        targetEntity: 'title',
+        status: 'status',
+        updatedOn: 'updatedOn',
+        date: 'updatedOn',
+      };
+      this.sortBy.set(fieldMap[sortFieldKey] ?? 'updatedOn');
+      this.sortOrder.set(event.sortOrder === 1 ? 'asc' : 'desc');
+    }
+
+    this.loadRequests();
+  }
+
+  onMobilePageChange(event: { first?: number; rows?: number }): void {
     this.first.set(event.first ?? 0);
-    this.pageRows.set(event.rows ?? 10);
+    this.pageSize.set(event.rows ?? 10);
+    this.loadRequests();
   }
-
-  readonly rows = computed(() => {
-    const tab = this.activeTab();
-    const status = this.statusFilter();
-    const sort = this.sortBy();
-
-    const filtered = this.allRows().filter((r) => {
-      if (tab === 'completed' && !r.completed) return false;
-      if (tab === 'incomplete' && r.completed) return false;
-      if (status && r.status !== status) return false;
-      return true;
-    });
-
-    return [...filtered].sort((a, b) =>
-      sort === 'newest' ? b.date.getTime() - a.date.getTime() : a.date.getTime() - b.date.getTime(),
-    );
-  });
-
-  readonly pagedRows = computed(() =>
-    this.rows().slice(this.first(), this.first() + this.pageRows()),
-  );
 
   /** While loading, feed the desktop table 5 falsy rows so PrimeNG renders the skeleton body. */
   readonly tableRows = computed(() => (this.tableLoading() ? new Array(5).fill(null) : this.rows()));
@@ -254,12 +340,10 @@ export class RequestCenterList {
       .recall(row.id)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterMutation(row, 'recall'),
+        next: () => this.afterMutation('recall'),
         error: (err) => {
           console.error('Recall request failed', err);
-          // Optimistically reflect the change so the mock-seeded list stays usable until the
-          // real list endpoint lands; the backend transition rules remain the source of truth.
-          this.afterMutation(row, 'recall');
+          this.afterMutation('recall');
         },
       });
   }
@@ -279,23 +363,24 @@ export class RequestCenterList {
       .cancel(row.id)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterMutation(row, 'delete'),
+        next: () => this.afterMutation('delete'),
         error: (err) => {
           console.error('Cancel request failed', err);
-          this.afterMutation(row, 'delete');
+          this.afterMutation('delete');
         },
       });
   }
 
   /** Apply the local list change and close the matching dialog once its call settles. */
-  private afterMutation(row: RequestRow, kind: 'recall' | 'delete'): void {
+  private afterMutation(kind: 'recall' | 'delete'): void {
     if (kind === 'recall') {
-      this.requestCenterService.recall(row.rowKey);
       this.recallTarget.set(null);
     } else {
-      this.requestCenterService.remove(row.rowKey);
       this.deleteTarget.set(null);
     }
+    this.loadRequests();
+    this.loadTabCounts();
+    this.loadMetrics();
   }
 
   statusClass(status: RequestStatus): string {

@@ -86,7 +86,7 @@
 
           <div class="app-filter-group">
             <label class="app-filter-label">{{ 'requestCenter.sort.label' | translate }}</label>
-            <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="onSortByChange($event)"
+            <p-select [options]="sortOptions()" [ngModel]="sortDropdown()" (ngModelChange)="onSortByChange($event)"
               optionLabel="label" optionValue="value"
               styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
           </div>
@@ -106,7 +106,7 @@
 
       <div class="app-filter-group">
         <label class="app-filter-label">{{ 'requestCenter.sort.label' | translate }}</label>
-        <p-select [options]="sortOptions()" [ngModel]="sortBy()" (ngModelChange)="onSortByChange($event)"
+        <p-select [options]="sortOptions()" [ngModel]="sortDropdown()" (ngModelChange)="onSortByChange($event)"
           optionLabel="label" optionValue="value"
           styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" appendTo="body" />
       </div>
@@ -114,16 +114,17 @@
 
     <!-- Desktop View: Table (matches Offers/Branches/Activities standard) -->
     <div class="request-center__desktop-view">
-      <p-table [value]="tableRows()" [paginator]="!tableLoading()" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+      <p-table [value]="tableRows()" [lazy]="true" [paginator]="!tableLoading()" [totalRecords]="totalRecords()"
+        [first]="first()" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]" (onLazyLoad)="onLazyLoad($event)"
         paginatorDropdownAppendTo="body" styleClass="request-center__table">
         <ng-template pTemplate="header">
           <tr>
-            <th>{{ 'requestCenter.column.requestId' | translate }}</th>
-            <th>{{ 'requestCenter.column.requestType' | translate }}</th>
-            <th pSortableColumn="actionType">{{ 'requestCenter.column.actionType' | translate }} <p-sortIcon field="actionType" /></th>
-            <th>{{ 'requestCenter.column.targetEntity' | translate }}</th>
-            <th pSortableColumn="date">{{ 'requestCenter.column.timestamp' | translate }} <p-sortIcon field="date" /></th>
-            <th>{{ 'requestCenter.column.status' | translate }}</th>
+            <th pSortableColumn="requestId">{{ 'requestCenter.column.requestId' | translate }} <p-sortIcon field="requestId" /></th>
+            <th pSortableColumn="entityType">{{ 'requestCenter.column.requestType' | translate }} <p-sortIcon field="entityType" /></th>
+            <th pSortableColumn="requestType">{{ 'requestCenter.column.actionType' | translate }} <p-sortIcon field="requestType" /></th>
+            <th pSortableColumn="title">{{ 'requestCenter.column.targetEntity' | translate }} <p-sortIcon field="title" /></th>
+            <th pSortableColumn="updatedOn">{{ 'requestCenter.column.timestamp' | translate }} <p-sortIcon field="updatedOn" /></th>
+            <th pSortableColumn="status">{{ 'requestCenter.column.status' | translate }} <p-sortIcon field="status" /></th>
             <th>{{ 'requestCenter.column.action' | translate }}</th>
           </tr>
         </ng-template>
@@ -184,7 +185,7 @@
         </div>
         }
         } @else {
-        @for (row of pagedRows(); track row.rowKey) {
+        @for (row of rows(); track row.rowKey) {
         <div class="request-center__ticket" [routerLink]="['/request-center', row.rowKey]">
           <div class="request-center__ticket-top">
             <div class="request-center__ticket-meta">
@@ -213,10 +214,10 @@
         }
       </div>
 
-      @if (!tableLoading() && rows().length > 0) {
+      @if (!tableLoading() && totalRecords() > 0) {
       <div class="request-center__paginator-wrapper">
-        <p-paginator [first]="first()" [rows]="pageRows()" [totalRecords]="rows().length"
-          [rowsPerPageOptions]="[5, 10, 20, 50]" (onPageChange)="onPageChange($event)"
+        <p-paginator [first]="first()" [rows]="pageSize()" [totalRecords]="totalRecords()"
+          [rowsPerPageOptions]="[5, 10, 20, 50]" (onPageChange)="onMobilePageChange($event)"
           paginatorDropdownAppendTo="body" />
       </div>
       }
