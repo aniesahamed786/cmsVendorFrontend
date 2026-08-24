@@ -48,19 +48,53 @@ export class MessagingCenterTicketDetails {
 
   private readonly thread = viewChild<ElementRef<HTMLElement>>('thread');
 
+  readonly isHeaderCollapsed = signal(false);
+  private lastScrollTop = 0;
+
   constructor() {
     // Scroll to the newest message whenever the thread changes.
     effect(() => {
       this.messages();
       this.ticket();
-      untracked(() => setTimeout(() => this.scrollToBottom(), 0));
+      untracked(() => {
+        this.isHeaderCollapsed.set(false);
+        setTimeout(() => this.scrollToBottom(), 0);
+      });
     });
+  }
 
+  onThreadScroll(event: Event): void {
+    const el = event.target as HTMLElement;
+    if (!el) return;
 
+    const currentScrollTop = el.scrollTop;
+    const delta = currentScrollTop - this.lastScrollTop;
+
+    if (currentScrollTop <= 15) {
+      this.isHeaderCollapsed.set(false);
+    } else if (delta > 10) {
+      this.isHeaderCollapsed.set(true);
+    } else if (delta < -10) {
+      this.isHeaderCollapsed.set(false);
+    }
+
+    this.lastScrollTop = currentScrollTop;
   }
 
   onBack(): void {
     this.store.selectedTicketId.set(null);
+  }
+
+  statusBadgeClass(status: string): string {
+    switch (status) {
+      case 'In Progress':
+        return 'mc-details__badge--progress';
+      case 'Closed':
+        return 'mc-details__badge--closed';
+      case 'New':
+      default:
+        return 'mc-details__badge--new';
+    }
   }
 
   statusKey(status: TicketStatus): string {
