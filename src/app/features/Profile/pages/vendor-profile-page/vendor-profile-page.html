@@ -111,14 +111,7 @@
     </div>
 
     <div class="vendor-profile-page__preview-column">
-      <div class="preview-wrapper">
-        <div class="phone-mockup">
-          <div class="app-skeleton vendor-profile-page__skeleton-preview-screen"></div>
-        </div>
-        <div class="language-toggle-container">
-          <div class="app-skeleton vendor-profile-page__skeleton-preview-toggle"></div>
-        </div>
-      </div>
+      <app-vendor-preview [loading]="true" />
     </div>
   </div>
   } @else if (profile(); as vendor) {

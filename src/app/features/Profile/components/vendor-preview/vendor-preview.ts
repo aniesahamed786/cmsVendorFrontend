@@ -11,17 +11,19 @@ import { resolveAssetUrl } from '../../../../shared/utils/resolve-asset-url';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorSocialLink } from '../../../vendors/models/createNewVendor';
+import { MobilePreview } from '../../../../shared/Components/mobile-preview/mobile-preview';
 
 @Component({
   selector: 'app-vendor-preview',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, TranslatePipe, MobilePreview],
   templateUrl: './vendor-preview.html',
   styleUrl: './vendor-preview.scss',
 })
 export class VendorPreview implements OnChanges {
   private readonly document = inject(DOCUMENT);
 
+  @Input() loading = false;
   @Input() isDialog = false;
   @Input() name: string | null = null;
   @Input() nameAr: string | null = null;
@@ -60,7 +62,7 @@ export class VendorPreview implements OnChanges {
     setTimeout(() => {
       const el = this.document.getElementById(sectionId);
       if (el) {
-        const container = el.closest('.vendor-preview__screen') as HTMLElement;
+        const container = el.closest('.mobile-preview__screen, .vendor-preview__screen') as HTMLElement;
         if (container) {
           const containerRect = container.getBoundingClientRect();
           const elRect = el.getBoundingClientRect();
@@ -148,69 +150,88 @@ export class VendorPreview implements OnChanges {
       const path = this.resolveSocialIconPathFromType(platform);
       if (path) return path;
     }
+
     const value = typeof link === 'string' ? link : link?.url ?? '';
-    const lowerValue = value.toLowerCase();
-    if (lowerValue.includes('instagram.com')) return this.resolveSocialAsset('ic-instagram.svg');
-    if (lowerValue.includes('facebook.com') || lowerValue.includes('fb.com')) return this.resolveSocialAsset('ic-facebook.svg');
-    if (lowerValue.includes('x.com') || lowerValue.includes('twitter.com')) return this.resolveSocialAsset('X.svg');
-    if (lowerValue.includes('whatsapp') || lowerValue.includes('wa.me')) return this.resolveSocialAsset('whatspp.svg');
-    if (lowerValue.includes('tiktok.com')) return this.resolveSocialAsset('tiktok.svg');
-    if (lowerValue.includes('linkedin.com')) return this.resolveSocialAsset('linkedin.svg');
-    if (lowerValue.includes('youtube.com') || lowerValue.includes('youtu.be')) return this.resolveSocialAsset('youtube.svg');
-    if (lowerValue.includes('snapchat.com')) return this.resolveSocialAsset('ic-snapchat.svg');
+    const domain = value
+      .replace(/^https?:\/\//i, '')
+      .replace(/^www\./i, '')
+      .split('/')[0]
+      .toLowerCase();
+
+    if (domain.includes('facebook') || domain.includes('fb.me')) {
+      return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-facebook.svg');
+    }
+    if (domain.includes('instagram') || domain.includes('instagr.am')) {
+      return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-instagram.svg');
+    }
+    if (domain.includes('twitter') || domain.includes('x.com')) {
+      return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-twitter.svg');
+    }
+    if (domain.includes('linkedin')) {
+      return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-linkedin.svg');
+    }
+    if (domain.includes('youtube') || domain.includes('youtu.be')) {
+      return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-youtube.svg');
+    }
+    if (domain.includes('tiktok')) {
+      return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-tiktok.svg');
+    }
+    if (domain.includes('snapchat')) {
+      return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-snapchat.svg');
+    }
     return null;
   }
 
-  private resolveSocialIconPathFromType(type: string): string | null {
-    switch (type) {
-      case 'instagram': return this.resolveSocialAsset('ic-instagram.svg');
-      case 'linkedin': return this.resolveSocialAsset('linkedin.svg');
-      case 'facebook': return this.resolveSocialAsset('ic-facebook.svg');
-      case 'tiktok': return this.resolveSocialAsset('tiktok.svg');
-      case 'youtube': return this.resolveSocialAsset('youtube.svg');
-      case 'snapchat': return this.resolveSocialAsset('ic-snapchat.svg');
-      case 'whatsapp': return this.resolveSocialAsset('whatspp.svg');
-      case 'x':
-      case 'twitter': return this.resolveSocialAsset('X.svg');
-      default: return null;
-    }
-  }
-
-  getSocialLinkIconClass(link?: unknown): string {
-    const platform = typeof link === 'object' && link ? (link as VendorSocialLink).platform?.toLowerCase() : null;
-    if (platform === 'linkedin') {
-      return 'vendor-preview__social-icon vendor-preview__social-icon--linkedin';
-    }
+  getSocialLinkIconClass(link: string | VendorSocialLink): string {
     return 'vendor-preview__social-icon';
   }
 
-  getLocationName(loc: Record<string, string>): string {
-    if (this.language() === 'ar') {
-      return loc['nameAr'] || loc['branchNameAr'] || loc['name'] || 'اسم الفرع';
+  private resolveSocialIconPathFromType(platform: string): string | null {
+    const normalized = platform.trim().toLowerCase();
+    switch (normalized) {
+      case 'facebook':
+        return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-facebook.svg');
+      case 'instagram':
+        return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-instagram.svg');
+      case 'twitter':
+      case 'x':
+        return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-twitter.svg');
+      case 'linkedin':
+        return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-linkedin.svg');
+      case 'youtube':
+        return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-youtube.svg');
+      case 'tiktok':
+        return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-tiktok.svg');
+      case 'snapchat':
+        return resolveAssetUrl(this.document, 'assets/svg/vendor-preview/ic-social-snapchat.svg');
+      default:
+        return null;
     }
-    return loc['nameEn'] || loc['branchName'] || loc['name'] || 'Branch Name';
-  }
-
-  getLocationCity(loc: Record<string, string>): string {
-    if (this.language() === 'ar') {
-      return loc['city_ar'] || loc['city'] || 'الخبر';
-    }
-    return loc['city'] || 'Khobar';
   }
 
   formatPhone(): string {
-    return this.phone || '+966 123 456-7890';
+    return this.phone?.trim() ? this.phone.trim() : '+966 00 000 0000';
   }
 
   formatEmail(): string {
-    return this.email || 'vendor@email.com';
+    return this.email?.trim() ? this.email.trim() : 'vendor@example.com';
   }
 
   formatWebsite(): string {
-    return this.website || 'www.vendor.com';
+    return this.website?.trim() ? this.website.trim() : 'www.vendor-website.com';
   }
 
-  private resolveSocialAsset(iconFile: string): string {
-    return resolveAssetUrl(this.document, `svg/social-media/${iconFile}`);
+  getLocationName(loc: any): string {
+    if (this.language() === 'ar') {
+      return loc?.branchNameAr || loc?.branchName || loc?.name_ar || loc?.name || 'فرع';
+    }
+    return loc?.branchName || loc?.branchNameAr || loc?.name || loc?.name_ar || 'Branch';
+  }
+
+  getLocationCity(loc: any): string {
+    if (this.language() === 'ar') {
+      return loc?.cityAr || loc?.city || loc?.addressAr || loc?.address || '';
+    }
+    return loc?.city || loc?.cityAr || loc?.address || loc?.addressAr || '';
   }
 }

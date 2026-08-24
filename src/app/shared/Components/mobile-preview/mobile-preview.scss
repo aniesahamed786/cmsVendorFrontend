@@ -97,3 +97,130 @@
   color: var(--app-text);
   font-weight: 700;
 }
+
+/* ==========================================================================
+   Skeleton loader
+   ========================================================================== */
+.mobile-preview__skeleton {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: 1rem;
+}
+
+.mobile-preview__skeleton-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.25rem;
+  width: 100%;
+}
+
+.mobile-preview__skeleton-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.mobile-preview__skeleton-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.mobile-preview__skeleton-hero-frame {
+  position: relative;
+  width: 100%;
+  padding: 1rem 1rem 0;
+}
+
+.mobile-preview__skeleton-banner {
+  width: 100%;
+  aspect-ratio: 2.39 / 1;
+}
+
+.mobile-preview__skeleton-logo {
+  position: absolute;
+  bottom: -1.25rem;
+  inset-inline-start: 1.5rem;
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--app-border);
+}
+
+.mobile-preview__skeleton-body {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.25rem 1rem;
+  gap: 0.75rem;
+}
+
+.mobile-preview__skeleton-line {
+  height: 0.75rem;
+
+  &--title {
+    height: 1.5rem;
+    width: 65%;
+  }
+
+  &--subtitle {
+    height: 1rem;
+    width: 45%;
+  }
+
+  &--text {
+    height: 0.75rem;
+    width: 90%;
+  }
+
+  &--text-short {
+    height: 0.75rem;
+    width: 75%;
+  }
+
+  &--date {
+    height: 0.65rem;
+    width: 40%;
+    margin-bottom: 0.25rem;
+  }
+
+  &--section-title {
+    height: 1rem;
+    width: 50%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.mobile-preview__skeleton-button {
+  width: 100%;
+  height: 2.5rem;
+  margin-top: 0.5rem;
+}
+
+.mobile-preview__skeleton-row {
+  display: flex;
+  justify-content: center;
+  gap: 3.5rem;
+  padding-top: 0.5rem;
+}
+
+.mobile-preview__skeleton-action {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.mobile-preview__skeleton-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.25rem;
+  gap: 0.75rem;
+  border-top: 1px solid var(--app-border);
+}
+
+.mobile-preview__skeleton-card {
+  width: 100%;
+  height: 3.5rem;
+}
+
+.mobile-preview__skeleton-toggle {
+  width: 100%;
+  height: 2.25rem;
+}

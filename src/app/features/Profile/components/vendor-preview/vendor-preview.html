@@ -1,229 +1,154 @@
-<!-- mobile-style preview -->
-<aside class="vendor-preview" [class.vendor-preview--inline]="!isDialog"
-    [attr.aria-label]="'profile.previewAriaLabel' | translate">
-
-    <div class="preview-wrapper" [class.vendor-preview__wrapper--relative]="isDialog">
-
-        <!-- Mobile Device Mockup Container -->
-        <div class="phone-mockup">
-
-            <!-- App Header / Status Bar -->
-            <div class="vendor-preview__statusbar">
-                <span>9:41</span>
-                <div class="vendor-preview__statusbar-icons">
-                    <i class="pi pi-wifi"></i>
-                    <i class="pi pi-battery-full vendor-preview__battery"></i>
-                </div>
-            </div>
-
-            <!-- Top Actions Bar -->
-            <div class="vendor-preview__topbar">
-                <i class="pi pi-chevron-left vendor-preview__topbar-icon vendor-preview__topbar-icon--lg"></i>
-                <div class="vendor-preview__topbar-actions">
-                    <i class="pi pi-bell vendor-preview__topbar-icon"></i>
-                    <i class="pi pi-map-marker vendor-preview__topbar-icon"></i>
-                </div>
-            </div>
-
-            <!-- Main Scrollable Content -->
-            <div class="vendor-preview__screen custom-scrollbar" [attr.dir]="language() === 'ar' ? 'rtl' : 'ltr'">
-
-                <!-- Hero Section -->
-                <div class="vendor-preview__hero">
-                    @if (getVendorBanner(); as banner) {
-                    <img [src]="banner" class="vendor-preview__banner" alt="Banner"
-                        (error)="markBannerImageFailed()" />
-                    } @else {
-                    <div class="vendor-preview__banner-fallback">
-                        <i class="pi pi-image vendor-preview__banner-fallback-icon"></i>
-                    </div>
-                    }
-                    <!-- Overlapping Logo -->
-                    <div class="vendor-preview__logo">
-                        @if (getVendorLogo(); as logo) {
-                        <img [src]="logo" class="vendor-preview__logo-img" alt="Logo"
-                            (error)="markLogoImageFailed()" />
-                        } @else {
-                        <div class="vendor-preview__logo-fallback">
-                            <i class="pi pi-image vendor-preview__logo-fallback-icon"></i>
-                        </div>
-                        }
-                    </div>
-                </div>
-
-                <!-- Vendor Identity -->
-                <div id="preview-section-identity" class="vendor-preview__identity">
-                    <h1 class="vendor-preview__name">
-                        {{ getVendorName() }}
-                    </h1>
-
-                    <!-- Contact Details -->
-                    <div class="vendor-preview__contact">
-                        <div class="vendor-preview__contact-row">
-                            <i class="pi pi-phone vendor-preview__contact-icon"></i>
-                            <span class="vendor-preview__phone" dir="ltr">{{ formatPhone() }}</span>
-                        </div>
-                        <div class="vendor-preview__contact-row">
-                            <i class="pi pi-envelope vendor-preview__contact-icon"></i>
-                            <span>{{ formatEmail() }}</span>
-                        </div>
-                        <div class="vendor-preview__contact-row">
-                            <i class="pi pi-globe vendor-preview__contact-icon"></i>
-                            <span>{{ formatWebsite() }}</span>
-                        </div>
-                        <div class="vendor-preview__contact-row vendor-preview__contact-row--desc">
-                            <i class="pi pi-info-circle vendor-preview__contact-icon vendor-preview__contact-icon--top"></i>
-                            <span>{{ getVendorDescription() }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Social Icons -->
-                    @if (getSocialLinks().length > 0) {
-                    <div class="vendor-preview__social">
-                        <div class="vendor-preview__social-row">
-                            @for (link of getSocialLinks(); track getSocialLinkHref(link)) {
-                            <a [href]="getSocialLinkHref(link)" target="_blank" rel="noopener noreferrer"
-                                class="vendor-preview__social-link">
-                                @if (getSocialLinkIconPath(link); as socialIconPath) {
-                                <span [class]="getSocialLinkIconClass(link)"
-                                    [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
-                                    [style.maskImage]="'url(' + socialIconPath + ')'"></span>
-                                } @else {
-                                <i class="pi pi-link vendor-preview__social-fallback-icon"></i>
-                                }
-                            </a>
-                            }
-                        </div>
-                    </div>
-                    }
-
-                    <!-- Action Buttons -->
-                    <div class="vendor-preview__actions">
-                        <div class="vendor-preview__action">
-                            <i class="pi pi-bookmark vendor-preview__action-icon"></i>
-                            <span class="vendor-preview__action-label">{{ language() === 'en' ? 'Save' : 'المفضلة'
-                                }}</span>
-                        </div>
-                        <div class="vendor-preview__action">
-                            <i class="pi pi-share-alt vendor-preview__action-icon"></i>
-                            <span class="vendor-preview__action-label">{{ language() === 'en' ? 'Share' : 'مشاركة'
-                                }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Offers Section -->
-                <div class="vendor-preview__offers">
-                    <h3 class="vendor-preview__section-title">{{ language() === 'en' ? 'Offers' : 'العروض' }}
-                    </h3>
-                    <div class="vendor-preview__offer-list">
-                        @for (offer of getOffers(); track $index) {
-                        <div class="vendor-preview__offer-card">
-                            <div class="vendor-preview__offer-info">
-                                <div class="vendor-preview__offer-icon">
-                                    @if (getVendorLogo(); as logo) {
-                                    <img [src]="logo" class="vendor-preview__offer-icon-img"
-                                        alt="Icon" (error)="markLogoImageFailed()" />
-                                    } @else {
-                                    <i class="pi pi-image vendor-preview__offer-icon-placeholder"></i>
-                                    }
-                                </div>
-                                <div class="vendor-preview__offer-text">
-                                    <span class="vendor-preview__offer-name">{{ language() === 'en' ? 'Special
-                                        Offer' : 'عرض خاص' }}</span>
-                                </div>
-                            </div>
-                            <div class="vendor-preview__offer-meta">
-                                <i class="pi pi-bookmark vendor-preview__offer-fav"></i>
-                                <span class="vendor-preview__offer-tag">{{ language() === 'en' ? 'In-Store' : 'في
-                                    المتجر' }}</span>
-                            </div>
-                        </div>
-                        } @empty {
-                        <div class="vendor-preview__offer-card">
-                            <div class="vendor-preview__offer-info">
-                                <div class="vendor-preview__offer-icon">
-                                    @if (getVendorLogo(); as logo) {
-                                    <img [src]="logo" class="vendor-preview__offer-icon-img"
-                                        alt="Icon" (error)="markLogoImageFailed()" />
-                                    } @else {
-                                    <i class="pi pi-image vendor-preview__offer-icon-placeholder"></i>
-                                    }
-                                </div>
-                                <div class="vendor-preview__offer-text">
-                                    <span class="vendor-preview__offer-name">{{ language() === 'en' ? 'Special
-                                        Offer' : 'عرض خاص' }}</span>
-                                </div>
-                            </div>
-                            <div class="vendor-preview__offer-meta">
-                                <i class="pi pi-bookmark vendor-preview__offer-fav"></i>
-                                <span class="vendor-preview__offer-tag">{{ language() === 'en' ? 'In-Store' : 'في
-                                    المتجر' }}</span>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                </div>
-
-                <!-- Branches Section -->
-                <div id="preview-section-branches" class="vendor-preview__branches">
-                    <h3 class="vendor-preview__section-title vendor-preview__section-title--branches">{{ language() === 'en' ? 'Branches' : 'الفروع' }}
-                    </h3>
-                    <div class="vendor-preview__branch-list">
-                        @for (loc of getLocations(); track $index) {
-                        <div class="vendor-preview__branch">
-                            <div class="vendor-preview__branch-info">
-                                <i class="pi pi-home vendor-preview__branch-icon"></i>
-                                <div class="vendor-preview__branch-text">
-                                    <span class="vendor-preview__branch-name">{{ getLocationName(loc)
-                                        }}</span>
-                                    <span class="vendor-preview__branch-city">{{ getLocationCity(loc)
-                                        }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        } @empty {
-                        }
-                    </div>
-
-                    <button class="vendor-preview__branches-button">
-                        <i class="pi pi-map vendor-preview__branches-button-icon"></i> {{ language() === 'en' ? 'View all branches' : 'عرض جميع
-                        الفروع' }}
-                    </button>
-                </div>
-
-            </div>
-
-            <!-- Persistent Bottom Nav -->
-            <div class="vendor-preview__bottom-nav">
-                <div class="vendor-preview__nav-item">
-                    <i class="pi pi-map-marker vendor-preview__nav-icon"></i>
-                    <span class="vendor-preview__nav-label">{{ language() === 'en' ? 'Near You' : 'بالقرب منك' }}</span>
-                </div>
-                <div class="vendor-preview__nav-item">
-                    <i class="pi pi-home vendor-preview__nav-icon"></i>
-                    <span class="vendor-preview__nav-label">{{ language() === 'en' ? 'Home' : 'الرئيسية' }}</span>
-                </div>
-                <div class="vendor-preview__nav-item">
-                    <i class="pi pi-search vendor-preview__nav-icon"></i>
-                    <span class="vendor-preview__nav-label">{{ language() === 'en' ? 'Search' : 'بحث' }}</span>
-                </div>
-                <div class="vendor-preview__nav-item">
-                    <i class="pi pi-user vendor-preview__nav-icon"></i>
-                    <span class="vendor-preview__nav-label vendor-preview__nav-label--active">{{ language() === 'en' ? 'Profile' : 'الملف الشخصي'
-                        }}</span>
-                </div>
-            </div>
-
+<app-mobile-preview [loading]="loading" [(language)]="language" [activeNav]="'profile'" [ariaLabel]="'profile.previewAriaLabel' | translate">
+    <!-- Hero Section -->
+    <div class="vendor-preview__hero">
+        @if (getVendorBanner(); as banner) {
+        <img [src]="banner" class="vendor-preview__banner" alt="Banner"
+            (error)="markBannerImageFailed()" />
+        } @else {
+        <div class="vendor-preview__banner-fallback">
+            <i class="pi pi-image vendor-preview__banner-fallback-icon"></i>
         </div>
-
-        <!-- Toggle Controls -->
-        <div class="language-toggle-container">
-            <button (click)="toggleLanguage()" class="toggle-button">
-                <i class="pi pi-language"></i>
-                {{ language() === 'en' ? 'Arabic' : 'English' }}
-            </button>
+        }
+        <!-- Overlapping Logo -->
+        <div class="vendor-preview__logo">
+            @if (getVendorLogo(); as logo) {
+            <img [src]="logo" class="vendor-preview__logo-img" alt="Logo"
+                (error)="markLogoImageFailed()" />
+            } @else {
+            <div class="vendor-preview__logo-fallback">
+                <i class="pi pi-image vendor-preview__logo-fallback-icon"></i>
+            </div>
+            }
         </div>
-
     </div>
-</aside>
+
+    <!-- Vendor Identity -->
+    <div id="preview-section-identity" class="vendor-preview__identity">
+        <h1 class="vendor-preview__name">
+            {{ getVendorName() }}
+        </h1>
+
+        <!-- Contact Details -->
+        <div class="vendor-preview__contact">
+            <div class="vendor-preview__contact-row">
+                <i class="pi pi-phone vendor-preview__contact-icon"></i>
+                <span class="vendor-preview__phone" dir="ltr">{{ formatPhone() }}</span>
+            </div>
+            <div class="vendor-preview__contact-row">
+                <i class="pi pi-envelope vendor-preview__contact-icon"></i>
+                <span>{{ formatEmail() }}</span>
+            </div>
+            <div class="vendor-preview__contact-row">
+                <i class="pi pi-globe vendor-preview__contact-icon"></i>
+                <span>{{ formatWebsite() }}</span>
+            </div>
+            <div class="vendor-preview__contact-row vendor-preview__contact-row--desc">
+                <i class="pi pi-info-circle vendor-preview__contact-icon vendor-preview__contact-icon--top"></i>
+                <span>{{ getVendorDescription() }}</span>
+            </div>
+        </div>
+
+        <!-- Social Icons -->
+        @if (getSocialLinks().length > 0) {
+        <div class="vendor-preview__social">
+            <div class="vendor-preview__social-row">
+                @for (link of getSocialLinks(); track getSocialLinkHref(link)) {
+                <a [href]="getSocialLinkHref(link)" target="_blank" rel="noopener noreferrer"
+                    class="vendor-preview__social-link">
+                    @if (getSocialLinkIconPath(link); as socialIconPath) {
+                    <span [class]="getSocialLinkIconClass(link)"
+                        [style.webkitMaskImage]="'url(' + socialIconPath + ')'"
+                        [style.maskImage]="'url(' + socialIconPath + ')'"></span>
+                    } @else {
+                    <i class="pi pi-link vendor-preview__social-fallback-icon"></i>
+                    }
+                </a>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- Action Buttons -->
+        <div class="vendor-preview__actions">
+            <div class="vendor-preview__action">
+                <i class="pi pi-bookmark vendor-preview__action-icon"></i>
+                <span class="vendor-preview__action-label">{{ language() === 'en' ? 'Save' : 'المفضلة' }}</span>
+            </div>
+            <div class="vendor-preview__action">
+                <i class="pi pi-share-alt vendor-preview__action-icon"></i>
+                <span class="vendor-preview__action-label">{{ language() === 'en' ? 'Share' : 'مشاركة' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Section -->
+    <div class="vendor-preview__offers">
+        <h3 class="vendor-preview__section-title">{{ language() === 'en' ? 'Offers' : 'العروض' }}</h3>
+        <div class="vendor-preview__offer-list">
+            @for (offer of getOffers(); track $index) {
+            <div class="vendor-preview__offer-card">
+                <div class="vendor-preview__offer-info">
+                    <div class="vendor-preview__offer-icon">
+                        @if (getVendorLogo(); as logo) {
+                        <img [src]="logo" class="vendor-preview__offer-icon-img"
+                            alt="Icon" (error)="markLogoImageFailed()" />
+                        } @else {
+                        <i class="pi pi-image vendor-preview__offer-icon-placeholder"></i>
+                        }
+                    </div>
+                    <div class="vendor-preview__offer-text">
+                        <span class="vendor-preview__offer-name">{{ language() === 'en' ? 'Special Offer' : 'عرض خاص' }}</span>
+                    </div>
+                </div>
+                <div class="vendor-preview__offer-meta">
+                    <i class="pi pi-bookmark vendor-preview__offer-fav"></i>
+                    <span class="vendor-preview__offer-tag">{{ language() === 'en' ? 'In-Store' : 'في المتجر' }}</span>
+                </div>
+            </div>
+            } @empty {
+            <div class="vendor-preview__offer-card">
+                <div class="vendor-preview__offer-info">
+                    <div class="vendor-preview__offer-icon">
+                        @if (getVendorLogo(); as logo) {
+                        <img [src]="logo" class="vendor-preview__offer-icon-img"
+                            alt="Icon" (error)="markLogoImageFailed()" />
+                        } @else {
+                        <i class="pi pi-image vendor-preview__offer-icon-placeholder"></i>
+                        }
+                    </div>
+                    <div class="vendor-preview__offer-text">
+                        <span class="vendor-preview__offer-name">{{ language() === 'en' ? 'Special Offer' : 'عرض خاص' }}</span>
+                    </div>
+                </div>
+                <div class="vendor-preview__offer-meta">
+                    <i class="pi pi-bookmark vendor-preview__offer-fav"></i>
+                    <span class="vendor-preview__offer-tag">{{ language() === 'en' ? 'In-Store' : 'في المتجر' }}</span>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
+    <!-- Branches Section -->
+    <div id="preview-section-branches" class="vendor-preview__branches">
+        <h3 class="vendor-preview__section-title vendor-preview__section-title--branches">{{ language() === 'en' ? 'Branches' : 'الفروع' }}</h3>
+        <div class="vendor-preview__branch-list">
+            @for (loc of getLocations(); track $index) {
+            <div class="vendor-preview__branch">
+                <div class="vendor-preview__branch-info">
+                    <i class="pi pi-home vendor-preview__branch-icon"></i>
+                    <div class="vendor-preview__branch-text">
+                        <span class="vendor-preview__branch-name">{{ getLocationName(loc) }}</span>
+                        <span class="vendor-preview__branch-city">{{ getLocationCity(loc) }}</span>
+                    </div>
+                </div>
+            </div>
+            } @empty {
+            }
+        </div>
+
+        <button class="vendor-preview__branches-button" type="button">
+            <i class="pi pi-map vendor-preview__branches-button-icon"></i> {{ language() === 'en' ? 'View all branches' : 'عرض جميع الفروع' }}
+        </button>
+    </div>
+</app-mobile-preview>

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './mobile-preview.scss',
 })
 export class MobilePreview {
+  loading = input<boolean>(false);
   language = model<'en' | 'ar'>('en');
   activeNav = input<'home' | 'near-you' | 'search' | 'profile'>('home');
   showStatusBar = input<boolean>(true);

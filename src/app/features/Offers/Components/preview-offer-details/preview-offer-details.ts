@@ -15,6 +15,7 @@ import { mapOfferModeToFormMode } from '../../models/createOffer';
 })
 export class PreviewOfferDetails implements OnChanges {
   private readonly document = inject(DOCUMENT);
+  @Input() loading = false;
   @Input() offer: any;
   @Input() vendor: any;
   @Input() locations: any[] = [];
