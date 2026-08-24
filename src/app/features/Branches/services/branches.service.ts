@@ -21,12 +21,17 @@ export interface BranchRow {
   locationNameAr: string;
   city: string;
   cityAr: string;
+  region?: string;
+  regionAr?: string;
+  country?: string;
+  countryAr?: string;
   totalOffers: number;
   representativeName: string;
   representativeNameAr: string;
   latitude: string | number;
   longitude: string | number;
-  status: string;
+  googleMapLink?: string;
+  status?: string;
 }
 
 export interface BranchesResponse {

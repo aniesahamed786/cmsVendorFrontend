@@ -146,12 +146,21 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     const manager = this.selectedManager();
     if (manager) rows = rows.filter(r => r.representativeName === manager);
 
-    const search = this.searchQuery().toLowerCase().trim();
+    const search = this.searchQuery().trim().toLocaleLowerCase();
     if (search) {
-      rows = rows.filter(r => 
-          r.locationName.toLowerCase().includes(search) ||
-          r.city.toLowerCase().includes(search) ||
-        r.representativeName.toLowerCase().includes(search)
+      rows = rows.filter((row) =>
+        [
+          row.locationName,
+          row.locationNameAr,
+          row.city,
+          row.cityAr,
+          row.representativeName,
+          row.representativeNameAr,
+          row.region,
+          row.regionAr,
+          row.country,
+          row.countryAr,
+        ].some((value) => String(value ?? '').toLocaleLowerCase().includes(search)),
       );
     }
 
@@ -356,6 +365,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       const mapOptions: any = {
         center,
         zoom: 5,
+        minZoom: 4,
         colorScheme: this.themeService.isDarkMode() ? 'DARK' : 'LIGHT',
       };
       this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
