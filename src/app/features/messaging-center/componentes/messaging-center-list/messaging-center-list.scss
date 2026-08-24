@@ -20,15 +20,23 @@
 
     .mc-list__search {
       flex: 1;
+      min-width: 0;
       padding: 0;
     }
   }
 
   &__search {
     padding: 1rem 1rem 0;
+    min-width: 0;
+
+    app-search {
+      display: block;
+      width: 100%;
+    }
 
     // app-search defaults to a fixed 16rem; fill the sidebar here
-    ::ng-deep .app-search {
+    ::ng-deep .app-search,
+    ::ng-deep .app-search--desktop {
       width: 100%;
     }
   }

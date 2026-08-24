@@ -6,37 +6,51 @@
 
   <section class="recent-activities__card">
     <div class="recent-activities__toolbar">
-      <h2 class="recent-activities__card-title">Recent Activity</h2>
-      <div class="recent-activities__controls">
-        <app-search [value]="search()" (valueChange)="onSearchInput($event)"
-          placeholder="Search title or request ID" />
-        <button type="button" class="app-filter-trigger-btn" [class.has-active]="activeFilterCount() > 0"
-          (click)="showMobileFilters.set(true)">
-          <i class="pi pi-filter"></i>
-          <span>{{ 'common.filters' | translate }}</span>
-          @if (activeFilterCount() > 0) {
-          <span class="app-filter-trigger-badge">{{ activeFilterCount() }}</span>
-          }
-        </button>
+      <div class="recent-activities__toolbar-header">
+        <h2 class="recent-activities__card-title">Recent Activity</h2>
+        <div class="recent-activities__controls">
+          <app-search [value]="search()" (valueChange)="onSearchInput($event)"
+            placeholder="Search title or request ID" />
+          <button type="button" class="app-filter-trigger-btn" [class.has-active]="activeFilterCount() > 0"
+            (click)="showMobileFilters.set(true)">
+            <i class="pi pi-filter"></i>
+            <span>{{ 'common.filters' | translate }}</span>
+            @if (activeFilterCount() > 0) {
+            <span class="app-filter-trigger-badge">{{ activeFilterCount() }}</span>
+            }
+          </button>
+        </div>
       </div>
 
-      <div class="recent-activities__filters app-desktop-filters">
-        <p-select [options]="entityTypeOptions" [ngModel]="entityType()"
-          (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
-          placeholder="Type" styleClass="recent-activities__filter" />
+      <div class="app-filters-row app-desktop-filters">
+        <div class="app-filter-group">
+          <label class="app-filter-label">Type</label>
+          <p-select [options]="entityTypeOptions" [ngModel]="entityType()"
+            (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
+            placeholder="Type" styleClass="recent-activities__filter" />
+        </div>
 
-        <p-select [options]="actionOptions" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
-          optionLabel="label" optionValue="value" placeholder="Action"
-          styleClass="recent-activities__filter" />
+        <div class="app-filter-group">
+          <label class="app-filter-label">Action</label>
+          <p-select [options]="actionOptions" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
+            optionLabel="label" optionValue="value" placeholder="Action"
+            styleClass="recent-activities__filter" />
+        </div>
 
-        <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
-          optionLabel="label" optionValue="value" placeholder="Period"
-          styleClass="recent-activities__filter" />
+        <div class="app-filter-group">
+          <label class="app-filter-label">Period</label>
+          <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
+            optionLabel="label" optionValue="value" placeholder="Period"
+            styleClass="recent-activities__filter" />
+        </div>
 
         @if (period() === 'custom') {
-        <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
-          selectionMode="range" [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy"
-          appendTo="body" styleClass="recent-activities__filter" />
+        <div class="app-filter-group">
+          <label class="app-filter-label">Custom Dates</label>
+          <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
+            selectionMode="range" [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy"
+            appendTo="body" styleClass="recent-activities__filter" />
+        </div>
         }
 
         @if (hasActiveFilters()) {

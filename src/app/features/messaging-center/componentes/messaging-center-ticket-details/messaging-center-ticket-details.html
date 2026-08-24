@@ -3,6 +3,10 @@
   <!-- Header -->
   <header class="mc-details__header">
     <div class="mc-details__header-top">
+      <button type="button" class="mc-details__back-btn" (click)="onBack()" [attr.aria-label]="'common.back' | translate">
+        <i class="pi pi-arrow-left"></i>
+        <span>{{ 'common.back' | translate }}</span>
+      </button>
       <span class="mc-details__header-ref">{{ t.reference }} • {{ categoryKey(t.category) | translate }}</span>
     </div>
 

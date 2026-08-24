@@ -33,6 +33,26 @@
 @media (max-width: 900px) {
   .messaging-center-page {
     grid-template-columns: 1fr;
-    height: auto;
+    height: calc(100vh - 8rem);
+
+    &__list {
+      display: flex;
+      border-inline-end: none;
+      border: 1px solid var(--app-border);
+    }
+
+    &__details {
+      display: none;
+    }
+
+    &--has-selected {
+      .messaging-center-page__list {
+        display: none;
+      }
+
+      .messaging-center-page__details {
+        display: flex;
+      }
+    }
   }
 }

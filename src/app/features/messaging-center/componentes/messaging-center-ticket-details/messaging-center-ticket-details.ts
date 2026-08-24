@@ -59,6 +59,10 @@ export class MessagingCenterTicketDetails {
 
   }
 
+  onBack(): void {
+    this.store.selectedTicketId.set(null);
+  }
+
   statusKey(status: TicketStatus): string {
     return TICKET_STATUS_KEYS[status];
   }

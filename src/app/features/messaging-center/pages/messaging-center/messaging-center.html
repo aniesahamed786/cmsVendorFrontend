@@ -1,4 +1,4 @@
-<div class="messaging-center-page">
+<div class="messaging-center-page" [class.messaging-center-page--has-selected]="!!store.selectedTicketId()">
   <aside class="messaging-center-page__list">
     <app-messaging-center-list (createTicket)="onCreateTicket()" />
   </aside>

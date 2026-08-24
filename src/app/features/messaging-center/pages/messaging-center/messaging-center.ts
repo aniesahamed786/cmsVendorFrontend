@@ -13,7 +13,7 @@ import { MessagingCenterStore } from '../../services/messaging-center-store';
 })
 export class MessagingCenterPage implements OnInit {
   private readonly router = inject(Router);
-  private readonly store = inject(MessagingCenterStore);
+  readonly store = inject(MessagingCenterStore);
 
   // The store is root-scoped and survives navigation, so every entry starts from
   // empty and refetches — no ticket from the last visit stays on screen.
