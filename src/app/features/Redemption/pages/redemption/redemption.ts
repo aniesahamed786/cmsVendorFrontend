@@ -111,7 +111,7 @@ function toTemplateOffer(entry: CatalogueEntry): TemplateOffer {
     RedemptionUploadPreview,
   ],
   templateUrl: './redemption.html',
-  styleUrl: './redemption.css',
+  styleUrl: './redemption.scss',
 })
 export class Redemption implements OnInit {
   private readonly fb = inject(FormBuilder);

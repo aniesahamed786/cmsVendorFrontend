@@ -1,0 +1,220 @@
+:host {
+  display: block;
+}
+
+.redemption-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.redemption-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__file-input {
+    display: none;
+  }
+}
+
+.redemption-upload-errors {
+  border: 1px solid #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #dc2626;
+    margin-bottom: 0.5rem;
+  }
+
+  &__close {
+    margin-inline-start: auto;
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+  }
+
+  &__list {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+    max-height: 14rem;
+    overflow-y: auto;
+    color: var(--app-text);
+    font-size: 0.875rem;
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+  }
+}
+
+.redemption-page__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--app-text);
+  white-space: nowrap;
+}
+
+::ng-deep .redemption-card.p-card,
+section.redemption-card {
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  box-shadow: none;
+  display: block;
+}
+
+section.redemption-card {
+  padding: 1.5rem;
+}
+
+.redemption-card--spaced {
+  margin-bottom: 1rem;
+}
+
+.redemption-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--app-text);
+
+  &--table {
+    padding-bottom: 1rem;
+  }
+
+  i {
+    color: var(--app-primary);
+  }
+}
+
+.redemption-card__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.required-star {
+  color: #dc2626;
+}
+
+.redemption-form {
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    &--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__required {
+    color: #dc2626;
+  }
+
+  &__error {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #dc2626;
+  }
+
+  input:focus {
+    box-shadow: none !important;
+  }
+
+  &__input--full,
+  &__field--full {
+    width: 100%;
+  }
+
+  &__spacer {
+    display: none;
+
+    @media (min-width: 768px) {
+      display: block;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+}
+
+::ng-deep .redemption-form .redemption-form__field.p-select:focus-within {
+  box-shadow: none !important;
+}
+
+.redemption-table__empty {
+  text-align: center;
+  color: var(--app-muted);
+  padding: 2rem !important;
+}
+
+.redemption-table__th--sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+::ng-deep .redemption-table {
+  margin: 0 -1.5rem -1.5rem;
+}
+
+/* Table skeleton cells (.app-skeleton owns fill + pulse; these own size) */
+.redemption-table__skeleton-cell {
+  display: inline-block;
+  height: 1rem;
+
+  &--id {
+    width: 6.5rem;
+  }
+
+  &--wide {
+    width: 10rem;
+  }
+
+  &--text {
+    width: 5rem;
+  }
+}
