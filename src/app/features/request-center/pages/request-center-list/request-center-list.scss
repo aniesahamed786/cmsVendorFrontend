@@ -278,12 +278,6 @@
     border: 1px solid var(--app-border);
     color: var(--app-text);
     cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-
-    &:hover {
-      background: var(--app-primary-hover-soft);
-      border-color: var(--app-primary);
-    }
 
     &--skeleton {
       cursor: default;
