@@ -887,30 +887,22 @@
 /* ---- Footer actions ---- */
 .offer-form__footer {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 1.5rem;
   padding: 1.25rem 1.5rem;
   background: var(--app-surface);
+  border: 1px solid var(--app-border);
 }
-@media (min-width: 640px) {
-  .offer-form__footer {
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-  }
-}
+
 .offer-form__footer-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
   gap: 0.75rem;
-}
-@media (min-width: 640px) {
-  .offer-form__footer-actions {
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-  }
+  flex-wrap: wrap;
 }
 
 /* ---- Image cropper modal (bespoke, not a p-dialog) ---- */
