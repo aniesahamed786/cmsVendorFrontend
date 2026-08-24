@@ -23,12 +23,11 @@ import {
 import { MessagingCenterStore } from '../../services/messaging-center-store';
 import { DialogModule } from 'primeng/dialog';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
-import { Button } from '../../../../shared/Components/button/button';
 
 @Component({
   selector: 'app-messaging-center-ticket-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, DialogModule, Button, TranslatePipe],
+  imports: [CommonModule, FormsModule, PrimeUIModules, DialogModule, TranslatePipe],
   templateUrl: './messaging-center-ticket-details.html',
   styleUrl: './messaging-center-ticket-details.scss',
 })
