@@ -73,7 +73,13 @@ export class RequestCenterApiService {
   list(query: ListRequestsQuery = {}): Observable<PaginatedRequestsResponse> {
     let params = new HttpParams();
     for (const [key, value] of Object.entries(query)) {
-      if (value !== undefined && value !== null) params = params.set(key, String(value));
+      if (value !== undefined && value !== null && value !== '') {
+        if (Array.isArray(value)) {
+          params = params.set(key, value.join(','));
+        } else {
+          params = params.set(key, String(value));
+        }
+      }
     }
     return this.http.get<PaginatedRequestsResponse>(this.baseUrl, { params });
   }

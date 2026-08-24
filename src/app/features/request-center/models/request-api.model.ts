@@ -44,6 +44,10 @@ export interface ListRequestsQuery {
   pageSize?: number;
   sortBy?: 'requestId' | 'entityType' | 'requestType' | 'title' | 'status' | 'updatedOn';
   sortOrder?: 'asc' | 'desc';
+  status?: ApiRequestStatus | ApiRequestStatus[] | string | string[];
+  type?: ApiRequestEntityType | string;
+  action?: ApiRequestType | string;
+  search?: string;
 }
 
 /** POST /cmsVendor/requests body. */

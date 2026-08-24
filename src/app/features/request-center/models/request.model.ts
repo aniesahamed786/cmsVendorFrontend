@@ -11,8 +11,9 @@ export type RequestStatus =
   | 'RECALLED'
   | 'CANCELLED';
 
-/** Terminal statuses — a request here has reached a final outcome (the "Completed" tab). */
-export const TERMINAL_STATUSES: RequestStatus[] = ['APPROVED', 'REJECTED', 'RECALLED', 'CANCELLED'];
+export const INCOMPLETE_STATUSES: RequestStatus[] = ['DRAFT', 'SUBMITTED', 'RETURNED'];
+export const COMPLETED_STATUSES: RequestStatus[] = ['APPROVED', 'REJECTED', 'RECALLED', 'CANCELLED'];
+export const TERMINAL_STATUSES: RequestStatus[] = COMPLETED_STATUSES;
 
 export interface RequestBasicInfo {
   titleEn: string;
