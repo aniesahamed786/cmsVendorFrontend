@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { finalize, forkJoin } from 'rxjs';
+import { finalize } from 'rxjs';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
@@ -74,13 +74,10 @@ export class RequestCenterList {
 
   constructor() {
     this.loadMetrics();
-    this.loadTabCounts();
-    this.loadRequests();
   }
 
   /**
-   * Fetch the KPI counts. The cards skeleton while this is in flight (statsLoading), then the
-   * numbers count up once the data lands.
+   * Fetch the KPI counts and tab totals from GET /cmsVendor/requests/metrics.
    */
   private loadMetrics(): void {
     this.statsLoading.set(true);
@@ -91,29 +88,14 @@ export class RequestCenterList {
         next: (metrics) => {
           this.stats.set(metrics);
           this.revealStats();
+          this.requestCenterService.setTabCounts({
+            incomplete: metrics.pendingRequests,
+            completed: metrics.completedRequests,
+            all: metrics.totalRequests,
+          });
         },
         error: (err) => console.error('Failed to load request metrics', err),
       });
-  }
-
-  /**
-   * Fetch tab totals from the server for all 3 tabs so the counts stay accurate.
-   */
-  private loadTabCounts(): void {
-    forkJoin({
-      incomplete: this.api.list({ pageSize: 1, status: INCOMPLETE_STATUSES }),
-      completed: this.api.list({ pageSize: 1, status: COMPLETED_STATUSES }),
-      all: this.api.list({ pageSize: 1 }),
-    }).subscribe({
-      next: ({ incomplete, completed, all }) => {
-        this.requestCenterService.setTabCounts({
-          incomplete: incomplete.total,
-          completed: completed.total,
-          all: all.total,
-        });
-      },
-      error: (err) => console.error('Failed to load tab counts', err),
-    });
   }
 
   /**
@@ -400,7 +382,6 @@ export class RequestCenterList {
       this.deleteTarget.set(null);
     }
     this.loadRequests();
-    this.loadTabCounts();
     this.loadMetrics();
   }
 
