@@ -243,12 +243,33 @@
             {{ 'offerForm.label.amenitiesEn' | translate }}
             <span class="offer-form__required">*</span>
           </label>
-          <div class="offer-form__input-wrap">
-            <input pInputText formControlName="hotelAmenities" class="offer-form__input offer-form__input--pl4"
-              [placeholder]="'offerForm.placeholder.amenitiesEn' | translate" />
+          <div class="offer-form__input-action-wrap">
+            <input #amenityEnInput pInputText type="text"
+              class="offer-form__input offer-form__input--pl5"
+              [placeholder]="'offerForm.placeholder.amenitiesEn' | translate"
+              (keydown.enter)="$event.preventDefault(); addHotelAmenity('en', amenityEnInput)" />
+            <button type="button" class="offer-form__input-add-btn"
+              (click)="addHotelAmenity('en', amenityEnInput)"
+              [attr.aria-label]="'offerForm.button.add' | translate">
+              <i class="pi pi-plus"></i>
+            </button>
           </div>
-          @if (offerForm.get('hotelAmenities')?.touched && offerForm.get('hotelAmenities')?.hasError('required')) {
+          @if (hotelAmenities.touched && hotelAmenities.hasError('required')) {
           <p class="offer-form__error">{{ 'offerForm.error.amenitiesRequired' | translate }}</p>
+          }
+          @if (hotelAmenities.value.length > 0) {
+          <div class="offer-form__amenity-cards">
+            @for (amenity of hotelAmenities.value; track $index) {
+            <div class="offer-form__amenity-card">
+              <span class="offer-form__amenity-label">{{ amenity }}</span>
+              <button type="button" class="offer-form__amenity-remove"
+                (click)="removeHotelAmenity('en', $index)"
+                [attr.aria-label]="'common.remove' | translate">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            }
+          </div>
           }
         </div>
 
@@ -257,12 +278,33 @@
             {{ 'offerForm.label.amenitiesAr' | translate }}
             <span class="offer-form__required">*</span>
           </label>
-          <div class="offer-form__input-wrap">
-            <input pInputText formControlName="hotelAmenitiesAr" class="offer-form__input offer-form__input--pl4 offer-form__input--right"
-              [placeholder]="'offerForm.placeholder.amenitiesAr' | translate" />
+          <div class="offer-form__input-action-wrap">
+            <input #amenityArInput pInputText type="text"
+              class="offer-form__input offer-form__input--right offer-form__input--pr4"
+              [placeholder]="'offerForm.placeholder.amenitiesAr' | translate"
+              (keydown.enter)="$event.preventDefault(); addHotelAmenity('ar', amenityArInput)" />
+            <button type="button" class="offer-form__input-add-btn"
+              (click)="addHotelAmenity('ar', amenityArInput)"
+              [attr.aria-label]="'offerForm.button.add' | translate">
+              <i class="pi pi-plus"></i>
+            </button>
           </div>
-          @if (offerForm.get('hotelAmenitiesAr')?.touched && offerForm.get('hotelAmenitiesAr')?.hasError('required')) {
+          @if (hotelAmenitiesAr.touched && hotelAmenitiesAr.hasError('required')) {
           <p class="offer-form__error">{{ 'offerForm.error.amenitiesArRequired' | translate }}</p>
+          }
+          @if (hotelAmenitiesAr.value.length > 0) {
+          <div class="offer-form__amenity-cards" dir="rtl">
+            @for (amenity of hotelAmenitiesAr.value; track $index) {
+            <div class="offer-form__amenity-card">
+              <span class="offer-form__amenity-label">{{ amenity }}</span>
+              <button type="button" class="offer-form__amenity-remove"
+                (click)="removeHotelAmenity('ar', $index)"
+                [attr.aria-label]="'common.remove' | translate">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            }
+          </div>
           }
         </div>
 

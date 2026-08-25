@@ -322,8 +322,8 @@ export class OfferForm {
       taxValue: [""],
       taxValueAr: [""],
       currency: [""],
-      hotelAmenities: [""],
-      hotelAmenitiesAr: [""],
+      hotelAmenities: this.fb.control<string[]>([], { nonNullable: true }),
+      hotelAmenitiesAr: this.fb.control<string[]>([], { nonNullable: true }),
       rooms: [null as number | null],
       highlightImage: [null],
       highlightImageLandscape: [null],
@@ -1299,8 +1299,6 @@ export class OfferForm {
       form.highlightTitleAr,
       form.highlightDescription,
       form.highlightDescriptionAr,
-      form.hotelAmenities,
-      form.hotelAmenitiesAr,
       form.rooms,
       form.currency,
       form.taxValue,
@@ -1312,6 +1310,8 @@ export class OfferForm {
     );
     if (hasStringValue) return true;
 
+    if (Array.isArray(form.hotelAmenities) && form.hotelAmenities.length > 0) return true;
+    if (Array.isArray(form.hotelAmenitiesAr) && form.hotelAmenitiesAr.length > 0) return true;
     if (Array.isArray(form.category) && form.category.length > 0) return true;
     if (Array.isArray(form.targetAudience) && form.targetAudience.length > 0) return true;
     if (Array.isArray(form.locationIds) && form.locationIds.length > 0) return true;
@@ -1868,12 +1868,18 @@ export class OfferForm {
       taxValue: hotelDetails?.taxValue ?? offerdetails.taxValue ?? "",
       taxValueAr: hotelDetails?.taxValue_ar ?? offerdetails.taxValue_ar ?? "",
       currency: hotelDetails?.currency ?? offerdetails.currency ?? "",
-      hotelAmenities: Array.isArray(hotelDetails?.hotelAmenitites)
-        ? hotelDetails.hotelAmenitites.join(", ")
-        : (hotelDetails?.hotelAmenitites ?? hotelDetails?.hotelAmenities ?? ""),
-      hotelAmenitiesAr: Array.isArray(hotelDetails?.hotelAmenitites_ar)
-        ? hotelDetails.hotelAmenitites_ar.join(", ")
-        : (hotelDetails?.hotelAmenitites_ar ?? ""),
+      hotelAmenities: this.parseAmenitiesToArray(
+        hotelDetails?.hotelAmenitites ??
+        hotelDetails?.hotelAmenities ??
+        offerdetails.hotelAmenitites ??
+        offerdetails.hotelAmenities,
+      ),
+      hotelAmenitiesAr: this.parseAmenitiesToArray(
+        hotelDetails?.hotelAmenitites_ar ??
+        hotelDetails?.hotelAmenities_ar ??
+        offerdetails.hotelAmenitites_ar ??
+        offerdetails.hotelAmenities_ar,
+      ),
       rooms: roomsCount,
 
       // Use separate highlight fields only. Falling back to the offer description here
@@ -2191,6 +2197,84 @@ export class OfferForm {
 
   get selectedTags(): FormControl<string[]> {
     return this.offerForm.get("selectedTags") as FormControl<string[]>;
+  }
+
+  get hotelAmenities(): FormControl<string[]> {
+    return this.offerForm.get("hotelAmenities") as FormControl<string[]>;
+  }
+
+  get hotelAmenitiesAr(): FormControl<string[]> {
+    return this.offerForm.get("hotelAmenitiesAr") as FormControl<string[]>;
+  }
+
+  addHotelAmenity(lang: "en" | "ar", inputElement?: HTMLInputElement): void {
+    const raw = inputElement?.value ?? "";
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+
+    const items = trimmed
+      .split(/[,،]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (items.length === 0) return;
+
+    const control = lang === "en" ? this.hotelAmenities : this.hotelAmenitiesAr;
+    const current = control.value || [];
+    const updated = [...current];
+
+    for (const item of items) {
+      if (!updated.some((existing) => existing.toLowerCase() === item.toLowerCase())) {
+        updated.push(item);
+      }
+    }
+
+    control.setValue(updated);
+    control.markAsDirty();
+    control.markAsTouched();
+    control.updateValueAndValidity();
+    this.offerForm.markAsDirty();
+
+    if (inputElement) {
+      inputElement.value = "";
+    }
+  }
+
+  removeHotelAmenity(lang: "en" | "ar", index: number): void {
+    const control = lang === "en" ? this.hotelAmenities : this.hotelAmenitiesAr;
+    const current = [...(control.value || [])];
+    if (index >= 0 && index < current.length) {
+      current.splice(index, 1);
+      control.setValue(current);
+      control.markAsDirty();
+      control.markAsTouched();
+      control.updateValueAndValidity();
+      this.offerForm.markAsDirty();
+    }
+  }
+
+  private parseAmenitiesToArray(raw: any): string[] {
+    if (!raw) return [];
+    if (Array.isArray(raw)) {
+      const list: string[] = [];
+      for (const item of raw) {
+        if (typeof item === "string") {
+          const parts = item
+            .split(/[,،]+/)
+            .map((s) => s.trim())
+            .filter(Boolean);
+          list.push(...parts);
+        }
+      }
+      return list;
+    }
+    if (typeof raw === "string") {
+      return raw
+        .split(/[,،]+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+    return [];
   }
 
   get category() {
@@ -2826,18 +2910,22 @@ export class OfferForm {
     const hotelPayload = shouldSendHotelDetails
       ? {
         hotelStarRating: form.hotelRating === "Yes",
-        hotelAmenitites: form.hotelAmenities
-          ? String(form.hotelAmenities)
-            .split(",")
-            .map((item: string) => item.trim())
-            .filter((item: string) => !!item)
-          : [],
-        hotelAmenitites_ar: form.hotelAmenitiesAr
-          ? String(form.hotelAmenitiesAr)
-            .split(",")
-            .map((item: string) => item.trim())
-            .filter((item: string) => !!item)
-          : [],
+        hotelAmenitites: Array.isArray(form.hotelAmenities)
+          ? form.hotelAmenities.map((item: any) => String(item).trim()).filter(Boolean)
+          : (form.hotelAmenities
+            ? String(form.hotelAmenities)
+              .split(/[,،]+/)
+              .map((item: string) => item.trim())
+              .filter(Boolean)
+            : []),
+        hotelAmenitites_ar: Array.isArray(form.hotelAmenitiesAr)
+          ? form.hotelAmenitiesAr.map((item: any) => String(item).trim()).filter(Boolean)
+          : (form.hotelAmenitiesAr
+            ? String(form.hotelAmenitiesAr)
+              .split(/[,،]+/)
+              .map((item: string) => item.trim())
+              .filter(Boolean)
+            : []),
         rooms:
           this.roomItems().length || this.normalizeRoomsCount(form.rooms),
         roomDetails: this.mapRoomDetailsToPayload(),

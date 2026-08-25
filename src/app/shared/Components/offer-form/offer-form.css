@@ -207,6 +207,51 @@
 
 .offer-form__input-wrap { position: relative; }
 
+.offer-form__input-action-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+.offer-form__input-action-wrap .offer-form__input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.offer-form__input-action-wrap .offer-form__input:focus {
+  position: relative;
+  z-index: 2;
+}
+
+.offer-form__input-add-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--field-height, 2.75rem);
+  height: var(--field-height, 2.75rem);
+  min-height: var(--field-height, 2.75rem);
+  margin-inline-start: -1px;
+  padding: 0;
+  background: var(--app-primary);
+  color: var(--app-primary-text, #ffffff);
+  border: 1px solid var(--app-primary);
+  border-radius: 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+  box-sizing: border-box;
+  z-index: 1;
+}
+.offer-form__input-add-btn:hover {
+  opacity: 0.9;
+}
+.offer-form__input-add-btn:active {
+  opacity: 0.8;
+}
+.offer-form__input-add-btn i {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .offer-form__textarea {
   width: 100%;
   padding: 1.25rem;
@@ -379,6 +424,52 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+/* ---- Hotel Amenities ---- */
+.offer-form__amenity-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.offer-form__amenity-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  border: 1px solid var(--app-border);
+  border-radius: 0;
+}
+
+.offer-form__amenity-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--app-text);
+  word-break: break-word;
+}
+
+.offer-form__amenity-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--app-muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.offer-form__amenity-remove:hover {
+  color: var(--app-danger, #ef4444);
+}
+
+.offer-form__amenity-remove i {
+  font-size: 0.75rem;
 }
 
 /* ---- Room list ---- */
