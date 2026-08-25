@@ -272,7 +272,7 @@ export class OfferForm {
       }),
       targetAudience: this.fb.control<string[]>([], { nonNullable: true }),
       tagInput: [""],
-      selectedTags: this.fb.array<FormControl>([]),
+      selectedTags: this.fb.control<string[]>([], { nonNullable: true }),
       instructionsEn: ["", [Validators.required, noWhitespaceValidator()]],
       instructionsAr: ["", [Validators.required, noWhitespaceValidator()]],
       offerImage: [null],
@@ -487,27 +487,22 @@ export class OfferForm {
   suggestedTags = signal<string[]>([]);
   readonly tagOptions = computed(() => {
     const list = this.tagsListService.tags();
-    const currentSelected = this.formPreviewValue()?.selectedTags || this.selectedTags?.value || [];
     const seen = new Set<string>();
     const options: { label: string; value: string }[] = [];
 
-    for (const t of list) {
-      const name = t?.name?.trim();
-      if (name && !seen.has(name.toLowerCase())) {
-        seen.add(name.toLowerCase());
-        options.push({ label: name, value: name });
+    const addOption = (name: string) => {
+      const trimmed = name?.trim();
+      if (trimmed && !seen.has(trimmed.toLowerCase())) {
+        seen.add(trimmed.toLowerCase());
+        options.push({ label: trimmed, value: trimmed });
       }
+    };
+
+    for (const t of list) {
+      if (t?.name) addOption(t.name);
     }
 
-    if (Array.isArray(currentSelected)) {
-      for (const t of currentSelected) {
-        const name = (typeof t === "string" ? t : t?.value)?.trim();
-        if (name && !seen.has(name.toLowerCase())) {
-          seen.add(name.toLowerCase());
-          options.push({ label: name, value: name });
-        }
-      }
-    }
+    ["in-store", "digital", "online", "في المتجر", "رقمي", "أونلاين"].forEach(addOption);
 
     return options.sort((a, b) => a.label.localeCompare(b.label));
   });
@@ -1781,13 +1776,9 @@ export class OfferForm {
       this.normalizeRoomsCount(hotelDetails?.rooms ?? offerdetails?.rooms);
     this.highlightCropSourceByTab = { mobile: null, desktop: null };
 
-    // Reset tags FormArray
-    const tagsArray = this.offerForm.get("selectedTags") as FormArray;
-    tagsArray.clear();
-
+    // Reset tags
     const tags = Array.isArray(offerdetails.tags) ? offerdetails.tags : [];
-
-    tags.forEach((t: string) => tagsArray.push(new FormControl(t)));
+    this.selectedTags.setValue(tags);
 
     const currentOfferImage = this.offerForm.get("offerImage")?.value;
     const userSelectedNewOfferImage = currentOfferImage instanceof File;
@@ -1991,81 +1982,23 @@ export class OfferForm {
       this.router.navigate([route]);
     }
   }
-  selectedTagValues(): string[] {
-    const raw = this.selectedTags?.value;
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map((item) => (typeof item === "string" ? item : item?.value))
-      .filter((item): item is string => typeof item === "string" && item.trim().length > 0);
-  }
-
-  onSelectedTagsChange(values: (string | null | undefined)[]): void {
-    const tagsArray = this.selectedTags;
-    tagsArray.clear();
-    (values || []).forEach((tag) => {
-      const trimmed = typeof tag === "string" ? tag.trim() : "";
-      if (trimmed) {
-        tagsArray.push(new FormControl(trimmed));
-      }
-    });
-    this.offerForm.markAsDirty();
-  }
-
-  onTagSelect(event: { value?: string | null }): void {
-    const tagName = event?.value;
-    if (!tagName) return;
-
-    this.addExistingTag(tagName);
-    this.offerForm.get("tagInput")?.setValue(null, { emitEvent: false });
-  }
-
-  addTag() {
-    const value = this.offerForm.get("tagInput")?.value;
-    if (!value) return;
-
-    const tagName = typeof value === "string" ? value : (value?.name ?? value?.value);
-    if (!tagName) return;
-
-    this.addExistingTag(tagName);
-    this.offerForm.get("tagInput")?.setValue(null, { emitEvent: false });
-  }
-
   addExistingTag(tagName: string) {
     if (!tagName) return;
-    const currentTags = (this.selectedTags.value as string[]) || [];
+    const currentTags = this.selectedTags.value || [];
     const normalized = normalizeTagName(tagName);
     if (currentTags.some((tag) => normalizeTagName(tag) === normalized)) return;
 
-    this.selectedTags.push(new FormControl(tagName.trim()));
+    this.selectedTags.setValue([...currentTags, tagName.trim()]);
     this.offerForm.markAsDirty();
-  }
-
-  onTagInputBlur() {
-    this.tagInputTouched.set(true);
-    this.updateTagDuplicateState();
-  }
-
-  shouldShowTagDuplicateError(): boolean {
-    return this.tagDuplicateError();
-  }
-
-  isTagAddDisabled(): boolean {
-    const value = this.offerForm.get("tagInput")?.value;
-    const tagName = typeof value === "string" ? value : (value?.name ?? "");
-    return !tagName.trim() || !!this.findSelectedTagName(tagName);
-  }
-
-  searchTags(event?: { query: string }) {
-    if (!event) return;
-    const query = event.query.toLowerCase();
-    const all = this.tagsListService.tags().map((t) => t.name);
-    this.suggestedTags.set(all.filter((t) => t.toLowerCase().includes(query)));
   }
 
   removeTag(index: number) {
-    this.selectedTags.removeAt(index);
-    this.tagDuplicateError.set(false);
-    this.offerForm.markAsDirty();
+    const currentTags = [...(this.selectedTags.value || [])];
+    if (index >= 0 && index < currentTags.length) {
+      currentTags.splice(index, 1);
+      this.selectedTags.setValue(currentTags);
+      this.offerForm.markAsDirty();
+    }
   }
 
   private updateTagDuplicateState(rawValue?: string): void {
@@ -2123,7 +2056,7 @@ export class OfferForm {
     mode: "In-Store" | "Digital" | "In-Store & Digital" | null,
   ): void {
     const selectedTagNames = new Set(
-      (this.selectedTags.value as string[]).map((tag) => normalizeTagName(tag)),
+      (this.selectedTags.value || []).map((tag) => normalizeTagName(tag)),
     );
     this.autoManagedTagNames = new Set(
       this.getAutoTagsForMode(mode)
@@ -2133,21 +2066,22 @@ export class OfferForm {
   }
 
   private replaceAutoManagedTags(nextAutoTags: string[]): void {
-    for (let index = this.selectedTags.length - 1; index >= 0; index -= 1) {
-      const tagValue = this.selectedTags.at(index)?.value;
-      const normalized = normalizeTagName(String(tagValue ?? ""));
-      if (this.autoManagedTagNames.has(normalized)) {
-        this.selectedTags.removeAt(index);
+    const currentTags = (this.selectedTags.value || []).filter(
+      (tag) => !this.autoManagedTagNames.has(normalizeTagName(tag)),
+    );
+    const newTags = [...currentTags];
+    nextAutoTags.forEach((tag) => {
+      const normalized = normalizeTagName(tag);
+      if (!newTags.some((t) => normalizeTagName(t) === normalized)) {
+        newTags.push(tag);
       }
-    }
-
-    nextAutoTags.forEach((tag) => this.addExistingTag(tag));
+    });
+    this.selectedTags.setValue(newTags);
     this.autoManagedTagNames = new Set(
       nextAutoTags
         .map((tag) => normalizeTagName(tag))
         .filter((tag) => !!tag),
     );
-    this.updateTagDuplicateState();
   }
 
   private getAutoTagsForMode(
@@ -2253,8 +2187,8 @@ export class OfferForm {
     this.offerForm.get("rooms")?.markAsDirty();
   }
 
-  get selectedTags() {
-    return this.offerForm.get("selectedTags") as FormArray;
+  get selectedTags(): FormControl<string[]> {
+    return this.offerForm.get("selectedTags") as FormControl<string[]>;
   }
 
   get category() {

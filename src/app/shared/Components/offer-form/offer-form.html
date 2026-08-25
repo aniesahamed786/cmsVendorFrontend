@@ -153,9 +153,7 @@
           <label class="offer-form__label">{{ 'offerForm.label.tags' | translate }}</label>
           <p-multiselect
             [options]="tagOptions()"
-            [ngModel]="selectedTagValues()"
-            (ngModelChange)="onSelectedTagsChange($event)"
-            [ngModelOptions]="{ standalone: true }"
+            formControlName="selectedTags"
             optionLabel="label"
             optionValue="value"
             [placeholder]="'offerForm.placeholder.tags' | translate"
@@ -177,12 +175,14 @@
           </div>
           }
 
-          <div formArrayName="selectedTags" class="offer-form__tag-list">
-            @for(item of selectedTags.controls; track item; let i = $index) {
-            <p-chip [label]="item.value" [removable]="true" styleClass="offer-form__tag-chip"
+          @if (selectedTags.value.length > 0) {
+          <div class="offer-form__tag-list">
+            @for(tag of selectedTags.value; track tag; let i = $index) {
+            <p-chip [label]="tag" [removable]="true" styleClass="offer-form__tag-chip"
               (onRemove)="removeTag(i)" />
             }
           </div>
+          }
         </div>
       </div>
     </div>
