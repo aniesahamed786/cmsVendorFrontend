@@ -137,7 +137,15 @@
     }
   </div>
 
-  <!-- Composer -->
+  <!-- Composer / Closed Notice -->
+  @if (isClosed()) {
+  <footer class="mc-details__composer mc-details__composer--closed">
+    <div class="mc-details__closed-notice">
+      <i class="pi pi-lock"></i>
+      <span>{{ 'messaging.details.ticketClosedNotice' | translate }}</span>
+    </div>
+  </footer>
+  } @else {
   <footer class="mc-details__composer">
     @if (attachments().length) {
     <div class="mc-details__pending-files">
@@ -176,6 +184,7 @@
       </div>
     </div>
   </footer>
+  }
 </div>
 } @else if (store.isLoadingTickets() && store.selectedTicketId()) {
 <div class="mc-details">

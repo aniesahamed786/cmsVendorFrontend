@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
+  computed,
   effect,
   inject,
   signal,
@@ -36,6 +37,8 @@ export class MessagingCenterTicketDetails {
 
   readonly ticket = this.store.selectedTicket;
   readonly messages = this.store.selectedMessages;
+
+  readonly isClosed = computed(() => this.ticket()?.status === 'Closed');
 
   readonly draft = signal<string>('');
 
@@ -110,6 +113,9 @@ export class MessagingCenterTicketDetails {
   }
 
   onSend(): void {
+    if (this.isClosed()) {
+      return;
+    }
     const text = this.draft().trim();
     const files = this.attachments();
     if (!text && files.length === 0) {
@@ -120,11 +126,12 @@ export class MessagingCenterTicketDetails {
 
     this.draft.set('');
     this.clearAttachments();
-    this.draft.set('');
-    this.clearAttachments();
   }
 
   onComposerKeydown(event: KeyboardEvent): void {
+    if (this.isClosed()) {
+      return;
+    }
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.onSend();
@@ -139,6 +146,9 @@ export class MessagingCenterTicketDetails {
   }
 
   onAttachClick(fileInput: HTMLInputElement): void {
+    if (this.isClosed()) {
+      return;
+    }
     fileInput.click();
   }
 

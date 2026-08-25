@@ -1246,7 +1246,8 @@
       "empty": "Select a ticket to view the conversation",
       "filePreview": "File Preview",
       "you": "You",
-      "sending": "Sending…"
+      "sending": "Sending…",
+      "ticketClosedNotice": "This ticket is closed. No further replies or changes can be made."
     },
     "create": {
       "back": "Back to Message Center",
