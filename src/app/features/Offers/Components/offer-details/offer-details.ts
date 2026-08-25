@@ -53,10 +53,32 @@ export class OfferDetails {
     }
 
     isHotelOffer = computed(() => {
-        return this.getCategories(this.offer()).some((category) => {
-            const categoryName = (category?.name || category?.categoryName || '')?.trim().toLowerCase();
-            return categoryName === 'hotels' || categoryName === 'hotel';
+        const categories = this.getCategories(this.offer());
+        const hasHotelCategory = categories.some((category) => {
+            const nameEn = (category?.name || category?.categoryName || '')?.trim().toLowerCase();
+            const nameAr = (category?.name_ar || category?.categoryNameAr || '')?.trim().toLowerCase();
+            return (
+                nameEn === 'hotels' ||
+                nameEn === 'hotel' ||
+                nameEn.includes('hotel') ||
+                nameAr.includes('فندق') ||
+                nameAr.includes('فنادق')
+            );
         });
+
+        if (hasHotelCategory) return true;
+
+        const offerData = this.offer();
+        const hotel = offerData?.hotel_details || offerData?.hotelDetails || offerData;
+        const hasRooms = Array.isArray(hotel?.roomDetails) && hotel.roomDetails.length > 0;
+        const hasAmenities =
+            (Array.isArray(hotel?.hotelAmenitites) && hotel.hotelAmenitites.length > 0) ||
+            (Array.isArray(hotel?.hotelAmenities) && hotel.hotelAmenities.length > 0) ||
+            (Array.isArray(hotel?.hotelAmenitites_ar) && hotel.hotelAmenitites_ar.length > 0) ||
+            (Array.isArray(hotel?.hotelAmenities_ar) && hotel.hotelAmenities_ar.length > 0);
+        const hasTaxOrCurrency = !!(hotel?.taxValue || hotel?.taxValue_ar);
+
+        return hasRooms || hasAmenities || hasTaxOrCurrency;
     });
 
     getCategories(offer: any): any[] {

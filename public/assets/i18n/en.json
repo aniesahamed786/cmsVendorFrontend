@@ -992,9 +992,10 @@
     },
     "hotel": {
       "title": "Hotel Details",
-      "roomDetails": "Room Details",
+      "roomDetails": "Hotel Room Details",
       "amenities": "Hotel Amenities",
       "taxValue": "Tax Value",
+      "currency": "Currency",
       "noRooms": "No room details available.",
       "roomFallback": "Room"
     },

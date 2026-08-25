@@ -154,7 +154,9 @@
 
   <!-- Hotel Details -->
   @if (isHotelOffer()) {
-  <app-hotel-details [hotelDetails]="offer().hotel_details || offer()"></app-hotel-details>
+  <app-hotel-details
+    [hotelDetails]="offer().hotel_details || offer().hotelDetails || offer()"
+  ></app-hotel-details>
   }
 
   <!-- Discount Details -->

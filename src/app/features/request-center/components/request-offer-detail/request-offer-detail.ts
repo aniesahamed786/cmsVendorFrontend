@@ -15,4 +15,5 @@ export class RequestOfferDetail {
   readonly vendor = input<OfferHeroVendor>({ name: '', nameAr: '', logo: '' });
   readonly locations = input<Record<string, unknown>[]>([]);
   readonly loading = input<boolean>(false);
+  readonly editedFields = input<Set<string>>(new Set<string>());
 }

@@ -992,9 +992,10 @@
     },
     "hotel": {
       "title": "تفاصيل الفندق",
-      "roomDetails": "تفاصيل الغرف",
+      "roomDetails": "تفاصيل غرف الفندق",
       "amenities": "مرافق الفندق",
       "taxValue": "قيمة الضريبة",
+      "currency": "العملة",
       "noRooms": "لا توجد تفاصيل غرف متاحة.",
       "roomFallback": "غرفة"
     },

@@ -11,6 +11,11 @@ const ALIASES: Record<string, string[]> = {
   // `category` is what GET /requests/{id} returns: resolveCategoryIdsToCategory replaces the
   // submitted `categoryIds` with a `{ id, name, icon }[]`, so the payload spelling varies.
   categories: ['category', 'categoryIds', 'categoryId'],
+  hotelAmenitites: ['hotelAmenities'],
+  hotelAmenitites_ar: ['hotelAmenities_ar'],
+  roomDetails: ['room_details'],
+  taxValue: ['tax_value'],
+  taxValue_ar: ['tax_value_ar'],
 };
 
 /** Every spelling categories travel under, in any of the three sources. */
@@ -158,6 +163,25 @@ export function toOfferDetailsView(proposed: Record<string, unknown>): Record<st
       : asString(rawMode[0])
     : asString(rawMode);
 
+  const hotelDetails = proposed['hotel_details']
+    ? (proposed['hotel_details'] as Record<string, unknown>)
+    : (proposed['hotelDetails'] as Record<string, unknown>) ||
+      (proposed['roomDetails'] || proposed['hotelAmenitites'] || proposed['hotelAmenities'] || proposed['taxValue'] || proposed['currency'] || proposed['rooms'] !== undefined
+        ? {
+            roomDetails: proposed['roomDetails'],
+            rooms: proposed['rooms'],
+            hotelAmenitites: proposed['hotelAmenitites'] ?? proposed['hotelAmenities'],
+            hotelAmenitites_ar: proposed['hotelAmenitites_ar'] ?? proposed['hotelAmenities_ar'],
+            hotelAmenities: proposed['hotelAmenities'] ?? proposed['hotelAmenitites'],
+            hotelAmenities_ar: proposed['hotelAmenities_ar'] ?? proposed['hotelAmenitites_ar'],
+            currency: proposed['currency'] ?? 'SAR',
+            currency_ar: proposed['currency_ar'] ?? 'SAR',
+            taxValue: proposed['taxValue'],
+            taxValue_ar: proposed['taxValue_ar'],
+            vendorClassificationId: proposed['vendorClassificationId'],
+          }
+        : null);
+
   return {
     title: asString(proposed['title']),
     title_ar: asString(proposed['title_ar']),
@@ -189,7 +213,18 @@ export function toOfferDetailsView(proposed: Record<string, unknown>): Record<st
     // its text but no artwork.
     highlight_image: asString(proposed['highlight_image']),
     highlight_image_landscape: asString(proposed['highlight_image_landscape']),
-    hotel_details: proposed['hotel_details'] ?? null,
+    hotel_details: hotelDetails,
+    hotelDetails: hotelDetails,
+    hotelAmenitites: proposed['hotelAmenitites'] ?? proposed['hotelAmenities'] ?? (hotelDetails as any)?.hotelAmenitites,
+    hotelAmenitites_ar: proposed['hotelAmenitites_ar'] ?? proposed['hotelAmenities_ar'] ?? (hotelDetails as any)?.hotelAmenitites_ar,
+    hotelAmenities: proposed['hotelAmenities'] ?? proposed['hotelAmenitites'] ?? (hotelDetails as any)?.hotelAmenities,
+    hotelAmenities_ar: proposed['hotelAmenities_ar'] ?? proposed['hotelAmenitites_ar'] ?? (hotelDetails as any)?.hotelAmenities_ar,
+    roomDetails: proposed['roomDetails'] ?? (hotelDetails as any)?.roomDetails,
+    rooms: proposed['rooms'] ?? (hotelDetails as any)?.rooms,
+    taxValue: proposed['taxValue'] ?? (hotelDetails as any)?.taxValue,
+    taxValue_ar: proposed['taxValue_ar'] ?? (hotelDetails as any)?.taxValue_ar,
+    currency: proposed['currency'] ?? (hotelDetails as any)?.currency ?? 'SAR',
+    currency_ar: proposed['currency_ar'] ?? (hotelDetails as any)?.currency_ar ?? 'SAR',
     status: asString(proposed['status']),
     offerImages: {
       image: asString(proposed['image']),

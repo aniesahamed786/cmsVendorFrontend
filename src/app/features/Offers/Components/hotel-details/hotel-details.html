@@ -1,49 +1,46 @@
-<div class="hotel-details">
-  <div class="hotel-details__header">
-    <div class="hotel-details__header-chip">
+<section class="hotel-details offer-card">
+  <header class="hotel-details__header offer-card__header">
+    <div class="offer-card__icon-wrap">
       <i class="pi pi-building hotel-details__header-icon"></i>
     </div>
-    <h3 class="hotel-details__title">{{ 'offerDetails.hotel.title' | translate }}</h3>
-  </div>
+    <h3 class="hotel-details__title offer-card__title">{{ 'offerDetails.hotel.title' | translate }}</h3>
+  </header>
 
   <div class="hotel-details__sections">
-    <!-- Room Details -->
-    <div>
-      <span class="hotel-details__section-label">{{ 'offerDetails.hotel.roomDetails' | translate }}</span>
-      <div class="hotel-details__rooms">
-        @for (room of getRoomDetails(); track room.roomName || $index) {
-        <div class="hotel-details__room-card">
-          <p class="hotel-details__room-name">{{ room.roomName || ('offerDetails.hotel.roomFallback' | translate) }}</p>
-          <div class="hotel-details__rates">
-            @for (rate of room.rates || []; track rate.season || $index) {
-            <div class="hotel-details__rate-row">
-              <span>{{ rate.season }}</span>
-              <span class="hotel-details__rate-value">
-                {{ rate.value }}
-                @if (isSAR(getCurrency())) {
-                <span class="hd-riyal"
-                  [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
-                  [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"></span>
-                } @else { {{ getCurrency() }} }
-              </span>
-            </div>
-            }
-          </div>
-        </div>
-        } @empty {
-        <p class="hotel-details__empty">{{ 'offerDetails.hotel.noRooms' | translate }}</p>
+    <!-- Tax Value -->
+    @if (getTaxValue()) {
+    <div class="hotel-details__field">
+      <span class="hotel-details__label">{{ 'offerDetails.hotel.taxValue' | translate }}</span>
+      <p class="hotel-details__value">{{ getTaxValue() }}</p>
+    </div>
+    }
+
+    <!-- Currency -->
+    @if (getCurrency()) {
+    <div class="hotel-details__field">
+      <span class="hotel-details__label">{{ 'offerDetails.hotel.currency' | translate }}</span>
+      <div class="hotel-details__currency-val">
+        @if (isSAR(getCurrency())) {
+        <span
+          class="hd-riyal"
+          [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+          [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+          [attr.aria-label]="'offerDetails.aria.sar' | translate"
+        ></span>
+        } @else {
+        <span class="hotel-details__value">{{ getCurrency() }}</span>
         }
       </div>
     </div>
+    }
 
     <!-- Amenities -->
     @if (getAmenities().length > 0) {
-    <div>
-      <span class="hotel-details__section-label">{{ 'offerDetails.hotel.amenities' | translate }}</span>
+    <div class="hotel-details__field">
+      <span class="hotel-details__label">{{ 'offerDetails.hotel.amenities' | translate }}</span>
       <div class="hotel-details__amenities">
-        @for (amenity of getAmenities(); track amenity) {
+        @for (amenity of getAmenities(); track $index) {
         <div class="hotel-details__amenity">
-          <i class="pi pi-sparkles hotel-details__amenity-icon"></i>
           <span class="hotel-details__amenity-label">{{ amenity }}</span>
         </div>
         }
@@ -51,12 +48,45 @@
     </div>
     }
 
-    <!-- Tax -->
-    @if (getTaxValue()) {
-    <div>
-      <span class="hotel-details__section-label hotel-details__section-label--tight">{{ 'offerDetails.hotel.taxValue' | translate }}</span>
-      <p class="hotel-details__tax">{{ getTaxValue() }}</p>
+    <!-- Room Details -->
+    @if (getRoomDetails().length > 0) {
+    <div class="hotel-details__field">
+      <span class="hotel-details__label">{{ 'offerDetails.hotel.roomDetails' | translate }}</span>
+      <div class="hotel-details__rooms">
+        @for (room of getRoomDetails(); track room.roomName || room.roomNameAr || $index) {
+        <div class="hotel-details__room-card">
+          <p class="hotel-details__room-name">{{ getRoomName(room) || ('offerDetails.hotel.roomFallback' | translate) }}</p>
+          @if (room.rates && room.rates.length > 0) {
+          <div class="hotel-details__rates">
+            @for (rate of room.rates; track rate.season || rate.seasonAr || $index) {
+            <div class="hotel-details__rate-row">
+              <span class="hotel-details__rate-season">{{ getSeasonName(rate) }}</span>
+              <div class="hotel-details__rate-dots"></div>
+              <span class="hotel-details__rate-value">
+                @if (hasRateValue(rate)) {
+                  <span>{{ getRateValue(rate) }}</span>
+                  @if (isSAR(getCurrency())) {
+                  <span
+                    class="hd-riyal"
+                    [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+                    [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+                    [attr.aria-label]="'offerDetails.aria.sar' | translate"
+                  ></span>
+                  } @else {
+                  <span>{{ getCurrency() }}</span>
+                  }
+                } @else {
+                  <span class="hotel-details__rate-empty">—</span>
+                }
+              </span>
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
+      </div>
     </div>
     }
   </div>
-</div>
+</section>
