@@ -992,10 +992,14 @@
     },
     "hotel": {
       "title": "Hotel Details",
-      "roomDetails": "Hotel Room Details",
+      "roomDetails": "Room Details",
       "amenities": "Hotel Amenities",
+      "amenitiesAr": "Hotel Amenities (Arabic)",
       "taxValue": "Tax Value",
+      "taxValueAr": "Tax Value (Arabic)",
       "currency": "Currency",
+      "rooms": "Rooms",
+      "roomsCount": "Number of Rooms",
       "noRooms": "No room details available.",
       "roomFallback": "Room"
     },

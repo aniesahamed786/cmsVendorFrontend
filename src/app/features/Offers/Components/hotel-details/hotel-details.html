@@ -8,10 +8,20 @@
 
   <div class="hotel-details__sections">
     <!-- Tax Value -->
-    @if (getTaxValue()) {
+    @if (getTaxValue() || getTaxValueAr()) {
     <div class="hotel-details__field">
       <span class="hotel-details__label">{{ 'offerDetails.hotel.taxValue' | translate }}</span>
-      <p class="hotel-details__value">{{ getTaxValue() }}</p>
+      <div class="hotel-details__tax-values">
+        @if (getTaxValue()) {
+          <span class="hotel-details__value">{{ getTaxValue() }}</span>
+        }
+        @if (getTaxValue() && getTaxValueAr()) {
+          <span class="hotel-details__tax-divider">|</span>
+        }
+        @if (getTaxValueAr()) {
+          <span class="hotel-details__value" dir="rtl">{{ getTaxValueAr() }}</span>
+        }
+      </div>
     </div>
     }
 
@@ -21,12 +31,9 @@
       <span class="hotel-details__label">{{ 'offerDetails.hotel.currency' | translate }}</span>
       <div class="hotel-details__currency-val">
         @if (isSAR(getCurrency())) {
-        <span
-          class="hd-riyal"
-          [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+        <span class="hd-riyal" [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
           [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
-          [attr.aria-label]="'offerDetails.aria.sar' | translate"
-        ></span>
+          [attr.aria-label]="'offerDetails.aria.sar' | translate"></span>
         } @else {
         <span class="hotel-details__value">{{ getCurrency() }}</span>
         }
@@ -52,40 +59,7 @@
     @if (getRoomDetails().length > 0) {
     <div class="hotel-details__field">
       <span class="hotel-details__label">{{ 'offerDetails.hotel.roomDetails' | translate }}</span>
-      <div class="hotel-details__rooms">
-        @for (room of getRoomDetails(); track room.roomName || room.roomNameAr || $index) {
-        <div class="hotel-details__room-card">
-          <p class="hotel-details__room-name">{{ getRoomName(room) || ('offerDetails.hotel.roomFallback' | translate) }}</p>
-          @if (room.rates && room.rates.length > 0) {
-          <div class="hotel-details__rates">
-            @for (rate of room.rates; track rate.season || rate.seasonAr || $index) {
-            <div class="hotel-details__rate-row">
-              <span class="hotel-details__rate-season">{{ getSeasonName(rate) }}</span>
-              <div class="hotel-details__rate-dots"></div>
-              <span class="hotel-details__rate-value">
-                @if (hasRateValue(rate)) {
-                  <span>{{ getRateValue(rate) }}</span>
-                  @if (isSAR(getCurrency())) {
-                  <span
-                    class="hd-riyal"
-                    [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
-                    [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
-                    [attr.aria-label]="'offerDetails.aria.sar' | translate"
-                  ></span>
-                  } @else {
-                  <span>{{ getCurrency() }}</span>
-                  }
-                } @else {
-                  <span class="hotel-details__rate-empty">—</span>
-                }
-              </span>
-            </div>
-            }
-          </div>
-          }
-        </div>
-        }
-      </div>
+      <app-hotel-rooms-list [rooms]="getRoomDetails()" [currency]="getCurrency()" />
     </div>
     }
   </div>

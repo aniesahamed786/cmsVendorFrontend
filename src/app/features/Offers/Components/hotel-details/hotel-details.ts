@@ -4,10 +4,12 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
+import { HotelRoomsListComponent } from '../hotel-room-card/hotel-room-card';
+
 @Component({
   selector: 'app-hotel-details',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, TranslatePipe],
+  imports: [CommonModule, PrimeUIModules, TranslatePipe, HotelRoomsListComponent],
   templateUrl: './hotel-details.html',
   styleUrl: './hotel-details.scss',
 })
@@ -78,10 +80,21 @@ export class HotelDetailsComponent {
 
   getTaxValue(): string {
     const h = this.rawHotel();
-    const isAr = this.i18n.lang() === 'ar';
-    return isAr
-      ? (h?.taxValue_ar || h?.taxValue || h?.tax_value || '')
-      : (h?.taxValue || h?.taxValue_ar || h?.tax_value || '');
+    return h?.taxValue || h?.tax_value || '';
+  }
+
+  getTaxValueAr(): string {
+    const h = this.rawHotel();
+    return h?.taxValue_ar || h?.tax_value_ar || '';
+  }
+
+  getCombinedTaxValue(): string {
+    const en = this.getTaxValue();
+    const ar = this.getTaxValueAr();
+    if (en && ar) {
+      return `${en} | ${ar}`;
+    }
+    return en || ar || '';
   }
 
   getCurrency(): string {

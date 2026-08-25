@@ -952,10 +952,12 @@ export class OfferForm {
     return this.categories().some((category) => {
       const id =
         typeof category._id === "string" ? category._id : category._id?.$oid;
+      const type = category.type?.trim().toLowerCase();
+      const name = category.name?.trim().toLowerCase();
       return (
         typeof id === "string" &&
         selectedCategoryIds.includes(id) &&
-        category.name?.trim().toLowerCase() === "hotels"
+        (type === "hotels" || (!type && name === "hotels"))
       );
     });
   }

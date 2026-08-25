@@ -1,4 +1,5 @@
-<app-mobile-preview [loading]="loading" [(language)]="language" [activeNav]="'home'" [ariaLabel]="'offerDetails.preview.aria' | translate">
+<app-mobile-preview [loading]="loading" [(language)]="language" [activeNav]="'home'"
+    [ariaLabel]="'offerDetails.preview.aria' | translate">
     <!-- Image Section -->
     <div id="preview-section-image" class="preview-offer-details__image-section">
         <div class="preview-offer-details__image-frame">
@@ -6,17 +7,22 @@
             @if (!offerImageFailed) {
             <img [src]="img" alt="Offer Banner" class="preview-offer-details__image" (error)="markOfferImageFailed()" />
             } @else {
-            <div class="preview-offer-details__img-fallback"><i class="pi pi-image preview-offer-details__img-fallback-icon"></i></div>
+            <div class="preview-offer-details__img-fallback"><i
+                    class="pi pi-image preview-offer-details__img-fallback-icon"></i></div>
             }
             } @else {
-            <div class="preview-offer-details__img-fallback"><i class="pi pi-image preview-offer-details__img-fallback-icon"></i></div>
+            <div class="preview-offer-details__img-fallback"><i
+                    class="pi pi-image preview-offer-details__img-fallback-icon"></i></div>
             }
             @if (showVendorLogo) {
             <div class="preview-offer-details__vendor-logo">
                 @if (getVendorLogo(offer); as logo) {
-                <img [src]="logo" alt="Vendor Logo" class="preview-offer-details__vendor-logo-img" (error)="$event.target.remove()" />
+                <img [src]="logo" alt="Vendor Logo" class="preview-offer-details__vendor-logo-img"
+                    (error)="$event.target.remove()" />
                 } @else {
-                <div class="preview-offer-details__img-fallback"><i class="pi pi-image preview-offer-details__img-fallback-icon preview-offer-details__img-fallback-icon--sm"></i></div>
+                <div class="preview-offer-details__img-fallback"><i
+                        class="pi pi-image preview-offer-details__img-fallback-icon preview-offer-details__img-fallback-icon--sm"></i>
+                </div>
                 }
             </div>
             }
@@ -33,11 +39,13 @@
     <!-- Main Info -->
     <div id="preview-section-main" class="preview-offer-details__main">
         @if (hasDiscount(offer)) {
-        <h1 class="preview-offer-details__headline preview-offer-details__headline--flex" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+        <h1 class="preview-offer-details__headline preview-offer-details__headline--flex"
+            [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
             <div dir="ltr" class="preview-offer-details__discount-amount">
                 @if (isPercentageDiscount(offer)) { <span>%</span> }
                 @else if (isFixedDiscount(offer)) {
-                <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR" class="preview-offer-details__riyal-icon" />
+                <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR"
+                    class="preview-offer-details__riyal-icon" />
                 }
                 <span>{{ getDiscountAmount(offer) }}</span>
             </div>
@@ -45,12 +53,16 @@
         </h1>
         } @else {
         <h1 class="preview-offer-details__headline" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
-            {{ language === 'ar' ? (offer?.title_ar || offer?.title || 'قيمة الخصم') : (offer?.title || 'Discount amount') }}
+            {{ language === 'ar' ? (offer?.title_ar || offer?.title || 'قيمة الخصم') : (offer?.title || 'Discount
+            amount') }}
         </h1>
         }
-        <h2 class="preview-offer-details__vendor-name" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">{{ getVendorName(offer) }}</h2>
-        <p class="preview-offer-details__text-wrap preview-offer-details__description" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
-            {{ language === 'en' ? (offer?.description || 'Description') : (offer?.description_ar || offer?.description || 'الوصف') }}
+        <h2 class="preview-offer-details__vendor-name" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">{{
+            getVendorName(offer) }}</h2>
+        <p class="preview-offer-details__text-wrap preview-offer-details__description"
+            [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+            {{ language === 'en' ? (offer?.description || 'Description') : (offer?.description_ar || offer?.description
+            || 'الوصف') }}
         </p>
         @if (getEndDate(offer)) {
         <p class="preview-offer-details__validity" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
@@ -79,7 +91,8 @@
     <div id="preview-section-hotel" class="preview-offer-details__hotel">
         @if (getRoomDetails().length > 0) {
         <div class="preview-offer-details__hotel-block">
-            <h3 class="preview-offer-details__hotel-heading">{{ language === 'en' ? 'Room Details' : 'تفاصيل الغرف' }}</h3>
+            <h3 class="preview-offer-details__hotel-heading">{{ language === 'en' ? 'Room Details' : 'تفاصيل الغرف' }}
+            </h3>
             <div class="preview-offer-details__room-list">
                 @for (room of getRoomDetails(); track room.roomName) {
                 <div class="preview-offer-details__room-card">
@@ -92,7 +105,8 @@
                             <span class="rate-value">
                                 {{ rate.value }}
                                 @if (isSAR(getCurrency())) {
-                                <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR" class="preview-offer-details__riyal-icon preview-offer-details__riyal-icon--sm" />
+                                <img src="assets/svg/Offers/offer-details/Saudi_Riyal_Symbol.svg" alt="SAR"
+                                    class="preview-offer-details__riyal-icon preview-offer-details__riyal-icon--sm" />
                                 } @else { {{ getCurrency() }} }
                             </span>
                         </div>
@@ -105,7 +119,8 @@
         }
         @if (getAmenities().length > 0) {
         <div class="preview-offer-details__hotel-block">
-            <h3 class="preview-offer-details__hotel-heading">{{ language === 'en' ? 'Hotel Amenities' : 'مرافق الفندق' }}</h3>
+            <h3 class="preview-offer-details__hotel-heading">{{ language === 'en' ? 'Hotel Amenities' : 'مرافق الفندق'
+                }}</h3>
             <div class="preview-offer-details__amenity-list">
                 @for (amenity of getAmenities(); track amenity) {
                 <div class="preview-offer-details__amenity">
@@ -117,7 +132,8 @@
         }
         @if (getTaxValue()) {
         <div class="preview-offer-details__hotel-block">
-            <h3 class="preview-offer-details__hotel-heading preview-offer-details__hotel-heading--tight">{{ language === 'en' ? 'Tax Value' : 'قيمة الضريبة' }}</h3>
+            <h3 class="preview-offer-details__hotel-heading preview-offer-details__hotel-heading--tight">{{ language ===
+                'en' ? 'Tax Value' : 'قيمة الضريبة' }}</h3>
             <p class="preview-offer-details__tax-value">{{ getTaxValue() }}</p>
         </div>
         }
@@ -127,30 +143,44 @@
     <div class="preview-offer-details__divider"></div>
 
     <!-- Where to Redeem -->
-    <div id="preview-section-locations" class="preview-offer-details__locations" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
-        <h3 class="preview-offer-details__locations-heading">{{ language === 'en' ? 'Where to Redeem' : 'أين يمكن الاسترداد' }}</h3>
+    <div id="preview-section-locations" class="preview-offer-details__locations"
+        [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+        <h3 class="preview-offer-details__locations-heading">{{ language === 'en' ? 'Where to Redeem' : 'أين يمكن
+            الاسترداد' }}</h3>
         <div class="preview-offer-details__location-list">
             @for (loc of locations | slice:0:2; track $index) {
-            <div class="preview-offer-details__location-row" [class.preview-offer-details__location-row--rtl]="language === 'ar'">
-                <div class="preview-offer-details__location-content" [class.preview-offer-details__location-content--rtl]="language === 'ar'" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+            <div class="preview-offer-details__location-row"
+                [class.preview-offer-details__location-row--rtl]="language === 'ar'">
+                <div class="preview-offer-details__location-content"
+                    [class.preview-offer-details__location-content--rtl]="language === 'ar'"
+                    [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
                     <i class="pi pi-home preview-offer-details__location-icon"></i>
                     <div class="preview-offer-details__location-text">
-                        <span class="preview-offer-details__text-wrap preview-offer-details__location-title">{{ getLocationTitle(loc) }}</span>
-                        <span class="preview-offer-details__text-wrap preview-offer-details__location-subtitle">{{ getLocationSubtitle(loc) }}</span>
+                        <span class="preview-offer-details__text-wrap preview-offer-details__location-title">{{
+                            getLocationTitle(loc) }}</span>
+                        <span class="preview-offer-details__text-wrap preview-offer-details__location-subtitle">{{
+                            getLocationSubtitle(loc) }}</span>
                     </div>
                 </div>
             </div>
             } @empty {
-            <p class="preview-offer-details__locations-empty">{{ language === 'en' ? 'No locations available.' : 'لا توجد مواقع متاحة.' }}</p>
+            <p class="preview-offer-details__locations-empty">{{ language === 'en' ? 'No locations available.' : 'لا
+                توجد مواقع متاحة.' }}</p>
             }
         </div>
         @if (locations.length > 2) {
-        <button class="preview-offer-details__branches-button" [class.preview-offer-details__branches-button--rtl]="language === 'ar'" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'" type="button">
-            <i class="pi pi-map preview-offer-details__branches-icon"></i> {{ language === 'en' ? ('View all ' + locations.length + ' branches') : ('عرض جميع الفروع (' + locations.length + ')') }}
+        <button class="preview-offer-details__branches-button"
+            [class.preview-offer-details__branches-button--rtl]="language === 'ar'"
+            [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'" type="button">
+            <i class="pi pi-map preview-offer-details__branches-icon"></i> {{ language === 'en' ? ('View all ' +
+            locations.length + ' branches') : ('عرض جميع الفروع (' + locations.length + ')') }}
         </button>
         } @else if (locations.length > 0) {
-        <button class="preview-offer-details__branches-button" [class.preview-offer-details__branches-button--rtl]="language === 'ar'" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'" type="button">
-            <i class="pi pi-map preview-offer-details__branches-icon"></i> {{ language === 'en' ? 'View all branches' : 'عرض جميع الفروع' }}
+        <button class="preview-offer-details__branches-button"
+            [class.preview-offer-details__branches-button--rtl]="language === 'ar'"
+            [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'" type="button">
+            <i class="pi pi-map preview-offer-details__branches-icon"></i> {{ language === 'en' ? 'View all branches' :
+            'عرض جميع الفروع' }}
         </button>
         }
     </div>
@@ -163,11 +193,13 @@
                 [class.preview-offer-details__tab-button--rtl-last]="language === 'ar'" type="button">
                 {{ language === 'en' ? 'How to avail' : 'طريقة الاسترداد' }}
             </button>
-            <button (click)="setActiveTab('contact')" class="preview-offer-details__tab-button preview-offer-details__tab-button--mid"
+            <button (click)="setActiveTab('contact')"
+                class="preview-offer-details__tab-button preview-offer-details__tab-button--mid"
                 [class.preview-offer-details__tab-button--active]="activeTab === 'contact'" type="button">
                 {{ language === 'en' ? 'Contact info' : 'معلومات التواصل' }}
             </button>
-            <button (click)="setActiveTab('feedback')" class="preview-offer-details__tab-button preview-offer-details__tab-button--sm-only"
+            <button (click)="setActiveTab('feedback')"
+                class="preview-offer-details__tab-button preview-offer-details__tab-button--sm-only"
                 [class.preview-offer-details__tab-button--active]="activeTab === 'feedback'"
                 [class.preview-offer-details__tab-button--rtl-first]="language === 'ar'" type="button">
                 {{ language === 'en' ? 'Share feedback' : 'شاركنا رأيك' }}
@@ -175,24 +207,32 @@
         </div>
         <div class="preview-offer-details__tab-panel">
             @if (activeTab === 'avail') {
-            <p class="preview-offer-details__text-wrap preview-offer-details__tab-text" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
-                {{ language === 'en' ? (offer?.howToAvail || 'Present your QR code or Aramco ID at the branch.') : (offer?.howToAvail_ar || 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في الفرع.') }}
+            <p class="preview-offer-details__text-wrap preview-offer-details__tab-text"
+                [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+                {{ language === 'en' ? (offer?.howToAvail || 'Present your QR code or Aramco ID at the branch.') :
+                (offer?.howToAvail_ar || 'اعرض رمز الاستجابة السريعة الخاص بك أو بطاقة هوية أرامكو في الفرع.') }}
             </p>
             } @else if (activeTab === 'contact') {
             <div class="preview-offer-details__contact-list" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
                 @if (offer?.mobile) {
-                <div class="preview-offer-details__contact-row" [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
-                    <i class="pi pi-phone preview-offer-details__contact-icon"></i><span class="preview-offer-details__text-wrap">{{ offer.mobile }}</span>
+                <div class="preview-offer-details__contact-row"
+                    [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
+                    <i class="pi pi-phone preview-offer-details__contact-icon"></i><span
+                        class="preview-offer-details__text-wrap">{{ offer.mobile }}</span>
                 </div>
                 }
                 @if (offer?.telephone) {
-                <div class="preview-offer-details__contact-row" [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
-                    <i class="pi pi-phone preview-offer-details__contact-icon"></i><span class="preview-offer-details__text-wrap">{{ offer.telephone }}</span>
+                <div class="preview-offer-details__contact-row"
+                    [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
+                    <i class="pi pi-phone preview-offer-details__contact-icon"></i><span
+                        class="preview-offer-details__text-wrap">{{ offer.telephone }}</span>
                 </div>
                 }
                 @if (offer?.email) {
-                <div class="preview-offer-details__contact-row" [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
-                    <i class="pi pi-envelope preview-offer-details__contact-icon"></i><span class="preview-offer-details__text-wrap">{{ offer.email }}</span>
+                <div class="preview-offer-details__contact-row"
+                    [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
+                    <i class="pi pi-envelope preview-offer-details__contact-icon"></i><span
+                        class="preview-offer-details__text-wrap">{{ offer.email }}</span>
                 </div>
                 }
             </div>

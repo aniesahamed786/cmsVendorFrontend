@@ -55,9 +55,12 @@ export class OfferDetails {
     isHotelOffer = computed(() => {
         const categories = this.getCategories(this.offer());
         const hasHotelCategory = categories.some((category) => {
+            const type = (category?.type || '')?.trim().toLowerCase();
             const nameEn = (category?.name || category?.categoryName || '')?.trim().toLowerCase();
             const nameAr = (category?.name_ar || category?.categoryNameAr || '')?.trim().toLowerCase();
             return (
+                type === 'hotels' ||
+                type === 'hotel' ||
                 nameEn === 'hotels' ||
                 nameEn === 'hotel' ||
                 nameEn.includes('hotel') ||

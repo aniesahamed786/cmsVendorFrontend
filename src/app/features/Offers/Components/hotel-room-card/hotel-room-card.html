@@ -1,0 +1,31 @@
+<div class="hotel-details__rooms">
+  @for (room of roomList(); track room.roomName || room.roomNameAr || $index) {
+  <div class="hotel-details__room-card">
+    <p class="hotel-details__room-name">{{ getRoomName(room) || ('offerDetails.hotel.roomFallback' | translate) }}</p>
+    @if (room.rates && room.rates.length > 0) {
+    <div class="hotel-details__rates">
+      @for (rate of room.rates; track rate.season || rate.seasonAr || $index) {
+      <div class="hotel-details__rate-row">
+        <span>{{ getSeasonName(rate) }}</span>
+        <span class="hotel-details__rate-value">
+          {{ getRateValue(rate) }}
+          @if (isSAR(currency()) && hasRateValue(rate)) {
+          <span
+            class="hd-riyal"
+            [style.webkitMaskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+            [style.maskImage]="'url(' + iconBasePath + '/Saudi_Riyal_Symbol.svg)'"
+            [attr.aria-label]="'offerDetails.aria.sar' | translate"
+          ></span>
+          } @else if (hasRateValue(rate)) {
+            {{ currency() }}
+          }
+        </span>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  } @empty {
+  <p class="hotel-details__empty">{{ 'offerDetails.hotel.noRooms' | translate }}</p>
+  }
+</div>

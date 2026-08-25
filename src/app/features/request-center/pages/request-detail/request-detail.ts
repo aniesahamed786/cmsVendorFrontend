@@ -40,6 +40,7 @@ import { extractApiErrorMessage } from '../../../../shared/utils/api-error-messa
 import { RequestOfferDetail } from '../../components/request-offer-detail/request-offer-detail';
 import { RequestProfileDetail } from '../../components/request-profile-detail/request-profile-detail';
 import { RequestBranchDetail } from '../../components/request-branch-detail/request-branch-detail';
+import { HotelRoomsListComponent } from '../../../Offers/Components/hotel-room-card/hotel-room-card';
 
 /**
  * Location ids as stored on an offer, which vary by source: plain strings in a request
@@ -54,6 +55,59 @@ function toIdList(value: unknown): string[] {
       return String(record['$oid'] ?? record['id'] ?? record['_id'] ?? '');
     })
     .filter(Boolean);
+}
+
+function parseRoomDetails(value: unknown): any[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+        if (parsed && typeof parsed === 'object') {
+          if (Array.isArray(parsed.roomDetails)) return parsed.roomDetails;
+          if (Array.isArray(parsed.rooms)) return parsed.rooms;
+          return [parsed];
+        }
+      } catch {
+        return [];
+      }
+    }
+  }
+  if (typeof value === 'object' && value !== null) {
+    const record = value as Record<string, unknown>;
+    if (Array.isArray(record['roomDetails'])) return record['roomDetails'] as any[];
+    if (Array.isArray(record['rooms'])) return record['rooms'] as any[];
+  }
+  return [];
+}
+
+function parseAmenitiesList(value: unknown): string[] {
+  if (!value) return [];
+  const list: string[] = [];
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (typeof item === 'string') {
+        const parts = item.split(/[,،]+/).map((s) => s.trim()).filter(Boolean);
+        list.push(...parts);
+      }
+    }
+  } else if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return parseAmenitiesList(parsed);
+      } catch {
+        // not JSON
+      }
+    }
+    const parts = trimmed.split(/[,،]+/).map((s) => s.trim()).filter(Boolean);
+    list.push(...parts);
+  }
+  return list;
 }
 
 /**
@@ -93,6 +147,7 @@ function prettyRole(role: string | null | undefined): string {
     RequestOfferDetail,
     RequestProfileDetail,
     RequestBranchDetail,
+    HotelRoomsListComponent,
   ],
   templateUrl: './request-detail.html',
   styleUrl: './request-detail.scss',
@@ -162,14 +217,50 @@ export class RequestDetail {
   readonly changeRows = computed(() => {
     this.i18n.loadSeq();
     const entityType = this.details()?.entityType;
-    return [...this.changeRowsRaw()]
+    const currency = (this.proposedEntity()['currency'] as string) || (this.details()?.requestData?.['currency'] as string) || 'SAR';
+    const raw = this.changeRowsRaw();
+    const hasCurrency = raw.some((c) => (c.field ?? '').toLowerCase() === 'currency');
+    const hasTaxValue = raw.some((c) => (c.field ?? '').toLowerCase() === 'taxvalue' || (c.field ?? '').toLowerCase() === 'tax_value');
+    const filteredRows = raw.filter((c) => {
+      const f = (c.field ?? '').toLowerCase();
+      if (f === 'currency_ar') return !hasCurrency;
+      if (f === 'taxvalue_ar' || f === 'tax_value_ar') return !hasTaxValue;
+      return true;
+    });
+
+    return [...filteredRows]
       .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-      .map((change) => ({
-        key: change._id ?? change.field,
-        label: this.i18n.t(changeFieldLabelKey(change.field, entityType)),
-        oldValue: formatChangeValue(change.oldValue, change.field),
-        newValue: formatChangeValue(change.newValue, change.field),
-      }));
+      .map((change) => {
+        const fieldName = change.field?.toLowerCase() ?? '';
+        const isAmenityField =
+          fieldName === 'hotelamenitites' ||
+          fieldName === 'hotelamenities' ||
+          fieldName === 'hotelamenitites_ar' ||
+          fieldName === 'hotelamenities_ar';
+        const isRoomDetailsField = fieldName === 'roomdetails' || fieldName === 'room_details';
+
+        const oldRooms = isRoomDetailsField ? parseRoomDetails(change.oldValue) : [];
+        const newRooms = isRoomDetailsField ? parseRoomDetails(change.newValue) : [];
+        const isRoomDetails = isRoomDetailsField;
+
+        const oldAmenities = isAmenityField ? parseAmenitiesList(change.oldValue) : [];
+        const newAmenities = isAmenityField ? parseAmenitiesList(change.newValue) : [];
+        const isAmenities = isAmenityField;
+
+        return {
+          key: change._id ?? change.field,
+          label: this.i18n.t(changeFieldLabelKey(change.field, entityType)),
+          isRoomDetails,
+          oldRooms,
+          newRooms,
+          isAmenities,
+          oldAmenities,
+          newAmenities,
+          currency,
+          oldValue: isRoomDetails || isAmenities ? '' : formatChangeValue(change.oldValue, change.field),
+          newValue: isRoomDetails || isAmenities ? '' : formatChangeValue(change.newValue, change.field),
+        };
+      });
   });
 
   /** History audit trail rows for the History tab. */

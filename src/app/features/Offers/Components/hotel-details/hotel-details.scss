@@ -43,6 +43,19 @@
     gap: 0.375rem;
   }
 
+  &__tax-values {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  &__tax-divider {
+    color: var(--app-muted);
+    opacity: 0.6;
+    font-weight: 300;
+    user-select: none;
+  }
+
   &__label {
     font-size: 0.875rem;
     font-weight: 500;

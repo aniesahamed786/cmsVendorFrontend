@@ -932,6 +932,35 @@
   overflow-wrap: anywhere;
 }
 
+.request-detail__diff {
+  .hotel-details__amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .hotel-details__amenity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    border: 1px solid var(--app-border);
+  }
+
+  .hotel-details__amenity-icon {
+    font-size: 0.75rem;
+    color: var(--app-muted);
+  }
+
+  .hotel-details__amenity-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--app-text);
+  }
+}
+
 @media (max-width: 640px) {
   .request-detail__diff {
     grid-template-columns: 1fr;

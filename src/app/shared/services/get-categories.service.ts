@@ -10,10 +10,14 @@ export interface Category {
   id?: string;
   name: string;
   name_ar: string;
+  type?: string;
   icon: string;
   image?: string;
   order: number;
   isActive: boolean;
+  isPlanMyTrip?: boolean;
+  offers?: number;
+  activeOffers?: number;
 }
 
 @Injectable({
@@ -29,6 +33,7 @@ export class GetCategoriesService {
     _id: '000000000000000000000001',
     name: 'Hotels',
     name_ar: 'الفنادق',
+    type: 'Hotels',
     icon: 'pi pi-building',
     order: 999,
     isActive: true,

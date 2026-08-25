@@ -47,18 +47,18 @@
        field-by-field diff behind it. -->
   <div class="request-detail__tabs" role="tablist">
     <button type="button" role="tab" class="request-detail__tab"
-      [class.request-detail__tab--active]="activeTab() === 'details'"
-      [attr.aria-selected]="activeTab() === 'details'" (click)="selectTab('details')">
+      [class.request-detail__tab--active]="activeTab() === 'details'" [attr.aria-selected]="activeTab() === 'details'"
+      (click)="selectTab('details')">
       {{ 'requestCenter.detail.tab.details' | translate }}
     </button>
     <button type="button" role="tab" class="request-detail__tab"
-      [class.request-detail__tab--active]="activeTab() === 'changes'"
-      [attr.aria-selected]="activeTab() === 'changes'" (click)="selectTab('changes')">
+      [class.request-detail__tab--active]="activeTab() === 'changes'" [attr.aria-selected]="activeTab() === 'changes'"
+      (click)="selectTab('changes')">
       {{ 'requestCenter.detail.tab.changes' | translate }}
     </button>
     <button type="button" role="tab" class="request-detail__tab"
-      [class.request-detail__tab--active]="activeTab() === 'history'"
-      [attr.aria-selected]="activeTab() === 'history'" (click)="selectTab('history')">
+      [class.request-detail__tab--active]="activeTab() === 'history'" [attr.aria-selected]="activeTab() === 'history'"
+      (click)="selectTab('history')">
       {{ 'requestCenter.detail.tab.history' | translate }}
     </button>
   </div>
@@ -119,7 +119,8 @@
                   <span class="request-detail__history-role">{{ row.roleLabel }}</span>
                 </td>
                 <td>
-                  <span class="request-detail__history-remarks" [class.request-detail__history-remarks--empty]="!row.remarks">
+                  <span class="request-detail__history-remarks"
+                    [class.request-detail__history-remarks--empty]="!row.remarks">
                     {{ row.remarks || '—' }}
                   </span>
                 </td>
@@ -167,11 +168,51 @@
           @for (row of changeRows(); track row.key) {
           <div class="request-detail__diff-cell">
             <span class="request-detail__diff-label">{{ row.label }}</span>
-            <p class="request-detail__diff-value">{{ row.oldValue || '—' }}</p>
+            @if (row.isRoomDetails) {
+              @if (row.oldRooms && row.oldRooms.length > 0) {
+                <app-hotel-rooms-list [rooms]="row.oldRooms" [currency]="row.currency" />
+              } @else {
+                <p class="request-detail__diff-value">—</p>
+              }
+            } @else if (row.isAmenities) {
+              @if (row.oldAmenities && row.oldAmenities.length > 0) {
+                <div class="hotel-details__amenities">
+                  @for (amenity of row.oldAmenities; track $index) {
+                  <div class="hotel-details__amenity">
+                    <span class="hotel-details__amenity-label">{{ amenity }}</span>
+                  </div>
+                  }
+                </div>
+              } @else {
+                <p class="request-detail__diff-value">—</p>
+              }
+            } @else {
+              <p class="request-detail__diff-value">{{ row.oldValue || '—' }}</p>
+            }
           </div>
           <div class="request-detail__diff-cell request-detail__diff-cell--new">
             <span class="request-detail__diff-label">{{ row.label }}</span>
-            <p class="request-detail__diff-value">{{ row.newValue || '—' }}</p>
+            @if (row.isRoomDetails) {
+              @if (row.newRooms && row.newRooms.length > 0) {
+                <app-hotel-rooms-list [rooms]="row.newRooms" [currency]="row.currency" />
+              } @else {
+                <p class="request-detail__diff-value">—</p>
+              }
+            } @else if (row.isAmenities) {
+              @if (row.newAmenities && row.newAmenities.length > 0) {
+                <div class="hotel-details__amenities">
+                  @for (amenity of row.newAmenities; track $index) {
+                  <div class="hotel-details__amenity">
+                    <span class="hotel-details__amenity-label">{{ amenity }}</span>
+                  </div>
+                  }
+                </div>
+              } @else {
+                <p class="request-detail__diff-value">—</p>
+              }
+            } @else {
+              <p class="request-detail__diff-value">{{ row.newValue || '—' }}</p>
+            }
           </div>
           }
         </div>
@@ -198,7 +239,8 @@
           @for (field of [1, 2, 3, 4, 5, 6, 7]; track field) {
           <div class="request-detail__branch-field" [class.request-detail__branch-field--full]="field >= 6">
             <span class="app-skeleton request-detail__skeleton-field-label"></span>
-            <span class="app-skeleton request-detail__skeleton-field-value" [class.request-detail__skeleton-field-value--full]="field >= 6"></span>
+            <span class="app-skeleton request-detail__skeleton-field-value"
+              [class.request-detail__skeleton-field-value--full]="field >= 6"></span>
           </div>
           }
         </div>
@@ -222,25 +264,21 @@
 
       <!-- The entity in its own detail design, showing how it will look once approved. -->
       @switch (entityType()) {
-        @case ('OFFER') {
-        <app-request-offer-detail
-          [offer]="offerView()"
-          [vendor]="heroVendor()"
-          [locations]="offerLocations()"
-          [editedFields]="editedFieldSet()"
-        />
-        }
-        @case ('PROFILE') {
-        @if (profileView(); as profile) {
-        <app-request-profile-detail [profile]="profile" />
-        }
-        }
-        @case ('STORE') {
-        <app-request-branch-detail [fields]="branchView()" />
-        }
-        @default {
-        <!-- Unknown entity type — fall back to the generic labelled field list. -->
-        @for (section of changeSections(); track section.key) {
+      @case ('OFFER') {
+      <app-request-offer-detail [offer]="offerView()" [vendor]="heroVendor()" [locations]="offerLocations()"
+        [editedFields]="editedFieldSet()" />
+      }
+      @case ('PROFILE') {
+      @if (profileView(); as profile) {
+      <app-request-profile-detail [profile]="profile" />
+      }
+      }
+      @case ('STORE') {
+      <app-request-branch-detail [fields]="branchView()" />
+      }
+      @default {
+      <!-- Unknown entity type — fall back to the generic labelled field list. -->
+      @for (section of changeSections(); track section.key) {
       <section class="request-detail__card">
         <div class="request-detail__section-header">
           <span class="request-detail__section-icon"><i [class]="section.icon"></i></span>
@@ -254,19 +292,18 @@
               <label class="request-detail__field-label">{{ field.labelKey | translate }}</label>
             </div>
 
-            <div
-              class="request-detail__field-value"
-              [class.request-detail__field-value--multiline]="field.multiline"
+            <div class="request-detail__field-value" [class.request-detail__field-value--multiline]="field.multiline"
               [attr.dir]="field.rtl ? 'rtl' : null">
               @if (field.value) { {{ field.value }} }
-              @else { <span class="request-detail__field-value-empty">{{ 'requestCenter.detail.emptyValue' | translate }}</span> }
+              @else { <span class="request-detail__field-value-empty">{{ 'requestCenter.detail.emptyValue' | translate
+                }}</span> }
             </div>
           </div>
           }
         </div>
       </section>
-        }
-        }
+      }
+      }
       }
       }
       }
@@ -308,14 +345,15 @@
           <ng-template pTemplate="marker" let-step>
             <span [class]="'request-detail__timeline-marker request-detail__timeline-marker--' + markerModifier(step)">
               @switch (markerModifier(step)) {
-                @case ('done') { <i class="pi pi-check"></i> }
-                @case ('danger') { <i class="pi pi-times"></i> }
-                @case ('muted') { <i class="pi pi-replay"></i> }
+              @case ('done') { <i class="pi pi-check"></i> }
+              @case ('danger') { <i class="pi pi-times"></i> }
+              @case ('muted') { <i class="pi pi-replay"></i> }
               }
             </span>
           </ng-template>
           <ng-template pTemplate="content" let-step>
-            <div class="request-detail__timeline-item" [class.request-detail__timeline-item--upcoming]="step.state === 'upcoming'">
+            <div class="request-detail__timeline-item"
+              [class.request-detail__timeline-item--upcoming]="step.state === 'upcoming'">
               <div class="request-detail__timeline-item-header">
                 <span class="request-detail__timeline-item-title">{{ step.title }}</span>
                 @if (step.date) {
@@ -374,7 +412,8 @@
         } @else {
         <div class="request-detail__summary-list">
           <div class="request-detail__summary-item">
-            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.requestId' | translate }}</span>
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.requestId' | translate
+              }}</span>
             <span class="request-detail__summary-value request-detail__summary-value--bold">
               {{ requestIdParam || details()?.requestId || row()?.id }}
             </span>
@@ -392,21 +431,24 @@
           </div>
 
           <div class="request-detail__summary-item">
-            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.requestType' | translate }}</span>
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.requestType' | translate
+              }}</span>
             <span class="request-detail__summary-value request-detail__summary-value--bold">
               {{ summaryEntityType() }}
             </span>
           </div>
 
           <div class="request-detail__summary-item">
-            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.actionType' | translate }}</span>
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.actionType' | translate
+              }}</span>
             <span class="request-detail__summary-value request-detail__summary-value--bold">
               {{ summaryActionType() }}
             </span>
           </div>
 
           <div class="request-detail__summary-item">
-            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.createdDate' | translate }}</span>
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.createdDate' | translate
+              }}</span>
             <div class="request-detail__summary-date">
               <i class="pi pi-calendar"></i>
               <span>{{ summaryCreatedDate() }}</span>
@@ -414,7 +456,8 @@
           </div>
 
           <div class="request-detail__summary-item">
-            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.lastUpdated' | translate }}</span>
+            <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.lastUpdated' | translate
+              }}</span>
             <span class="request-detail__summary-value request-detail__summary-value--bold">
               {{ summaryLastUpdated() }}
             </span>
@@ -441,5 +484,6 @@
 <app-confirmation-pop-up [visible]="showCancelConfirm" [title]="'requestCenter.deleteConfirm.title' | translate"
   [message]="'requestCenter.deleteConfirm.message' | translate"
   [confirmLabel]="'requestCenter.detail.cancelRequest' | translate" [cancelLabel]="'common.cancel' | translate"
-  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onCancelConfirmed()" (cancel)="showCancelConfirm = false">
+  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onCancelConfirmed()"
+  (cancel)="showCancelConfirm = false">
 </app-confirmation-pop-up>

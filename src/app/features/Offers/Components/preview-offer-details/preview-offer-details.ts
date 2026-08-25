@@ -40,8 +40,9 @@ export class PreviewOfferDetails implements OnChanges {
           ? [this.offer.category]
           : [];
     return categories.some((category: any) => {
+      const type = (category?.type || '')?.trim().toLowerCase();
       const name = (category?.name || category?.categoryName || '')?.trim().toLowerCase();
-      return name === 'hotels' || name === 'hotel';
+      return type === 'hotels' || type === 'hotel' || name === 'hotels' || name === 'hotel';
     });
   }
 

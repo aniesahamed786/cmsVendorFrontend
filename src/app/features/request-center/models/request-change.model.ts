@@ -112,8 +112,10 @@ const OFFER_SECTIONS: SectionDef[] = [
     fields: [
       { key: 'taxValue', labelKey: 'offerDetails.hotel.taxValue', aliases: ['tax_value', 'taxValue_ar', 'tax_value_ar'] },
       { key: 'currency', labelKey: 'offerDetails.hotel.currency', aliases: ['currency_ar'] },
-      { key: 'hotelAmenitites', labelKey: 'offerDetails.hotel.amenities', aliases: ['hotelAmenities', 'hotelAmenitites_ar', 'hotelAmenities_ar'] },
-      { key: 'roomDetails', labelKey: 'offerDetails.hotel.roomDetails', aliases: ['rooms', 'room_details'] },
+      { key: 'hotelAmenitites', labelKey: 'offerDetails.hotel.amenities', aliases: ['hotelAmenities'] },
+      { key: 'hotelAmenitites_ar', labelKey: 'offerDetails.hotel.amenitiesAr', aliases: ['hotelAmenities_ar'], rtl: true },
+      { key: 'rooms', labelKey: 'offerDetails.hotel.roomsCount' },
+      { key: 'roomDetails', labelKey: 'offerDetails.hotel.roomDetails', aliases: ['room_details'] },
     ],
   },
   {
