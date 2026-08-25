@@ -222,18 +222,7 @@ export class PreviewOfferDetails implements OnChanges {
 
   getFormattedDiscount(offer: any): string {
     const isAr = this.language === 'ar';
-    const amount = isAr
-      ? offer?.discount_amount_ar ||
-        offer?.Discount_amount_ar ||
-        offer?.discountValueAr ||
-        offer?.discount_amount ||
-        offer?.Discount_amount ||
-        offer?.discountValue ||
-        ''
-      : offer?.discount_amount ||
-        offer?.Discount_amount ||
-        offer?.discountValue ||
-        '';
+    const amount = this.getDiscountAmount(offer);
     const type = (offer?.discount_type || offer?.discountType || '').toLowerCase().trim();
     if (!amount) return '';
     if (type === 'percentage') {
@@ -246,7 +235,7 @@ export class PreviewOfferDetails implements OnChanges {
   }
 
   hasDiscount(offer: any): boolean {
-    return !this.getDiscountAmount(offer);
+    return Boolean(this.getDiscountAmount(offer));
   }
 
   isPercentageDiscount(offer: any): boolean {
@@ -266,20 +255,27 @@ export class PreviewOfferDetails implements OnChanges {
 
   getDiscountAmount(offer: any): string {
     const isAr = this.language === 'ar';
-    const rawAmount = isAr
-      ? offer?.discount_amount_ar ??
-        offer?.Discount_amount_ar ??
-        offer?.discountValueAr ??
-        offer?.discount_amount ??
-        offer?.Discount_amount ??
-        offer?.discountValue ??
-        ''
-      : offer?.discount_amount ??
-        offer?.Discount_amount ??
-        offer?.discountValue ??
-        '';
-    if (!rawAmount && rawAmount !== 0) return '';
+    const amountAr =
+      this.nonEmptyString(offer?.discount_amount_ar) ??
+      this.nonEmptyString(offer?.Discount_amount_ar) ??
+      this.nonEmptyString(offer?.discountValueAr);
+    const amountEn =
+      this.nonEmptyString(offer?.discount_amount) ??
+      this.nonEmptyString(offer?.Discount_amount) ??
+      this.nonEmptyString(offer?.discountValue);
+
+    const rawAmount = isAr ? (amountAr ?? amountEn ?? '') : (amountEn ?? '');
+    if (rawAmount === '' || rawAmount === null || rawAmount === undefined) return '';
     return String(rawAmount).replace('%', '').trim();
+  }
+
+  private nonEmptyString(value: unknown): string | number | null {
+    if (value === null || value === undefined) return null;
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      return trimmed.length > 0 ? trimmed : null;
+    }
+    return value as number;
   }
 
   getEndDate(offer: any): string | null {
@@ -339,7 +335,9 @@ export class PreviewOfferDetails implements OnChanges {
   getLocationTitle(loc: any): string {
     const isAr = this.language === 'ar';
     return (
-      (isAr ? loc?.branchNameAr || loc?.branchName : loc?.branchName || loc?.branchNameAr) ||
+      (isAr
+        ? loc?.locationNameAr || loc?.branchNameAr || loc?.branch_name_ar || loc?.locationName || loc?.branchName || loc?.branch_name
+        : loc?.locationName || loc?.branchName || loc?.branch_name || loc?.locationNameAr || loc?.branchNameAr || loc?.branch_name_ar) ||
       (isAr ? loc?.name_ar || loc?.name : loc?.name || loc?.name_ar) ||
       (isAr ? 'فرع' : 'Branch')
     );
@@ -348,8 +346,12 @@ export class PreviewOfferDetails implements OnChanges {
   getLocationSubtitle(loc: any): string {
     const isAr = this.language === 'ar';
     return (
-      (isAr ? loc?.cityAr || loc?.city : loc?.city || loc?.cityAr) ||
-      (isAr ? loc?.addressAr || loc?.address : loc?.address || loc?.addressAr) ||
+      (isAr
+        ? loc?.cityAr || loc?.city_ar || loc?.city
+        : loc?.city || loc?.cityAr || loc?.city_ar) ||
+      (isAr
+        ? loc?.addressAr || loc?.address_ar || loc?.address
+        : loc?.address || loc?.addressAr || loc?.address_ar) ||
       ''
     );
   }

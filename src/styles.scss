@@ -465,8 +465,8 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-select:has(:focus-visible),
 .p-multiselect:has(:focus-visible),
 .p-listbox:has(:focus-visible) {
-  outline: 2px solid var(--field-border-focus) !important;
-  outline-offset: -2px;
+  border-color: var(--field-border-focus) !important;
+  outline: none !important;
 }
 
 .p-inputtext:enabled:focus,
@@ -476,7 +476,6 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-multiselect.p-multiselect-open,
 .app-search:focus-within {
   border-color: var(--field-border-focus) !important;
-  // box-shadow: 0 0 0 3px var(--field-ring) !important;
   outline: none !important;
 }
 

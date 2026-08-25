@@ -75,12 +75,13 @@ export class AccountsService {
   }
 
   listLocations(): Observable<SelectOption[]> {
-    return this.http.get<VendorLocation[]>(`${this.baseUrl}/locations`).pipe(
-      map((rows) =>
-        (rows ?? [])
+    return this.http.get<any>(`${this.baseUrl}/locations`).pipe(
+      map((res) => {
+        const rows: VendorLocation[] = Array.isArray(res) ? res : res?.locations ?? [];
+        return (rows ?? [])
           .map((row) => ({ label: this.branchLabel(row), value: row.locationId }))
-          .filter((o) => !!o.value),
-      ),
+          .filter((o) => !!o.value);
+      }),
       catchError((err) => {
         return of<SelectOption[]>([]);
       }),

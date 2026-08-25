@@ -45,7 +45,7 @@
         </h1>
         } @else {
         <h1 class="preview-offer-details__headline" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
-            {{ language === 'ar' ? 'قيمة الخصم' : 'Discount amount' }}
+            {{ language === 'ar' ? (offer?.title_ar || offer?.title || 'قيمة الخصم') : (offer?.title || 'Discount amount') }}
         </h1>
         }
         <h2 class="preview-offer-details__vendor-name" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">{{ getVendorName(offer) }}</h2>

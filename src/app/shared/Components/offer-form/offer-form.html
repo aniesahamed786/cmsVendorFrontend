@@ -151,20 +151,18 @@
 
         <div class="offer-form__col-2 offer-form__field-group">
           <label class="offer-form__label">{{ 'offerForm.label.tags' | translate }}</label>
-          <div class="offer-form__row">
-            <div class="offer-form__input-wrap offer-form__flex-1">
-              <p-autoComplete formControlName="tagInput" [suggestions]="suggestedTags()"
-                (completeMethod)="searchTags($event)" [placeholder]="'offerForm.placeholder.tags' | translate"
-                styleClass="offer-form__field offer-form__autocomplete offer-form__input"
-                panelStyleClass="offer-form__overlay-panel offer-form__autocomplete-panel"
-                inputStyleClass="offer-form__input offer-form__input--pl5" (onBlur)="onTagInputBlur()"
-                (onSelect)="addTag()" [forceSelection]="true">
-              </p-autoComplete>
-            </div>
-          </div>
-          @if (shouldShowTagDuplicateError()) {
-          <p class="offer-form__error">{{ 'offerForm.tag.duplicate' | translate }}</p>
-          }
+          <p-multiselect
+            [options]="tagOptions()"
+            [ngModel]="selectedTagValues()"
+            (ngModelChange)="onSelectedTagsChange($event)"
+            [ngModelOptions]="{ standalone: true }"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="'offerForm.placeholder.tags' | translate"
+            styleClass="offer-form__field offer-form__multiselect offer-form__input"
+            panelStyleClass="offer-form__overlay-panel offer-form__multiselect-panel"
+            appendTo="body">
+          </p-multiselect>
 
           @if (topTags().length > 0) {
           <div class="offer-form__mt-2 offer-form__row offer-form__row--gap2">

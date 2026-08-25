@@ -186,18 +186,34 @@ export class GetVendorList {
        });
      }
      return this.http
-       .get<any[]>(`${this.base_url}/locations`)
+       .get<any>(`${this.base_url}/locations`)
        .pipe(
-         map((rows) =>
-           (rows ?? []).map((loc: any) => ({
-             id: loc?.locationId ?? '',
-             __id__: { $oid: loc?.locationId ?? '' },
-             branch_name: loc?.locationName ?? '',
-             branch_name_ar: loc?.locationNameAr ?? '',
+         map((res) => {
+           const rows = Array.isArray(res) ? res : res?.locations ?? [];
+           return (rows ?? []).map((loc: any) => ({
+             id: loc?.locationId ?? loc?.id ?? loc?._id ?? loc?.__id__?.$oid ?? '',
+             __id__: { $oid: loc?.locationId ?? loc?.id ?? loc?._id ?? loc?.__id__?.$oid ?? '' },
+             locationId: loc?.locationId ?? loc?.id ?? loc?._id ?? loc?.__id__?.$oid ?? '',
+             branch_name: loc?.locationName ?? loc?.branch_name ?? '',
+             branch_name_ar: loc?.locationNameAr ?? loc?.branch_name_ar ?? '',
+             locationName: loc?.locationName ?? loc?.branch_name ?? '',
+             locationNameAr: loc?.locationNameAr ?? loc?.branch_name_ar ?? '',
              city: loc?.city ?? '',
-             city_ar: loc?.cityAr ?? '',
-           })),
-         ),
+             cityAr: loc?.cityAr ?? loc?.city_ar ?? '',
+             city_ar: loc?.cityAr ?? loc?.city_ar ?? '',
+             country: loc?.country ?? '',
+             countryAr: loc?.countryAr ?? '',
+             region: loc?.region ?? '',
+             regionAr: loc?.regionAr ?? '',
+             latitude: loc?.latitude,
+             longitude: loc?.longitude,
+             googleMapLink: loc?.googleMapLink ?? '',
+             representativeName: loc?.representativeName ?? '',
+             representativeNameAr: loc?.representativeNameAr ?? '',
+             totalOffers: loc?.totalOffers,
+             vendorLogo: res?.vendorLogo,
+           }));
+         }),
          catchError(handleApiError),
        );
    }

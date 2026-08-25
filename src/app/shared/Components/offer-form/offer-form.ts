@@ -63,7 +63,6 @@ import {
   normalizeTagName,
   TagsListService,
 } from "../../../features/setting/services/tags-list/tags-list";
-import { AutoCompleteCompleteEvent } from "primeng/autocomplete";
 import { noWhitespaceValidator } from "../../utils/form-validators";
 import { ConfirmationPopUp } from "../confirmation-pop-up/confirmation-pop-up";
 import { ImageCropperComponent, ImageCroppedEvent } from "ngx-image-cropper";
@@ -486,6 +485,32 @@ export class OfferForm {
     this.previewLanguage.set(lang);
   }
   suggestedTags = signal<string[]>([]);
+  readonly tagOptions = computed(() => {
+    const list = this.tagsListService.tags();
+    const currentSelected = this.formPreviewValue()?.selectedTags || this.selectedTags?.value || [];
+    const seen = new Set<string>();
+    const options: { label: string; value: string }[] = [];
+
+    for (const t of list) {
+      const name = t?.name?.trim();
+      if (name && !seen.has(name.toLowerCase())) {
+        seen.add(name.toLowerCase());
+        options.push({ label: name, value: name });
+      }
+    }
+
+    if (Array.isArray(currentSelected)) {
+      for (const t of currentSelected) {
+        const name = (typeof t === "string" ? t : t?.value)?.trim();
+        if (name && !seen.has(name.toLowerCase())) {
+          seen.add(name.toLowerCase());
+          options.push({ label: name, value: name });
+        }
+      }
+    }
+
+    return options.sort((a, b) => a.label.localeCompare(b.label));
+  });
   topTags = computed(() => {
     return [...this.tagsListService.tags()]
       .sort((a, b) => b.count - a.count)
@@ -704,7 +729,7 @@ export class OfferForm {
   loadInitialData() {
     this.loadVendorOptions();
     this.getCategories();
-    this.tagsListService.loadTags();
+    this.tagsListService.loadTags(1, 1000);
   }
 
   private setupVendorSearch(): void {
@@ -953,19 +978,31 @@ export class OfferForm {
       .getVendorLocationsById(vendorId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (res: any[]) => {
-          const options = (res || [])
+        next: (res: any) => {
+          const rawLocations = Array.isArray(res) ? res : res?.locations ?? [];
+          const options = (rawLocations || [])
             .map((loc: any) => ({
-              id: loc?.__id__?.$oid ?? "",
+              id: loc?.locationId ?? loc?.__id__?.$oid ?? loc?.id ?? loc?._id ?? "",
+              locationId: loc?.locationId ?? loc?.__id__?.$oid ?? loc?.id ?? loc?._id ?? "",
               label:
-                loc?.branch_name || loc?.city || loc?.address || "Location",
-              branch_name_ar: loc?.branch_name_ar || "",
-              address: loc?.address,
+                loc?.locationName || loc?.branch_name || loc?.city || loc?.address || "Location",
+              branch_name: loc?.locationName || loc?.branch_name || "",
+              branch_name_ar: loc?.locationNameAr || loc?.branch_name_ar || "",
+              locationName: loc?.locationName || loc?.branch_name || "",
+              locationNameAr: loc?.locationNameAr || loc?.branch_name_ar || "",
+              address: loc?.address || "",
               address_ar: loc?.address_ar || "",
-              city: loc?.city,
-              city_ar: loc?.city_ar || "",
+              city: loc?.city || "",
+              city_ar: loc?.cityAr || loc?.city_ar || "",
+              country: loc?.country || "",
+              country_ar: loc?.countryAr || loc?.country_ar || "",
+              region: loc?.region || "",
+              region_ar: loc?.regionAr || loc?.region_ar || "",
+              googleMapLink: loc?.googleMapLink || "",
+              latitude: loc?.latitude,
+              longitude: loc?.longitude,
             }))
-            .filter((opt) => !!opt.id);
+            .filter((opt: any) => !!opt.id);
 
           this.vendorLocations.set(options);
 
@@ -973,7 +1010,7 @@ export class OfferForm {
             | string[]
             | null;
           const nextSelectedIds = Array.isArray(current)
-            ? current.filter((id) => options.some((option) => option.id === id))
+            ? current.filter((id) => options.some((option: any) => option.id === id))
             : [];
           this.patchWithoutDirty(() =>
             this.offerForm.patchValue({ locationIds: nextSelectedIds }),
@@ -1954,50 +1991,53 @@ export class OfferForm {
       this.router.navigate([route]);
     }
   }
+  selectedTagValues(): string[] {
+    const raw = this.selectedTags?.value;
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((item) => (typeof item === "string" ? item : item?.value))
+      .filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+  }
+
+  onSelectedTagsChange(values: (string | null | undefined)[]): void {
+    const tagsArray = this.selectedTags;
+    tagsArray.clear();
+    (values || []).forEach((tag) => {
+      const trimmed = typeof tag === "string" ? tag.trim() : "";
+      if (trimmed) {
+        tagsArray.push(new FormControl(trimmed));
+      }
+    });
+    this.offerForm.markAsDirty();
+  }
+
+  onTagSelect(event: { value?: string | null }): void {
+    const tagName = event?.value;
+    if (!tagName) return;
+
+    this.addExistingTag(tagName);
+    this.offerForm.get("tagInput")?.setValue(null, { emitEvent: false });
+  }
+
   addTag() {
     const value = this.offerForm.get("tagInput")?.value;
     if (!value) return;
 
-    const tagName = typeof value === "string" ? value : value.name;
+    const tagName = typeof value === "string" ? value : (value?.name ?? value?.value);
     if (!tagName) return;
 
-    const normalized = normalizeTagName(tagName);
-    if (!normalized) return;
-
-    this.tagInputTouched.set(true);
-    this.updateTagDuplicateState();
-
-    const existingGlobalTag = this.findKnownTagName(tagName);
-    const existingSelectedTag = this.findSelectedTagName(tagName);
-
-    if (existingSelectedTag) {
-      this.offerForm.get("tagInput")?.reset();
-      this.tagDuplicateError.set(false);
-      this.tagInputTouched.set(false);
-      return;
-    }
-
-    if (existingGlobalTag) {
-      this.addExistingTag(existingGlobalTag);
-      this.offerForm.get("tagInput")?.reset();
-      this.tagDuplicateError.set(false);
-      this.tagInputTouched.set(false);
-      return;
-    }
-
-    // Since the user can only select existing tags, if it's not a known tag, we just reset.
-    this.offerForm.get("tagInput")?.reset();
-    this.tagDuplicateError.set(false);
-    this.tagInputTouched.set(false);
+    this.addExistingTag(tagName);
+    this.offerForm.get("tagInput")?.setValue(null, { emitEvent: false });
   }
 
   addExistingTag(tagName: string) {
     if (!tagName) return;
-    const currentTags = this.selectedTags.value as string[];
+    const currentTags = (this.selectedTags.value as string[]) || [];
     const normalized = normalizeTagName(tagName);
     if (currentTags.some((tag) => normalizeTagName(tag) === normalized)) return;
 
     this.selectedTags.push(new FormControl(tagName.trim()));
+    this.offerForm.markAsDirty();
   }
 
   onTagInputBlur() {
@@ -2006,7 +2046,7 @@ export class OfferForm {
   }
 
   shouldShowTagDuplicateError(): boolean {
-    return this.tagInputTouched() && this.tagDuplicateError();
+    return this.tagDuplicateError();
   }
 
   isTagAddDisabled(): boolean {
@@ -2015,7 +2055,8 @@ export class OfferForm {
     return !tagName.trim() || !!this.findSelectedTagName(tagName);
   }
 
-  searchTags(event: AutoCompleteCompleteEvent) {
+  searchTags(event?: { query: string }) {
+    if (!event) return;
     const query = event.query.toLowerCase();
     const all = this.tagsListService.tags().map((t) => t.name);
     this.suggestedTags.set(all.filter((t) => t.toLowerCase().includes(query)));
@@ -2023,7 +2064,8 @@ export class OfferForm {
 
   removeTag(index: number) {
     this.selectedTags.removeAt(index);
-    this.updateTagDuplicateState();
+    this.tagDuplicateError.set(false);
+    this.offerForm.markAsDirty();
   }
 
   private updateTagDuplicateState(rawValue?: string): void {
@@ -3097,13 +3139,31 @@ export class OfferForm {
   });
 
   get previewLocations() {
-    return this.vendorLocations().map((location) => ({
-      branch_name: location.label,
-      branch_name_ar: (location as any).branch_name_ar,
+    const selectedIds = new Set(this.offerForm.get('locationIds')?.value || []);
+    const all = this.vendorLocations().map((location: any) => ({
+      id: location.id,
+      locationId: location.id,
+      branch_name: location.locationName || location.branch_name || location.label,
+      branch_name_ar: location.locationNameAr || location.branch_name_ar,
+      branchName: location.locationName || location.branch_name || location.label,
+      branchNameAr: location.locationNameAr || location.branch_name_ar,
       address: location.address,
-      address_ar: (location as any).address_ar,
+      address_ar: location.address_ar,
       city: location.city,
-      city_ar: (location as any).city_ar,
+      city_ar: location.city_ar,
+      cityAr: location.city_ar,
+      country: location.country,
+      countryAr: location.country_ar,
+      region: location.region,
+      regionAr: location.region_ar,
+      googleMapLink: location.googleMapLink,
+      latitude: location.latitude,
+      longitude: location.longitude,
     }));
+    if (selectedIds.size > 0) {
+      const filtered = all.filter((l: any) => selectedIds.has(l.id));
+      if (filtered.length > 0) return filtered;
+    }
+    return all;
   }
 }
