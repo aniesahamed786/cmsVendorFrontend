@@ -58,40 +58,51 @@
         </button>
       </div>
 
-      <div class="dashboard-page__activity-list">
-        @if (activityLoading()) {
-        @for (row of skeletonRows; track row) {
-        <div class="dashboard-page__activity">
-          <span class="app-skeleton dashboard-page__activity-icon"></span>
-          <div class="dashboard-page__activity-body">
-            <span class="app-skeleton dashboard-page__skeleton-title"></span>
-            <span class="app-skeleton dashboard-page__skeleton-desc"></span>
-          </div>
-          <span class="app-skeleton dashboard-page__skeleton-time"></span>
-        </div>
-        }
-        } @else {
-        @for (activity of recentActivities(); track $index) {
-        <div class="dashboard-page__activity">
-          <div class="dashboard-page__activity-icon" [ngClass]="activity.iconClass">
-            <span
-              class="dashboard-page__icon-mask"
-              [style.webkitMaskImage]="'url(' + activity.icon + ')'"
-              [style.maskImage]="'url(' + activity.icon + ')'"
-              role="img"
-            ></span>
-          </div>
-          <div class="dashboard-page__activity-body">
-            <p class="dashboard-page__activity-title">{{ activity.title }}</p>
-            <p class="dashboard-page__activity-desc">{{ activity.description }}</p>
-          </div>
-          <span class="dashboard-page__activity-time">{{ activity.time }}</span>
-        </div>
-        } @empty {
-        <p class="dashboard-page__activity-desc">{{ 'dashboard.noRecentActivity' | translate }}</p>
-        }
-        }
-      </div>
+      <p-table [value]="tableRows()" styleClass="dashboard-page__table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Activity Date & Time</th>
+            <th>Module</th>
+            <th>Item Name</th>
+            <th>Activity</th>
+            <th>Performed By</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>{{ row.timestamp }}</td>
+            <td>{{ row.module }}</td>
+            <td>
+              {{ row.itemName }}
+              @if (row.remarks) {
+              <i class="pi pi-info-circle dashboard-page__remarks-icon" [pTooltip]="row.remarks"
+                tooltipPosition="top"></i>
+              }
+            </td>
+            <td><span class="dashboard-page__row-title">{{ row.activity }}</span></td>
+            <td>{{ row.performedBy }}</td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="loadingbody">
+          <tr class="dashboard-page__row--skeleton">
+            <td><span class="app-skeleton dashboard-page__skeleton-cell dashboard-page__skeleton-cell--date"></span></td>
+            <td><span class="app-skeleton dashboard-page__skeleton-cell dashboard-page__skeleton-cell--text"></span></td>
+            <td><span class="app-skeleton dashboard-page__skeleton-cell dashboard-page__skeleton-cell--wide"></span></td>
+            <td><span class="app-skeleton dashboard-page__skeleton-cell dashboard-page__skeleton-cell--wide"></span></td>
+            <td><span class="app-skeleton dashboard-page__skeleton-cell dashboard-page__skeleton-cell--text"></span></td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="dashboard-page__empty">
+              {{ 'dashboard.noRecentActivity' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </section>
 
     <section class="dashboard-page__panel">

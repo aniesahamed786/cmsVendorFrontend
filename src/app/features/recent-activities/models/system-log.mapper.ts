@@ -2,6 +2,9 @@ import { SystemLogEntry, SystemLogListResponse } from './system-log.model';
 
 export interface ActivityRow {
   timestamp: string;
+  module: string;
+  itemName: string;
+  activity: string;
   actionType: string;
   performedBy: string;
   targetEntity: string;
@@ -13,9 +16,13 @@ export interface ActivityRow {
 
 const ENTITY_LABELS: Record<string, string> = {
   OFFER: 'Offer',
-  STORE: 'Store',
+  STORE: 'Branch',
+  BRANCH: 'Branch',
   PROFILE: 'Profile',
   HIGHLIGHT: 'Highlight',
+  ACCOUNT: 'Account',
+  BANNER: 'Banner',
+  NOTIFICATION: 'Notification',
 };
 
 export function titleCase(value: string | null | undefined): string {
@@ -41,9 +48,13 @@ export function formatTimestamp(iso: string | null | undefined): string {
 export function toActivityRow(entry: SystemLogEntry): ActivityRow {
   const entity = ENTITY_LABELS[entry.entityType] ?? titleCase(entry.entityType);
   const action = titleCase(entry.action);
+  const activityDesc = [entity, action].filter(Boolean).join(' ') || '—';
   return {
     timestamp: formatTimestamp(entry.createdAt),
-    actionType: [entity, action].filter(Boolean).join(' ') || '—',
+    module: entity || '—',
+    itemName: entry.title || entity || '—',
+    activity: activityDesc,
+    actionType: activityDesc,
     performedBy: entry.performedBy || '—',
     targetEntity: entry.title || entity || '—',
     referenceId: entry.requestId || '—',

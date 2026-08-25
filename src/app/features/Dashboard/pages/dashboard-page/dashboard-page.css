@@ -207,6 +207,28 @@
   flex-shrink: 0;
 }
 
+.dashboard-page__table {
+  margin: 0 -1.5rem -1.5rem;
+}
+
+.dashboard-page__row-title {
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.dashboard-page__remarks-icon {
+  margin-inline-start: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--app-muted);
+  cursor: help;
+}
+
+.dashboard-page__empty {
+  text-align: center;
+  color: var(--app-muted);
+  padding: 1.5rem 0;
+}
+
 .dashboard-page__status {
   display: inline-block;
   font-size: 0.72rem;
@@ -217,9 +239,16 @@
 }
 
 .dashboard-page__status--submitted,
-.dashboard-page__status--approved {
+.dashboard-page__status--approved,
+.dashboard-page__status--created,
+.dashboard-page__status--published {
   background: rgba(34, 197, 94, 0.16);
   color: #16a34a;
+}
+
+.dashboard-page__status--edited {
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
 }
 
 .dashboard-page__status--rejected,
@@ -238,6 +267,18 @@
   background: rgba(245, 158, 11, 0.16);
   color: #d97706;
 }
+
+/* Table skeleton cells (.app-skeleton owns fill + pulse; these own size) */
+.dashboard-page__skeleton-cell {
+  display: inline-block;
+  height: 1rem;
+}
+
+.dashboard-page__skeleton-cell--date { width: 9rem; }
+.dashboard-page__skeleton-cell--wide { width: 8rem; }
+.dashboard-page__skeleton-cell--text { width: 6rem; }
+.dashboard-page__skeleton-cell--id { width: 6.5rem; }
+.dashboard-page__skeleton-cell--pill { width: 4.5rem; }
 
 .dashboard-page__activity-icon {
   width: 2.5rem;

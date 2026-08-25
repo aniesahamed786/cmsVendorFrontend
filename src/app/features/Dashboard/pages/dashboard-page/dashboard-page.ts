@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorQuickActions } from '../../components/vendor-quick-actions/vendor-quick-actions';
 import { DashboardService } from '../../services/dashboard.service';
-import { toActivityRow } from '../../../recent-activities/models/system-log.mapper';
+import { ActivityRow, toActivityPage } from '../../../recent-activities/models/system-log.mapper';
 import { SystemLogService } from '../../../recent-activities/services/system-log.service';
 import { createCountUp } from '../../../../shared/animation/count-up';
 import { environment } from '../../../../../environments/environment';
@@ -16,14 +18,6 @@ import { VendorProfileApi } from '../../../Profile/models/vendor-profile-request
 import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
 import { INCOMPLETE_STATUSES, RequestStatus } from '../../../request-center/models/request.model';
 import { toRequestRow } from '../../../request-center/models/request.mapper';
-
-interface RecentActivityItem {
-  icon: string;
-  iconClass: string;
-  title: string;
-  description: string;
-  time: string;
-}
 
 interface PendingRequestItem {
   id: string;
@@ -61,7 +55,7 @@ const ACTIVITY_ICON_CLASSES: Record<string, string> = {
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CommonModule, OfferTile, VendorQuickActions, TranslatePipe],
+  imports: [CommonModule, OfferTile, VendorQuickActions, TranslatePipe, TableModule, TooltipModule],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
@@ -94,11 +88,11 @@ export class DashboardPage implements OnInit {
   // Incomplete requests fetched for the Pending Requests panel
   pendingRequests = signal<PendingRequestItem[]>([]);
 
-  // ponytail: server copy is English-only; times stay absolute like the
-  // recent-activities table. Relative "2 mins ago" wants Intl.RelativeTimeFormat.
-  recentActivities = signal<RecentActivityItem[]>([]);
+  recentActivities = signal<ActivityRow[]>([]);
   activityLoading = signal(true);
-  readonly skeletonRows = [0, 1, 2, 3, 4];
+  readonly tableRows = computed(() =>
+    this.activityLoading() ? new Array(7).fill(null) : this.recentActivities(),
+  );
 
   private readonly dashboardService = inject(DashboardService);
   private readonly systemLogs = inject(SystemLogService);
@@ -128,24 +122,13 @@ export class DashboardPage implements OnInit {
         },
       });
 
-    this.systemLogs.getSystemLogs({ page: 1, pageSize: 5, sortOrder: 'desc' })
+    this.systemLogs.getSystemLogs({ page: 1, pageSize: 7, sortOrder: 'desc' })
       .pipe(finalize(() => this.activityLoading.set(false)))
       .subscribe({
-        next: (res) =>
-          this.recentActivities.set(
-            (res?.data ?? []).map((entry) => {
-              const row = toActivityRow(entry);
-              const statusKey = String(entry.status ?? '').toUpperCase();
-              return {
-                icon: ACTIVITY_ICONS[String(entry.entityType ?? '').toUpperCase()] ?? 'assets/svg/Navbar/ic-log.svg',
-                iconClass:
-                  ACTIVITY_ICON_CLASSES[statusKey] ?? 'dashboard-page__activity-icon--white',
-                title: row.actionType,
-                description: row.targetEntity,
-                time: row.timestamp,
-              };
-            }),
-          ),
+        next: (res) => {
+          const { rows } = toActivityPage(res);
+          this.recentActivities.set(rows);
+        },
         error: () => this.recentActivities.set([]),
       });
   }
@@ -246,8 +229,8 @@ export class DashboardPage implements OnInit {
     this.router.navigate(['/request-center', rowKey]);
   }
 
-  statusClass(status: RequestStatus): string {
-    return `dashboard-page__status dashboard-page__status--${status.toLowerCase()}`;
+  statusClass(status: string | RequestStatus): string {
+    return status ? `dashboard-page__status dashboard-page__status--${String(status).toLowerCase()}` : '';
   }
 
   statusKey(status: RequestStatus): string {
