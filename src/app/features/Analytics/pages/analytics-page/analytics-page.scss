@@ -361,7 +361,9 @@
 }
 
 ::ng-deep .analytics-table {
-  margin: 0 -1.5rem -1.5rem;
+  margin-inline: -1.5rem;
+  margin-block-end: -1.5rem;
+  width: calc(100% + 3rem) !important;
 
   .analytics-table__row-title {
     font-weight: 600;

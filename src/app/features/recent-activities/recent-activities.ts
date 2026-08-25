@@ -125,6 +125,48 @@ export class RecentActivities implements OnInit {
     this.reload();
   }
 
+  readonly activeFilterChips = computed(() => {
+    const chips: { key: string; label: string }[] = [];
+
+    if (this.entityType()) {
+      const opt = this.entityTypeOptions.find((o) => o.value === this.entityType());
+      chips.push({
+        key: 'entityType',
+        label: `Type: ${opt?.label ?? this.entityType()}`,
+      });
+    }
+
+    if (this.action()) {
+      const opt = this.actionOptions.find((o) => o.value === this.action());
+      chips.push({
+        key: 'action',
+        label: `Action: ${opt?.label ?? this.action()}`,
+      });
+    }
+
+    if (this.period() !== 'all') {
+      const opt = this.periodOptions.find((o) => o.value === this.period());
+      chips.push({
+        key: 'period',
+        label: `Period: ${opt?.label ?? this.period()}`,
+      });
+    }
+
+    return chips;
+  });
+
+  removeFilterChip(chip: { key: string; label: string }): void {
+    if (chip.key === 'entityType') {
+      this.entityType.set(null);
+    } else if (chip.key === 'action') {
+      this.action.set(null);
+    } else if (chip.key === 'period') {
+      this.period.set('all');
+      this.customRange.set(null);
+    }
+    this.reload();
+  }
+
   readonly activeFilterCount = computed(() => {
     let count = 0;
     if (this.entityType()) count++;
@@ -133,10 +175,7 @@ export class RecentActivities implements OnInit {
     return count;
   });
 
-  readonly hasActiveFilters = computed(
-    () =>
-      !!this.entityType() || !!this.action() || this.period() !== 'all' || !!this.search().trim(),
-  );
+  readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0 || !!this.search().trim());
 
   onLazyLoad(event: TableLazyLoadEvent): void {
     const rows = event.rows ?? this.pageSize();

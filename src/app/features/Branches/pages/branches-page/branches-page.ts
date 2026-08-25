@@ -55,6 +55,46 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     return count;
   });
 
+  readonly activeFilterChips = computed(() => {
+    this.i18n.loadSeq();
+    const chips: { key: string; label: string }[] = [];
+
+    if (this.selectedStatus()) {
+      const sOption = this.statusOptions().find(o => o.value === this.selectedStatus());
+      chips.push({
+        key: 'status',
+        label: `${this.i18n.t('branches.filter.status')}: ${sOption?.label ?? this.selectedStatus()}`
+      });
+    }
+
+    if (this.selectedRegion()) {
+      const rOption = this.regionOptions().find(o => o.value === this.selectedRegion());
+      chips.push({
+        key: 'region',
+        label: `${this.i18n.t('branches.filter.region')}: ${rOption?.label ?? this.selectedRegion()}`
+      });
+    }
+
+    if (this.selectedManager()) {
+      chips.push({
+        key: 'manager',
+        label: `${this.i18n.t('branches.filter.manager')}: ${this.selectedManager()}`
+      });
+    }
+
+    return chips;
+  });
+
+  removeFilterChip(chip: { key: string; label: string }): void {
+    if (chip.key === 'status') {
+      this.selectedStatus.set(null);
+    } else if (chip.key === 'region') {
+      this.selectedRegion.set(null);
+    } else if (chip.key === 'manager') {
+      this.selectedManager.set(null);
+    }
+  }
+
   clearFilters(): void {
     this.selectedStatus.set(null);
     this.selectedRegion.set(null);

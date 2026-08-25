@@ -120,6 +120,8 @@
 }
 
 ::ng-deep .account-management__table {
-  margin: 0 -1.5rem -1.25rem;
+  margin-inline: -1.5rem;
+  margin-block-end: -1.25rem;
+  width: calc(100% + 3rem) !important;
 }
 

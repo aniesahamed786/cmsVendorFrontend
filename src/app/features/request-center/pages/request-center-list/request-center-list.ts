@@ -247,6 +247,27 @@ export class RequestCenterList {
     return count;
   });
 
+  readonly activeFilterChips = computed(() => {
+    this.i18n.loadSeq();
+    const chips: { key: string; label: string }[] = [];
+
+    if (this.statusFilter()) {
+      const opt = this.statusOptions().find((o) => o.value === this.statusFilter());
+      chips.push({
+        key: 'status',
+        label: `${this.i18n.t('requestCenter.filter.status')}: ${opt?.label ?? this.statusFilter()}`,
+      });
+    }
+
+    return chips;
+  });
+
+  removeFilterChip(chip: { key: string; label: string }): void {
+    if (chip.key === 'status') {
+      this.onStatusFilterChange(null);
+    }
+  }
+
   clearFilters(): void {
     this.statusFilter.set(null);
     this.sortDropdown.set('newest');

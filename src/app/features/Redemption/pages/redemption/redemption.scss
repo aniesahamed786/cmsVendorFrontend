@@ -198,7 +198,9 @@ section.redemption-card {
 }
 
 ::ng-deep .redemption-table {
-  margin: 0 -1.5rem -1.5rem;
+  margin-inline: -1.5rem;
+  margin-block-end: -1.5rem;
+  width: calc(100% + 3rem) !important;
 }
 
 /* Table skeleton cells (.app-skeleton owns fill + pulse; these own size) */

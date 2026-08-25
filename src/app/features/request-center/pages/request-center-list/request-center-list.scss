@@ -392,6 +392,8 @@
 
 // Full-bleed table sides & bottom inside the card for desktop view
 ::ng-deep .request-center__table {
-  margin: 0 -1.5rem -1.25rem;
+  margin-inline: -1.5rem;
+  margin-block-end: -1.25rem;
+  width: calc(100% + 3rem) !important;
 }
 
