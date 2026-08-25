@@ -167,6 +167,18 @@
     "rowActionsAria": "Row actions",
     "empty": "No offers found.",
     "stats": {
+      "pendingRequests": {
+        "label": "Pending Requests",
+        "hint": "Awaiting approval"
+      },
+      "completedRequests": {
+        "label": "Completed Requests",
+        "hint": "Approved & processed"
+      },
+      "totalRequests": {
+        "label": "Total Requests",
+        "hint": "All requests"
+      },
       "active": {
         "label": "Active Offers",
         "hint": "Currently active"

@@ -11,7 +11,7 @@
     @if (loading()) {
     <!-- whole card contents, matching the branches KPI cards. Blocks sit in the
          real __stat article, so its padding, border and column gap are shared. -->
-    @for (i of [1,2,3,4]; track i) {
+    @for (i of [1,2,3]; track i) {
     <article class="offers__stat">
       <span class="app-skeleton offers__skeleton-stat-icon"></span>
       <span class="app-skeleton offers__skeleton-stat-value"></span>
@@ -21,28 +21,22 @@
     }
     } @else {
     <article class="offers__stat">
-      <span class="offers__stat-icon"><i class="pi pi-bolt"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('active') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.active.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.active.hint' | translate }}</span>
+      <span class="offers__stat-icon"><i class="pi pi-clock"></i></span>
+      <span class="offers__stat-value">{{ animatedCount('pendingRequests') }}</span>
+      <span class="offers__stat-label">{{ 'offers.stats.pendingRequests.label' | translate }}</span>
+      <span class="offers__stat-hint">{{ 'offers.stats.pendingRequests.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
-      <span class="offers__stat-icon"><i class="pi pi-calendar"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('scheduled') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.scheduled.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.scheduled.hint' | translate }}</span>
-    </article>
-    <article class="offers__stat">
-      <span class="offers__stat-icon offers__stat-icon--danger"><i class="pi pi-stopwatch"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('expiringSoon') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.expiringSoon.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.expiringSoon.hint' | translate }}</span>
+      <span class="offers__stat-icon"><i class="pi pi-check-circle"></i></span>
+      <span class="offers__stat-value">{{ animatedCount('completedRequests') }}</span>
+      <span class="offers__stat-label">{{ 'offers.stats.completedRequests.label' | translate }}</span>
+      <span class="offers__stat-hint">{{ 'offers.stats.completedRequests.hint' | translate }}</span>
     </article>
     <article class="offers__stat">
       <span class="offers__stat-icon"><i class="pi pi-tag"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('total') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.total.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.total.hint' | translate }}</span>
+      <span class="offers__stat-value">{{ animatedCount('totalRequests') }}</span>
+      <span class="offers__stat-label">{{ 'offers.stats.totalRequests.label' | translate }}</span>
+      <span class="offers__stat-hint">{{ 'offers.stats.totalRequests.hint' | translate }}</span>
     </article>
     }
   </section>

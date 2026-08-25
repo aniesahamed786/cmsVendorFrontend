@@ -167,6 +167,18 @@
     "rowActionsAria": "إجراءات الصف",
     "empty": "لا توجد عروض.",
     "stats": {
+      "pendingRequests": {
+        "label": "الطلبات المعلقة",
+        "hint": "في انتظار الموافقة"
+      },
+      "completedRequests": {
+        "label": "الطلبات المكتملة",
+        "hint": "تمت الموافقة والمعالجة"
+      },
+      "totalRequests": {
+        "label": "إجمالي الطلبات",
+        "hint": "جميع الطلبات"
+      },
       "active": {
         "label": "العروض النشطة",
         "hint": "نشطة حالياً"

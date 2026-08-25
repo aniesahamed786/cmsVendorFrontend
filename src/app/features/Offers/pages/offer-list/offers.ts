@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
-import { OffersService, OfferStats } from '../../services/offers.service';
 import { OnInit } from '@angular/core';
 
 type Availability = 'Online' | 'In-Store' | 'Hybrid';
@@ -34,6 +33,9 @@ import { OfferApi } from '../../models/offerList';
 import { environment } from '../../../../../environments/environment';
 import { createCountUp } from '../../../../shared/animation/count-up';
 
+import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
+import { RequestMetricsResponse } from '../../../request-center/models/request-api.model';
+
 @Component({
   selector: 'app-offers',
   standalone: true,
@@ -45,19 +47,20 @@ export class Offers implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private readonly i18n = inject(I18nService);
-  private readonly offersService = inject(OffersService);
+  private readonly requestCenterApi = inject(RequestCenterApiService);
   private readonly offerListService = inject(OfferListService);
 
   readonly showMobileFilters = signal(false);
 
-  // ponytail: in-memory dummy data; swap for a service feed when the API exists
-  // private readonly offers: Offer[] = this.buildRows();
-  readonly offerStats = signal<OfferStats>({
-  totalOffers: 0,
-  activeOffers: 0,
-  scheduledOffers: 0,
-  expiringSoonOffers: 0
-});
+  readonly requestMetrics = signal<RequestMetricsResponse>({
+    pendingOffer: 0,
+    pendingStore: 0,
+    pendingProfile: 0,
+    rejected: 0,
+    pendingRequests: 0,
+    completedRequests: 0,
+    totalRequests: 0,
+  });
   private readonly offers = signal<Offer[]>([]);
   readonly backendUrl = environment.backendUrl;
 
@@ -69,13 +72,13 @@ export class Offers implements OnInit {
   }
 
   private loadOfferStats(): void {
-    this.offersService.getOfferStats().subscribe({
-      next: (stats) => {
-        this.offerStats.set(stats);
+    this.requestCenterApi.getMetrics().subscribe({
+      next: (metrics) => {
+        this.requestMetrics.set(metrics);
         this.revealStats();
       },
       error: (err) => {
-        console.error('Failed to load offer stats', err);
+        console.error('Failed to load request metrics', err);
       }
     });
   }
@@ -88,16 +91,13 @@ export class Offers implements OnInit {
   private readonly animateTo = this.countUp.animateTo;
 
   /** Kick off every stat's count-up. Call this when the data lands. */
- private revealStats(): void {
+  private revealStats(): void {
+    const s = this.requestMetrics();
 
-  const s = this.offerStats();
-
-  this.animateTo('active', s.activeOffers);
-  this.animateTo('scheduled', s.scheduledOffers);
-  this.animateTo('expiringSoon', s.expiringSoonOffers);
-  this.animateTo('total', s.totalOffers);
-
-}
+    this.animateTo('pendingRequests', s.pendingRequests);
+    this.animateTo('completedRequests', s.completedRequests);
+    this.animateTo('totalRequests', s.totalRequests);
+  }
 
   // p-select takes plain label strings, so these rebuild through t() instead of
   // the pipe. Values stay the English literals — they are the filter keys.

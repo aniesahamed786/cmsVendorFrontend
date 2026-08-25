@@ -19,6 +19,9 @@ export interface RequestMetricsResponse {
   pendingStore: number;
   pendingProfile: number;
   rejected: number;
+  pendingRequests: number;
+  completedRequests: number;
+  totalRequests: number;
 }
 
 /** One row of GET /cmsVendor/requests (the summary projection). */
