@@ -226,8 +226,8 @@
     }
 
     &--closed {
-      background: rgba(220, 38, 38, 0.14);
-      color: #b91c1c;
+      background: color-mix(in srgb, var(--app-muted) 16%, transparent);
+      color: var(--app-muted);
     }
   }
 
