@@ -119,6 +119,19 @@
     border: 1px solid var(--app-border);
     color: var(--app-text);
 
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: 0;
+      top: 0;
+      bottom: 0;
+      width: 3.5px;
+      background: transparent;
+      z-index: 1;
+    }
+
     &--selected {
       background: var(--app-primary-soft);
       border-color: var(--app-primary-soft);
@@ -135,16 +148,19 @@
       }
     }
 
-    &--status-new {
-      border-inline-start: 3px solid var(--app-primary);
+    &--status-new::before {
+      background: var(--app-primary);
     }
 
-    &--status-progress {
-      border-inline-start: 3px solid #eab308;
+    &--status-progress::before {
+      background: #eab308;
+    }
+
+    &--status-closed::before {
+      background: var(--app-muted);
     }
 
     &--status-closed {
-      border-inline-start: 3px solid var(--app-muted);
       opacity: 0.7;
     }
 

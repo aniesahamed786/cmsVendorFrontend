@@ -87,7 +87,8 @@
     } @else {
     @for (ticket of tickets(); track ticket.id) {
     <button type="button" class="mc-list__card" [class.mc-list__card--selected]="ticket.id === selectedTicketId()"
-      [class.mc-list__card--unread]="ticket.unread" [class.mc-list__card--status-new]="ticket.status === 'New'"
+      [class.mc-list__card--unread]="ticket.unread"
+      [class.mc-list__card--status-new]="ticket.status === 'New'"
       [class.mc-list__card--status-progress]="ticket.status === 'In Progress'"
       [class.mc-list__card--status-closed]="ticket.status === 'Closed'" (click)="onSelectTicket(ticket)">
       <div class="mc-list__card-top">
