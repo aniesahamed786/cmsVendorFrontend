@@ -220,11 +220,9 @@ export class RequestDetail {
     const currency = (this.proposedEntity()['currency'] as string) || (this.details()?.requestData?.['currency'] as string) || 'SAR';
     const raw = this.changeRowsRaw();
     const hasCurrency = raw.some((c) => (c.field ?? '').toLowerCase() === 'currency');
-    const hasTaxValue = raw.some((c) => (c.field ?? '').toLowerCase() === 'taxvalue' || (c.field ?? '').toLowerCase() === 'tax_value');
     const filteredRows = raw.filter((c) => {
       const f = (c.field ?? '').toLowerCase();
       if (f === 'currency_ar') return !hasCurrency;
-      if (f === 'taxvalue_ar' || f === 'tax_value_ar') return !hasTaxValue;
       return true;
     });
 

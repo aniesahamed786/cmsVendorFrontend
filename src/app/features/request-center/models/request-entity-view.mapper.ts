@@ -166,21 +166,21 @@ export function toOfferDetailsView(proposed: Record<string, unknown>): Record<st
   const hotelDetails = proposed['hotel_details']
     ? (proposed['hotel_details'] as Record<string, unknown>)
     : (proposed['hotelDetails'] as Record<string, unknown>) ||
-      (proposed['roomDetails'] || proposed['hotelAmenitites'] || proposed['hotelAmenities'] || proposed['taxValue'] || proposed['currency'] || proposed['rooms'] !== undefined
-        ? {
-            roomDetails: proposed['roomDetails'],
-            rooms: proposed['rooms'],
-            hotelAmenitites: proposed['hotelAmenitites'] ?? proposed['hotelAmenities'],
-            hotelAmenitites_ar: proposed['hotelAmenitites_ar'] ?? proposed['hotelAmenities_ar'],
-            hotelAmenities: proposed['hotelAmenities'] ?? proposed['hotelAmenitites'],
-            hotelAmenities_ar: proposed['hotelAmenities_ar'] ?? proposed['hotelAmenitites_ar'],
-            currency: proposed['currency'] ?? 'SAR',
-            currency_ar: proposed['currency_ar'] ?? 'SAR',
-            taxValue: proposed['taxValue'],
-            taxValue_ar: proposed['taxValue_ar'],
-            vendorClassificationId: proposed['vendorClassificationId'],
-          }
-        : null);
+    (proposed['roomDetails'] || proposed['hotelAmenitites'] || proposed['hotelAmenities'] || proposed['taxValue'] || proposed['currency'] || proposed['rooms'] !== undefined
+      ? {
+        roomDetails: proposed['roomDetails'],
+        rooms: proposed['rooms'],
+        hotelAmenitites: proposed['hotelAmenitites'] ?? proposed['hotelAmenities'],
+        hotelAmenitites_ar: proposed['hotelAmenitites_ar'] ?? proposed['hotelAmenities_ar'],
+        hotelAmenities: proposed['hotelAmenities'] ?? proposed['hotelAmenitites'],
+        hotelAmenities_ar: proposed['hotelAmenities_ar'] ?? proposed['hotelAmenitites_ar'],
+        currency: proposed['currency'] ?? 'SAR',
+        currency_ar: proposed['currency_ar'] ?? 'SAR',
+        taxValue: proposed['taxValue'],
+        taxValue_ar: proposed['taxValue_ar'],
+        vendorClassificationId: proposed['vendorClassificationId'],
+      }
+      : null);
 
   return {
     title: asString(proposed['title']),

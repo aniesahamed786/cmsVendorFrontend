@@ -145,7 +145,8 @@
   padding: 0.5rem 0.75rem;
   background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
   border: 1px solid var(--app-border);
-  border-radius: 0; /* Square borders forced */
+  border-radius: 0;
+  /* Square borders forced */
 
   &__icon {
     color: var(--app-muted);

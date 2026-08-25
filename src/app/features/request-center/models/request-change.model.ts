@@ -110,7 +110,8 @@ const OFFER_SECTIONS: SectionDef[] = [
     titleKey: 'offerDetails.hotel.title',
     icon: 'pi pi-building',
     fields: [
-      { key: 'taxValue', labelKey: 'offerDetails.hotel.taxValue', aliases: ['tax_value', 'taxValue_ar', 'tax_value_ar'] },
+      { key: 'taxValue', labelKey: 'offerDetails.hotel.taxValue', aliases: ['tax_value'] },
+      { key: 'taxValue_ar', labelKey: 'offerDetails.hotel.taxValueAr', aliases: ['tax_value_ar'], rtl: true },
       { key: 'currency', labelKey: 'offerDetails.hotel.currency', aliases: ['currency_ar'] },
       { key: 'hotelAmenitites', labelKey: 'offerDetails.hotel.amenities', aliases: ['hotelAmenities'] },
       { key: 'hotelAmenitites_ar', labelKey: 'offerDetails.hotel.amenitiesAr', aliases: ['hotelAmenities_ar'], rtl: true },
