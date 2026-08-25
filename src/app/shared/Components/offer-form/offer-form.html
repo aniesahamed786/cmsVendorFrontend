@@ -115,8 +115,7 @@
           </label>
           <p-datepicker formControlName="startdate" iconDisplay="input" [minDate]="minDate" showIcon="true"
             inputId="discountStartDate" styleClass="offer-form__datepicker offer-form__input"
-            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" [placeholder]="'offerForm.placeholder.date' | translate"
-            variant="filled" />
+            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" [placeholder]="'offerForm.placeholder.date' | translate" />
           @if (hasRequiredError('startdate')) {
           <p class="offer-form__error">{{ 'offerForm.error.startDateRequired' | translate }}</p>
           }
@@ -129,8 +128,7 @@
           </label>
           <p-datepicker formControlName="expiry" iconDisplay="input" showIcon="true" inputId="discountExpireDate"
             [minDate]="minExpiryDate()" styleClass="offer-form__datepicker offer-form__input"
-            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" [placeholder]="'offerForm.placeholder.date' | translate"
-            variant="filled" />
+            panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" [placeholder]="'offerForm.placeholder.date' | translate" />
           @if (hasRequiredError('expiry')) {
           <p class="offer-form__error">{{ 'offerForm.error.expiryRequired' | translate }}</p>
           } @else if (hasFieldError('expiry', 'invalidDateRange')) {

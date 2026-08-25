@@ -389,10 +389,15 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-select-label,
 .p-multiselect-label,
 .p-datepicker-input,
+.p-datepicker .p-inputtext,
 .p-password-input,
 .p-inputnumber-input,
 .p-autocomplete-input,
-.app-search input {
+.app-search input,
+.p-datepicker-input:hover,
+.p-datepicker .p-inputtext:hover,
+.p-datepicker-input:focus,
+.p-datepicker .p-inputtext:focus {
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
@@ -437,12 +442,13 @@ p-button[severity="primary"] .p-button:enabled:hover,
 }
 
 /* Hover / focus / open — "active" reads as the primary border plus a soft ring */
-.p-inputtext:enabled:hover,
+.p-inputtext:not(.p-datepicker-input):enabled:hover,
 .p-textarea:enabled:hover,
 .p-select:not(.p-disabled):hover,
 .p-multiselect:not(.p-disabled):hover,
 .p-listbox:not(.p-disabled):hover,
 .p-datepicker:not(.p-disabled):hover,
+.p-datepicker:not(.p-disabled):has(.p-datepicker-input:hover),
 .app-search:hover {
   background: var(--field-bg-hover) !important;
   border-color: var(--field-border-hover) !important;
