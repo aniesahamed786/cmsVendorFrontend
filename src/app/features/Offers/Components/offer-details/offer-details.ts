@@ -281,18 +281,11 @@ export class OfferDetails {
     }
 
     /**
-     * True when the offer carries anything worth showing in the Custom Highlight card.
-     * `isHighlightEnabled` alone isn't enough: the offer form requires the highlight images
-     * even when the toggle is off, so an offer can hold artwork with the flag false.
+     * True only when the offer has highlight enabled.
      */
     hasHighlightContent(offer: any): boolean {
-        return !!(
-            offer?.isHighlightEnabled ||
-            offer?.highlight_title ||
-            offer?.highlight_title_ar ||
-            offer?.highlight_description ||
-            offer?.highlight_description_ar
-        );
+        const enabled = offer?.isHighlightEnabled;
+        return enabled === true || enabled === 'true';
     }
 
     getHighlightMobileImage(offer: any): string | null {
