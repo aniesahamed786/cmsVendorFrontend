@@ -41,7 +41,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   branchesLoading = signal(true);
 
   // Table filters
-  selectedStatus = signal<string | null>(null);
   selectedRegion = signal<string | null>(null);
   selectedManager = signal<string | null>(null);
   searchQuery = signal<string>('');
@@ -49,7 +48,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   readonly activeFilterCount = computed(() => {
     let count = 0;
-    if (this.selectedStatus()) count++;
     if (this.selectedRegion()) count++;
     if (this.selectedManager()) count++;
     return count;
@@ -58,14 +56,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   readonly activeFilterChips = computed(() => {
     this.i18n.loadSeq();
     const chips: { key: string; label: string }[] = [];
-
-    if (this.selectedStatus()) {
-      const sOption = this.statusOptions().find(o => o.value === this.selectedStatus());
-      chips.push({
-        key: 'status',
-        label: `${this.i18n.t('branches.filter.status')}: ${sOption?.label ?? this.selectedStatus()}`
-      });
-    }
 
     if (this.selectedRegion()) {
       const rOption = this.regionOptions().find(o => o.value === this.selectedRegion());
@@ -86,9 +76,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   });
 
   removeFilterChip(chip: { key: string; label: string }): void {
-    if (chip.key === 'status') {
-      this.selectedStatus.set(null);
-    } else if (chip.key === 'region') {
+    if (chip.key === 'region') {
       this.selectedRegion.set(null);
     } else if (chip.key === 'manager') {
       this.selectedManager.set(null);
@@ -96,7 +84,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   clearFilters(): void {
-    this.selectedStatus.set(null);
     this.selectedRegion.set(null);
     this.selectedManager.set(null);
   }
@@ -106,12 +93,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   sortOrder = signal<1 | -1>(-1); // Newest first by default
 
   // Options — labels are translated, values stay the English data keys.
-  readonly statusOptions = computed(() => [
-    { label: this.i18n.t('branches.status.all'), value: null },
-    { label: this.i18n.t('branches.status.active'), value: 'Active' },
-    { label: this.i18n.t('branches.status.inactive'), value: 'Inactive' },
-  ]);
-
   readonly regionOptions = computed(() => [
     { label: this.i18n.t('branches.region.all'), value: null },
     ...(['East', 'West', 'South', 'North', 'Central'] as const).map((r) => ({
@@ -176,9 +157,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   readonly filteredBranches = computed(() => {
     let rows = this.allBranches();
-
-    const status = this.selectedStatus();
-    if (status) rows = rows.filter(r => r.status === status);
 
     const region = this.selectedRegion();
     // if (region) rows = rows.filter(r => r.region === region);
