@@ -155,6 +155,55 @@ export class Offers implements OnInit {
     return count;
   });
 
+  readonly activeFilterChips = computed(() => {
+    this.i18n.loadSeq();
+    const chips: { key: string; label: string }[] = [];
+
+    if (this.discountType()) {
+      chips.push({
+        key: 'discountType',
+        label: `${this.i18n.t('offers.filter.discountType')}: ${this.discountType()}`
+      });
+    }
+
+    if (this.status()) {
+      chips.push({
+        key: 'status',
+        label: `${this.i18n.t('offers.filter.status')}: ${this.status()}`
+      });
+    }
+
+    if (this.availability()) {
+      chips.push({
+        key: 'availability',
+        label: `${this.i18n.t('offers.filter.availability')}: ${this.availability()}`
+      });
+    }
+
+    if (this.period() !== 'all') {
+      const pLabel = this.periodOptions().find(o => o.value === this.period())?.label ?? this.period();
+      chips.push({
+        key: 'period',
+        label: `${this.i18n.t('offers.filter.period')}: ${pLabel}`
+      });
+    }
+
+    return chips;
+  });
+
+  removeFilterChip(chip: { key: string; label: string }): void {
+    if (chip.key === 'discountType') {
+      this.discountType.set(null);
+    } else if (chip.key === 'status') {
+      this.status.set(null);
+    } else if (chip.key === 'availability') {
+      this.availability.set(null);
+    } else if (chip.key === 'period') {
+      this.period.set('all');
+      this.customRange.set(null);
+    }
+  }
+
   clearFilters(): void {
     this.status.set(null);
     this.availability.set(null);

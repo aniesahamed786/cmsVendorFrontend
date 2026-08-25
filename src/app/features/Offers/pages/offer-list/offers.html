@@ -98,6 +98,24 @@
         </div>
         }
       </div>
+      @if (activeFilterChips().length > 0) {
+      <div class="app-table-active-filters">
+        <div class="app-table-chips">
+          @for (chip of activeFilterChips(); track chip.key) {
+          <span class="app-filter-chip">
+            {{ chip.label }}
+            <button type="button" class="app-chip-remove" (click)="removeFilterChip(chip)">
+              <i class="pi pi-times"></i>
+            </button>
+          </span>
+          }
+        </div>
+        <button type="button" class="app-btn-clear-all" (click)="clearFilters()">
+          <i class="pi pi-times"></i>
+          {{ 'common.clear' | translate }}
+        </button>
+      </div>
+      }
     </div>
 
     <!-- Mobile Draggable Bottom Sheet Filters -->
