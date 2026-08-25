@@ -76,6 +76,7 @@ export const MOCK_TICKETS: Ticket[] = [
     preview: 'pls describe the issue',
     timeAgo: '44m ago',
     unread: true,
+    unreadCount: 2,
     order: 10,
   },
   {
@@ -95,6 +96,7 @@ export const MOCK_TICKETS: Ticket[] = [
     preview: 'test ticket 2',
     timeAgo: '1h ago',
     unread: false,
+    unreadCount: 0,
     order: 9,
   },
   {
@@ -114,6 +116,7 @@ export const MOCK_TICKETS: Ticket[] = [
     preview: 'test desc',
     timeAgo: '1h ago',
     unread: true,
+    unreadCount: 1,
     order: 8,
   },
   {
@@ -133,6 +136,7 @@ export const MOCK_TICKETS: Ticket[] = [
     preview: 'jj',
     timeAgo: '2h ago',
     unread: false,
+    unreadCount: 0,
     order: 5,
   },
   {
@@ -152,6 +156,7 @@ export const MOCK_TICKETS: Ticket[] = [
     preview: 'testing',
     timeAgo: '2h ago',
     unread: false,
+    unreadCount: 0,
     order: 7,
   },
 ];

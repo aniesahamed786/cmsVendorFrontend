@@ -94,7 +94,9 @@
       <div class="mc-list__card-top">
         <div class="mc-list__card-meta">
           @if (ticket.unread) {
-          <span class="mc-list__unread-dot" [title]="'messaging.unreadDot' | translate"></span>
+          <span class="mc-list__unread-badge" [title]="'messaging.unreadDot' | translate">
+            {{ ticket.unreadCount > 99 ? '99+' : (ticket.unreadCount > 0 ? ticket.unreadCount : '') }}
+          </span>
           }
           <span class="mc-list__badge" [class]="statusBadgeClass(ticket.status)">{{ statusKey(ticket.status) | translate }}</span>
           <span class="mc-list__reference">{{ ticket.reference }}</span>

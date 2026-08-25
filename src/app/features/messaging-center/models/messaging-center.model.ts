@@ -85,6 +85,8 @@ export interface Ticket {
   timeAgo: string;
   /** Whether the ticket has unread messages */
   unread: boolean;
+  /** Number of unread messages for the user */
+  unreadCount: number;
   /** Monotonic sequence used for newest/oldest sorting. */
   order: number;
 }

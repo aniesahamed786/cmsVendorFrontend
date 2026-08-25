@@ -130,12 +130,18 @@ export class MessagingCenterStore {
 
     this.selectedTicketId.set(id);
     this.messagesRecord.update(({ [id]: _dropped, ...rest }) => rest);
-    this.patchTicket(id, { unread: false });
 
     const ticket = this.ticketsSignal().find((t) => t.id === id);
     if (!ticket) {
       return;
     }
+
+    this.patchTicket(id, { unread: false, unreadCount: 0 });
+
+    const ticketId = ticket.reference || ticket.id;
+    this.markTicketAsRead(ticketId).subscribe({
+      error: (err) => console.error('Failed to mark ticket as read', err),
+    });
 
     this.socketService.joinTicketRoom(ticket.reference);
     this.loadTicketMessages(ticket.reference);
@@ -437,6 +443,11 @@ export class MessagingCenterStore {
   }
 
   private mapTicket(ticket: any, index: number): Ticket {
+    const isCurrentlySelected = ticket.id === this.selectedTicketId();
+    const count = Number(ticket.unreadCount_user) || 0;
+    const unreadCount = isCurrentlySelected ? 0 : count;
+    const unread = unreadCount > 0;
+
     return {
       id: ticket.id,
       reference: ticket.ticketId,
@@ -459,7 +470,8 @@ export class MessagingCenterStore {
       createdDate: this.formatApiDate(ticket.createdAt),
       lastUpdated: this.formatApiDate(ticket.updatedAt),
       timeAgo: this.getTimeAgo(ticket.lastMessageAt || ticket.updatedAt || ticket.createdAt),
-      unread: ticket.unreadCount_vendor > 0 || ticket.unreadCount_admin > 0 || ticket.unread === true,
+      unread,
+      unreadCount,
       order: index + 1,
     };
   }
