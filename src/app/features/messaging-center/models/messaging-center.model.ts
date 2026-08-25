@@ -20,11 +20,14 @@ export const TICKET_CATEGORY_KEYS: Record<TicketCategory, string> = {
   VendorIssue: 'messaging.type.vendorIssue',
 };
 
-export const TICKET_STATUS_KEYS: Record<TicketStatus, string> = {
+export const TICKET_STATUS_KEYS: Record<string, string> = {
   New: 'messaging.status.new',
   'In Progress': 'messaging.status.inProgress',
   Open: 'messaging.status.open',
   Closed: 'messaging.status.closed',
+  new: 'messaging.status.new',
+  inprogress: 'messaging.status.inProgress',
+  closed: 'messaging.status.closed',
 };
 
 export const SENDER_ROLE_KEYS: Record<SenderRole, string> = {

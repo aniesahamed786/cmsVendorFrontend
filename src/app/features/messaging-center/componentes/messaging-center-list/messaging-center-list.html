@@ -67,7 +67,7 @@
   </div>
 
   <!-- Ticket list -->
-  <div class="mc-list__cards">
+  <div class="mc-list__cards" (scroll)="onScroll($event)">
     @if (store.isLoadingTickets()) {
     <!-- Reuses the real __card geometry; --skeleton kills its interactive state. -->
     @for (i of [1,2,3,4,5]; track i) {
@@ -112,6 +112,23 @@
       <i class="pi pi-inbox"></i>
       <span>{{ 'messaging.empty' | translate }}</span>
     </div>
+    }
+
+    @if (store.isLoadingMoreTickets()) {
+    @for (i of [1,2,3]; track i) {
+    <div class="mc-list__card mc-list__card--skeleton">
+      <div class="mc-list__card-top">
+        <div class="mc-list__card-meta">
+          <span class="app-skeleton mc-list__skeleton-badge"></span>
+          <span class="app-skeleton mc-list__skeleton-ref"></span>
+        </div>
+        <span class="app-skeleton mc-list__skeleton-category"></span>
+      </div>
+      <span class="app-skeleton mc-list__skeleton-title"></span>
+      <span class="app-skeleton mc-list__skeleton-preview"></span>
+      <span class="app-skeleton mc-list__skeleton-time"></span>
+    </div>
+    }
     }
     }
   </div>

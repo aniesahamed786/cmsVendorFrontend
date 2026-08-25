@@ -17,9 +17,9 @@ export const TICKET_TYPE_OPTIONS: MessagingFilterOption[] = [
 
 export const TICKET_STATUS_OPTIONS: MessagingFilterOption[] = [
   { label: 'All', value: null },
-  { label: 'New', value: 'New' },
-  { label: 'In Progress', value: 'In Progress' },
-  { label: 'Closed', value: 'Closed' },
+  { label: 'New', value: 'new' },
+  { label: 'In Progress', value: 'inprogress' },
+  { label: 'Closed', value: 'closed' },
 ];
 
 export const TICKET_SORT_OPTIONS: MessagingFilterOption[] = [

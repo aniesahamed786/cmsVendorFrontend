@@ -44,8 +44,18 @@ export class MessagingCenterList {
   });
 
   clearFilters(): void {
-    this.store.setType(null);
-    this.store.setStatus(null);
+    this.store.clearFilters();
+  }
+
+  onScroll(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target) return;
+
+    const threshold = 100;
+    const isAtBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - threshold;
+    if (isAtBottom) {
+      this.store.loadMoreTickets();
+    }
   }
 
   // p-select renders plain strings, so the labels have to be recomputed on a
@@ -107,8 +117,8 @@ export class MessagingCenterList {
     this.createTicket.emit();
   }
 
-  statusKey(status: TicketStatus): string {
-    return TICKET_STATUS_KEYS[status];
+  statusKey(status: string): string {
+    return TICKET_STATUS_KEYS[status] ?? 'messaging.status.new';
   }
 
   categoryKey(category: TicketCategory): string {
@@ -116,12 +126,13 @@ export class MessagingCenterList {
   }
 
   statusBadgeClass(status: string): string {
-    switch (status) {
-      case 'In Progress':
+    switch (status?.toLowerCase()) {
+      case 'in progress':
+      case 'inprogress':
         return 'mc-list__badge--progress';
-      case 'Closed':
+      case 'closed':
         return 'mc-list__badge--closed';
-      case 'New':
+      case 'new':
       default:
         return 'mc-list__badge--new';
     }
