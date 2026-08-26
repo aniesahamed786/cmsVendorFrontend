@@ -12,7 +12,7 @@ export interface MapCoordinates {
   providedIn: 'root',
 })
 export class MapUrlCoordinatesService {
-  private baseUrl = environment.apiBaseUrl;
+  private baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 

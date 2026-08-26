@@ -9,7 +9,7 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root',
 })
 export class GetVendorById {
-  private readonly base_url = environment.apiBaseUrl
+  private readonly base_url = environment.backendUrl + environment.apiBaseUrl;
   
   
   constructor(private http:HttpClient){

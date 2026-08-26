@@ -12,6 +12,7 @@ import { BranchApiPayload } from '../branch-form/branch-form';
 import { Button } from '../../../../shared/Components/button/button';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
 import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-view-branch',
@@ -28,7 +29,7 @@ export class ViewBranch {
   private readonly i18n = inject(I18nService);
   readonly pendingRequest = inject(PendingRequestCheck);
 
-  private readonly requestsBaseUrl = '/api/v1/cmsVendor/getStoreDetails';
+  private readonly requestsBaseUrl = `${environment.backendUrl}${environment.apiBaseUrl}/getStoreDetails`;
 
   readonly id = this.route.snapshot.paramMap.get('id');
 

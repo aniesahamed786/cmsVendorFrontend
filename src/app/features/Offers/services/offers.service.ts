@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface OfferStats {
   totalOffers: number;
@@ -13,13 +14,12 @@ export interface OfferStats {
   providedIn: 'root'
 })
 export class OffersService {
-
   private readonly http = inject(HttpClient);
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   getOfferStats(): Observable<OfferStats> {
     return this.http.get<OfferStats>(
-      '/api/v1/cmsVendor/offer-stats'
+      `${this.baseUrl}/offer-stats`
     );
   }
-
 }

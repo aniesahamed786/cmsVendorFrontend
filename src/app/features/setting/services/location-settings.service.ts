@@ -51,7 +51,7 @@ export type SettingsLocationListQuery = {
 @Injectable({ providedIn: 'root' })
 export class LocationSettingsService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiBaseUrl;
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   list(query: SettingsLocationListQuery = {}): Observable<SettingsLocation[]> {
     let params = new HttpParams();

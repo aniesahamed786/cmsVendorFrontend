@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface BranchKPIs {
   totalLocations: number;
@@ -44,13 +45,14 @@ export interface BranchesResponse {
 })
 export class BranchesService {
   private http = inject(HttpClient);
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   getKPIs(): Observable<BranchKPIs> {
-    return this.http.get<BranchKPIs>('/api/v1/cmsVendor/location-stats');
+    return this.http.get<BranchKPIs>(`${this.baseUrl}/location-stats`);
   }
 
   getBranches(): Observable<BranchesResponse> {
-    return this.http.get<BranchesResponse>('/api/v1/cmsVendor/locations');
+    return this.http.get<BranchesResponse>(`${this.baseUrl}/locations`);
   }
 }
 

@@ -9,5 +9,5 @@ export function resolveStoredImageUrl(path: string | null | undefined): string |
   if (!trimmed) return null;
   if (/^(https?:|data:|blob:)/i.test(trimmed)) return trimmed;
   if (/^\/?assets\//i.test(trimmed)) return trimmed.replace(/^\/+/, '');
-  return `${environment.apiBaseUrl.replace(/\/+$/, '')}/${trimmed.replace(/^\/+/, '')}`;
+  return `${environment.backendUrl}${environment.apiBaseUrl.replace(/\/+$/, '')}/${trimmed.replace(/^\/+/, '')}`;
 }

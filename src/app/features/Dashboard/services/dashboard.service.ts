@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface DashboardStats {
   totalRedemptions: number;
@@ -13,12 +14,12 @@ export interface DashboardStats {
   providedIn: 'root'
 })
 export class DashboardService {
-
   private readonly http = inject(HttpClient);
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   getDashboardStats(): Observable<DashboardStats> {
     return this.http.get<DashboardStats>(
-      '/api/v1/cmsVendor/dashboard-stats'
+      `${this.baseUrl}/dashboard-stats`
     );
   }
 }

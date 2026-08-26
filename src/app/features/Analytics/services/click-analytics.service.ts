@@ -23,7 +23,7 @@ export interface VendorClickAnalyticsResponse {
 
 @Injectable({ providedIn: 'root' })
 export class VendorClickAnalyticsService {
-  private readonly baseUrl = environment.apiBaseUrl;
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   constructor(private readonly http: HttpClient) {}
 

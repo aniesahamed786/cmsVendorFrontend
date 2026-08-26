@@ -24,7 +24,7 @@ export interface Category {
   providedIn: 'root',
 })
 export class GetCategoriesService {
-  private readonly base_url = environment.apiBaseUrl;
+  private readonly base_url = environment.backendUrl + environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 

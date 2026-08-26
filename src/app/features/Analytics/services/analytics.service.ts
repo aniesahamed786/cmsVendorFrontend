@@ -92,21 +92,22 @@ export interface CountryOption {
 @Injectable({ providedIn: 'root' })
 export class VendorAnalyticsService {
   private readonly http = inject(HttpClient);
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   getOverview(): Observable<AnalyticsOverview> {
-    return this.http.get<AnalyticsOverview>(`${environment.apiBaseUrl}/analytics/overview`);
+    return this.http.get<AnalyticsOverview>(`${this.baseUrl}/analytics/overview`);
   }
 
   getOffersSummary(): Observable<AnalyticsOffersSummary> {
-    return this.http.get<AnalyticsOffersSummary>(`${environment.apiBaseUrl}/analytics/offersSummary`);
+    return this.http.get<AnalyticsOffersSummary>(`${this.baseUrl}/analytics/offersSummary`);
   }
 
   getRedemptionsByLocation(): Observable<AnalyticsRedemptionsByLocation[]> {
-    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${environment.apiBaseUrl}/analytics/getRedemptionsByLocation`);
+    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${this.baseUrl}/analytics/getRedemptionsByLocation`);
   }
 
   getRedemptionsByDays(): Observable<AnalyticsRedemptionsByDay[]> {
-    return this.http.get<AnalyticsRedemptionsByDay[]>(`${environment.apiBaseUrl}/analytics/redemptionsByDays`);
+    return this.http.get<AnalyticsRedemptionsByDay[]>(`${this.baseUrl}/analytics/redemptionsByDays`);
   }
 
   /** Server-paginated + server-sorted + server-searched offer insights. */
@@ -126,7 +127,7 @@ export class VendorAnalyticsService {
     if (search?.trim()) params['search'] = search.trim();
 
     return this.http.get<OfferInsightsResponse>(
-      `${environment.apiBaseUrl}/analytics/offerInsights`,
+      `${this.baseUrl}/analytics/offerInsights`,
       { params },
     );
   }

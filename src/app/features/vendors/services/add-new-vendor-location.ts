@@ -26,7 +26,7 @@ export interface AddVendorLocationRequest {
   providedIn: 'root',
 })
 export class AddNewVendorLocationService {
-  private readonly baseUrl = environment.apiBaseUrl;
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 

@@ -55,7 +55,7 @@ export interface VendorExportColumn {
   providedIn: 'root',
 })
 export class GetVendorList {
-  private readonly base_url = environment.apiBaseUrl;
+  private readonly base_url = environment.backendUrl + environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 

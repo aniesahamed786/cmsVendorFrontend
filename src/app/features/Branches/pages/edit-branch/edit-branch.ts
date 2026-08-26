@@ -15,6 +15,7 @@ import {
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 import { BranchForm, BranchApiPayload, BranchFormSubmit } from '../branch-form/branch-form';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-edit-branch',
@@ -30,7 +31,7 @@ export class EditBranch {
   private readonly messageService = inject(MessageService);
   private readonly i18n = inject(I18nService);
 
-  private readonly requestsBaseUrl = '/api/v1/cmsVendor/getStoreDetails';
+  private readonly requestsBaseUrl = `${environment.backendUrl}${environment.apiBaseUrl}/getStoreDetails`;
 
   readonly id = this.route.snapshot.paramMap.get('id');
 

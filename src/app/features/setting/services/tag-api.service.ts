@@ -26,7 +26,7 @@ export interface PaginatedTagsResponse {
   providedIn: 'root',
 })
 export class TagApiService {
-  private readonly baseUrl = environment.apiBaseUrl;
+  private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 
