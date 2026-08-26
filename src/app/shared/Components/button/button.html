@@ -5,7 +5,8 @@
   [class.app-btn--primary]="variant() === 'primary'"
   [class.app-btn--outline]="variant() === 'outline'"
   [class.app-btn--ghost]="variant() === 'ghost'"
-  [class.app-btn--danger]="variant() === 'danger'">
+  [class.app-btn--danger]="variant() === 'danger'"
+  [class.app-btn--danger-ghost]="variant() === 'danger-ghost' || variant() === 'danger-outline' || variant() === 'ghost-danger'">
   @if (loading()) { <i class="pi pi-spin pi-spinner"></i> }
   @else if (icon()) { <i [class]="icon()"></i> }
   <ng-content></ng-content>

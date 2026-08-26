@@ -334,6 +334,11 @@
       "message": "Are you sure you want to delete this request? This action cannot be undone.",
       "confirm": "Delete Request"
     },
+    "discardDraftConfirm": {
+      "title": "Discard Draft",
+      "message": "Are you sure you want to discard this draft? This action cannot be undone.",
+      "confirm": "Discard Draft"
+    },
     "detail": {
       "summary": {
         "title": "Request Details",
@@ -353,6 +358,7 @@
       "viewStores": "View Stores",
       "viewProfile": "View Profile",
       "submitRequest": "Submit Request",
+      "discardDraft": "Discard Draft",
       "recallRequest": "Recall Request",
       "resubmitRequest": "Resubmit",
       "cancelRequest": "Cancel Request",
@@ -363,6 +369,10 @@
       "submitSuccessDetail": "Your request has been submitted for review.",
       "submitFailedSummary": "Submission Failed",
       "submitFailedDetail": "Could not submit the request. Please try again.",
+      "discardSuccessSummary": "Draft Discarded",
+      "discardSuccessDetail": "Your draft request has been discarded.",
+      "discardFailedSummary": "Discard Failed",
+      "discardFailedDetail": "Could not discard the draft. Please try again.",
       "recallSuccessSummary": "Request Recalled",
       "recallSuccessDetail": "Your request has been recalled from review.",
       "recallFailedSummary": "Recall Failed",
@@ -544,7 +554,8 @@
     "apply": "Apply",
     "clear": "Clear",
     "reset": "Reset",
-    "close": "Close"
+    "close": "Close",
+    "actions": "Actions"
   },
   "offerForm": {
     "backToOffers": "Back to Offers",

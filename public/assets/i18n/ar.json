@@ -334,6 +334,11 @@
       "message": "هل أنت متأكد من رغبتك في حذف هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
       "confirm": "حذف الطلب"
     },
+    "discardDraftConfirm": {
+      "title": "استبعاد المسودة",
+      "message": "هل أنت متأكد من رغبتك في استبعاد هذه المسودة؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "استبعاد المسودة"
+    },
     "detail": {
       "summary": {
         "title": "تفاصيل الطلب",
@@ -353,6 +358,7 @@
       "viewStores": "عرض المتاجر",
       "viewProfile": "عرض الملف الشخصي",
       "submitRequest": "إرسال الطلب",
+      "discardDraft": "استبعاد المسودة",
       "recallRequest": "سحب الطلب",
       "resubmitRequest": "إعادة الإرسال",
       "cancelRequest": "إلغاء الطلب",
@@ -363,6 +369,10 @@
       "submitSuccessDetail": "تم إرسال طلبك بنجاح للمراجعة.",
       "submitFailedSummary": "فشل إرسال الطلب",
       "submitFailedDetail": "تعذر إرسال الطلب. يرجى المحاولة مرة أخرى.",
+      "discardSuccessSummary": "تم استبعاد المسودة",
+      "discardSuccessDetail": "تم استبعاد طلب المسودة بنجاح.",
+      "discardFailedSummary": "فشل استبعاد المسودة",
+      "discardFailedDetail": "تعذر استبعاد المسودة. يرجى المحاولة مرة أخرى.",
       "recallSuccessSummary": "تم سحب الطلب",
       "recallSuccessDetail": "تم سحب طلبك من المراجعة بنجاح.",
       "recallFailedSummary": "فشل سحب الطلب",
@@ -544,7 +554,8 @@
     "apply": "تطبيق",
     "clear": "مسح",
     "reset": "إعادة ضبط",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "actions": "الإجراءات"
   },
   "offerForm": {
     "backToOffers": "العودة إلى العروض",

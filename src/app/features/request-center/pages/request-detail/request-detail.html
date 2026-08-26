@@ -3,33 +3,19 @@
     <app-back-button label="requestCenter.detail.backToRequestCenter" (click)="goBack()" />
 
     <div class="request-detail__topbar-actions">
-      <app-button variant="outline" [routerLink]="relatedListRoute()">
-        {{ relatedListLabelKey() | translate }}
-      </app-button>
-      <!-- Each action shows only while the backend actually allows it (ALLOWED_TRANSITIONS):
-           recall while SUBMITTED, cancel once the admin has returned the request. A greyed-out
-           button the vendor can never press just reads as broken. -->
-      <!-- Editing is allowed until the admin's decision sticks — approved, rejected, recalled
-           and cancelled requests are final, so the button disappears entirely. -->
-      @if (canEdit()) {
-      <app-button variant="outline" icon="pi pi-pencil" (click)="goToEdit()">
-        {{ 'requestCenter.detail.editRequest' | translate }}
-      </app-button>
-      }
       @if (canSubmit()) {
       <app-button variant="primary" (click)="confirmSubmit()">
         {{ 'requestCenter.detail.submitRequest' | translate }}
       </app-button>
       }
-      @if (canRecall()) {
-      <app-button variant="primary" (click)="confirmRecall()">
-        {{ 'requestCenter.detail.recallRequest' | translate }}
-      </app-button>
-      }
-      @if (canCancel()) {
-      <app-button variant="danger" (click)="confirmCancel()">
-        {{ 'requestCenter.detail.cancelRequest' | translate }}
-      </app-button>
+
+      @if (menuActions().length > 0) {
+      <button type="button" class="request-detail__menu-btn"
+        (click)="actionMenu.toggle($event)"
+        [attr.aria-label]="'common.actions' | translate">
+        <i class="pi pi-ellipsis-v"></i>
+      </button>
+      <p-menu #actionMenu [model]="menuActions()" [popup]="true" appendTo="body" />
       }
     </div>
   </div>
@@ -479,6 +465,13 @@
   [message]="'requestCenter.recallConfirm.message' | translate"
   [confirmLabel]="'requestCenter.recallConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
   [loading]="actionLoading()" (confirm)="onRecallConfirmed()" (cancel)="showRecallConfirm = false">
+</app-confirmation-pop-up>
+
+<app-confirmation-pop-up [visible]="showDiscardDraftConfirm" [title]="'requestCenter.discardDraftConfirm.title' | translate"
+  [message]="'requestCenter.discardDraftConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.detail.discardDraft' | translate" [cancelLabel]="'common.cancel' | translate"
+  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onDiscardDraftConfirmed()"
+  (cancel)="showDiscardDraftConfirm = false">
 </app-confirmation-pop-up>
 
 <app-confirmation-pop-up [visible]="showCancelConfirm" [title]="'requestCenter.deleteConfirm.title' | translate"

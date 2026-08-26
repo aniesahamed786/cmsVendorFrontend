@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
@@ -550,6 +550,7 @@ export class RequestDetail {
 
   // Mirrors the backend's ALLOWED_TRANSITIONS: submit from DRAFT, recall only from SUBMITTED.
   readonly canSubmit = computed(() => this.status() === 'DRAFT');
+  readonly canDiscardDraft = computed(() => this.status() === 'DRAFT');
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
   // A RETURNED request offers Edit and Cancel only. There is no Resubmit button by design —
   // a returned request goes back for changes, so it is re-sent by editing it, not by pushing
@@ -564,6 +565,55 @@ export class RequestDetail {
   readonly canEdit = computed(() => {
     const status = this.status();
     return status === 'DRAFT' || status === 'SUBMITTED' || status === 'RETURNED';
+  });
+
+  readonly menuActions = computed<MenuItem[]>(() => {
+    this.i18n.loadSeq();
+    const items: MenuItem[] = [];
+
+    items.push({
+      label: this.i18n.t(this.relatedListLabelKey()),
+      icon: 'pi pi-external-link',
+      command: () => {
+        this.router.navigate([this.relatedListRoute()]);
+      },
+    });
+
+    if (this.canEdit()) {
+      items.push({
+        label: this.i18n.t('requestCenter.detail.editRequest'),
+        icon: 'pi pi-pencil',
+        command: () => this.goToEdit(),
+      });
+    }
+
+    if (this.canDiscardDraft()) {
+      items.push({
+        label: this.i18n.t('requestCenter.detail.discardDraft'),
+        icon: 'pi pi-trash',
+        styleClass: 'p-menuitem-danger',
+        command: () => this.confirmDiscardDraft(),
+      });
+    }
+
+    if (this.canRecall()) {
+      items.push({
+        label: this.i18n.t('requestCenter.detail.recallRequest'),
+        icon: 'pi pi-replay',
+        command: () => this.confirmRecall(),
+      });
+    }
+
+    if (this.canCancel()) {
+      items.push({
+        label: this.i18n.t('requestCenter.detail.cancelRequest'),
+        icon: 'pi pi-times',
+        styleClass: 'p-menuitem-danger',
+        command: () => this.confirmCancel(),
+      });
+    }
+
+    return items;
   });
 
   goToEdit(): void {
@@ -850,6 +900,43 @@ export class RequestDetail {
     this.requestCenterService.recall(this.rowKey);
     this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
     this.showRecallConfirm = false;
+  }
+
+  // ---- Discard Draft confirmation (POST /cmsVendor/requests/{id}/cancel) -----
+  showDiscardDraftConfirm = false;
+
+  confirmDiscardDraft(): void {
+    this.showDiscardDraftConfirm = true;
+  }
+
+  onDiscardDraftConfirmed(): void {
+    this.actionLoading.set(true);
+    this.api
+      .cancel(this.requestId)
+      .pipe(finalize(() => this.actionLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this.toast('success', 'requestCenter.detail.discardSuccessSummary', 'requestCenter.detail.discardSuccessDetail');
+          this.afterDiscardDraft();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Discard draft request failed', err);
+          this.showDiscardDraftConfirm = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: this.i18n.t('requestCenter.detail.discardFailedSummary'),
+            detail: extractApiErrorMessage(err) ?? this.i18n.t('requestCenter.detail.discardFailedDetail'),
+            life: 8000,
+            closable: true,
+          });
+        },
+      });
+  }
+
+  private afterDiscardDraft(): void {
+    this.requestCenterService.remove(this.rowKey);
+    this.showDiscardDraftConfirm = false;
+    this.goBack();
   }
 
   // ---- Cancel confirmation (POST /cmsVendor/requests/{id}/cancel) -----------

@@ -64,6 +64,19 @@
   border-color: color-mix(in srgb, var(--app-danger) 85%, black 15%);
 }
 
+/* Danger Ghost — same ghost/back-button look, but in danger red */
+.app-btn--danger-ghost {
+  background: transparent;
+  color: var(--app-danger);
+  border-color: var(--app-danger);
+  font-weight: 400;
+}
+.app-btn--danger-ghost:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--app-danger) 10%, transparent);
+  border-color: var(--app-danger);
+  color: var(--app-danger);
+}
+
 /* Directional icons point the other way in RTL. Lives here, not in the caller,
    because the <i> is in this component's template. */
 :host-context(html[lang="ar"]) .pi-arrow-left,

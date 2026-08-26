@@ -293,10 +293,30 @@ p-button[severity="primary"] .p-button:enabled:hover,
   font-weight: 500;
 }
 
-/* Utility class for danger menu items */
+/* Utility class for danger menu items (text, icon, and red hover) */
 .p-menuitem-danger .p-menuitem-text,
-.p-menuitem-danger .p-menuitem-icon {
-  color: #dc2626 !important;
+.p-menuitem-danger .p-menuitem-icon,
+.p-menuitem-danger .p-menu-item-label,
+.p-menuitem-danger .p-menu-item-icon {
+  color: var(--app-danger) !important;
+}
+
+.p-menu .p-menuitem-danger .p-menuitem-link:hover,
+.p-menu .p-menuitem-danger .p-menu-item-content:hover,
+.p-menu .p-menuitem-danger:hover > .p-menuitem-link,
+.p-menu .p-menuitem-danger:hover > .p-menu-item-content,
+.p-tieredmenu .p-menuitem-danger .p-menuitem-link:hover,
+.p-tieredmenu .p-menuitem-danger .p-menu-item-content:hover {
+  background: color-mix(in srgb, var(--app-danger) 10%, transparent) !important;
+}
+
+.p-menu .p-menuitem-danger .p-menuitem-link:hover .p-menuitem-text,
+.p-menu .p-menuitem-danger .p-menuitem-link:hover .p-menuitem-icon,
+.p-menu .p-menuitem-danger .p-menu-item-content:hover .p-menu-item-label,
+.p-menu .p-menuitem-danger .p-menu-item-content:hover .p-menu-item-icon,
+.p-menu .p-menuitem-danger:hover .p-menuitem-text,
+.p-menu .p-menuitem-danger:hover .p-menuitem-icon {
+  color: var(--app-danger) !important;
 }
 
 /* ---------------------------------------------------------------------------

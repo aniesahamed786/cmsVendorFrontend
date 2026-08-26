@@ -8,7 +8,7 @@ import { Component, input } from '@angular/core';
   styleUrl: './button.css',
 })
 export class Button {
-  variant = input<'primary' | 'outline' | 'ghost' | 'danger'>('primary');
+  variant = input<'primary' | 'outline' | 'ghost' | 'danger' | 'danger-ghost' | 'danger-outline' | 'ghost-danger'>('primary');
   type = input<'button' | 'submit'>('button');
   disabled = input(false);
   loading = input(false); // shows a spinner and blocks clicks during async work
