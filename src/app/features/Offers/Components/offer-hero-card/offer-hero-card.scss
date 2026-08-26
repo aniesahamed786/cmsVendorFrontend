@@ -161,17 +161,16 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.95);
+    background: color-mix(in srgb, #ffffff 95%, transparent);
+    border: none;
+    color: #000000;
     padding: 0.375rem 0.75rem;
     width: fit-content;
 
     span {
       font-size: 0.875rem;
       font-weight: 500;
-      /* Fixed-contrast literal — the mode badge is always white (it sits on the primary
-         gradient), so a theme token like --app-text would invert to light in dark mode
-         and vanish. Slate-600 stays put. */
-      color: #4B5563;
+      color: #000000;
       text-transform: capitalize;
     }
   }
