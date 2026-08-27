@@ -136,9 +136,8 @@ export class PreviewOfferDetails implements OnChanges {
 
   getOfferModeIcon(): string {
     const mode = mapOfferModeToFormMode(this.offer?.offerMode);
-    if (mode === 'Digital') return 'pi-globe';
-    if (mode === 'In-Store & Digital') return 'pi-shop';
-    return 'pi-home';
+    if (mode === 'Digital') return 'assets/svg/Offers/offer-details/online.svg';
+    return 'assets/svg/Offers/offer-details/in-store.svg';
   }
 
   getActionText(): string {

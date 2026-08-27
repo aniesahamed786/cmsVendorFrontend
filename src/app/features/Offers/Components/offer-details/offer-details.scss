@@ -312,8 +312,12 @@
     width: fit-content;
     border: 1px solid var(--app-border);
 
+    .offer-settings__mode-icon,
     i {
+      width: 1.125rem;
+      height: 1rem;
       font-size: 0.875rem;
+      background-color: var(--app-muted);
       color: var(--app-muted);
     }
 

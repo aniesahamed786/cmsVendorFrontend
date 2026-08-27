@@ -30,7 +30,9 @@
         <!-- In-Store Badge -->
         <div class="preview-offer-details__mode-badge-row">
             <div class="preview-offer-details__mode-badge">
-                <i class="pi preview-offer-details__mode-badge-icon" [ngClass]="getOfferModeIcon()"></i>
+                <span class="app-svg-icon preview-offer-details__mode-badge-icon"
+                    [style.webkitMaskImage]="'url(' + getOfferModeIcon() + ')'"
+                    [style.maskImage]="'url(' + getOfferModeIcon() + ')'"></span>
                 <span class="preview-offer-details__mode-badge-text">{{ getOfferMode() }}</span>
             </div>
         </div>

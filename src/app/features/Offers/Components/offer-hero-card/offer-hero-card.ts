@@ -68,8 +68,8 @@ export class OfferHeroCard {
   }
 
   getOfferModeBadges(offer: any): { label: string; icon: string }[] {
-    const inStore = { label: 'In-Store', icon: 'pi-home' };
-    const digital = { label: 'Digital', icon: 'pi-globe' };
+    const inStore = { label: 'In-Store', icon: 'assets/svg/Offers/offer-details/in-store.svg' };
+    const digital = { label: 'Digital', icon: 'assets/svg/Offers/offer-details/online.svg' };
     const mode = this.getOfferMode(offer);
     if (mode === 'in store') return [inStore];
     if (mode === 'online') return [digital];

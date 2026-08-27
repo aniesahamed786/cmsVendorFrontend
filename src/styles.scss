@@ -1101,6 +1101,12 @@ html body [data-pc-name="toggleswitch"],
   font-size: 0.875rem;
   font-weight: 500;
 
+  .app-svg-icon {
+    width: 1.125rem;
+    height: 1rem;
+    background-color: currentColor;
+  }
+
   .pi {
     font-size: 0.875rem;
   }

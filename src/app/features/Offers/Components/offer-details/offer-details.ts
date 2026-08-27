@@ -244,8 +244,8 @@ export class OfferDetails {
         const hasDigital = modes.some((mode: string) => mode === 'online' || mode === 'digital' || mode === 'both');
         const badges: Array<{ label: string; icon: string }> = [];
 
-        if (hasInStore || !hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.inStore') || 'In-Store', icon: 'pi-building' });
-        if (hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.digital') || 'Digital', icon: 'pi-globe' });
+        if (hasInStore || !hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.inStore') || 'In-Store', icon: `${this.offerDetailIconBasePath}/in-store.svg` });
+        if (hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.digital') || 'Digital', icon: `${this.offerDetailIconBasePath}/online.svg` });
         return badges;
     }
 
