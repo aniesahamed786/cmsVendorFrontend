@@ -218,6 +218,13 @@
   color: #000000;
 }
 
+  &__badges {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
   &__mode-badge {
     display: flex;
     align-items: center;
@@ -228,7 +235,13 @@
     padding: 0.375rem 0.75rem;
     width: fit-content;
 
-    span {
+    i {
+      font-size: 0.875rem;
+      color: #000000;
+    }
+
+    span,
+    .offer-hero-card__mode-label {
       font-size: 0.875rem;
       font-weight: 500;
       color: #000000;

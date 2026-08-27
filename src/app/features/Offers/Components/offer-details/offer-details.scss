@@ -296,6 +296,13 @@
     }
   }
 
+  &__badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
   &__badge {
     display: flex;
     align-items: center;
@@ -305,10 +312,17 @@
     width: fit-content;
     border: 1px solid var(--app-border);
 
-    span {
+    i {
+      font-size: 0.875rem;
+      color: var(--app-muted);
+    }
+
+    span,
+    .offer-settings__mode-label {
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--app-text);
+      text-transform: capitalize;
     }
   }
 

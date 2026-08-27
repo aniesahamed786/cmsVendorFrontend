@@ -236,6 +236,19 @@ export class OfferDetails {
         return this.i18n.t('offerDetails.mode.inStore');
     }
 
+    getOfferModeBadges(offer: any): Array<{ label: string; icon: string }> {
+        const modes = (Array.isArray(offer?.offerMode) ? offer.offerMode : [offer?.offerMode])
+            .map((mode: unknown) => String(mode ?? '').trim().toLowerCase())
+            .filter(Boolean);
+        const hasInStore = modes.some((mode: string) => mode === 'in store' || mode === 'in-store' || mode === 'store' || mode === 'both');
+        const hasDigital = modes.some((mode: string) => mode === 'online' || mode === 'digital' || mode === 'both');
+        const badges: Array<{ label: string; icon: string }> = [];
+
+        if (hasInStore || !hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.inStore') || 'In-Store', icon: 'pi-building' });
+        if (hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.digital') || 'Digital', icon: 'pi-globe' });
+        return badges;
+    }
+
     getHighlightTitle(offer: any): string {
         return offer?.highlight_title || this.i18n.t('offerDetails.value.na');
     }

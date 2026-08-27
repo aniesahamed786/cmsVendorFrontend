@@ -68,13 +68,14 @@
           [rounded]="true"></p-tag>
       </div>
 
-      <!-- Offer mode badge -->
-      <div class="offer-hero-card__mode-badge">
-        <span>
-          {{ (getOfferMode(offer) === 'in store' ? 'offerDetails.mode.inStore'
-             : getOfferMode(offer) === 'online' ? 'offerDetails.mode.digital'
-             : 'offerDetails.mode.hybrid') | translate }}
-        </span>
+      <!-- Offer mode badges -->
+      <div class="offer-hero-card__badges">
+        @for (badge of getOfferModeBadges(offer); track badge.label) {
+        <div class="offer-mode-badge offer-hero-card__mode-badge">
+          <i class="pi" [ngClass]="badge.icon"></i>
+          <span class="offer-hero-card__mode-label">{{ badge.label }}</span>
+        </div>
+        }
       </div>
     </div>
     }

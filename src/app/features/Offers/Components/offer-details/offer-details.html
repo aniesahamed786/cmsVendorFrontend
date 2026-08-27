@@ -264,8 +264,13 @@
     <div class="offer-settings">
       <div class="offer-settings__group">
         <span class="offer-settings__label">{{ 'offerDetails.label.offerType' | translate }}</span>
-        <div class="offer-settings__badge">
-          <span>{{formatOfferMode(offer())}}</span>
+        <div class="offer-settings__badges">
+          @for (badge of getOfferModeBadges(offer()); track badge.label) {
+          <div class="offer-mode-badge offer-settings__badge">
+            <i class="pi" [ngClass]="badge.icon"></i>
+            <span class="offer-settings__mode-label">{{ badge.label }}</span>
+          </div>
+          }
         </div>
       </div>
       <div class="offer-settings__group">

@@ -67,6 +67,15 @@ export class OfferHeroCard {
     return 'both';
   }
 
+  getOfferModeBadges(offer: any): { label: string; icon: string }[] {
+    const inStore = { label: 'In-Store', icon: 'pi-home' };
+    const digital = { label: 'Digital', icon: 'pi-globe' };
+    const mode = this.getOfferMode(offer);
+    if (mode === 'in store') return [inStore];
+    if (mode === 'online') return [digital];
+    return [inStore, digital];
+  }
+
   getFormattedDiscountEn(offer: any): string {
     const amount = offer?.discount_amount || '';
     const type = (offer?.discount_type || '').toLowerCase().trim();
