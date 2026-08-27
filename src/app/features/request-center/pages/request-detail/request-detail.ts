@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
@@ -138,7 +138,6 @@ function prettyRole(role: string | null | undefined): string {
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     PrimeUIModules,
     TranslatePipe,
     BackButton,
