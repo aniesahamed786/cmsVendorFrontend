@@ -1378,6 +1378,79 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
 }
 
 /* ---------------------------------------------------------------------------
+ * Checkbox — one look everywhere (list options, tables, forms). PrimeNG's own
+ * preset paints checked boxes in its theme blue; these repaint them in the
+ * brand accent so a filter list and a form pill match.
+ * ------------------------------------------------------------------------ */
+.p-checkbox-box {
+  background: var(--app-surface) !important;
+  border: 1px solid var(--app-border) !important;
+  border-radius: 0.25rem !important;
+  box-shadow: none !important;
+}
+
+.p-checkbox:not(.p-disabled):hover .p-checkbox-box {
+  border-color: var(--field-border-hover) !important;
+}
+
+.p-checkbox-checked .p-checkbox-box,
+.p-checkbox-box:has(.p-checkbox-input:checked) {
+  background: var(--app-primary) !important;
+  border-color: var(--app-primary) !important;
+}
+
+.p-checkbox-checked:not(.p-disabled):hover .p-checkbox-box {
+  background: var(--app-primary-700) !important;
+  border-color: var(--app-primary-700) !important;
+}
+
+.p-checkbox-icon {
+  color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Checkbox pill (.app-check-pill)
+ *
+ * A <label> wrapping a p-checkbox, an optional .app-svg-icon and its text —
+ * e.g. "PwD Friendly" on the offer form. The pill radius is a deliberate
+ * exception to the square-corner rule, like the filter chips.
+ * ------------------------------------------------------------------------ */
+.app-check-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  padding: 0.625rem 1.25rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 9999px;
+  color: var(--app-text);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--field-border-hover);
+  }
+
+  .app-svg-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .p-checkbox,
+  .p-checkbox-box {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .p-checkbox-icon {
+    font-size: 0.875rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * Default Mobile Table Layout (Card / Ticket Style for < 768px screens)
  * ------------------------------------------------------------------------ */
 @media (max-width: 767px) {

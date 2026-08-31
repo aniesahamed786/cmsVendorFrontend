@@ -313,6 +313,7 @@ export class OfferForm {
         ],
       ],
       highlight: [false],
+      pwdFriendly: [false],
       discountType: this.fb.control<"Fixed" | "Percentage" | "Others" | null>(
         "Fixed",
         {
@@ -1717,6 +1718,10 @@ export class OfferForm {
     );
   }
 
+  pwdIconMask(): string {
+    return resolveMaskImageStyle(this.document, "svg/PWD/PWD.svg");
+  }
+
   getUploadIconMask(): string {
     return resolveUploadIconMaskStyle(this.document);
   }
@@ -1858,6 +1863,8 @@ export class OfferForm {
       highlight: toBool(
         offerdetails.isHighlightEnabled ?? offerdetails.isFeatured,
       ),
+
+      pwdFriendly: toBool(offerdetails.isPwdAvailable),
 
       discountType:
         offerdetails.discountType === "fixed"
@@ -3003,6 +3010,7 @@ export class OfferForm {
       isFeatured: form.highlight,
       isHighlightEnabled: !!form.highlight,
       isPartnerHotel: false,
+      isPwdAvailable: !!form.pwdFriendly,
 
       email: form.email ? [form.email] : [],
       mobile: form.phone ? [form.phone] : [],

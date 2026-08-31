@@ -91,6 +91,8 @@ export interface CreateOfferPayload {
     isFeatured: boolean;
     isHighlightEnabled: boolean;
     isPartnerHotel: boolean;
+    /** Offer is accessible to persons with disabilities. */
+    isPwdAvailable?: boolean;
 
     hotelStarRating?: boolean;
     hotelAmenitites?: string[];

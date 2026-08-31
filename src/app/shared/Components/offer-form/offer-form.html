@@ -541,6 +541,15 @@
           <p class="offer-form__error">{{ 'offerForm.error.offerTypeRequired' | translate }}</p>
           }
         </div>
+
+        <div class="offer-form__field-group offer-form__col-2">
+          <label class="app-check-pill">
+            <p-checkbox formControlName="pwdFriendly" [binary]="true"></p-checkbox>
+            <span class="app-svg-icon" [style.webkitMaskImage]="pwdIconMask()"
+              [style.maskImage]="pwdIconMask()"></span>
+            <span>{{ 'offerForm.label.pwdFriendly' | translate }}</span>
+          </label>
+        </div>
       </div>
 
       <!-- Website + Discount Code -->
