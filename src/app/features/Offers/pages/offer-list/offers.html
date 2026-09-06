@@ -155,7 +155,8 @@
       }
     </app-bottom-sheet>
 
-    <p-table [value]="tableRows()" [paginator]="!loading()" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+    <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
+      [paginator]="!loading()" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]"
       paginatorDropdownAppendTo="body" styleClass="offers__table">
       <ng-template pTemplate="header">
         <tr>

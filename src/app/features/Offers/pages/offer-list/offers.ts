@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { TableLazyLoadEvent } from 'primeng/table';
 import { OnInit } from '@angular/core';
 
 type Availability = 'Online' | 'In-Store' | 'Hybrid';
@@ -65,10 +66,24 @@ export class Offers implements OnInit {
   readonly backendUrl = environment.backendUrl;
 
   readonly loading = signal(true);
+  readonly totalRecords = signal(0);
+  readonly pageSize = signal(10);
 
   ngOnInit(): void {
-    this.loadOffers();
+    // ponytail: no initial loadOffers() — p-table [lazy] fires onLazyLoad on init.
     this.loadOfferStats();
+  }
+
+  onLazyLoad(event: TableLazyLoadEvent): void {
+    const rows = event.rows ?? this.pageSize();
+    this.pageSize.set(rows);
+
+    // The offers endpoint only takes page/pageSize, so sorting is applied to the
+    // page we hold — see rows().
+    this.sortField.set((event.sortField as keyof Offer) ?? null);
+    this.sortOrder.set(event.sortOrder === -1 ? -1 : 1);
+
+    this.loadOffers(Math.floor((event.first ?? 0) / rows) + 1);
   }
 
   private loadOfferStats(): void {
@@ -144,7 +159,8 @@ export class Offers implements OnInit {
   readonly discountType = signal<'Percentage' | 'Fixed Amount' | null>(null);
   readonly period = signal<string>('all');
   readonly customRange = signal<Date[] | null>(null);
-  readonly sort = signal<string>('newest');
+  readonly sortField = signal<keyof Offer | null>(null);
+  readonly sortOrder = signal<1 | -1>(1);
   readonly search = signal<string>('');
 
   readonly activeFilterCount = computed(() => {
@@ -260,12 +276,13 @@ export class Offers implements OnInit {
       return true;
     });
 
+    const field = this.sortField();
+    if (!field) return filtered;
+
+    const dir = this.sortOrder();
     return [...filtered].sort((a, b) => {
-      switch (this.sort()) {
-        case 'oldest': return a.startDate.getTime() - b.startDate.getTime();
-        case 'title': return a.title.localeCompare(b.title);
-        default: return b.startDate.getTime() - a.startDate.getTime();
-      }
+      const x = a[field], y = b[field];
+      return (x < y ? -1 : x > y ? 1 : 0) * dir;
     });
   });
 
@@ -273,7 +290,7 @@ export class Offers implements OnInit {
   // `rowData ? bodyTemplate : loadingBodyTemplate` per row, so each null draws
   // the loadingbody skeleton row while the header and table chrome stay real.
   readonly tableRows = computed(() =>
-    this.loading() ? new Array(5).fill(null) : this.rows()
+    this.loading() ? new Array(this.pageSize()).fill(null) : this.rows()
   );
 
   statusClass(status: OfferStatus): string {
@@ -316,19 +333,19 @@ export class Offers implements OnInit {
   //   });
   // }
 
-  private loadOffers() {
+  private loadOffers(page: number) {
     this.loading.set(true);
     this.offerListService
-      .getOffers(1, 10)
+      .getOffers(page, this.pageSize())
       .subscribe({
         next: (res) => {
-          console.log('Offer List', res);
-          this.offers.set(
-            res.data.map(this.mapOffer)
-          );
+          this.offers.set(res.data.map(this.mapOffer));
+          this.totalRecords.set(res.total || res.data.length);
           this.loading.set(false);
         },
         error: () => {
+          this.offers.set([]);
+          this.totalRecords.set(0);
           this.loading.set(false);
         }
       });
