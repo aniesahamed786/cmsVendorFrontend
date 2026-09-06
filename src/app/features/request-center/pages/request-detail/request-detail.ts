@@ -57,6 +57,63 @@ function toIdList(value: unknown): string[] {
     .filter(Boolean);
 }
 
+/** A diff value that holds ids: an array, a JSON array string, or a single id. */
+function parseIdArray(value: unknown): unknown[] {
+  if (Array.isArray(value)) return value;
+  if (typeof value !== 'string' || !value.trim()) return [];
+  const trimmed = value.trim();
+  if (trimmed.startsWith('[')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // not JSON — fall through to the single-id reading
+    }
+  }
+  return [trimmed];
+}
+
+/** An object value, whether it arrives as one or as a JSON string. */
+function toRecord(value: unknown): Record<string, unknown> | null {
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed.startsWith('{')) return null;
+    try {
+      const parsed = JSON.parse(trimmed);
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : null;
+    } catch {
+      return null;
+    }
+  }
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+/**
+ * The diff reports the whole hotel block as one `hotel_details` change, which would render as
+ * raw JSON. Split it into one row per sub-field so amenities and rooms reach their renderers,
+ * keeping only the sub-fields that actually differ.
+ */
+function expandHotelDetails(change: RequestChangeResponse): RequestChangeResponse[] {
+  if (!/^hotel_?details$/i.test(change.field ?? '')) return [change];
+
+  const oldRecord = toRecord(change.oldValue) ?? {};
+  const newRecord = toRecord(change.newValue) ?? {};
+  const keys = [...new Set([...Object.keys(oldRecord), ...Object.keys(newRecord)])];
+  if (!keys.length) return [change];
+
+  return keys
+    .map((key) => ({
+      ...change,
+      _id: `${change._id ?? change.field}:${key}`,
+      field: key,
+      oldValue: oldRecord[key],
+      newValue: newRecord[key],
+    }))
+    .filter((row) => JSON.stringify(row.oldValue ?? null) !== JSON.stringify(row.newValue ?? null));
+}
+
 function parseRoomDetails(value: unknown): any[] {
   if (!value) return [];
   if (Array.isArray(value)) return value;
@@ -217,7 +274,7 @@ export class RequestDetail {
     this.i18n.loadSeq();
     const entityType = this.details()?.entityType;
     const currency = (this.proposedEntity()['currency'] as string) || (this.details()?.requestData?.['currency'] as string) || 'SAR';
-    const raw = this.changeRowsRaw();
+    const raw = this.changeRowsRaw().flatMap(expandHotelDetails);
     const hasCurrency = raw.some((c) => (c.field ?? '').toLowerCase() === 'currency');
     const filteredRows = raw.filter((c) => {
       const f = (c.field ?? '').toLowerCase();
@@ -235,6 +292,7 @@ export class RequestDetail {
           fieldName === 'hotelamenitites_ar' ||
           fieldName === 'hotelamenities_ar';
         const isRoomDetailsField = fieldName === 'roomdetails' || fieldName === 'room_details';
+        const isLocationField = fieldName === 'locationids' || fieldName === 'locations';
 
         const oldRooms = isRoomDetailsField ? parseRoomDetails(change.oldValue) : [];
         const newRooms = isRoomDetailsField ? parseRoomDetails(change.newValue) : [];
@@ -254,8 +312,16 @@ export class RequestDetail {
           oldAmenities,
           newAmenities,
           currency,
-          oldValue: isRoomDetails || isAmenities ? '' : formatChangeValue(change.oldValue, change.field),
-          newValue: isRoomDetails || isAmenities ? '' : formatChangeValue(change.newValue, change.field),
+          oldValue: isRoomDetails || isAmenities
+            ? ''
+            : isLocationField
+              ? this.locationNames(change.oldValue)
+              : formatChangeValue(change.oldValue, change.field),
+          newValue: isRoomDetails || isAmenities
+            ? ''
+            : isLocationField
+              ? this.locationNames(change.newValue)
+              : formatChangeValue(change.newValue, change.field),
         };
       });
   });
@@ -325,6 +391,28 @@ export class RequestDetail {
       .map((id) => byId.get(id))
       .filter((location): location is Record<string, unknown> => !!location);
   });
+  /**
+   * Branch names for a diff value that carries location ids. Falls back to the raw id when the
+   * branch is gone or the list hasn't loaded — a reviewer needs to see *something* either way.
+   */
+  private locationNames(value: unknown): string {
+    const ids = toIdList(Array.isArray(value) ? value : parseIdArray(value));
+    if (!ids.length) return '';
+
+    const isAr = this.i18n.lang() === 'ar';
+    const byId = new Map(this.vendorLocations().map((loc) => [String(loc['id']), loc] as const));
+    return ids
+      .map((id) => {
+        const loc = byId.get(id);
+        if (!loc) return id;
+        const name = isAr
+          ? loc['branch_name_ar'] || loc['branch_name']
+          : loc['branch_name'] || loc['branch_name_ar'];
+        return String(name || id);
+      })
+      .join(', ');
+  }
+
   readonly profileView = computed(() => toProfileRequestView(this.proposedEntity()));
   readonly branchView = computed(() => toBranchView(this.proposedEntity()));
 
