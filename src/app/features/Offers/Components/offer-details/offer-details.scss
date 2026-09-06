@@ -334,6 +334,21 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    // ponytail: ~5 cards tall (4.6rem each + 0.75rem gaps); the 6th peeks and scrolls
+    max-height: 26rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--app-border);
+      border-radius: 4px;
+    }
   }
 
   &__location {
