@@ -282,12 +282,15 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     const headers = [
       this.i18n.t('branches.column.name'),
       this.i18n.t('branches.column.totalOffers'),
-      this.i18n.t('branches.column.location'),
+      this.i18n.t('branches.column.city'),
+      this.i18n.t('branches.column.region'),
+      this.i18n.t('branches.column.country'),
       this.i18n.t('branches.column.manager'),
       this.i18n.t('branches.filter.status'),
     ];
     const csvContent = rows.map(r => [
-      `"${r.locationName}"`, r.totalOffers, `"${r.city}"`, `"${r.representativeName}"`, `"${r.status || ''}"`
+      `"${r.locationName}"`, r.totalOffers, `"${r.city}"`, `"${r.region || ''}"`, `"${r.country || ''}"`,
+      `"${r.representativeName}"`, `"${r.status || ''}"`
     ].join(','));
     const csvStr = '\ufeff' + headers.join(',') + '\n' + csvContent.join('\n');
     const blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });

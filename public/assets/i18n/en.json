@@ -1094,7 +1094,9 @@
     "column": {
       "name": "Branch Name",
       "totalOffers": "Total Offers",
-      "location": "Location",
+      "city": "City",
+      "region": "Region",
+      "country": "Country",
       "manager": "Manager",
       "action": "Action"
     },

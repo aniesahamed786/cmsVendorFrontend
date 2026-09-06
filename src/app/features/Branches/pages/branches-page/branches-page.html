@@ -193,7 +193,9 @@
           <tr>
             <th pSortableColumn="name">{{ 'branches.column.name' | translate }} <p-sortIcon field="name" /></th>
             <th pSortableColumn="totalOffers">{{ 'branches.column.totalOffers' | translate }} <p-sortIcon field="totalOffers" /></th>
-            <th pSortableColumn="location">{{ 'branches.column.location' | translate }} <p-sortIcon field="location" /></th>
+            <th pSortableColumn="city">{{ 'branches.column.city' | translate }} <p-sortIcon field="city" /></th>
+            <th pSortableColumn="region">{{ 'branches.column.region' | translate }} <p-sortIcon field="region" /></th>
+            <th pSortableColumn="country">{{ 'branches.column.country' | translate }} <p-sortIcon field="country" /></th>
             <th pSortableColumn="manager">{{ 'branches.column.manager' | translate }} <p-sortIcon field="manager" /></th>
             <th>{{ 'branches.column.action' | translate }}</th>
           </tr>
@@ -204,6 +206,8 @@
             <td><span class="branches-page__row-title" (click)="navigateBranchDetail(branch.locationId)">{{ branch.locationName }}</span></td>
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.totalOffers }}</td>
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.city }}</td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.region }}</td>
+            <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.country }}</td>
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.representativeName }}</td>
             <td class="branches-page__td-center">
               <button class="branches-page__action-btn" type="button" (click)="selectedRow.set(branch); menu.toggle($event)">
@@ -222,6 +226,8 @@
             <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--num"></span></td>
             <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--text"></span></td>
             <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--text"></span></td>
+            <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--text"></span></td>
+            <td><span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--text"></span></td>
             <td class="branches-page__td-center">
               <span class="app-skeleton branches-page__skeleton-cell branches-page__skeleton-cell--action"></span>
             </td>
@@ -230,7 +236,7 @@
 
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="5" class="branches-page__empty-message">{{ 'branches.empty' | translate }}</td>
+            <td colspan="7" class="branches-page__empty-message">{{ 'branches.empty' | translate }}</td>
           </tr>
         </ng-template>
       </p-table>
