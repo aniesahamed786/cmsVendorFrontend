@@ -320,15 +320,6 @@
     color: var(--app-text);
   }
 
-  /* FLAGGED for the Phase 4 gate — trend/positive-increase green, same case
-     as recent-activities' status green. No success/positive token exists in
-     :root, and inventing one is a token decision, not a page one. Left
-     literal so light mode is unchanged. */
-  &__performer-trend {
-    font-size: 10px;
-    color: #16a34a;
-  }
-
   /* Table Toolbar Section */
   &__toolbar {
     margin-bottom: 1rem;

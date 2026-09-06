@@ -1067,8 +1067,7 @@
     },
     "performers": {
       "title": "Top Performers",
-      "subtitle": "Ranked by monthly redemptions",
-      "increase": "20% INCREASE"
+      "subtitle": "Ranked by monthly redemptions"
     },
     "filter": {
       "status": "Status",
