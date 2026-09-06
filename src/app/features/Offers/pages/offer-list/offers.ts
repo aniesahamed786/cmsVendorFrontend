@@ -94,9 +94,10 @@ export class Offers implements OnInit {
   private revealStats(): void {
     const s = this.requestMetrics();
 
-    this.animateTo('pendingRequests', s.pendingRequests);
-    this.animateTo('completedRequests', s.completedRequests);
-    this.animateTo('totalRequests', s.totalRequests);
+    this.animateTo('active', s.activeOffers ?? 0);
+    this.animateTo('scheduled', s.scheduledOffers ?? 0);
+    this.animateTo('expiringSoon', s.expiringSoonOffers ?? 0);
+    this.animateTo('total', s.totalOffers ?? 0);
   }
 
   // p-select takes plain label strings, so these rebuild through t() instead of
@@ -238,19 +239,6 @@ export class Offers implements OnInit {
     const from = new Date();
     from.setDate(from.getDate() - Number(period));
     return [from, to];
-  });
-
-  readonly stats = computed(() => {
-    const all = this.offers();
-    const now = new Date();
-    const in30 = new Date();
-    in30.setDate(in30.getDate() + 30);
-    return {
-      active: all.filter((o) => o.status === 'Active').length,
-      scheduled: all.filter((o) => o.status === 'Scheduled').length,
-      expiringSoon: all.filter((o) => o.expirationDate >= now && o.expirationDate <= in30).length,
-      total: all.length,
-    };
   });
 
   readonly rows = computed(() => {

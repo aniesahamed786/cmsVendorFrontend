@@ -22,6 +22,11 @@ export interface RequestMetricsResponse {
   pendingRequests: number;
   completedRequests: number;
   totalRequests: number;
+  /** Offer-list KPI cards. Optional until the backend adds them; render as 0. */
+  activeOffers?: number;
+  scheduledOffers?: number;
+  expiringSoonOffers?: number;
+  totalOffers?: number;
 }
 
 /** One row of GET /cmsVendor/requests (the summary projection). */
