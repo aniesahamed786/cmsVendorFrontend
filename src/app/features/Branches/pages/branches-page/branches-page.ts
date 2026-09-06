@@ -232,7 +232,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       this.allBranches.set(branches);
       this.branchesLoading.set(false);
 
-      const performers: TopPerformer[] = branches.map(branch => ({
+      const performers: TopPerformer[] = branches.slice(0, 4).map(branch => ({
         id: branch.locationId,
         name: branch.locationName,
         redemptions: 0,
