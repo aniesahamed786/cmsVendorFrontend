@@ -34,8 +34,8 @@ import { OfferApi } from '../../models/offerList';
 import { environment } from '../../../../../environments/environment';
 import { createCountUp } from '../../../../shared/animation/count-up';
 
-import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
-import { RequestMetricsResponse } from '../../../request-center/models/request-api.model';
+import { OffersService, OfferStats } from '../../services/offers.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-offers',
@@ -48,20 +48,18 @@ export class Offers implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private readonly i18n = inject(I18nService);
-  private readonly requestCenterApi = inject(RequestCenterApiService);
+  private readonly offersService = inject(OffersService);
   private readonly offerListService = inject(OfferListService);
 
   readonly showMobileFilters = signal(false);
 
-  readonly requestMetrics = signal<RequestMetricsResponse>({
-    pendingOffer: 0,
-    pendingStore: 0,
-    pendingProfile: 0,
-    rejected: 0,
-    pendingRequests: 0,
-    completedRequests: 0,
-    totalRequests: 0,
+  readonly offerStats = signal<OfferStats>({
+    totalOffers: 0,
+    activeOffers: 0,
+    scheduledOffers: 0,
+    expiringSoonOffers: 0,
   });
+  readonly statsLoading = signal(true);
   private readonly offers = signal<Offer[]>([]);
   readonly backendUrl = environment.backendUrl;
 
@@ -87,15 +85,19 @@ export class Offers implements OnInit {
   }
 
   private loadOfferStats(): void {
-    this.requestCenterApi.getMetrics().subscribe({
-      next: (metrics) => {
-        this.requestMetrics.set(metrics);
-        this.revealStats();
-      },
-      error: (err) => {
-        console.error('Failed to load request metrics', err);
-      }
-    });
+    this.statsLoading.set(true);
+    this.offersService
+      .getOfferStats()
+      .pipe(finalize(() => this.statsLoading.set(false)))
+      .subscribe({
+        next: (stats) => {
+          this.offerStats.set(stats);
+          this.revealStats();
+        },
+        error: (err) => {
+          console.error('Failed to load offer stats', err);
+        }
+      });
   }
   // ---- Count-up stats (shared/animation/count-up.ts) ------------------------
   // The cards skeleton while the data is absent, then count up once it lands —
@@ -107,7 +109,7 @@ export class Offers implements OnInit {
 
   /** Kick off every stat's count-up. Call this when the data lands. */
   private revealStats(): void {
-    const s = this.requestMetrics();
+    const s = this.offerStats();
 
     this.animateTo('active', s.activeOffers ?? 0);
     this.animateTo('scheduled', s.scheduledOffers ?? 0);

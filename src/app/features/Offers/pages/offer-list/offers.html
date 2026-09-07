@@ -8,7 +8,7 @@
   </header>
 
   <section class="offers__stats">
-    @if (loading()) {
+    @if (statsLoading()) {
     <!-- whole card contents, matching the branches KPI cards. Blocks sit in the
          real __stat article, so its padding, border and column gap are shared. -->
     @for (i of [1,2,3,4]; track i) {
