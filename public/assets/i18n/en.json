@@ -49,6 +49,11 @@
     "pendingRequests": "Pending Requests",
     "noPendingRequests": "No pending requests",
     "noPendingRequestsDescription": "You're all caught up.",
+    "topPerformingOffer": "Top Performing Offer",
+    "totalRedemption": "TOTAL REDEMPTION",
+    "viewOffer": "View Offer",
+    "noTopOffer": "No Top Performing Offer",
+    "noTopOfferDescription": "Offers will appear here once redemptions are recorded.",
     "stats": {
       "totalRedemptions": {
         "title": "Total Redemptions",

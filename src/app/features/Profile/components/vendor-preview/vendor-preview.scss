@@ -2,6 +2,12 @@
   display: block;
   word-break: break-word;
   overflow-wrap: break-word;
+
+  ::ng-deep .mobile-preview__skeleton-logo {
+    inset-inline-start: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .vendor-preview {
@@ -59,8 +65,8 @@
   &__logo {
     position: absolute;
     bottom: -1.5rem;
-    inset-inline-start: 1rem;
-    inset-inline-end: auto;
+    left: 50%;
+    transform: translateX(-50%);
     width: 70px;
     height: 70px;
     display: flex;

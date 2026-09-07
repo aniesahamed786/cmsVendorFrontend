@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { BackButton } from '../../../../shared/Components/back-button/back-button';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorQuickActions } from '../../components/vendor-quick-actions/vendor-quick-actions';
@@ -15,47 +16,18 @@ import { environment } from '../../../../../environments/environment';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
 import { VendorProfileApi } from '../../../Profile/models/vendor-profile-request.mapper';
-import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
-import { INCOMPLETE_STATUSES, RequestStatus } from '../../../request-center/models/request.model';
-import { toRequestRow } from '../../../request-center/models/request.mapper';
 
-interface PendingRequestItem {
-  id: string;
-  title: string;
-  subtitle: string;
-  status: RequestStatus;
-  time: string;
-  icon: string;
-  iconClass: string;
+interface TopOfferData {
+  offerId: string;
+  offerTitle: string;
+  offerTitleAr?: string;
+  offerMode: string[];
+  redemptions: number;
 }
-
-const ACTIVITY_ICONS: Record<string, string> = {
-  OFFER: 'assets/svg/Navbar/ic-offer.svg',
-  STORE: 'assets/svg/Navbar/ic-vendor.svg',
-  BRANCH: 'assets/svg/Navbar/ic-vendor.svg',
-  PROFILE: 'assets/svg/Navbar/ic-vendor.svg',
-  VENDOR: 'assets/svg/Navbar/ic-vendor.svg',
-  HIGHLIGHT: 'assets/svg/Navbar/ic-highlights.svg',
-  BANNER: 'assets/svg/Navbar/ic-banner.svg',
-  NOTIFICATION: 'assets/svg/Navbar/ic-notification.svg',
-  REQUEST: 'assets/svg/Navbar/ic-requests.svg',
-  DEFAULT: 'assets/svg/Navbar/ic-log.svg',
-};
-
-const ACTIVITY_ICON_CLASSES: Record<string, string> = {
-  APPROVED: 'dashboard-page__activity-icon--approved',
-  SUBMITTED: 'dashboard-page__activity-icon--submitted',
-  PENDING: 'dashboard-page__activity-icon--pending',
-  DRAFT: 'dashboard-page__activity-icon--draft',
-  RETURNED: 'dashboard-page__activity-icon--returned',
-  REJECTED: 'dashboard-page__activity-icon--rejected',
-  RECALLED: 'dashboard-page__activity-icon--recalled',
-  CANCELLED: 'dashboard-page__activity-icon--cancelled',
-};
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CommonModule, OfferTile, VendorQuickActions, TranslatePipe, TableModule, TooltipModule],
+  imports: [CommonModule, BackButton, OfferTile, VendorQuickActions, TranslatePipe, TableModule, TooltipModule],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
@@ -81,12 +53,35 @@ export class DashboardPage implements OnInit {
   });
 
   statsLoading = signal(true);
-  pendingRequestsLoading = signal(true);
+  topOfferLoading = signal(true);
   readonly skeletonStats = [0, 1, 2, 3];
-  readonly skeletonPendingRows = [0, 1, 2];
 
-  // Incomplete requests fetched for the Pending Requests panel
-  pendingRequests = signal<PendingRequestItem[]>([]);
+  topOffer = signal<TopOfferData | null>(null);
+
+  readonly displayOfferTitle = computed(() => {
+    const offer = this.topOffer();
+    if (!offer) return '';
+    return this.localized(offer.offerTitle, offer.offerTitleAr);
+  });
+
+  readonly offerModeInfo = computed(() => {
+    const offer = this.topOffer();
+    if (!offer) return { labelKey: 'offers.value.online', icon: 'pi pi-globe' };
+    const raw = Array.isArray(offer.offerMode)
+      ? offer.offerMode.join(' ').toLowerCase()
+      : String(offer.offerMode ?? '').toLowerCase();
+
+    const hasDigital = raw.includes('digital') || raw.includes('online');
+    const hasStore = raw.includes('store') || raw.includes('in store');
+
+    if (hasDigital && hasStore) {
+      return { labelKey: 'offers.value.hybridLong', icon: 'pi pi-globe' };
+    }
+    if (hasStore) {
+      return { labelKey: 'offers.value.inStore', icon: 'pi pi-shop' };
+    }
+    return { labelKey: 'offers.value.online', icon: 'pi pi-globe' };
+  });
 
   recentActivities = signal<ActivityRow[]>([]);
   activityLoading = signal(true);
@@ -97,14 +92,13 @@ export class DashboardPage implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly systemLogs = inject(SystemLogService);
   private readonly vendorProfileService = inject(VendorProfileService);
-  private readonly requestCenterApi = inject(RequestCenterApiService);
   private readonly i18n = inject(I18nService);
 
   constructor(private readonly router: Router) {}
 
   ngOnInit(): void {
     this.loadVendorProfile();
-    this.loadPendingRequests();
+    this.loadTopOffer();
 
     this.statsLoading.set(true);
     this.dashboardService
@@ -115,6 +109,7 @@ export class DashboardPage implements OnInit {
           this.dashboardStats.set(stats);
           this.animateTo('totalRedemptions', stats?.totalRedemptions ?? 0);
           this.animateTo('activeOffers', stats?.activeOffers ?? 0);
+          this.animateTo('pendingRequests', stats?.pendingRequests ?? 0);
           this.animateTo('expiringSoonOffers', stats?.expiringSoonOffers ?? 0);
         },
         error: (err) => {
@@ -133,42 +128,20 @@ export class DashboardPage implements OnInit {
       });
   }
 
-  private loadPendingRequests(): void {
-    this.pendingRequestsLoading.set(true);
-    this.requestCenterApi
-      .list({
-        page: 1,
-        pageSize: 5,
-        sortBy: 'updatedOn',
-        sortOrder: 'desc',
-        status: INCOMPLETE_STATUSES,
-      })
-      .pipe(finalize(() => this.pendingRequestsLoading.set(false)))
-      .subscribe({
-        next: (res) => {
-          this.animateTo('pendingRequests', res.total);
-          this.pendingRequests.set(
-            (res.data ?? []).map((summary) => {
-              const row = toRequestRow(summary);
-              const statusKey = String(row.status ?? '').toUpperCase();
-              return {
-                id: row.rowKey,
-                title: row.targetEntity,
-                subtitle: `${this.i18n.t(`requestCenter.type.${row.type.toLowerCase()}`)} • ${this.i18n.t(`requestCenter.actionType.${row.actionType.toLowerCase()}`)}`,
-                status: row.status,
-                time: row.timestamp,
-                icon: ACTIVITY_ICONS[String(summary.entityType ?? '').toUpperCase()] ?? 'assets/svg/Navbar/ic-requests.svg',
-                iconClass:
-                  ACTIVITY_ICON_CLASSES[statusKey] ?? 'dashboard-page__activity-icon--white',
-              };
-            }),
-          );
-        },
-        error: (err) => {
-          console.error('Failed to load pending requests for dashboard', err);
-          this.pendingRequests.set([]);
-        },
+  private loadTopOffer(): void {
+    this.topOfferLoading.set(true);
+    // Placeholder data until dedicated top-performing offer API is provided
+    setTimeout(() => {
+      this.topOffer.set({
+        offerId: '',
+        offerTitle: 'Summer Sale 2026',
+        offerTitleAr: 'تخفيضات صيف 2026',
+        offerMode: ['online'],
+        redemptions: 0,
       });
+      this.animateTo('topOfferRedemptions', 0);
+      this.topOfferLoading.set(false);
+    }, 200);
   }
 
   private loadVendorProfile(): void {
@@ -225,15 +198,12 @@ export class DashboardPage implements OnInit {
     this.router.navigate(['/messaging-center']);
   }
 
-  goToRequestDetails(rowKey: string): void {
-    this.router.navigate(['/request-center', rowKey]);
-  }
-
-  statusClass(status: string | RequestStatus): string {
-    return status ? `dashboard-page__status dashboard-page__status--${String(status).toLowerCase()}` : '';
-  }
-
-  statusKey(status: RequestStatus): string {
-    return `requestCenter.value.${status.toLowerCase()}`;
+  goToTopOffer(): void {
+    const id = this.topOffer()?.offerId;
+    if (id) {
+      this.router.navigate(['/offers', id]);
+    } else {
+      this.router.navigate(['/offers']);
+    }
   }
 }

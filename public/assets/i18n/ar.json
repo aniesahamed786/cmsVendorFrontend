@@ -49,6 +49,11 @@
     "pendingRequests": "الطلبات قيد المراجعة",
     "noPendingRequests": "لا توجد طلبات معلقة",
     "noPendingRequestsDescription": "جميع طلباتك محدّثة.",
+    "topPerformingOffer": "العرض الأعلى أداءً",
+    "totalRedemption": "إجمالي الاسترداد",
+    "viewOffer": "عرض العرض",
+    "noTopOffer": "لا يوجد عرض أعلى أداءً",
+    "noTopOfferDescription": "ستظهر العروض هنا بمجرد تسجيل عمليات الاسترداد.",
     "stats": {
       "totalRedemptions": {
         "title": "إجمالي عمليات الاسترداد",
