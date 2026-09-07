@@ -101,10 +101,12 @@
         <p class="settings-label">{{ 'settingsPage.language.selectLabel' | translate }}</p>
         <div class="language-switch">
           <button type="button" class="language-switch__option" [class.language-switch__option--active]="!isArabic()"
+            [disabled]="saving()"
             (click)="setLanguage('en')">
             {{ 'settingsPage.language.english' | translate }}
           </button>
           <button type="button" class="language-switch__option" [class.language-switch__option--active]="isArabic()"
+            [disabled]="saving()"
             (click)="setLanguage('ar')">
             {{ 'settingsPage.language.arabic' | translate }}
           </button>
@@ -118,6 +120,7 @@
         <div class="theme-options">
           @for (option of themeModes; track option.value) {
           <button type="button" class="theme-option" [class.theme-option--active]="currentThemeMode() === option.value"
+            [disabled]="saving()"
             (click)="setThemeMode(option.value)">
             <span>{{ themeLabel(option.value, option.label) }}</span>
             <span class="theme-option__radio" [class.theme-option__radio--active]="currentThemeMode() === option.value"></span>

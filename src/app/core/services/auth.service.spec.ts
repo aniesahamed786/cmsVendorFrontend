@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
@@ -86,6 +86,19 @@ describe('AuthService', () => {
     expect(service.getVendorId()).toBe('v-1');
   });
 
+  it('should update cached preferences after they are saved', () => {
+    localStorage.setItem(
+      'vendorAccount',
+      JSON.stringify({ id: 'acc-1', vendorId: 'v-1', language: 'ENGLISH', theme: 'LIGHT' }),
+    );
+
+    service.updateVendorAccountPreferences('ARABIC', 'DARK');
+
+    expect(service.getVendorAccount()).toEqual(
+      expect.objectContaining({ language: 'ARABIC', theme: 'DARK' }),
+    );
+  });
+
   it('should remove session and navigate to /login on logout', () => {
     localStorage.setItem('accessToken', 'mock-token');
     localStorage.setItem('vendorAccount', JSON.stringify({ name: 'Vendor' }));
@@ -97,24 +110,29 @@ describe('AuthService', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
   });
 
-  it('should automatically logout when token expires via timer', fakeAsync(() => {
-    const futureExp = Math.floor(Date.now() / 1000) + 2; // 2 seconds
-    const validToken = createMockJwt({ sub: '123', exp: futureExp });
-    const account = {
-      id: 'acc-1',
-      vendorId: 'v-1',
-      roleId: 'role-1',
-      name: 'Vendor Owner',
-      email: 'vendor@example.com',
-      accountStatus: 'ACTIVE',
-    };
+  it('should automatically logout when token expires via timer', () => {
+    vi.useFakeTimers();
+    try {
+      const futureExp = Math.floor(Date.now() / 1000) + 2; // 2 seconds
+      const validToken = createMockJwt({ sub: '123', exp: futureExp });
+      const account = {
+        id: 'acc-1',
+        vendorId: 'v-1',
+        roleId: 'role-1',
+        name: 'Vendor Owner',
+        email: 'vendor@example.com',
+        accountStatus: 'ACTIVE',
+      };
 
-    service.setSession(validToken, account);
-    expect(service.isAuthenticated()).toBe(true);
+      service.setSession(validToken, account);
+      expect(service.isAuthenticated()).toBe(true);
 
-    tick(2100);
+      vi.advanceTimersByTime(2100);
 
-    expect(localStorage.getItem('accessToken')).toBeNull();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
-  }));
+      expect(localStorage.getItem('accessToken')).toBeNull();
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

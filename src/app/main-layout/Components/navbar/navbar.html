@@ -34,9 +34,11 @@
               <i class="pi pi-moon"></i>
               <span>{{ 'navbar.darkTheme' | translate }}</span>
             </div>
-            <p-toggleswitch [ngModel]="isDarkMode()" (ngModelChange)="onThemeToggle($event)"></p-toggleswitch>
+            <p-toggleswitch [ngModel]="isDarkMode()" [disabled]="preferenceSaving()"
+              (ngModelChange)="onThemeToggle($event)"></p-toggleswitch>
           </div>
-          <button type="button" class="profile-menu-item" (click)="onLanguageToggle()">
+          <button type="button" class="profile-menu-item" [disabled]="preferenceSaving()"
+            (click)="onLanguageToggle()">
             <i class="pi pi-globe"></i>
             @if (isArabic()) {
               <span>English</span>

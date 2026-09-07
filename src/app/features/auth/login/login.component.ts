@@ -14,6 +14,11 @@ import { I18nService } from '../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
 import { AppearanceMode, ThemeService } from '../../../shared/services/theme.service';
 
+const API_TO_LANGUAGE = {
+  ENGLISH: 'en',
+  ARABIC: 'ar',
+} as const;
+
 /** vendor_accounts.theme → the UI's appearance modes (inverse of the settings page's map). */
 const API_TO_THEME: Record<string, AppearanceMode> = {
   LIGHT: 'light',
@@ -107,7 +112,7 @@ export class LoginComponent {
 
   this.authService.login(payload).subscribe({
 
-    next: (response) => {
+    next: async (response) => {
 
       console.log('Login Success:', response);
 
@@ -120,7 +125,14 @@ export class LoginComponent {
         this.theme.setAppearanceMode(saved);
       }
 
-      this.router.navigate(['/dashboard']);
+      const savedLanguage = response.vendorAccount.language
+        ? API_TO_LANGUAGE[response.vendorAccount.language]
+        : undefined;
+      if (savedLanguage) {
+        await this.i18n.setLang(savedLanguage);
+      }
+
+      void this.router.navigate(['/dashboard']);
 
     },
 

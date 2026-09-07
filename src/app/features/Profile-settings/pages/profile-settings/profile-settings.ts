@@ -14,6 +14,7 @@ import { extractApiErrorMessage } from '../../../../shared/utils/api-error-messa
 import { AuthService } from '../../../../core/services/auth.service';
 import {
   ProfileSettingsService,
+  UpdateProfileSettingsPayload,
   VendorAccountLanguage,
   VendorAccountTheme,
 } from '../../services/profile-settings.service';
@@ -246,14 +247,50 @@ export class ProfileSettings {
   }
 
   setLanguage(lang: 'en' | 'ar'): void {
-    if (this.currentLang() === lang) {
+    if (this.currentLang() === lang || this.saving()) {
       return;
     }
-    void this.i18n.toggle();
+    const previous = this.currentLang();
+    void this.i18n.setLang(lang);
+    this.persistPreference(
+      { language: LANGUAGE_TO_API[lang] },
+      () => void this.i18n.setLang(previous),
+    );
   }
 
   setThemeMode(mode: AppearanceMode): void {
+    if (this.currentThemeMode() === mode || this.saving()) {
+      return;
+    }
+    const previous = this.currentThemeMode();
     this.themeService.setAppearanceMode(mode);
+    this.persistPreference(
+      { theme: THEME_TO_API[mode] },
+      () => this.themeService.setAppearanceMode(previous),
+    );
+  }
+
+  private persistPreference(payload: UpdateProfileSettingsPayload, rollback: () => void): void {
+    this.saving.set(true);
+    this.settingsService
+      .updateSettings(payload)
+      .pipe(finalize(() => this.saving.set(false)))
+      .subscribe({
+        next: (account) => {
+          this.savedLanguage.set(account.language);
+          this.savedTheme.set(account.theme);
+          this.auth.updateVendorAccountPreferences(account.language, account.theme);
+        },
+        error: (err: HttpErrorResponse) => {
+          rollback();
+          this.messageService.add({
+            severity: 'error',
+            summary: this.i18n.t('settingsPage.toast.saveFailedSummary'),
+            detail: extractApiErrorMessage(err) ?? this.i18n.t('settingsPage.toast.saveFailedDetail'),
+            life: 5000,
+          });
+        },
+      });
   }
 
   themeLabel(mode: AppearanceMode, fallbackLabel: string): string {
