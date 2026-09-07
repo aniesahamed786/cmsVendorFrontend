@@ -143,6 +143,11 @@
   font-size: 1.25rem;
 }
 
+.dashboard-page__empty-icon--info {
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+}
+
 .dashboard-page__empty-title {
   margin: 0;
   font-weight: 600;
@@ -170,43 +175,7 @@
   text-decoration: underline;
 }
 
-/* Recent activity */
-.dashboard-page__activity-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.dashboard-page__activity {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--app-border);
-}
-
-.dashboard-page__activity.is-clickable {
-  cursor: pointer;
-  padding: 0.75rem 0.5rem;
-  margin: 0 -0.5rem;
-  transition: background-color 160ms ease;
-}
-
-.dashboard-page__activity.is-clickable:hover {
-  background-color: var(--app-primary-hover-soft);
-}
-
-.dashboard-page__activity:last-child {
-  border-bottom: 0;
-}
-
-.dashboard-page__activity-side {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35rem;
-  flex-shrink: 0;
-}
-
+/* Recent activity table */
 .dashboard-page__table {
   margin-inline: -1.5rem;
   margin-block-end: -1.5rem;
@@ -231,45 +200,6 @@
   padding: 1.5rem 0;
 }
 
-.dashboard-page__status {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-}
-
-.dashboard-page__status--submitted,
-.dashboard-page__status--approved,
-.dashboard-page__status--created,
-.dashboard-page__status--published {
-  background: rgba(34, 197, 94, 0.16);
-  color: #16a34a;
-}
-
-.dashboard-page__status--edited {
-  background: var(--app-primary-soft);
-  color: var(--app-primary);
-}
-
-.dashboard-page__status--rejected,
-.dashboard-page__status--cancelled {
-  background: rgba(239, 68, 68, 0.16);
-  color: #dc2626;
-}
-
-.dashboard-page__status--recalled {
-  background: var(--app-primary-soft);
-  color: var(--app-primary);
-}
-
-.dashboard-page__status--returned,
-.dashboard-page__status--draft {
-  background: rgba(245, 158, 11, 0.16);
-  color: #d97706;
-}
-
 /* Table skeleton cells (.app-skeleton owns fill + pulse; these own size) */
 .dashboard-page__skeleton-cell {
   display: inline-block;
@@ -281,109 +211,6 @@
 .dashboard-page__skeleton-cell--text { width: 6rem; }
 .dashboard-page__skeleton-cell--id { width: 6.5rem; }
 .dashboard-page__skeleton-cell--pill { width: 4.5rem; }
-
-.dashboard-page__activity-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dashboard-page__icon-mask {
-  display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
-  background-color: currentColor;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-}
-
-/* Activity icon background matching status */
-.dashboard-page__activity-icon--submitted,
-.dashboard-page__activity-icon--approved,
-.dashboard-page__activity-icon--success {
-  background: rgba(34, 197, 94, 0.16);
-  color: #16a34a;
-}
-
-.dashboard-page__activity-icon--rejected,
-.dashboard-page__activity-icon--cancelled,
-.dashboard-page__activity-icon--danger {
-  background: rgba(239, 68, 68, 0.16);
-  color: #dc2626;
-}
-
-.dashboard-page__activity-icon--recalled,
-.dashboard-page__activity-icon--brand {
-  background: var(--app-primary-soft);
-  color: var(--app-primary);
-}
-
-.dashboard-page__activity-icon--returned,
-.dashboard-page__activity-icon--draft,
-.dashboard-page__activity-icon--pending,
-.dashboard-page__activity-icon--warning {
-  background: rgba(245, 158, 11, 0.16);
-  color: #d97706;
-}
-
-/* White background when not related to status */
-.dashboard-page__activity-icon--white,
-.dashboard-page__activity-icon--default {
-  background: #ffffff;
-  color: var(--app-primary);
-  border: 1px solid var(--app-border);
-}
-
-.dashboard-page__activity-body {
-  min-width: 0;
-  flex: 1;
-}
-
-.dashboard-page__activity-title {
-  margin: 0;
-  font-weight: 600;
-  color: var(--app-text);
-}
-
-.dashboard-page__activity-desc {
-  margin: 0.125rem 0 0;
-  font-size: 0.875rem;
-  color: var(--app-muted);
-}
-
-.dashboard-page__activity-time {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  color: var(--app-muted);
-}
-
-/* Activity skeletons (.app-skeleton owns fill + pulse; these own size only),
-   sized to the elements they stand in for so the panel keeps its height. */
-.dashboard-page__skeleton-title {
-  display: block;
-  width: 10rem;
-  height: 1rem;
-}
-
-.dashboard-page__skeleton-desc {
-  display: block;
-  width: 7rem;
-  height: 0.875rem;
-  margin-top: 0.375rem;
-}
-
-.dashboard-page__skeleton-time {
-  flex-shrink: 0;
-  width: 4.5rem;
-  height: 0.75rem;
-}
 
 /* Header skeletons */
 .dashboard-page__skeleton-logo {
@@ -416,43 +243,255 @@
   margin-bottom: 0;
 }
 
-/* Top branch */
-.dashboard-page__branch {
+/* Top Performing Offer */
+.dashboard-page__panel--top-offer {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.dashboard-page__branch-name {
-  margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
+.dashboard-page__panel-head--top-offer {
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--app-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard-page__top-rank-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.625rem;
+  background: var(--app-primary-soft);
   color: var(--app-primary);
+  border: 1px solid var(--app-primary-subtle);
+  letter-spacing: 0.04em;
+  border-radius: 0;
 }
 
-.dashboard-page__branch-address {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
+.dashboard-page__top-rank-badge i {
+  font-size: 0.8125rem;
+}
+
+.dashboard-page__top-offer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.dashboard-page__top-offer-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.dashboard-page__top-offer-icon-box {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+  border: 1px solid var(--app-primary-subtle);
+  font-size: 1.125rem;
+  border-radius: 0;
+}
+
+.dashboard-page__top-offer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.dashboard-page__top-offer-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--app-text);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-page__top-offer-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: var(--app-muted);
 }
 
-.dashboard-page__branch-stat {
-  padding: 1.25rem;
-  background: var(--app-primary-soft);
-}
-
-.dashboard-page__branch-stat-label {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.dashboard-page__top-offer-mode-icon {
+  font-size: 0.875rem;
   color: var(--app-primary);
 }
 
-.dashboard-page__branch-stat-value {
-  margin: 0.5rem 0 0;
-  font-size: 2.25rem;
+/* Stat card box */
+.dashboard-page__top-offer-stat {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.75rem 1.25rem;
+  background: linear-gradient(180deg, var(--app-primary-soft) 0%, rgba(var(--app-primary-rgb), 0.03) 100%);
+  border: none;
+  border-radius: 0;
+}
+
+.dashboard-page__top-offer-stat-watermark {
+  position: absolute;
+  inset-inline-end: 1rem;
+  bottom: 0.75rem;
+  font-size: 3rem;
+  color: var(--app-primary);
+  opacity: 0.08;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.dashboard-page__top-offer-stat-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-page__top-offer-stat-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboard-page__top-offer-stat-pulse {
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--app-primary);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 2px var(--app-primary-ring);
+}
+
+.dashboard-page__top-offer-stat-label {
+  margin: 0;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--app-text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+}
+
+.dashboard-page__top-offer-stat-value {
+  margin: 0.5rem 0 0;
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--app-primary);
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.dashboard-page__top-offer-footer {
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+.dashboard-page__top-offer-btn {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .dashboard-page__top-offer-btn app-button,
+:host ::ng-deep .dashboard-page__top-offer-btn .app-btn {
+  width: 100%;
+  justify-content: center;
+  height: 2.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 0;
+}
+
+/* Skeletons */
+.dashboard-page__top-offer-skeleton {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.dashboard-page__skeleton-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.dashboard-page__skeleton-offer-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+}
+
+.dashboard-page__skeleton-meta-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dashboard-page__skeleton-offer-title {
+  display: block;
+  width: 75%;
+  height: 1.25rem;
+}
+
+.dashboard-page__skeleton-offer-mode {
+  display: block;
+  width: 40%;
+  height: 0.875rem;
+}
+
+.dashboard-page__skeleton-stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.75rem 1rem;
+  background: var(--app-primary-soft);
+  border: none;
+  border-radius: 0;
+}
+
+.dashboard-page__skeleton-stat-label {
+  display: block;
+  width: 7.5rem;
+  height: 0.75rem;
+}
+
+.dashboard-page__skeleton-stat-val {
+  display: block;
+  width: 6rem;
+  height: 2.5rem;
+}
+
+.dashboard-page__skeleton-offer-btn {
+  display: block;
+  width: 100%;
+  height: 2.75rem;
+  margin-top: auto;
 }

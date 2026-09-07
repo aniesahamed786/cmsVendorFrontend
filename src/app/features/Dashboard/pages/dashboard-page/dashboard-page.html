@@ -105,59 +105,77 @@
       </p-table>
     </section>
 
-    <section class="dashboard-page__panel">
-      <div class="dashboard-page__panel-head">
-        <h2 class="dashboard-page__panel-title">{{ 'dashboard.pendingRequests' | translate }}</h2>
-        <button type="button" class="dashboard-page__link" (click)="goToRequestCenter()">
-          {{ 'dashboard.viewHistory' | translate }}
-        </button>
+    <section class="dashboard-page__panel dashboard-page__panel--top-offer">
+      <div class="dashboard-page__panel-head dashboard-page__panel-head--top-offer">
+        <h2 class="dashboard-page__panel-title">{{ 'dashboard.topPerformingOffer' | translate }}</h2>
+        <span class="dashboard-page__top-rank-badge">
+          <i class="pi pi-trophy"></i>
+          <span>#1</span>
+        </span>
       </div>
 
-      @if (pendingRequestsLoading()) {
-      <div class="dashboard-page__activity-list">
-        @for (row of skeletonPendingRows; track row) {
-        <div class="dashboard-page__activity">
-          <span class="app-skeleton dashboard-page__activity-icon"></span>
-          <div class="dashboard-page__activity-body">
-            <span class="app-skeleton dashboard-page__skeleton-title"></span>
-            <span class="app-skeleton dashboard-page__skeleton-desc"></span>
+      @if (topOfferLoading()) {
+      <div class="dashboard-page__top-offer-skeleton">
+        <div class="dashboard-page__skeleton-meta-row">
+          <span class="app-skeleton dashboard-page__skeleton-offer-icon"></span>
+          <div class="dashboard-page__skeleton-meta-text">
+            <span class="app-skeleton dashboard-page__skeleton-offer-title"></span>
+            <span class="app-skeleton dashboard-page__skeleton-offer-mode"></span>
           </div>
-          <span class="app-skeleton dashboard-page__skeleton-time"></span>
         </div>
-        }
+        <div class="dashboard-page__skeleton-stat-box">
+          <span class="app-skeleton dashboard-page__skeleton-stat-label"></span>
+          <span class="app-skeleton dashboard-page__skeleton-stat-val"></span>
+        </div>
+        <span class="app-skeleton dashboard-page__skeleton-offer-btn"></span>
+      </div>
+      } @else if (topOffer()) {
+      <div class="dashboard-page__top-offer">
+        <div class="dashboard-page__top-offer-card-top">
+          <div class="dashboard-page__top-offer-icon-box">
+            <i class="pi pi-tag"></i>
+          </div>
+          <div class="dashboard-page__top-offer-info">
+            <h3 class="dashboard-page__top-offer-title" [title]="displayOfferTitle()">{{ displayOfferTitle() }}</h3>
+            <div class="dashboard-page__top-offer-mode">
+              <i [class]="offerModeInfo().icon + ' dashboard-page__top-offer-mode-icon'"></i>
+              <span>{{ offerModeInfo().labelKey | translate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-page__top-offer-stat">
+          <i class="pi pi-ticket dashboard-page__top-offer-stat-watermark" aria-hidden="true"></i>
+          <div class="dashboard-page__top-offer-stat-inner">
+            <div class="dashboard-page__top-offer-stat-head">
+              <span class="dashboard-page__top-offer-stat-pulse"></span>
+              <span class="dashboard-page__top-offer-stat-label">
+                {{ 'dashboard.totalRedemption' | translate }}
+              </span>
+            </div>
+            <div class="dashboard-page__top-offer-stat-value">
+              {{ animatedCount('topOfferRedemptions') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-page__top-offer-footer">
+          <app-back-button
+            class="dashboard-page__top-offer-btn"
+            label="dashboard.viewOffer"
+            (click)="goToTopOffer()"
+          />
+        </div>
       </div>
       } @else {
-      <div class="dashboard-page__activity-list">
-        @for (req of pendingRequests(); track req.id) {
-        <div class="dashboard-page__activity is-clickable" (click)="goToRequestDetails(req.id)">
-          <div class="dashboard-page__activity-icon" [ngClass]="req.iconClass">
-            <span
-              class="dashboard-page__icon-mask"
-              [style.webkitMaskImage]="'url(' + req.icon + ')'"
-              [style.maskImage]="'url(' + req.icon + ')'"
-              role="img"
-            ></span>
-          </div>
-          <div class="dashboard-page__activity-body">
-            <p class="dashboard-page__activity-title">{{ req.title }}</p>
-            <p class="dashboard-page__activity-desc">{{ req.subtitle }}</p>
-          </div>
-          <div class="dashboard-page__activity-side">
-            <span [class]="statusClass(req.status)">{{ statusKey(req.status) | translate }}</span>
-            <span class="dashboard-page__activity-time">{{ req.time }}</span>
-          </div>
+      <div class="dashboard-page__empty-state">
+        <div class="dashboard-page__empty-icon dashboard-page__empty-icon--info" aria-hidden="true">
+          <i class="pi pi-tag"></i>
         </div>
-        } @empty {
-        <div class="dashboard-page__empty-state">
-          <div class="dashboard-page__empty-icon" aria-hidden="true">
-            <i class="pi pi-check"></i>
-          </div>
-          <p class="dashboard-page__empty-title">{{ 'dashboard.noPendingRequests' | translate }}</p>
-          <p class="dashboard-page__empty-description">
-            {{ 'dashboard.noPendingRequestsDescription' | translate }}
-          </p>
-        </div>
-        }
+        <p class="dashboard-page__empty-title">{{ 'dashboard.noTopOffer' | translate }}</p>
+        <p class="dashboard-page__empty-description">
+          {{ 'dashboard.noTopOfferDescription' | translate }}
+        </p>
       </div>
       }
     </section>
