@@ -234,7 +234,8 @@
       "hybridLong": "In-Store & Online",
       "active": "Active",
       "scheduled": "Scheduled",
-      "expired": "Expired"
+      "expired": "Expired",
+      "inactive": "Inactive"
     },
     "action": {
       "viewOffer": "View Offer",

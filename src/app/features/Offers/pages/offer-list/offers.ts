@@ -7,7 +7,7 @@ import { TableLazyLoadEvent } from 'primeng/table';
 import { OnInit } from '@angular/core';
 
 type Availability = 'Online' | 'In-Store' | 'Hybrid';
-type OfferStatus = 'Active' | 'Scheduled' | 'Expired';
+type OfferStatus = 'Active' | 'Scheduled' | 'Expired' | 'Inactive';
 
 interface Offer {
   id: string;
@@ -68,6 +68,8 @@ export class Offers implements OnInit {
   readonly loading = signal(true);
   readonly totalRecords = signal(0);
   readonly pageSize = signal(10);
+  readonly first = signal(0);
+  private searchTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit(): void {
     // ponytail: no initial loadOffers() — p-table [lazy] fires onLazyLoad on init.
@@ -77,9 +79,9 @@ export class Offers implements OnInit {
   onLazyLoad(event: TableLazyLoadEvent): void {
     const rows = event.rows ?? this.pageSize();
     this.pageSize.set(rows);
+    this.first.set(event.first ?? 0);
 
-    // The offers endpoint only takes page/pageSize, so sorting is applied to the
-    // page we hold — see rows().
+    // PrimeNG field names are mapped to API sort fields in loadOffers().
     this.sortField.set((event.sortField as keyof Offer) ?? null);
     this.sortOrder.set(event.sortOrder === -1 ? -1 : 1);
 
@@ -129,6 +131,7 @@ export class Offers implements OnInit {
     ['offers.value.active', 'Active'],
     ['offers.value.scheduled', 'Scheduled'],
     ['offers.value.expired', 'Expired'],
+    ['offers.value.inactive', 'Inactive'],
   ]);
 
   readonly discountTypeOptions = this.options<'Percentage' | 'Fixed Amount' | null>([
@@ -219,6 +222,7 @@ export class Offers implements OnInit {
       this.period.set('all');
       this.customRange.set(null);
     }
+    this.applyFilters();
   }
 
   clearFilters(): void {
@@ -227,6 +231,18 @@ export class Offers implements OnInit {
     this.discountType.set(null);
     this.period.set('all');
     this.customRange.set(null);
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    this.first.set(0);
+    this.loadOffers(1);
+  }
+
+  onSearch(value: string): void {
+    this.search.set(value);
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => this.applyFilters(), 300);
   }
 
   activeOffer: Offer | null = null;
@@ -257,40 +273,11 @@ export class Offers implements OnInit {
     return [from, to];
   });
 
-  readonly rows = computed(() => {
-    const status = this.status();
-    const branch = this.branch();
-    const availability = this.availability();
-    const discountType = this.discountType();
-    const [from, to] = this.window();
-    const search = this.search().trim().toLowerCase();
-
-    const filtered = this.offers().filter((o) => {
-      if (status && o.status !== status) return false;
-      if (branch && o.branch !== branch) return false;
-      if (availability && o.availability !== availability) return false;
-      if (discountType && o.discountType !== discountType) return false;
-      if (from && o.startDate < from) return false;
-      if (to && o.startDate > to) return false;
-      if (search && !o.title.toLowerCase().includes(search)) return false;
-      return true;
-    });
-
-    const field = this.sortField();
-    if (!field) return filtered;
-
-    const dir = this.sortOrder();
-    return [...filtered].sort((a, b) => {
-      const x = a[field], y = b[field];
-      return (x < y ? -1 : x > y ? 1 : 0) * dir;
-    });
-  });
-
   // While loading, feed the table 5 falsy rows. PrimeNG's TableBody renders
   // `rowData ? bodyTemplate : loadingBodyTemplate` per row, so each null draws
   // the loadingbody skeleton row while the header and table chrome stay real.
   readonly tableRows = computed(() =>
-    this.loading() ? new Array(this.pageSize()).fill(null) : this.rows()
+    this.loading() ? new Array(this.pageSize()).fill(null) : this.offers()
   );
 
   statusClass(status: OfferStatus): string {
@@ -334,9 +321,23 @@ export class Offers implements OnInit {
   // }
 
   private loadOffers(page: number) {
+    const [from, to] = this.window();
+    const sortField = this.sortField();
+    const sortBy = sortField === 'expirationDate' ? 'expiryDate' : sortField;
     this.loading.set(true);
     this.offerListService
-      .getOffers(page, this.pageSize())
+      .getOffers({
+        page,
+        pageSize: this.pageSize(),
+        search: this.search().trim() || undefined,
+        discountType: this.discountType() === 'Percentage' ? 'percentage' : this.discountType() ? 'fixed' : undefined,
+        status: this.status() ?? undefined,
+        availability: this.availability() === 'Online' ? 'digital' : this.availability() === 'In-Store' ? 'in-store' : this.availability() ? 'hybrid' : undefined,
+        startDateFrom: from?.toISOString(),
+        startDateTo: to?.toISOString(),
+        sortBy: sortBy === 'title' || sortBy === 'discount' || sortBy === 'startDate' || sortBy === 'expiryDate' ? sortBy : undefined,
+        sortOrder: this.sortOrder() === -1 ? 'desc' : 'asc',
+      })
       .subscribe({
         next: (res) => {
           this.offers.set(res.data.map(this.mapOffer));
@@ -398,6 +399,7 @@ const VALUE_KEYS: Record<string, string> = {
   Active: 'offers.value.active',
   Scheduled: 'offers.value.scheduled',
   Expired: 'offers.value.expired',
+  Inactive: 'offers.value.inactive',
 };
 
 function endOfDay(d: Date): Date {

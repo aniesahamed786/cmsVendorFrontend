@@ -89,3 +89,16 @@ export interface OfferDetailApi {
     highlightImageLandscape: string;
     hotelDetails: OfferHotelDetailsApi | null;
 }
+
+export interface OffersQuery {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    discountType?: 'percentage' | 'fixed';
+    status?: 'Active' | 'Scheduled' | 'Expired' | 'Inactive';
+    availability?: 'digital' | 'in-store' | 'hybrid';
+    startDateFrom?: string;
+    startDateTo?: string;
+    sortBy?: 'title' | 'discount' | 'startDate' | 'expiryDate';
+    sortOrder?: 'asc' | 'desc';
+}

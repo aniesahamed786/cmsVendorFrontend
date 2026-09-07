@@ -214,6 +214,11 @@
       background: rgba(239, 68, 68, 0.16);
       color: #dc2626;
     }
+
+    &--inactive {
+      background: color-mix(in srgb, var(--app-surface) 75%, var(--app-border) 25%);
+      color: var(--app-muted);
+    }
   }
 
   &__title-cell {

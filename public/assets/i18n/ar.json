@@ -234,7 +234,8 @@
       "hybridLong": "في المتجر وعبر الإنترنت",
       "active": "نشط",
       "scheduled": "مجدول",
-      "expired": "منتهي"
+      "expired": "منتهي",
+      "inactive": "غير نشط"
     },
     "action": {
       "viewOffer": "عرض التفاصيل",
