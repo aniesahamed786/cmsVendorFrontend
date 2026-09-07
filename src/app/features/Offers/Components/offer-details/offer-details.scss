@@ -141,6 +141,8 @@
 .offer-detail-tile {
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   background-color: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
@@ -149,23 +151,29 @@
   /* Square borders forced */
 
   &__icon {
-    color: var(--app-muted);
+    color: var(--app-text);
   }
 
-  &__img {
+  /* masked by offer-detail-svg-icon, tinted to the label color */
+  &__img.offer-detail-svg-icon {
     width: 1rem;
     height: 1rem;
-    object-fit: contain;
+    background-color: var(--app-text);
+  }
+
+  &__img-probe {
+    display: none;
   }
 
   &__icon-placeholder {
     font-size: 0.75rem;
-    color: var(--app-muted);
+    color: var(--app-text);
   }
 
   &__label {
     font-size: 0.875rem;
     font-weight: 600;
+    line-height: 1;
     color: var(--app-text);
   }
 }

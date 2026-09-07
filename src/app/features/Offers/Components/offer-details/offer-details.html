@@ -106,8 +106,12 @@
           @if (isPrimeIcon(getCategoryTileIcon(category))) {
           <i [class]="getCategoryTileIcon(category) + ' offer-detail-tile__icon'"></i>
           } @else if (getCategoryTileIcon(category) && !hasCategoryIconError(getCategoryTileIcon(category))) {
-          <img [src]="getCategoryIconImage(getCategoryTileIcon(category))" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
+          <!-- ponytail: hidden <img> is only the load-error probe; the visible icon is mask-tinted to the label color -->
+          <img [src]="getCategoryIconImage(getCategoryTileIcon(category))" alt="" aria-hidden="true" class="offer-detail-tile__img-probe"
             (error)="markCategoryIconError(getCategoryTileIcon(category))" />
+          <span class="offer-detail-svg-icon offer-detail-tile__img" role="img" [attr.aria-label]="'offerDetails.alt.categoryIcon' | translate"
+            [style.webkitMaskImage]="'url(' + getCategoryIconImage(getCategoryTileIcon(category)) + ')'"
+            [style.maskImage]="'url(' + getCategoryIconImage(getCategoryTileIcon(category)) + ')'"></span>
           } @else if (getCategoryTileIcon(category)) {
           <i class="pi pi-image offer-detail-tile__icon-placeholder"></i>
           }
@@ -118,8 +122,11 @@
           @if (isPrimeIcon(getCategoryIcon(offer()))) {
           <i [class]="getCategoryIcon(offer()) + ' offer-detail-tile__icon'"></i>
           } @else if (getCategoryIcon(offer()) && !hasCategoryIconError(getCategoryIcon(offer()))) {
-          <img [src]="getCategoryIconImage(getCategoryIcon(offer()))" [alt]="'offerDetails.alt.categoryIcon' | translate" class="offer-detail-tile__img"
+          <img [src]="getCategoryIconImage(getCategoryIcon(offer()))" alt="" aria-hidden="true" class="offer-detail-tile__img-probe"
             (error)="markCategoryIconError(getCategoryIcon(offer()))" />
+          <span class="offer-detail-svg-icon offer-detail-tile__img" role="img" [attr.aria-label]="'offerDetails.alt.categoryIcon' | translate"
+            [style.webkitMaskImage]="'url(' + getCategoryIconImage(getCategoryIcon(offer())) + ')'"
+            [style.maskImage]="'url(' + getCategoryIconImage(getCategoryIcon(offer())) + ')'"></span>
           } @else if (getCategoryIcon(offer())) {
           <i class="pi pi-image offer-detail-tile__icon-placeholder"></i>
           }
