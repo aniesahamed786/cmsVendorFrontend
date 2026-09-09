@@ -149,21 +149,10 @@ export class Offers implements OnInit {
     ['offers.value.hybrid', 'Hybrid'],
   ]);
 
-  readonly periodOptions = this.options<string>([
-    ['offers.period.all', 'all'],
-    ['offers.period.last7', '7'],
-    ['offers.period.last30', '30'],
-    ['offers.period.last90', '90'],
-    ['offers.period.year', 'year'],
-    ['offers.period.custom', 'custom'],
-  ]);
-
   readonly status = signal<OfferStatus | null>(null);
   readonly branch = signal<string | null>(null);
   readonly availability = signal<Availability | null>(null);
   readonly discountType = signal<'Percentage' | 'Fixed Amount' | null>(null);
-  readonly period = signal<string>('all');
-  readonly customRange = signal<Date[] | null>(null);
   readonly sortField = signal<keyof Offer | null>(null);
   readonly sortOrder = signal<1 | -1>(1);
   readonly search = signal<string>('');
@@ -173,7 +162,6 @@ export class Offers implements OnInit {
     if (this.status()) count++;
     if (this.availability()) count++;
     if (this.discountType()) count++;
-    if (this.period() !== 'all') count++;
     return count;
   });
 
@@ -202,14 +190,6 @@ export class Offers implements OnInit {
       });
     }
 
-    if (this.period() !== 'all') {
-      const pLabel = this.periodOptions().find(o => o.value === this.period())?.label ?? this.period();
-      chips.push({
-        key: 'period',
-        label: `${this.i18n.t('offers.filter.period')}: ${pLabel}`
-      });
-    }
-
     return chips;
   });
 
@@ -220,9 +200,6 @@ export class Offers implements OnInit {
       this.status.set(null);
     } else if (chip.key === 'availability') {
       this.availability.set(null);
-    } else if (chip.key === 'period') {
-      this.period.set('all');
-      this.customRange.set(null);
     }
     this.applyFilters();
   }
@@ -231,8 +208,6 @@ export class Offers implements OnInit {
     this.status.set(null);
     this.availability.set(null);
     this.discountType.set(null);
-    this.period.set('all');
-    this.customRange.set(null);
     this.applyFilters();
   }
 
@@ -253,26 +228,11 @@ export class Offers implements OnInit {
     this.i18n.loadSeq();
     return [
       { label: this.i18n.t('offers.action.viewOffer'), icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
-      { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-arrows-v', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
-      { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-refresh' },
+      { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
+      { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync' },
       // { label: this.i18n.t('offers.action.createTicket'), icon: 'pi pi-comment' },
-      { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-file-excel', styleClass: 'p-menuitem-danger' },
+      { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
     ];
-  });
-
-  // resolve the active period to a [from, to] window
-  private readonly window = computed<[Date | null, Date | null]>(() => {
-    const period = this.period();
-    if (period === 'custom') {
-      const [from, to] = this.customRange() ?? [];
-      return [from ?? null, to ? endOfDay(to) : null];
-    }
-    if (period === 'all') return [null, null];
-    const to = endOfDay(new Date());
-    if (period === 'year') return [new Date(new Date().getFullYear(), 0, 1), to];
-    const from = new Date();
-    from.setDate(from.getDate() - Number(period));
-    return [from, to];
   });
 
   // While loading, feed the table 5 falsy rows. PrimeNG's TableBody renders
@@ -323,7 +283,6 @@ export class Offers implements OnInit {
   // }
 
   private loadOffers(page: number) {
-    const [from, to] = this.window();
     const sortField = this.sortField();
     const sortBy = sortField === 'expirationDate' ? 'expiryDate' : sortField;
     this.loading.set(true);
@@ -335,8 +294,6 @@ export class Offers implements OnInit {
         discountType: this.discountType() === 'Percentage' ? 'percentage' : this.discountType() ? 'fixed' : undefined,
         status: this.status() ?? undefined,
         availability: this.availability() === 'Online' ? 'digital' : this.availability() === 'In-Store' ? 'in-store' : this.availability() ? 'hybrid' : undefined,
-        startDateFrom: from?.toISOString(),
-        startDateTo: to?.toISOString(),
         sortBy: sortBy === 'title' || sortBy === 'discount' || sortBy === 'startDate' || sortBy === 'expiryDate' ? sortBy : undefined,
         sortOrder: this.sortOrder() === -1 ? 'desc' : 'asc',
       })
@@ -404,8 +361,4 @@ const VALUE_KEYS: Record<string, string> = {
   Inactive: 'offers.value.inactive',
 };
 
-function endOfDay(d: Date): Date {
-  const e = new Date(d);
-  e.setHours(23, 59, 59, 999);
-  return e;
-}
+

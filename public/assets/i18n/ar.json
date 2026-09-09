@@ -204,13 +204,13 @@
     "filter": {
       "discountType": "نوع الخصم",
       "status": "الحالة",
-      "availability": "التوفر",
+      "availability": "نوع العرض",
       "period": "الفترة",
       "customRange": "نطاق مخصص",
       "selectDates": "اختر التواريخ",
       "allStatuses": "كل الحالات",
       "allTypes": "كل الأنواع",
-      "allAvailability": "كل خيارات التوفر"
+      "allAvailability": "كل أنواع العروض"
     },
     "period": {
       "all": "كل الأوقات",
@@ -224,7 +224,7 @@
       "title": "عنوان العرض",
       "discount": "الخصم",
       "discountType": "نوع الخصم",
-      "availability": "التوفر",
+      "availability": "نوع العرض",
       "startDate": "تاريخ البدء",
       "expirationDate": "تاريخ الانتهاء",
       "status": "الحالة",
@@ -244,10 +244,10 @@
     },
     "action": {
       "viewOffer": "عرض التفاصيل",
-      "requestChanges": "طلب تعديلات",
-      "requestRenew": "طلب تجديد",
+      "requestChanges": "تعديل العرض (طلب)",
+      "requestRenew": "تجديد العرض (طلب)",
       "createTicket": "إنشاء تذكرة",
-      "deactivate": "إيقاف العرض"
+      "deactivate": "إلغاء العرض (طلب)"
     }
   },
   "requestCenter": {

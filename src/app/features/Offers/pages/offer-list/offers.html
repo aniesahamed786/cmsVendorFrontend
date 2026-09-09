@@ -83,20 +83,6 @@
             (ngModelChange)="availability.set($event); applyFilters()" optionLabel="label" optionValue="value"
             [placeholder]="'offers.filter.availability' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
         </div>
-        <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'offers.filter.period' | translate }}</label>
-          <p-select [options]="periodOptions()" [ngModel]="period()" (ngModelChange)="period.set($event); applyFilters()"
-            optionLabel="label" optionValue="value" [placeholder]="'offers.filter.period' | translate" styleClass="offers__filter"
-            panelStyleClass="offers__overlay-panel" />
-        </div>
-        @if (period() === 'custom') {
-        <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'offers.filter.customRange' | translate }}</label>
-          <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event); applyFilters()" selectionMode="range"
-            [readonlyInput]="true" [placeholder]="'offers.filter.selectDates' | translate" dateFormat="yy-mm-dd" appendTo="body"
-            styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
-        </div>
-        }
       </div>
       @if (activeFilterChips().length > 0) {
       <div class="app-table-active-filters">
@@ -139,20 +125,6 @@
           (ngModelChange)="availability.set($event); applyFilters()" optionLabel="label" optionValue="value"
           [showClear]="true" [placeholder]="'offers.filter.availability' | translate" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" appendTo="body" />
       </div>
-      <div class="app-filter-group">
-        <label class="app-filter-label">{{ 'offers.filter.period' | translate }}</label>
-        <p-select [options]="periodOptions()" [ngModel]="period()" (ngModelChange)="period.set($event); applyFilters()"
-          optionLabel="label" optionValue="value" [placeholder]="'offers.filter.period' | translate" styleClass="offers__filter"
-          panelStyleClass="offers__overlay-panel" appendTo="body" />
-      </div>
-      @if (period() === 'custom') {
-      <div class="app-filter-group">
-        <label class="app-filter-label">{{ 'offers.filter.customRange' | translate }}</label>
-        <p-datepicker [ngModel]="customRange()" (ngModelChange)="customRange.set($event); applyFilters()" selectionMode="range"
-          [readonlyInput]="true" [placeholder]="'offers.filter.selectDates' | translate" dateFormat="yy-mm-dd" appendTo="body"
-          [showClear]="true" styleClass="offers__filter" panelStyleClass="offers__overlay-panel" />
-      </div>
-      }
     </app-bottom-sheet>
 
     <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()" [first]="first()"
