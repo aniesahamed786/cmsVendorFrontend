@@ -204,13 +204,13 @@
     "filter": {
       "discountType": "Discount Type",
       "status": "Status",
-      "availability": "Availability",
+      "availability": "Offer Type",
       "period": "Period",
       "customRange": "Custom Range",
       "selectDates": "Select dates",
       "allStatuses": "All statuses",
       "allTypes": "All types",
-      "allAvailability": "All availability"
+      "allAvailability": "All"
     },
     "period": {
       "all": "All time",
@@ -224,7 +224,7 @@
       "title": "Offer Title",
       "discount": "Discount",
       "discountType": "Discount Type",
-      "availability": "Availability",
+      "availability": "Offer Type",
       "startDate": "Start Date",
       "expirationDate": "Expiration Date",
       "status": "Status",
@@ -235,7 +235,7 @@
       "fixedAmount": "Fixed Amount",
       "online": "Online",
       "inStore": "In-Store",
-      "hybrid": "Hybrid",
+      "hybrid": "Online and In-Store",
       "hybridLong": "In-Store & Online",
       "active": "Active",
       "scheduled": "Scheduled",
