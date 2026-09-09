@@ -65,7 +65,6 @@ export class RequestCenterList {
   // ---- Pagination / Sorting / Filtering state ------------------------------
   readonly activeTab = signal<TabKey>('incomplete');
   readonly statusFilter = signal<RequestStatus | null>(null);
-  readonly sortDropdown = signal<'newest' | 'oldest'>('newest');
   readonly sortBy = signal<'requestId' | 'entityType' | 'requestType' | 'title' | 'status' | 'updatedOn'>('updatedOn');
   readonly sortOrder = signal<'asc' | 'desc'>('desc');
   readonly first = signal(0);
@@ -167,20 +166,6 @@ export class RequestCenterList {
     this.loadRequests();
   }
 
-  onSortByChange(val: 'newest' | 'oldest'): void {
-    this.sortDropdown.set(val);
-    this.sortBy.set('updatedOn');
-    this.sortOrder.set(val === 'newest' ? 'desc' : 'asc');
-    this.first.set(0);
-    this.loadRequests();
-  }
-
-  private options<T>(entries: [key: string, value: T][]) {
-    return computed(() => {
-      this.i18n.loadSeq();
-      return entries.map(([key, value]) => ({ label: this.i18n.t(key), value }));
-    });
-  }
 
   readonly statusOptions = computed(() => {
     this.i18n.loadSeq();
@@ -217,15 +202,9 @@ export class RequestCenterList {
     return entries.map(([key, value]) => ({ label: this.i18n.t(key), value }));
   });
 
-  readonly sortOptions = this.options<'newest' | 'oldest'>([
-    ['requestCenter.sort.newest', 'newest'],
-    ['requestCenter.sort.oldest', 'oldest'],
-  ]);
-
   readonly activeFilterCount = computed(() => {
     let count = 0;
     if (this.statusFilter()) count++;
-    if (this.sortDropdown() !== 'newest') count++;
     return count;
   });
 
@@ -252,7 +231,6 @@ export class RequestCenterList {
 
   clearFilters(): void {
     this.statusFilter.set(null);
-    this.sortDropdown.set('newest');
     this.sortBy.set('updatedOn');
     this.sortOrder.set('desc');
     this.first.set(0);
