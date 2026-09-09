@@ -279,7 +279,7 @@
     height: 2.5rem;
     border-radius: 0;
     background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-    border: 1px solid var(--app-border);
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -289,6 +289,15 @@
     i {
       font-size: 1.1rem;
     }
+  }
+
+  &__logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 0;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: none;
   }
 
 }
@@ -318,9 +327,9 @@
   .offers__logo {
     width: 48px;
     height: 48px;
-    border-radius: 8px;
+    border-radius: 0;
     object-fit: cover;
     flex-shrink: 0;
-    border: 1px solid var(--app-border);
+    border: none;
   }
 }
