@@ -315,14 +315,16 @@ export class RequestCenterList {
             command: () => this.confirmRecall(activeRow),
           }]
         : []),
-      {
-        label: this.i18n.t('requestCenter.action.delete'),
-        icon: 'pi pi-trash',
-        styleClass: 'p-menuitem-danger',
-        command: () => {
-          if (activeRow) this.confirmDelete(activeRow);
-        },
-      },
+      ...(activeRow?.status !== 'RECALLED'
+        ? [{
+            label: this.i18n.t('requestCenter.action.delete'),
+            icon: 'pi pi-trash',
+            styleClass: 'p-menuitem-danger',
+            command: () => {
+              if (activeRow) this.confirmDelete(activeRow);
+            },
+          }]
+        : []),
     ];
   });
 
