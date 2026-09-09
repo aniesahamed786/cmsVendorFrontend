@@ -159,7 +159,7 @@
             <td>
               <button type="button" class="request-center__row-action"
                 [attr.aria-label]="'requestCenter.rowActionsAria' | translate"
-                (click)="activeRow = row; menu.toggle($event); $event.stopPropagation()">
+                (click)="activeRow.set(row); menu.toggle($event); $event.stopPropagation()">
                 <i class="pi pi-ellipsis-v"></i>
               </button>
             </td>
@@ -215,7 +215,7 @@
               <span class="request-center__ticket-category">{{ typeKey(row.type) | translate }} • {{ actionTypeKey(row.actionType) | translate }}</span>
               <button type="button" class="request-center__row-action"
                 [attr.aria-label]="'requestCenter.rowActionsAria' | translate"
-                (click)="activeRow = row; menu.toggle($event); $event.stopPropagation()">
+                (click)="activeRow.set(row); menu.toggle($event); $event.stopPropagation()">
                 <i class="pi pi-ellipsis-v"></i>
               </button>
             </div>

@@ -295,31 +295,32 @@ export class RequestCenterList {
   readonly tableRows = computed(() => (this.tableLoading() ? new Array(5).fill(null) : this.rows()));
 
   // ---- Row actions (3-dot menu) ---------------------------------------------
-  activeRow: RequestRow | null = null;
+  readonly activeRow = signal<RequestRow | null>(null);
 
   readonly rowActions = computed(() => {
     this.i18n.loadSeq();
+    const activeRow = this.activeRow();
     return [
       {
         label: this.i18n.t('requestCenter.action.view'),
         icon: 'pi pi-eye',
         command: () => {
-          if (this.activeRow) this.router.navigate(['/request-center', this.activeRow.rowKey]);
+          if (activeRow) this.router.navigate(['/request-center', activeRow.rowKey]);
         },
       },
-      {
-        label: this.i18n.t('requestCenter.action.recall'),
-        icon: 'pi pi-replay',
-        command: () => {
-          if (this.activeRow) this.confirmRecall(this.activeRow);
-        },
-      },
+      ...(activeRow?.status === 'SUBMITTED'
+        ? [{
+            label: this.i18n.t('requestCenter.action.recall'),
+            icon: 'pi pi-replay',
+            command: () => this.confirmRecall(activeRow),
+          }]
+        : []),
       {
         label: this.i18n.t('requestCenter.action.delete'),
         icon: 'pi pi-trash',
         styleClass: 'p-menuitem-danger',
         command: () => {
-          if (this.activeRow) this.confirmDelete(this.activeRow);
+          if (activeRow) this.confirmDelete(activeRow);
         },
       },
     ];
