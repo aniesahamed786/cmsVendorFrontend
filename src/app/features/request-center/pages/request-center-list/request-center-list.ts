@@ -286,6 +286,16 @@ export class RequestCenterList {
           if (activeRow) this.router.navigate(['/request-center', activeRow.rowKey]);
         },
       },
+
+      ...(activeRow?.status === 'DRAFT'
+        ? [{
+            label: this.i18n.t('requestCenter.detail.editRequest'),
+            icon: 'pi pi-pencil',
+            command: () => {
+              if (activeRow) this.router.navigate(['/request-center', activeRow.rowKey, 'edit']);
+            },
+          }]
+        : []),
       ...(activeRow?.status === 'SUBMITTED'
         ? [{
             label: this.i18n.t('requestCenter.action.recall'),
@@ -306,7 +316,7 @@ export class RequestCenterList {
     ];
   });
 
-  // The confirm button on both dialogs spins while its endpoint is in flight.
+  // The confirm button on dialogs spins while its endpoint is in flight.
   readonly actionLoading = signal(false);
 
   // ---- Recall confirmation (POST /cmsVendor/requests/{id}/recall) -----------

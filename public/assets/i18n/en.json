@@ -319,7 +319,9 @@
     "action": {
       "view": "View Request",
       "recall": "Recall Request",
-      "delete": "Delete Request"
+      "delete": "Delete Request",
+      "resubmit": "Resubmit",
+      "editAndResubmit": "Edit & Resubmit"
     },
     "submitConfirm": {
       "title": "Submit Request",
@@ -333,7 +335,8 @@
     },
     "resubmitConfirm": {
       "title": "Resubmit Request",
-      "message": "Send this request back for review? Make sure you have addressed the reviewer's note first."
+      "message": "Send this request back for review? Make sure you have addressed the reviewer's note first.",
+      "confirm": "Resubmit"
     },
     "deleteConfirm": {
       "title": "Delete Request",
@@ -369,6 +372,7 @@
       "resubmitRequest": "Resubmit",
       "cancelRequest": "Cancel Request",
       "editRequest": "Edit Request",
+      "editAndResubmit": "Edit & Resubmit",
       "submitMissingFieldsSummary": "Missing Fields",
       "submitMissingFieldsDetail": "There are missing fields. Please edit the request and submit again.",
       "submitSuccessSummary": "Request Submitted",
@@ -540,8 +544,11 @@
       "title": "Edit Request",
       "backToRequest": "Back to Request",
       "saveChanges": "Save Changes",
+      "saveAndResubmit": "Save & Resubmit",
       "savedSummary": "Request updated",
       "savedDetail": "Your changes have been saved to this request.",
+      "resubmittedSummary": "Request Resubmitted",
+      "resubmittedDetail": "Your changes have been saved and the request was resubmitted for review.",
       "noChangesSummary": "Nothing to save",
       "noChangesDetail": "Change at least one field before saving.",
       "failedSummary": "Could not update request",

@@ -9,6 +9,12 @@
       </app-button>
       }
 
+      @if (canEditAndResubmit()) {
+      <app-button variant="primary" icon="pi pi-file-edit" (click)="goToEdit()">
+        {{ 'requestCenter.action.editAndResubmit' | translate }}
+      </app-button>
+      }
+
       @if (menuActions().length > 0) {
       <button type="button" class="request-detail__menu-btn"
         (click)="actionMenu.toggle($event)"

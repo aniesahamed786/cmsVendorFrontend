@@ -319,7 +319,9 @@
     "action": {
       "view": "عرض الطلب",
       "recall": "سحب الطلب",
-      "delete": "حذف الطلب"
+      "delete": "حذف الطلب",
+      "resubmit": "إعادة الإرسال",
+      "editAndResubmit": "تعديل وإعادة الإرسال"
     },
     "submitConfirm": {
       "title": "إرسال الطلب",
@@ -333,7 +335,8 @@
     },
     "resubmitConfirm": {
       "title": "إعادة إرسال الطلب",
-      "message": "هل تريد إعادة إرسال هذا الطلب للمراجعة؟ تأكد من معالجة ملاحظة المراجع أولاً."
+      "message": "هل تريد إعادة إرسال هذا الطلب للمراجعة؟ تأكد من معالجة ملاحظة المراجع أولاً.",
+      "confirm": "إعادة الإرسال"
     },
     "deleteConfirm": {
       "title": "حذف الطلب",
@@ -369,6 +372,7 @@
       "resubmitRequest": "إعادة الإرسال",
       "cancelRequest": "إلغاء الطلب",
       "editRequest": "تعديل الطلب",
+      "editAndResubmit": "تعديل وإعادة الإرسال",
       "submitMissingFieldsSummary": "حقول مفقودة",
       "submitMissingFieldsDetail": "توجد حقول مفقودة. يرجى تعديل الطلب وإعادة إرساله.",
       "submitSuccessSummary": "تم إرسال الطلب",
@@ -540,8 +544,11 @@
       "title": "تعديل الطلب",
       "backToRequest": "العودة إلى الطلب",
       "saveChanges": "حفظ التغييرات",
+      "saveAndResubmit": "حفظ وإعادة الإرسال",
       "savedSummary": "تم تحديث الطلب",
       "savedDetail": "تم حفظ التغييرات على هذا الطلب.",
+      "resubmittedSummary": "تمت إعادة إرسال الطلب",
+      "resubmittedDetail": "تم حفظ تغييراتك وإعادة إرسال الطلب للمراجعة بنجاح.",
       "noChangesSummary": "لا يوجد ما يتم حفظه",
       "noChangesDetail": "قم بتغيير حقل واحد على الأقل قبل الحفظ.",
       "failedSummary": "تعذر تحديث الطلب",

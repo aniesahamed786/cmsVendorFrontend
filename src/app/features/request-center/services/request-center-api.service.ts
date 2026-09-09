@@ -121,6 +121,17 @@ export class RequestCenterApiService {
   }
 
   /**
+   * Resubmit a request. For a RETURNED or SUBMITTED request, saving with actionType: 'SUBMIT'
+   * moves it to SUBMITTED and creates a submission log entry.
+   */
+  resubmit(requestId: string, status?: string): Observable<RequestEntityResponse> {
+    if (status === 'DRAFT') {
+      return this.submit(requestId);
+    }
+    return this.update(requestId, { actionType: 'SUBMIT' });
+  }
+
+  /**
    * GET /cmsVendor/checkRequest/{entityId} — `{ requestId }` when an in-flight UPDATE request
    * already targets this entity, `{}` otherwise. Note the path is mounted at bare
    * `/cmsVendor`, not under `/requests`.

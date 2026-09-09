@@ -639,9 +639,7 @@ export class RequestDetail {
   readonly canSubmit = computed(() => this.status() === 'DRAFT');
   readonly canDiscardDraft = computed(() => this.status() === 'DRAFT');
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
-  // A RETURNED request offers Edit and Cancel only. There is no Resubmit button by design —
-  // a returned request goes back for changes, so it is re-sent by editing it, not by pushing
-  // the same content through again unchanged.
+  readonly canEditAndResubmit = computed(() => this.status() === 'RETURNED' || this.status() === 'SUBMITTED');
   readonly canCancel = computed(() => this.status() === 'RETURNED');
 
   /**

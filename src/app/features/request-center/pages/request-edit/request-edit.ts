@@ -175,11 +175,22 @@ onBranchSave(event: BranchFormSubmit): void {
     this.persist(data, PROFILE_REQUEST_TITLE);
   }
  
+  readonly isResubmission = computed(() => {
+    const status = this.details()?.status;
+    return status === 'RETURNED' || status === 'SUBMITTED';
+  });
+ 
+  readonly submitButtonLabel = computed(() => {
+    this.i18n.loadSeq();
+    return this.isResubmission()
+      ? this.i18n.t('requestCenter.edit.saveAndResubmit')
+      : this.i18n.t('requestCenter.edit.saveChanges');
+  });
+ 
   /**
    * PUT /cmsVendor/requests/{id}. Only `title` and `requestData` are sent — entityType,
-   * entityId and requestType are the request's identity and must not change, and the endpoint
-   * rejects any field outside its DTO (`forbidNonWhitelisted`), so `actionType` is not sent
-   * either: editing a request never changes its status.
+   * entityId and requestType are the request's identity and must not change. If the request
+   * was RETURNED or SUBMITTED, actionType: 'SUBMIT' is sent to resubmit it.
    */
   private persist(formData: Record<string, unknown>, title: string): void {
     if (this.saving()) return;
@@ -199,12 +210,21 @@ onBranchSave(event: BranchFormSubmit): void {
     }
  
     this.saving.set(true);
+    const isResubmit = this.isResubmission();
     this.api
-      .update(this.requestId, { title: title || details.title, requestData })
+      .update(this.requestId, {
+        title: title || details.title,
+        requestData,
+        ...(isResubmit ? { actionType: 'SUBMIT' as const } : {}),
+      })
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: () => {
-          this.toast('success', 'requestCenter.edit.savedSummary', 'requestCenter.edit.savedDetail');
+          if (isResubmit) {
+            this.toast('success', 'requestCenter.edit.resubmittedSummary', 'requestCenter.edit.resubmittedDetail');
+          } else {
+            this.toast('success', 'requestCenter.edit.savedSummary', 'requestCenter.edit.savedDetail');
+          }
           this.goBack();
         },
         error: (err: HttpErrorResponse) => {
