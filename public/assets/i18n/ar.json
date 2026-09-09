@@ -244,10 +244,10 @@
     },
     "action": {
       "viewOffer": "عرض التفاصيل",
-      "requestChanges": "طلب تعديلات",
-      "requestRenew": "طلب تجديد",
+      "requestChanges": "تعديل العرض (طلب)",
+      "requestRenew": "تجديد العرض (طلب)",
       "createTicket": "إنشاء تذكرة",
-      "deactivate": "إيقاف العرض"
+      "deactivate": "إلغاء العرض (طلب)"
     }
   },
   "requestCenter": {

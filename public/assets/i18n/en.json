@@ -243,11 +243,11 @@
       "inactive": "Inactive"
     },
     "action": {
-      "viewOffer": "View Offer",
-      "requestChanges": "Request Changes",
-      "requestRenew": "Request to Renew",
+      "viewOffer": "View Details",
+      "requestChanges": "Edit Offer (Request)",
+      "requestRenew": "Renew Offer (Request)",
       "createTicket": "Create Ticket",
-      "deactivate": "Cancel Offer"
+      "deactivate": "Cancel Offer (Request)"
     }
   },
   "requestCenter": {

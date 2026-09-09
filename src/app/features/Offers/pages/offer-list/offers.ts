@@ -228,10 +228,10 @@ export class Offers implements OnInit {
     this.i18n.loadSeq();
     return [
       { label: this.i18n.t('offers.action.viewOffer'), icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
-      { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-arrows-v', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
-      { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-refresh' },
+      { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
+      { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync' },
       // { label: this.i18n.t('offers.action.createTicket'), icon: 'pi pi-comment' },
-      { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-file-excel', styleClass: 'p-menuitem-danger' },
+      { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
     ];
   });
 
