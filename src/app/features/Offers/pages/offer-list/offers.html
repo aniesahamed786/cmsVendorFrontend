@@ -171,7 +171,13 @@
           </td>
           <td>{{ row.startDate | date: 'MMM d, y' }}</td>
           <td>{{ row.expirationDate | date: 'MMM d, y' }}</td>
-          <td><span [class]="statusClass(row.status)">{{ valueKey(row.status) | translate }}</span></td>
+          <td>
+            <p-tag
+              [value]="valueKey(row.status) | translate"
+              class="app-status-tag app-status-tag--{{ row.status.toLowerCase() }}"
+              [rounded]="true"
+            />
+          </td>
           <td>
             <button #btn type="button" class="offers__row-action" [attr.aria-label]="'offers.rowActionsAria' | translate"
               (click)="activeOffer = row; menu.toggle($event); $event.stopPropagation()">

@@ -72,6 +72,16 @@ html[lang="ar"] {
      The stray #dc2626 in .p-menuitem-danger below is a later phase's migration. */
   --app-danger: #b41340;
 
+  /* Status tokens */
+  --app-status-active: #16a34a;    /* Green  - Active / Live / Sent */
+  --app-status-scheduled: #0ea5e9; /* Sky Blue - Scheduled / Idle / Upcoming */
+  --app-status-expired: #dc2626;   /* Red    - Expired */
+  --app-status-inactive: #f97316;  /* Orange - Inactive / Disabled / Draft */
+  --app-status-draft: var(--app-status-inactive, #f97316); /* Orange - Draft */
+  --app-status-returned: #6b7280;  /* Gray   - Returned */
+  --app-status-default: #6b7280;   /* Gray   - Unknown / Default */
+  --app-status-new: #0033A0;       /* Blue   - New / Primary */
+
   /* Brand / primary tokens (derived from the #0033A0 brand color) */
   --app-primary-rgb: 0, 51, 160;
   --app-primary: #0033A0;
@@ -254,6 +264,151 @@ p-button[severity="primary"] .p-button:enabled:hover,
 .p-popover,
 .p-tag {
   border-radius: 0 !important;
+}
+
+/* ==========================================================================
+   Status Tags — Pill styles for <p-tag>
+   ========================================================================== */
+.app-status-tag.p-tag,
+.app-status-tag .p-tag,
+p-tag.app-status-tag,
+p-tag.app-status-tag .p-tag {
+  border-radius: 9999px !important;
+  padding: 0.35rem 1rem !important;
+  border: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.25 !important;
+}
+
+.app-status-tag.p-tag .p-tag-label,
+.app-status-tag .p-tag-label,
+p-tag.app-status-tag .p-tag-label {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  text-transform: capitalize !important;
+  line-height: 1.25 !important;
+}
+
+/* Status variants */
+.app-status-tag--active.p-tag,
+.app-status-tag--active .p-tag,
+p-tag.app-status-tag--active,
+p-tag.app-status-tag--active .p-tag {
+  background: var(--app-status-active, #16a34a) !important;
+}
+
+.app-status-tag--scheduled.p-tag,
+.app-status-tag--scheduled .p-tag,
+p-tag.app-status-tag--scheduled,
+p-tag.app-status-tag--scheduled .p-tag,
+.app-status-tag--idle.p-tag,
+.app-status-tag--idle .p-tag,
+p-tag.app-status-tag--idle,
+p-tag.app-status-tag--idle .p-tag {
+  background: var(--app-status-scheduled, #0ea5e9) !important;
+}
+
+.app-status-tag--expired.p-tag,
+.app-status-tag--expired .p-tag,
+p-tag.app-status-tag--expired,
+p-tag.app-status-tag--expired .p-tag {
+  background: var(--app-status-expired, #dc2626) !important;
+}
+
+/* Supports 'inactive', 'in-active', and 'draft' */
+.app-status-tag--inactive.p-tag,
+.app-status-tag--inactive .p-tag,
+p-tag.app-status-tag--inactive,
+p-tag.app-status-tag--inactive .p-tag,
+.app-status-tag--in-active.p-tag,
+.app-status-tag--in-active .p-tag,
+p-tag.app-status-tag--in-active,
+p-tag.app-status-tag--in-active .p-tag,
+.app-status-tag--draft.p-tag,
+.app-status-tag--draft .p-tag,
+p-tag.app-status-tag--draft,
+p-tag.app-status-tag--draft .p-tag {
+  background: var(--app-status-inactive, #f97316) !important;
+}
+
+.app-status-tag--new.p-tag,
+.app-status-tag--new .p-tag,
+p-tag.app-status-tag--new,
+p-tag.app-status-tag--new .p-tag,
+.app-status-tag--primary.p-tag,
+.app-status-tag--primary .p-tag,
+p-tag.app-status-tag--primary,
+p-tag.app-status-tag--primary .p-tag {
+  background: var(--app-status-new, var(--app-primary, #0033A0)) !important;
+}
+
+/* Supports 'returned' and 'default' */
+.app-status-tag--returned.p-tag,
+.app-status-tag--returned .p-tag,
+p-tag.app-status-tag--returned,
+p-tag.app-status-tag--returned .p-tag,
+.app-status-tag--default.p-tag,
+.app-status-tag--default .p-tag,
+p-tag.app-status-tag--default,
+p-tag.app-status-tag--default .p-tag {
+  background: var(--app-status-default, #6b7280) !important;
+}
+
+/* White labels for all solid pills */
+.app-status-tag .p-tag-label,
+.app-status-tag.p-tag,
+p-tag.app-status-tag,
+p-tag.app-status-tag .p-tag-label {
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Standalone Badge Styles (Standard HTML <span> / <div>)
+   ========================================================================== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: 0.35rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #ffffff;
+  white-space: nowrap;
+  line-height: 1.25;
+
+  &--active {
+    background-color: var(--app-status-active, #16a34a);
+    color: #ffffff;
+  }
+  &--scheduled,
+  &--idle {
+    background-color: var(--app-status-scheduled, #0ea5e9);
+    color: #ffffff;
+  }
+  &--expired {
+    background-color: var(--app-status-expired, #dc2626);
+    color: #ffffff;
+  }
+  &--inactive,
+  &--in-active,
+  &--draft {
+    background-color: var(--app-status-inactive, #f97316);
+    color: #ffffff;
+  }
+  &--new,
+  &--primary {
+    background-color: var(--app-status-new, var(--app-primary, #0033A0));
+    color: #ffffff;
+  }
+  &--returned,
+  &--default {
+    background-color: var(--app-status-default, #6b7280);
+    color: #ffffff;
+  }
 }
 
 /* Confirmation dialog: header/footer share the body's --app-surface */
