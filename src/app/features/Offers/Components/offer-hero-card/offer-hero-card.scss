@@ -211,22 +211,30 @@
   text-transform: capitalize;
 }
 
-/* No --app-success / --app-info / --app-warning tokens exist yet, so the four status hues
-   stay literals. #DC2626 is the app's sanctioned danger red. */
 :host ::ng-deep p-tag.offer-status-tag--active {
-  background: #16A34A !important;
+  background: var(--app-status-active, #16A34A) !important;
 }
 
 :host ::ng-deep p-tag.offer-status-tag--scheduled {
-  background: #0EA5E9 !important;
+  background: var(--app-status-scheduled, #0EA5E9) !important;
 }
 
 :host ::ng-deep p-tag.offer-status-tag--expired {
-  background: #DC2626 !important;
+  background: var(--app-status-expired, #DC2626) !important;
 }
 
-:host ::ng-deep p-tag.offer-status-tag--inactive {
-  background: #F97316 !important;
+:host ::ng-deep p-tag.offer-status-tag--inactive,
+:host ::ng-deep p-tag.offer-status-tag--draft {
+  background: var(--app-status-inactive, #F97316) !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--new {
+  background: var(--app-status-new, var(--app-primary, #0033A0)) !important;
+}
+
+:host ::ng-deep p-tag.offer-status-tag--returned,
+:host ::ng-deep p-tag.offer-status-tag--default {
+  background: var(--app-status-default, #6B7280) !important;
 }
 
 /* Skeletons — fill, pulse and soft corners come from the global .app-skeleton

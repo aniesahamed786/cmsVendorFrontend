@@ -499,38 +499,47 @@
 
   // ---- Status pill — same recipe as the list page ----
   &__status {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 0.2rem 0.7rem;
-    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    line-height: 1.25;
+    padding: 0.35rem 1rem;
+    border-radius: 9999px;
+    color: #ffffff;
+    white-space: nowrap;
 
     &--submitted,
     &--approved {
-      background: rgba(34, 197, 94, 0.16);
-      color: #16a34a;
+      background: var(--app-status-active, #16a34a);
+      color: #ffffff;
     }
 
     &--rejected,
     &--cancelled {
-      background: rgba(239, 68, 68, 0.16);
-      color: #dc2626;
+      background: var(--app-status-expired, #dc2626);
+      color: #ffffff;
     }
 
     &--recalled {
-      background: var(--app-primary-soft);
-      color: var(--app-primary);
+      background: var(--app-status-scheduled, #0ea5e9);
+      color: #ffffff;
     }
 
-    &--returned,
     &--draft {
-      background: rgba(245, 158, 11, 0.16);
-      color: #d97706;
+      background: var(--app-status-draft, var(--app-status-inactive, #f97316));
+      color: #ffffff;
+    }
+
+    &--returned {
+      background: var(--app-status-returned, var(--app-status-default, #6b7280));
+      color: #ffffff;
     }
 
     &--new {
-      background: #002b80;
+      background: var(--app-status-new, var(--app-primary, #0033A0));
       color: #ffffff;
     }
   }
@@ -1067,34 +1076,47 @@
 
 // ---- Status pills inside request details ----
 .request-center__status {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 0.2rem 0.7rem;
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  line-height: 1.25;
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  color: #ffffff;
   white-space: nowrap;
 
   &--submitted,
   &--approved {
-    background: rgba(34, 197, 94, 0.16);
-    color: #16a34a;
+    background: var(--app-status-active, #16a34a);
+    color: #ffffff;
   }
 
   &--rejected,
   &--cancelled {
-    background: rgba(239, 68, 68, 0.16);
-    color: #dc2626;
+    background: var(--app-status-expired, #dc2626);
+    color: #ffffff;
   }
 
   &--recalled {
-    background: var(--app-primary-soft);
-    color: var(--app-primary);
+    background: var(--app-status-scheduled, #0ea5e9);
+    color: #ffffff;
   }
 
-  &--returned,
   &--draft {
-    background: rgba(245, 158, 11, 0.16);
-    color: #d97706;
+    background: var(--app-status-draft, var(--app-status-inactive, #f97316));
+    color: #ffffff;
+  }
+
+  &--returned {
+    background: var(--app-status-returned, var(--app-status-default, #6b7280));
+    color: #ffffff;
+  }
+
+  &--new {
+    background: var(--app-status-new, var(--app-primary, #0033A0));
+    color: #ffffff;
   }
 }
