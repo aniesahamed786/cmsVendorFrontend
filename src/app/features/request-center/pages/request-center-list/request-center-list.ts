@@ -315,7 +315,7 @@ export class RequestCenterList {
             command: () => this.confirmRecall(activeRow),
           }]
         : []),
-      ...(activeRow?.status !== 'RECALLED'
+      ...(activeRow?.status !== 'RECALLED' && activeRow?.status !== 'SUBMITTED'
         ? [{
             label: this.i18n.t('requestCenter.action.delete'),
             icon: 'pi pi-trash',
