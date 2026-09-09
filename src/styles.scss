@@ -631,12 +631,15 @@ p-tag.app-status-tag .p-tag-label {
 .p-inputnumber-input,
 .p-autocomplete-input,
 .app-search input,
+.app-search input:hover,
+.app-search input:focus,
 .p-datepicker-input:hover,
 .p-datepicker .p-inputtext:hover,
 .p-datepicker-input:focus,
 .p-datepicker .p-inputtext:focus {
   background: transparent !important;
   border: none !important;
+  outline: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   color: inherit !important;
@@ -653,8 +656,19 @@ p-tag.app-status-tag .p-tag-label {
   align-items: center;
 }
 
+.app-search {
+  cursor: text;
+}
+
 .app-search input {
   padding-inline: 0 !important;
+  cursor: text;
+}
+
+.app-search i.app-search__icon,
+.app-search > i {
+  cursor: text;
+  pointer-events: none;
 }
 
 /* The chevron/calendar button sits --field-padding-x from the end edge, matching
@@ -686,7 +700,8 @@ p-tag.app-status-tag .p-tag-label {
 .p-listbox:not(.p-disabled):hover,
 .p-datepicker:not(.p-disabled):hover,
 .p-datepicker:not(.p-disabled):has(.p-datepicker-input:hover),
-.app-search:hover {
+.app-search:hover,
+.app-search:has(input:hover) {
   background: var(--field-bg-hover) !important;
   border-color: var(--field-border-hover) !important;
 }
@@ -697,7 +712,8 @@ p-tag.app-status-tag .p-tag-label {
    end. Keyboard focus is an outline, so it can't be mistaken for either. */
 .p-select:not(:hover):not(.p-select-open),
 .p-multiselect:not(:hover):not(.p-multiselect-open),
-.p-listbox:not(:hover) {
+.p-listbox:not(:hover),
+.app-search:not(:hover):not(:focus-within) {
   background: var(--field-bg) !important;
   border-color: var(--field-border) !important;
 }
@@ -747,6 +763,17 @@ p-tag.app-status-tag .p-tag-label {
   border: none !important;
 }
 
+.app-search .app-search__clear-btn {
+  color: var(--field-icon) !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--app-text) !important;
+  }
+}
+
 /* Overlay panels (select / multiselect / datepicker / autocomplete lists) */
 .p-select-overlay,
 .p-select-panel,
@@ -765,21 +792,84 @@ p-tag.app-status-tag .p-tag-label {
   z-index: 2200 !important;
 }
 
-/* In-overlay search boxes (multiselect filter, select filter) are fields too */
+/* In-overlay search boxes (multiselect filter, select filter, listbox filter) are fields too */
+.p-select-filter-container,
+.p-multiselect-filter-container,
+.p-listbox-filter-container,
+.p-autocomplete-filter-container {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  cursor: text;
+
+  .p-inputicon {
+    pointer-events: none !important;
+    cursor: text !important;
+    color: var(--field-icon) !important;
+  }
+}
+
 .p-select-filter,
 .p-multiselect-filter,
+.p-listbox-filter,
 .p-autocomplete-filter {
   background: var(--field-bg) !important;
   border: 1px solid var(--field-border) !important;
   border-radius: 0 !important;
   color: var(--field-text) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  outline-width: 0 !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+  padding-inline-end: calc(var(--field-padding-x) + 1.5rem) !important;
+}
+
+.p-select-filter:hover,
+.p-multiselect-filter:hover,
+.p-listbox-filter:hover,
+.p-autocomplete-filter:hover,
+.p-select-filter-container:hover .p-select-filter,
+.p-multiselect-filter-container:hover .p-multiselect-filter,
+.p-listbox-filter-container:hover .p-listbox-filter,
+.p-autocomplete-filter-container:hover .p-autocomplete-filter {
+  background: var(--field-bg-hover) !important;
+  border-color: var(--field-border-hover) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.p-select-filter:not(:hover):not(:focus),
+.p-multiselect-filter:not(:hover):not(:focus),
+.p-listbox-filter:not(:hover):not(:focus),
+.p-autocomplete-filter:not(:hover):not(:focus) {
+  background: var(--field-bg) !important;
+  border-color: var(--field-border) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .p-select-filter:focus,
-.p-multiselect-filter:focus {
+.p-select-filter:focus-visible,
+.p-select-filter:active,
+.p-multiselect-filter:focus,
+.p-multiselect-filter:focus-visible,
+.p-multiselect-filter:active,
+.p-listbox-filter:focus,
+.p-listbox-filter:focus-visible,
+.p-listbox-filter:active,
+.p-autocomplete-filter:focus,
+.p-autocomplete-filter:focus-visible,
+.p-autocomplete-filter:active,
+.p-select-filter-container:focus-within .p-select-filter,
+.p-multiselect-filter-container:focus-within .p-multiselect-filter,
+.p-listbox-filter-container:focus-within .p-listbox-filter,
+.p-autocomplete-filter-container:focus-within .p-autocomplete-filter {
+  background: var(--field-bg) !important;
   border-color: var(--field-border-focus) !important;
-  box-shadow: 0 0 0 3px var(--field-ring) !important;
+  box-shadow: none !important;
   outline: none !important;
+  outline-width: 0 !important;
 }
 
 /* Options — same three states everywhere: rest, hover/keyboard-focus, selected */
@@ -813,13 +903,13 @@ p-tag.app-status-tag .p-tag-label {
   font-weight: 600;
 }
 
-/* Chips shown for multiselect selections */
+/* Chips shown for multiselect selections and tag chips */
 .p-multiselect-chip,
 .p-chip {
   background: var(--app-primary-soft) !important;
   color: var(--app-primary) !important;
   border: 1px solid color-mix(in srgb, var(--app-primary) 22%, transparent) !important;
-  border-radius: 9999px !important;
+  border-radius: 0 !important;
   font-size: 0.8125rem !important;
   padding: 0.15rem 0.5rem !important;
 
@@ -1729,26 +1819,25 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
 }
 
 /* ---------------------------------------------------------------------------
- * Checkbox pill (.app-check-pill)
+ * Checkbox card / pill (.app-check-card, .app-check-pill)
  *
- * A <label> wrapping a p-checkbox, an optional .app-svg-icon and its text —
- * e.g. "PwD Friendly" on the offer form. The pill radius is a deliberate
- * exception to the square-corner rule, like the filter chips.
+ * A <label> wrapping a p-checkbox, an .app-svg-icon, and title + subtitle copy —
+ * e.g. "PwD Friendly" on the offer form.
  * ------------------------------------------------------------------------ */
+.app-check-card,
 .app-check-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.75rem;
-  width: fit-content;
-  padding: 0.625rem 1.25rem;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
   background: var(--app-surface);
   border: 1px solid var(--app-border);
-  border-radius: 9999px;
+  border-radius: 0;
   color: var(--app-text);
-  font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 
   &:hover {
     border-color: var(--field-border-hover);
@@ -1757,16 +1846,49 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
   .app-svg-icon {
     width: 1.5rem;
     height: 1.5rem;
+    flex-shrink: 0;
+    color: var(--app-muted);
   }
 
-  .p-checkbox,
+  .p-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
   .p-checkbox-box {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    border: 1px solid var(--app-border) !important;
+    border-radius: 0 !important;
+    background: var(--app-surface) !important;
+    box-shadow: none !important;
   }
 
   .p-checkbox-icon {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--app-text);
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size: 0.8125rem;
+    color: var(--app-muted);
+    line-height: 1.3;
   }
 }
 

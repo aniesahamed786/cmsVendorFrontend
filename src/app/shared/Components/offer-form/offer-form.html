@@ -543,11 +543,14 @@
         </div>
 
         <div class="offer-form__field-group offer-form__col-2">
-          <label class="app-check-pill">
+          <label class="app-check-card">
             <p-checkbox formControlName="pwdFriendly" [binary]="true"></p-checkbox>
             <span class="app-svg-icon" [style.webkitMaskImage]="pwdIconMask()"
               [style.maskImage]="pwdIconMask()"></span>
-            <span>{{ 'offerForm.label.pwdFriendly' | translate }}</span>
+            <div class="app-check-card__content">
+              <span class="app-check-card__title">{{ 'offerForm.label.pwdFriendly' | translate }}</span>
+              <span class="app-check-card__subtitle">{{ 'offerForm.label.pwdFriendlyDesc' | translate }}</span>
+            </div>
           </label>
         </div>
       </div>

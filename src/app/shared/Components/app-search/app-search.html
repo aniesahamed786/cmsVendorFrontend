@@ -1,5 +1,5 @@
 <!-- Desktop Search Bar (Visible >= 768px) -->
-<div class="app-search app-search--desktop">
+<div class="app-search app-search--desktop" (click)="desktopInput.focus()">
   <i class="pi pi-search app-search__icon"></i>
   <input #desktopInput type="text"
     [placeholder]="resolvedPlaceholder()"

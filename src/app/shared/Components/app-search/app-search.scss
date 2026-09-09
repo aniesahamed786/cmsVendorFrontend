@@ -11,29 +11,33 @@
   align-items: center;
   gap: 0.5rem;
   width: 16rem;
-  height: var(--field-height, 2.75rem);
-  min-height: var(--field-height, 2.75rem);
-  padding: 0 0.75rem;
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  border: 1px solid var(--app-border);
+  height: var(--field-height);
+  min-height: var(--field-height);
+  padding: 0 var(--field-padding-x);
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
   border-radius: 0;
   box-sizing: border-box;
-  color: var(--app-text);
+  color: var(--field-text);
+  cursor: text;
   transition: border-color 0.15s ease, background-color 0.15s ease;
 
   &:hover {
-    border-color: color-mix(in srgb, var(--app-border) 60%, var(--app-primary) 40%);
+    background: var(--field-bg-hover);
+    border-color: var(--field-border-hover);
   }
 
   &:focus-within {
-    border-color: var(--app-primary) !important;
-    background: var(--app-surface);
+    border-color: var(--field-border-focus) !important;
+    background: var(--field-bg);
   }
 
   .app-search__icon {
     font-size: 0.95rem;
-    color: var(--app-muted);
+    color: var(--field-icon);
     flex-shrink: 0;
+    cursor: text;
+    pointer-events: none;
   }
 
   input {
@@ -43,12 +47,13 @@
     background: transparent;
     border: none;
     outline: none;
-    color: var(--app-text);
+    color: var(--field-text);
     font-size: 0.95rem;
     font-family: inherit;
+    cursor: text;
 
     &::placeholder {
-      color: var(--app-muted);
+      color: var(--field-placeholder);
       opacity: 1;
     }
   }
@@ -61,7 +66,7 @@
     height: 1.25rem;
     background: transparent;
     border: none;
-    color: var(--app-muted);
+    color: var(--field-icon);
     font-size: 0.85rem;
     cursor: pointer;
     padding: 0;
@@ -83,11 +88,11 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: var(--field-height, 2.75rem);
-  height: var(--field-height, 2.75rem);
-  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-  border: 1px solid var(--app-border);
-  color: var(--app-text);
+  width: var(--field-height);
+  height: var(--field-height);
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  color: var(--field-text);
   border-radius: 0;
   cursor: pointer;
   box-sizing: border-box;
@@ -95,16 +100,20 @@
 
   i {
     font-size: 1rem;
-    color: var(--app-text);
+    color: var(--field-icon);
   }
 
   &:hover {
-    background: color-mix(in srgb, var(--app-surface) 80%, var(--app-border) 20%);
-    border-color: var(--app-primary);
+    background: var(--field-bg-hover);
+    border-color: var(--field-border-hover);
+
+    i {
+      color: var(--app-text);
+    }
   }
 
   &.has-value {
-    border-color: var(--app-primary);
+    border-color: var(--field-border-focus);
     background: var(--app-primary-soft);
 
     i {
@@ -164,15 +173,20 @@
     display: flex;
     align-items: center;
     height: 2.65rem;
-    padding: 0 0.75rem;
-    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-    border: 1px solid var(--app-border);
+    padding: 0 var(--field-padding-x);
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
     gap: 0.5rem;
     box-sizing: border-box;
 
+    &:hover {
+      background: var(--field-bg-hover);
+      border-color: var(--field-border-hover);
+    }
+
     &:focus-within {
-      border-color: var(--app-primary);
-      background: var(--app-surface);
+      border-color: var(--field-border-focus);
+      background: var(--field-bg);
     }
 
     input {
@@ -182,12 +196,12 @@
       background: transparent;
       border: none;
       outline: none;
-      color: var(--app-text);
+      color: var(--field-text);
       font-size: 0.95rem;
       font-family: inherit;
 
       &::placeholder {
-        color: var(--app-muted);
+        color: var(--field-placeholder);
         opacity: 1;
       }
     }
@@ -195,7 +209,7 @@
 
   &__icon {
     font-size: 0.95rem;
-    color: var(--app-muted);
+    color: var(--field-icon);
     flex-shrink: 0;
   }
 
@@ -205,7 +219,7 @@
     justify-content: center;
     background: transparent;
     border: none;
-    color: var(--app-muted);
+    color: var(--field-icon);
     font-size: 1rem;
     cursor: pointer;
     padding: 0;
