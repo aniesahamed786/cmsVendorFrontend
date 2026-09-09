@@ -31,6 +31,7 @@ export class OfferHeroCard {
   offer = input<any>(null);
   vendor = input<OfferHeroVendor>({ name: '', nameAr: '', logo: '' });
   loading = input<boolean>(false);
+  showStatus = input<boolean>(true);
 
   private readonly logoFailed = signal(false);
 
