@@ -295,12 +295,29 @@
   &__skeleton-cell {
     height: 1rem; // one text line, so the row keeps the height it will have
 
-    &--title { width: 8rem; }
-    &--num { width: 2.5rem; }
-    &--text { width: 5rem; }
-    &--date { width: 5.5rem; }
-    &--pill { width: 4rem; }
-    &--action { width: 1.25rem; }
+    &--title {
+      width: 8rem;
+    }
+
+    &--num {
+      width: 2.5rem;
+    }
+
+    &--text {
+      width: 5rem;
+    }
+
+    &--date {
+      width: 5.5rem;
+    }
+
+    &--pill {
+      width: 4rem;
+    }
+
+    &--action {
+      width: 1.25rem;
+    }
   }
 
   &__image-placeholder {

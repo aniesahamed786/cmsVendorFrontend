@@ -16,6 +16,11 @@ import {
   UpdateProfileSettingsPayload,
 } from '../../../features/Profile-settings/services/profile-settings.service';
 import { extractApiErrorMessage } from '../../../shared/utils/api-error-message';
+import { timeAgo } from '../../../shared/utils/time-ago';
+import {
+  NotificationCenterService,
+  VendorNotification,
+} from '../../../shared/services/notification-center.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,10 +35,18 @@ export class Navbar {
   private readonly authService = inject(AuthService);
   private readonly settingsService = inject(ProfileSettingsService);
   private readonly messageService = inject(MessageService);
+  private readonly notificationCenter = inject(NotificationCenterService);
 
   readonly isArabic = this.i18n.isRtl;
 
+  readonly notifications = this.notificationCenter.notifications;
+  readonly messages = this.notificationCenter.messages;
+  readonly notificationsLoading = this.notificationCenter.loading;
+  readonly unreadCount = this.notificationCenter.unreadCount;
+  readonly hasNotificationItem = this.notificationCenter.hasAnyItem;
+
   @ViewChild('profileMenu') profileMenu!: Popover;
+  @ViewChild('notificationMenu') notificationMenu!: Popover;
 
   /** A translation key (`nav.<slug>.title`), emitted by Sidenav — not text. */
   headerData = input<string>('');
@@ -67,6 +80,9 @@ export class Navbar {
   });
 
   constructor() {
+    // Root-scoped service, but the navbar is rebuilt per login — refresh here so a
+    // re-login as another vendor never shows the previous one's badge.
+    this.notificationCenter.load();
     this.routeSlug.set(this.slugFromUrl(this.router.url));
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -103,6 +119,56 @@ export class Navbar {
   onLogout(): void {
     this.closeProfileMenu();
     this.authService.logout();
+  }
+
+  // --- Notification bell -----------------------------------------------------
+
+  onNotificationsShow(): void {
+    this.notificationCenter.load();
+  }
+
+  markAllNotificationsRead(): void {
+    this.notificationCenter.markAllAsRead();
+  }
+
+  onNotificationClick(notification: VendorNotification): void {
+    if (!notification.isRead) {
+      this.notificationCenter.markAsRead(notification.id);
+    }
+    this.notificationMenu?.hide();
+
+    if (notification.type === 'MESSAGE') {
+      this.router.navigate(['/messaging-center']);
+      return;
+    }
+
+    const offerId =
+      notification.offerId ||
+      (notification.actionType === 'Open Specific Offer' ? notification.actionValue : '');
+    if (offerId) {
+      this.router.navigate(['/offers', offerId]);
+    } else if (notification.actionType === 'Open External link' && notification.actionValue) {
+      window.open(notification.actionValue, '_blank', 'noopener');
+    }
+  }
+
+  notificationIcon(notification: VendorNotification): string {
+    if (notification.type === 'MESSAGE') return 'pi-comments';
+    return notification.type === 'SYSTEM' ? 'pi-cog' : 'pi-bell';
+  }
+
+  notificationTitle(notification: VendorNotification): string {
+    return this.isArabic() && notification.titleAr ? notification.titleAr : notification.title;
+  }
+
+  notificationDescription(notification: VendorNotification): string {
+    return this.isArabic() && notification.descriptionAr
+      ? notification.descriptionAr
+      : notification.description;
+  }
+
+  timeAgo(iso: string): string {
+    return timeAgo(iso, this.isArabic());
   }
 
   isDarkMode(): boolean {

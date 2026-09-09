@@ -1677,5 +1677,12 @@
     "list": {
       "title": "Subaccounts"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "empty": "No notifications yet",
+    "messages": "Messages",
+    "loading": "Loading…"
   }
 }

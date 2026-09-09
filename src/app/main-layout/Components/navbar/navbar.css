@@ -51,6 +51,189 @@
   flex-shrink: 0;
 }
 
+/* --- Notification bell ---------------------------------------------------- */
+
+.notif-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--app-text);
+  cursor: pointer;
+}
+
+.notif-trigger .pi {
+  font-size: 1.25rem;
+}
+
+/* Rounded on purpose: a count badge is a status indicator, same exception the
+   table status pill takes. */
+.notif-trigger-badge {
+  position: absolute;
+  top: -0.125rem;
+  inset-inline-end: -0.25rem;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--app-danger);
+  color: #ffffff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.125rem;
+  text-align: center;
+}
+
+.notif-panel {
+  width: 22rem;
+  max-width: 90vw;
+  background: var(--app-surface);
+}
+
+.notif-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.125rem;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.notif-panel-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--app-text);
+}
+
+.notif-mark-all {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--app-primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.notif-list {
+  max-height: 26rem;
+  overflow-y: auto;
+}
+
+.notif-section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.125rem;
+  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+  color: var(--app-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.notif-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1.125rem;
+  border: 0;
+  border-bottom: 1px solid var(--app-border);
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.notif-item:hover {
+  background: var(--app-primary-hover-soft);
+}
+
+.notif-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 999px; /* unread indicator dot */
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.notif-item--unread .notif-dot {
+  background: var(--app-danger);
+}
+
+.notif-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+  color: var(--app-muted);
+  overflow: hidden;
+}
+
+.notif-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.notif-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.notif-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--app-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notif-desc {
+  font-size: 0.8125rem;
+  color: var(--app-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notif-time {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--app-muted);
+}
+
+.notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1.125rem;
+  color: var(--app-muted);
+  font-size: 0.875rem;
+}
+
+.notif-empty p {
+  margin: 0;
+}
+
 .profile-menu {
   width: 15.5rem;
   overflow: hidden;
@@ -162,24 +345,31 @@
 /* p-popover is appendTo=body, so these must stay ::ng-deep (scope rule 2).
    No local border-radius: styles.scss already forces .p-popover square. */
 ::ng-deep .navbar-profile-popover.p-popover,
-::ng-deep .navbar-profile-popover .p-popover-content {
+::ng-deep .navbar-profile-popover .p-popover-content,
+::ng-deep .navbar-notif-popover.p-popover,
+::ng-deep .navbar-notif-popover .p-popover-content {
   background: var(--app-surface) !important;
   color: var(--app-text) !important;
 }
 
-::ng-deep .navbar-profile-popover.p-popover {
+::ng-deep .navbar-profile-popover.p-popover,
+::ng-deep .navbar-notif-popover.p-popover {
   border: 1px solid var(--app-border) !important;
   padding: 0 !important;
   margin-block-start: 0.5rem;
 }
 
-::ng-deep .navbar-profile-popover .p-popover-content {
+::ng-deep .navbar-profile-popover .p-popover-content,
+::ng-deep .navbar-notif-popover .p-popover-content {
   padding: 0 !important;
 }
 
 ::ng-deep .navbar-profile-popover .p-popover-arrow,
 ::ng-deep .navbar-profile-popover::before,
-::ng-deep .navbar-profile-popover::after {
+::ng-deep .navbar-profile-popover::after,
+::ng-deep .navbar-notif-popover .p-popover-arrow,
+::ng-deep .navbar-notif-popover::before,
+::ng-deep .navbar-notif-popover::after {
   display: none !important;
 }
 

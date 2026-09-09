@@ -4,6 +4,68 @@
   <div class="navbar-spacer"></div>
 
   <div class="navbar-actions" [attr.aria-label]="'navbar.toolbarActions' | translate">
+    <button type="button" class="notif-trigger" [attr.aria-label]="'notifications.title' | translate"
+      (click)="notificationMenu.toggle($event)">
+      <i class="pi pi-bell"></i>
+      @if (unreadCount()) {
+        <span class="notif-trigger-badge">{{ unreadCount() > 9 ? '9+' : unreadCount() }}</span>
+      }
+    </button>
+
+    <p-popover #notificationMenu styleClass="navbar-notif-popover" (onShow)="onNotificationsShow()">
+      <div class="notif-panel">
+        <div class="notif-panel-header">
+          <h3 class="notif-panel-title">{{ 'notifications.title' | translate }}</h3>
+          @if (hasNotificationItem()) {
+            <button type="button" class="notif-mark-all" (click)="markAllNotificationsRead()">
+              {{ 'notifications.markAllAsRead' | translate }}
+            </button>
+          }
+        </div>
+
+        <div class="notif-list">
+          @if (notificationsLoading() && !hasNotificationItem()) {
+            <p class="notif-empty">{{ 'notifications.loading' | translate }}</p>
+          } @else if (!hasNotificationItem()) {
+            <div class="notif-empty">
+              <i class="pi pi-bell-slash"></i>
+              <p>{{ 'notifications.empty' | translate }}</p>
+            </div>
+          }
+
+          @for (section of [
+            { key: 'notifications.messages', icon: 'pi-comments', rows: messages() },
+            { key: 'notifications.title', icon: 'pi-bell', rows: notifications() }
+          ]; track section.key) {
+            @if (section.rows.length) {
+              <div class="notif-section-label">
+                <i class="pi" [ngClass]="section.icon"></i>
+                <span>{{ section.key | translate }}</span>
+              </div>
+              @for (notification of section.rows; track notification.id) {
+                <button type="button" class="notif-item" [class.notif-item--unread]="!notification.isRead"
+                  (click)="onNotificationClick(notification)">
+                  <span class="notif-dot"></span>
+                  <span class="notif-icon">
+                    @if (notification.image) {
+                      <img [src]="notification.image" alt="" />
+                    } @else {
+                      <i class="pi" [ngClass]="notificationIcon(notification)"></i>
+                    }
+                  </span>
+                  <span class="notif-content">
+                    <span class="notif-title" [title]="notificationTitle(notification)">{{ notificationTitle(notification) }}</span>
+                    <span class="notif-desc" [title]="notificationDescription(notification)">{{ notificationDescription(notification) }}</span>
+                  </span>
+                  <span class="notif-time">{{ timeAgo(notification.createdAt) }}</span>
+                </button>
+              }
+            }
+          }
+        </div>
+      </div>
+    </p-popover>
+
     <button type="button" class="profile-trigger" [attr.aria-label]="'navbar.profileMenu' | translate" (click)="profileMenu.toggle($event)">
       <!-- No aria-label here: the wrapping button already carries one, and a
            nested label would have the avatar announced twice. -->
