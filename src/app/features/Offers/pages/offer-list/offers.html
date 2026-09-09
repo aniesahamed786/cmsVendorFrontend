@@ -161,7 +161,12 @@
           <td>{{ valueKey(row.discountType) | translate }}</td>
           <td>
             <span class="offers__availability">
-              <i [class]="availabilityIcon(row.availability)"></i> {{ availabilityKey(row.availability) | translate }}
+              <span class="offers__availability-icons">
+                @for (icon of availabilityIcons(row.availability); track icon) {
+                <img class="offers__mode-icon" [src]="icon" alt="" aria-hidden="true" />
+                }
+              </span>
+              <span>{{ availabilityKey(row.availability) | translate }}</span>
             </span>
           </td>
           <td>{{ row.startDate | date: 'MMM d, y' }}</td>

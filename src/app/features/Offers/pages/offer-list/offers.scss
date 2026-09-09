@@ -159,11 +159,21 @@
   &__availability {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.5rem;
     color: var(--app-text);
 
-    i {
-      color: var(--app-muted);
+    &-icons {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .offers__mode-icon {
+      width: 1.125rem;
+      height: 1rem;
+      object-fit: contain;
+      display: inline-block;
+      flex-shrink: 0;
     }
   }
 
