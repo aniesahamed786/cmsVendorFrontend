@@ -599,6 +599,7 @@
       "instructionsAr": "Redemption Instruction (Arabic)",
       "offerType": "Offer Type",
       "pwdFriendly": "PwD Friendly",
+      "pwdFriendlyDesc": "This offer is suitable for people with disabilities.",
       "website": "Website",
       "discountCode": "Discount Code",
       "selectedLocations": "Selected Locations",

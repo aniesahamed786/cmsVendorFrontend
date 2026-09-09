@@ -367,7 +367,7 @@
 /* ---- Tags ---- */
 ::ng-deep .offer-form__tag-chip.p-chip {
   background: var(--app-primary-subtle);
-  border-radius: 0;
+  border-radius: 0 !important;
   color: var(--app-primary);
   padding: 0.75rem 1rem;
 }

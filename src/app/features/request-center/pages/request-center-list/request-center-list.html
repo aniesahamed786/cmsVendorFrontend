@@ -83,13 +83,6 @@
               optionLabel="label" optionValue="value" [placeholder]="'requestCenter.filter.status' | translate"
               styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
           </div>
-
-          <div class="app-filter-group">
-            <label class="app-filter-label">{{ 'requestCenter.sort.label' | translate }}</label>
-            <p-select [options]="sortOptions()" [ngModel]="sortDropdown()" (ngModelChange)="onSortByChange($event)"
-              optionLabel="label" optionValue="value"
-              styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" />
-          </div>
         </div>
       </div>
 
@@ -120,13 +113,6 @@
         <label class="app-filter-label">{{ 'requestCenter.filter.status' | translate }}</label>
         <p-select [options]="statusOptions()" [ngModel]="statusFilter()" (ngModelChange)="onStatusFilterChange($event)"
           optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'requestCenter.filter.status' | translate"
-          styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" appendTo="body" />
-      </div>
-
-      <div class="app-filter-group">
-        <label class="app-filter-label">{{ 'requestCenter.sort.label' | translate }}</label>
-        <p-select [options]="sortOptions()" [ngModel]="sortDropdown()" (ngModelChange)="onSortByChange($event)"
-          optionLabel="label" optionValue="value"
           styleClass="request-center__filter" panelStyleClass="request-center__overlay-panel" appendTo="body" />
       </div>
     </app-bottom-sheet>

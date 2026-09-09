@@ -114,26 +114,30 @@
   &__badge {
     display: inline-flex;
     align-items: center;
-    font-size: 0.6875rem;
+    justify-content: center;
+    font-size: 0.75rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    padding: 0.2rem 0.5rem;
-    border-radius: 0;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    color: #ffffff;
+    white-space: nowrap;
 
     &--new {
-      background: rgba(255, 255, 255, 0.22);
+      background: var(--app-status-new, var(--app-primary, #0033A0));
       color: #ffffff;
     }
 
-    &--progress {
-      background: rgba(254, 240, 138, 0.22);
-      color: #fef08a;
+    &--progress,
+    &--in-progress {
+      background: var(--app-status-scheduled, #0ea5e9);
+      color: #ffffff;
     }
 
     &--closed {
-      background: rgba(255, 255, 255, 0.18);
-      color: #e2e8f0;
+      background: var(--app-status-default, #6b7280);
+      color: #ffffff;
     }
   }
 

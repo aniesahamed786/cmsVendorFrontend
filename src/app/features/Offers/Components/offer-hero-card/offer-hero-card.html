@@ -7,7 +7,9 @@
         <div class="skeleton-text app-skeleton app-skeleton--on-primary"></div>
       </div>
       <div class="skeleton-title app-skeleton app-skeleton--on-primary"></div>
+      @if (showStatus()) {
       <div class="skeleton-tag app-skeleton app-skeleton--on-primary app-skeleton--pill"></div>
+      }
       <div class="skeleton-badge app-skeleton app-skeleton--on-primary"></div>
     </div>
     <div class="offer-hero-card__right" dir="rtl">
@@ -59,6 +61,7 @@
       }
 
       <!-- Status tag -->
+      @if (showStatus()) {
       <div>
         <p-tag class="offer-status-tag" [class.offer-status-tag--active]="getOfferStatus(offer) === 'Active'"
           [class.offer-status-tag--scheduled]="getOfferStatus(offer) === 'Scheduled'"
@@ -67,6 +70,7 @@
           [value]="('offerDetails.status.' + getOfferStatus(offer).toLowerCase()) | translate"
           [rounded]="true"></p-tag>
       </div>
+      }
 
       <!-- Offer mode badges -->
       <div class="offer-hero-card__badges">

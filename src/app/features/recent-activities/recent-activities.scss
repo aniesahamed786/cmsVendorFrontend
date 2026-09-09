@@ -89,47 +89,55 @@
 
   // ---- Status pills (rounded lozenge — justified: status indicator) ----
   &__status {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 0.2rem 0.7rem;
-    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    line-height: 1.25;
+    padding: 0.35rem 1rem;
+    border-radius: 9999px;
+    color: #ffffff;
+    white-space: nowrap;
 
-    /* FLAGGED for the Phase 3 gate — status green. No success/positive token
-       exists in :root, and inventing one is a token decision, not a page one.
-       Left literal so light mode is unchanged. */
     &--created,
     &--approved,
-    &--published {
-      background: rgba(34, 197, 94, 0.16);
-      color: #16a34a;
+    &--published,
+    &--active {
+      background: var(--app-status-active, #16a34a);
+      color: #ffffff;
     }
 
     &--edited,
-    &--submitted {
-      background: var(--app-primary-soft);
-      color: var(--app-primary);
+    &--submitted,
+    &--scheduled {
+      background: var(--app-status-scheduled, #0ea5e9);
+      color: #ffffff;
     }
 
-    /* FLAGGED for the Phase 3 gate — status red. --app-danger (#b41340) is
-       scoped to destructive *actions*, not status, and is a visibly different
-       crimson; swapping would change light mode. */
-    &--rejected {
-      background: rgba(239, 68, 68, 0.16);
-      color: #dc2626;
+    &--rejected,
+    &--cancelled,
+    &--expired {
+      background: var(--app-status-expired, #dc2626);
+      color: #ffffff;
     }
 
     &--returned {
-      background: rgba(245, 158, 11, 0.16);
-      color: #d97706;
+      background: var(--app-status-returned, var(--app-status-default, #6b7280));
+      color: #ffffff;
+    }
+
+    &--draft,
+    &--inactive {
+      background: var(--app-status-draft, var(--app-status-inactive, #f97316));
+      color: #ffffff;
     }
 
     &--recalled,
-    &--cancelled,
-    &--draft {
-      background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
-      color: var(--app-muted);
+    &--default {
+      background: var(--app-status-default, #6b7280);
+      color: #ffffff;
     }
   }
 

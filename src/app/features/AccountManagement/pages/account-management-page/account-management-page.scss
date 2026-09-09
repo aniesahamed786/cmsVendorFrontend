@@ -100,21 +100,27 @@
   }
 
   &__status {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 0.2rem 0.7rem;
-    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    line-height: 1.25;
+    padding: 0.35rem 1rem;
+    border-radius: 9999px;
+    color: #ffffff;
+    white-space: nowrap;
 
     &--active {
-      background: rgba(34, 197, 94, 0.16);
-      color: #16a34a;
+      background: var(--app-status-active, #16a34a);
+      color: #ffffff;
     }
 
-    &--suspended {
-      background: rgba(239, 68, 68, 0.16);
-      color: #dc2626;
+    &--suspended,
+    &--inactive {
+      background: var(--app-status-inactive, #f97316);
+      color: #ffffff;
     }
   }
 }

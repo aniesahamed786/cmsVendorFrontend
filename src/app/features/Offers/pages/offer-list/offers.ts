@@ -258,11 +258,19 @@ export class Offers implements OnInit {
     return availability === 'Hybrid' ? 'offers.value.hybridLong' : this.valueKey(availability);
   }
 
-  availabilityIcon(availability: Availability): string {
+  availabilityIcons(availability: Availability): string[] {
     switch (availability) {
-      case 'Online': return 'pi pi-globe';
-      case 'In-Store': return 'pi pi-building';
-      default: return 'pi pi-shopping-cart';
+      case 'Online':
+        return ['assets/svg/Offers/offer-details/online.svg'];
+      case 'In-Store':
+        return ['assets/svg/Offers/offer-details/in-store.svg'];
+      case 'Hybrid':
+        return [
+          'assets/svg/Offers/offer-details/in-store.svg',
+          'assets/svg/Offers/offer-details/online.svg',
+        ];
+      default:
+        return [];
     }
   }
 
