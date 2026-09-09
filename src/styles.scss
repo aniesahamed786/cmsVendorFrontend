@@ -185,7 +185,9 @@ body {
 .dark-mode .p-drawer,
 .dark-mode .p-dialog-content,
 .dark-mode .p-datatable-table-container,
-.dark-mode .p-overlaypanel-content {
+.dark-mode .p-overlaypanel-content,
+.dark-mode .p-datepicker-panel,
+.dark-mode .p-datepicker-header {
   background: var(--app-surface) !important;
   border-color: var(--app-border) !important;
 }
@@ -827,6 +829,109 @@ p-tag.app-status-tag .p-tag-label {
     color: var(--app-primary) !important;
     font-size: 0.75rem !important;
   }
+}
+
+/* Datepicker calendar panel & header theming */
+.p-datepicker-panel,
+.offer-form__datepicker-panel {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+.p-datepicker-header,
+.p-datepicker-panel .p-datepicker-header,
+.offer-form__datepicker-panel .p-datepicker-header,
+.offer-form__overlay-panel.p-datepicker-panel .p-datepicker-header {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-bottom: 1px solid var(--app-border) !important;
+  border-block-end: 1px solid var(--app-border) !important;
+}
+
+.p-datepicker-title,
+.p-datepicker-panel .p-datepicker-title,
+.p-datepicker-select-month,
+.p-datepicker-select-year,
+.p-datepicker-panel .p-datepicker-select-month,
+.p-datepicker-panel .p-datepicker-select-year,
+.offer-form__datepicker-panel .p-datepicker-title,
+.offer-form__datepicker-panel .p-datepicker-select-month,
+.offer-form__datepicker-panel .p-datepicker-select-year {
+  color: var(--app-text) !important;
+}
+
+.p-datepicker-panel .p-datepicker-select-month:hover,
+.p-datepicker-panel .p-datepicker-select-year:hover {
+  background: var(--field-bg-hover) !important;
+  color: var(--app-primary) !important;
+}
+
+.p-datepicker-panel .p-datepicker-prev-button,
+.p-datepicker-panel .p-datepicker-next-button,
+.offer-form__datepicker-panel .p-datepicker-prev-button,
+.offer-form__datepicker-panel .p-datepicker-next-button {
+  color: var(--app-muted) !important;
+  background: transparent !important;
+  border: none !important;
+
+  &:hover {
+    color: var(--app-text) !important;
+    background: var(--field-bg-hover) !important;
+  }
+}
+
+.p-datepicker-panel .p-datepicker-calendar-container,
+.p-datepicker-panel .p-datepicker-calendar {
+  background: var(--app-surface) !important;
+}
+
+.p-datepicker-panel .p-datepicker-weekday-cell,
+.p-datepicker-panel .p-datepicker-weekday {
+  color: var(--app-muted) !important;
+}
+
+.p-datepicker-panel .p-datepicker-day,
+.offer-form__datepicker-panel .p-datepicker-day {
+  color: var(--app-text) !important;
+
+  &:not(.p-datepicker-day-selected):not(.p-disabled):hover {
+    background: var(--field-bg-hover) !important;
+    color: var(--app-text) !important;
+  }
+
+  &.p-datepicker-day-selected,
+  &.p-highlight {
+    background: var(--app-primary) !important;
+    color: #ffffff !important;
+  }
+}
+
+.p-datepicker-panel .p-datepicker-today > .p-datepicker-day {
+  background: color-mix(in srgb, var(--app-primary) 15%, transparent) !important;
+  color: var(--app-primary) !important;
+}
+
+.p-datepicker-panel .p-datepicker-month,
+.p-datepicker-panel .p-datepicker-year {
+  color: var(--app-text) !important;
+
+  &:not(.p-disabled):hover {
+    background: var(--field-bg-hover) !important;
+    color: var(--app-text) !important;
+  }
+
+  &.p-datepicker-month-selected,
+  &.p-datepicker-year-selected {
+    background: var(--app-primary) !important;
+    color: #ffffff !important;
+  }
+}
+
+.p-datepicker-panel .p-datepicker-buttonbar {
+  background: var(--app-surface) !important;
+  border-top: 1px solid var(--app-border) !important;
+  border-block-start: 1px solid var(--app-border) !important;
 }
 
 /* ---------------------------------------------------------------------------
