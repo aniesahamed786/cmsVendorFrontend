@@ -1857,14 +1857,13 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
     flex-shrink: 0;
   }
 
+  // Background/border come from the global .p-checkbox-box rules above — overriding them
+  // here (same specificity, later in the file) painted checked boxes as unchecked.
   .p-checkbox-box {
     width: 1.25rem;
     height: 1.25rem;
     flex-shrink: 0;
-    border: 1px solid var(--app-border) !important;
     border-radius: 0 !important;
-    background: var(--app-surface) !important;
-    box-shadow: none !important;
   }
 
   .p-checkbox-icon {

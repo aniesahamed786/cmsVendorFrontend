@@ -271,7 +271,7 @@
       }
       }
       @case ('STORE') {
-      <app-request-branch-detail [fields]="branchView()" />
+      <app-request-branch-detail [fields]="branchView()" [pwdFriendly]="branchPwdFriendly()" />
       }
       @default {
       <!-- Unknown entity type — fall back to the generic labelled field list. -->

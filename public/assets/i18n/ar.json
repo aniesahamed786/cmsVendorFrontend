@@ -1331,7 +1331,9 @@
       "address": "العنوان",
       "googleMapLink": "رابط خرائط جوجل",
       "representativeName": "اسم ممثل الموقع",
-      "phoneNumber": "رقم هاتف الموقع"
+      "phoneNumber": "رقم هاتف الموقع",
+      "pwdFriendly": "مناسب لذوي الاحتياجات الخاصة",
+      "pwdFriendlyDesc": "هذا الموقع مناسب لذوي الاحتياجات الخاصة."
     },
     "placeholder": {
       "locationNameEn": "Khobar Branch",

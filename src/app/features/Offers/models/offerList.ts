@@ -81,6 +81,7 @@ export interface OfferDetailApi {
     discountUrl: string;
     website: string;
     isHighlightEnabled: boolean;
+    isPwdAvailable?: boolean;
     highlightTitle: string;
     highlightTitleAr: string;
     highlightDescription: string;

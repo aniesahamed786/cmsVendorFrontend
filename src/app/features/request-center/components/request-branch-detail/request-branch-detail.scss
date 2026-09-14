@@ -26,6 +26,26 @@
     flex-shrink: 0;
   }
 
+  &__pwd-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-inline-start: auto;
+    padding: 0.375rem 0.75rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    color: var(--app-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &__pwd-icon {
+    width: 1.125rem;
+    height: 1rem;
+    background-color: currentColor;
+  }
+
   &__head-text {
     display: flex;
     flex-direction: column;

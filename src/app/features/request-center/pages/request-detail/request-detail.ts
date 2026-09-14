@@ -24,6 +24,7 @@ import {
   buildEditedFieldSet,
   buildProposedEntity,
   toBranchView,
+  isPwdAvailable,
   toOfferDetailsView,
   toProfileRequestView,
 } from '../../models/request-entity-view.mapper';
@@ -415,6 +416,7 @@ export class RequestDetail {
 
   readonly profileView = computed(() => toProfileRequestView(this.proposedEntity()));
   readonly branchView = computed(() => toBranchView(this.proposedEntity()));
+  readonly branchPwdFriendly = computed(() => isPwdAvailable(this.proposedEntity()));
 
   /**
    * Field names this request edits. Fields stay in the entity's natural order and are simply

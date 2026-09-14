@@ -46,6 +46,8 @@ export function toEditableOfferData(api: OfferDetailApi): Record<string, unknown
 
     locationIds: api.locationIds ?? [],
 
+    isPwdAvailable: api.isPwdAvailable,
+
     isHighlightEnabled: api.isHighlightEnabled,
     highlight_title: api.highlightTitle,
     highlight_title_ar: api.highlightTitleAr,

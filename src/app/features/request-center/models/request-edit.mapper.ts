@@ -53,6 +53,7 @@ export function toBranchFormModel(proposed: Record<string, unknown>): BranchForm
       link: asText(proposed['link']),
       branchRepresentativeName: asText(proposed['branchRepresentativeName']),
       branchPhoneNumber: asText(proposed['branchPhoneNumber']),
+      isPwdAvailable: asText(proposed['isPwdAvailable']) === 'true',
       settingsLocationId: asText(proposed['settingsLocationId']),
       geoPoint: asGeoPoint(proposed['geoPoint']) ?? DEFAULT_GEOPOINT,
   };
@@ -111,6 +112,7 @@ export function fromBranchFormModel(model: BranchFormModel | Partial<BranchFormM
     link: asText(model.link),
     branchRepresentativeName: asText(model.branchRepresentativeName),
     branchPhoneNumber: asText(model.branchPhoneNumber),
+    isPwdAvailable: model.isPwdAvailable === true,
     settingsLocationId: asText(model.settingsLocationId),
     geoPoint: model.geoPoint ?? DEFAULT_GEOPOINT,
   };
@@ -131,6 +133,7 @@ export function fromBranchFormSubmit(submit: BranchFormSubmit): Record<string, u
     link: asText(changed['link']),
     branchRepresentativeName: asText(changed['branchRepresentativeName']),
     branchPhoneNumber: asText(changed['branchPhoneNumber']),
+    isPwdAvailable: changed['isPwdAvailable'] === true,
     settingsLocationId: asText(changed['settingsLocationId']),
     geoPoint: asGeoPoint(changed['geoPoint']) ?? DEFAULT_GEOPOINT,
   };

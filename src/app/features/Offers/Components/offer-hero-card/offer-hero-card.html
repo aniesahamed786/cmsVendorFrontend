@@ -82,6 +82,14 @@
           <span class="offer-hero-card__mode-label">{{ badge.label }}</span>
         </div>
         }
+        @if (isPwdFriendly(offer)) {
+        <div class="offer-mode-badge offer-hero-card__mode-badge offer-hero-card__mode-badge--pwd">
+          <span class="app-svg-icon offer-hero-card__mode-icon"
+            [style.webkitMaskImage]="'url(assets/svg/PWD/PWD.svg)'"
+            [style.maskImage]="'url(assets/svg/PWD/PWD.svg)'"></span>
+          <span class="offer-hero-card__mode-label">{{ 'offerForm.label.pwdFriendly' | translate }}</span>
+        </div>
+        }
       </div>
     </div>
     }

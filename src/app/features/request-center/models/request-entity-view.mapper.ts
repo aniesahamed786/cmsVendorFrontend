@@ -198,6 +198,7 @@ export function toOfferDetailsView(proposed: Record<string, unknown>): Record<st
     discount_amount_ar: asString(proposed['Discount_amount_ar']),
     discountCode: asString(proposed['discountCode']),
     offerMode: offerMode || 'in store',
+    isPwdAvailable: isPwdAvailable(proposed),
     howToAvail: asString(proposed['howToAvail']),
     howToAvail_ar: asString(proposed['howToAvail_ar']),
     website: asString(proposed['website']),
@@ -292,6 +293,11 @@ export function toProfileRequestView(proposed: Record<string, unknown>): Profile
     coverImage: asString(proposed['coverImage']),
     coverImageLandscape: asString(proposed['coverImageLandscape']),
   };
+}
+
+/** The flag arrives as a boolean on documents but as the string 'true' in raw request payloads. */
+export function isPwdAvailable(proposed: Record<string, unknown>): boolean {
+  return proposed['isPwdAvailable'] === true || proposed['isPwdAvailable'] === 'true';
 }
 
 export interface BranchViewField {

@@ -106,6 +106,11 @@ export class OfferHeroCard {
     return normalized;
   }
 
+  /** Request Center spreads raw proposed values, where the flag can arrive as the string 'true'. */
+  isPwdFriendly(offer: any): boolean {
+    return offer?.isPwdAvailable === true || offer?.isPwdAvailable === 'true';
+  }
+
   isPercentageDiscount(offer: any): boolean {
     return (offer?.discount_type || '').toLowerCase().trim() === 'percentage';
   }

@@ -190,6 +190,15 @@
       color: #000000;
       text-transform: capitalize;
     }
+
+    /* PwD tag reads muted grey per design; hero is on the primary gradient in both themes */
+    &--pwd {
+      .offer-hero-card__mode-icon,
+      .offer-hero-card__mode-label {
+        color: #6b7280;
+        text-transform: none;
+      }
+    }
   }
 }
 

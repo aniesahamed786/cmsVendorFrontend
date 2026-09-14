@@ -1329,7 +1329,9 @@
       "address": "Address",
       "googleMapLink": "Google Map Link",
       "representativeName": "Location Representative Name",
-      "phoneNumber": "Location Phone Number"
+      "phoneNumber": "Location Phone Number",
+      "pwdFriendly": "PwD Friendly",
+      "pwdFriendlyDesc": "This location is suitable for people with disabilities."
     },
     "placeholder": {
       "locationNameEn": "Khobar Branch",

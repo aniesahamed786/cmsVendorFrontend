@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import {
   AbstractControl,
@@ -20,6 +20,7 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { noWhitespaceValidator } from '../../../../shared/utils/form-validators';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
+import { resolveMaskImageStyle } from '../../../../shared/utils/resolve-asset-url';
 import { MapUrlCoordinatesService } from '../../../../features/vendors/services/map-url-coordinates.service';
 import {
   LocationSettingsService,
@@ -46,6 +47,7 @@ export interface BranchApiPayload {
   branchRepresentativeName: string;
   branchPhoneNumber: string;
   settingsLocationId?: string;
+  isPwdAvailable?: boolean;
   geoPoint: GeoPoint;
 }
  
@@ -63,6 +65,7 @@ export interface BranchFormModel {
   branchRepresentativeName: string;
   branchPhoneNumber: string;
   settingsLocationId?: string;
+  isPwdAvailable?: boolean;
   geoPoint: GeoPoint;
 }
  
@@ -108,7 +111,8 @@ export class BranchForm {
   private readonly i18n = inject(I18nService);
   private readonly mapUrlCoordinatesService = inject(MapUrlCoordinatesService);
   private readonly locationSettingsService = inject(LocationSettingsService);
- 
+  private readonly document = inject(DOCUMENT);
+
   actionType = input<'create' | 'edit'>('create');
   buttonName = input<string>('Save');
   backNavRouteLink = input<string>('');
@@ -180,6 +184,7 @@ export class BranchForm {
       ],
       representativeName: [''],
       phoneNumber: ['', [Validators.maxLength(20), Validators.pattern(this.phonePattern)]],
+      pwdFriendly: [false],
       latitude: [null as number | null],
       longitude: [null as number | null],
     });
@@ -235,6 +240,7 @@ export class BranchForm {
           googleMapLink: data.link,
           representativeName: data.branchRepresentativeName,
           phoneNumber: data.branchPhoneNumber,
+          pwdFriendly: data.isPwdAvailable === true,
           latitude,
           longitude,
         },
@@ -295,7 +301,7 @@ export class BranchForm {
     const hasValue = fields.some(
       (val) => typeof val === 'string' && val.trim().length > 0,
     );
-    if (hasValue) return true;
+    if (hasValue || form.pwdFriendly) return true;
 
     if (form.country && form.country.trim() !== '' && form.country.trim() !== 'Saudi Arabia') {
       return true;
@@ -304,6 +310,10 @@ export class BranchForm {
     return false;
   }
  
+  pwdIconMask(): string {
+    return resolveMaskImageStyle(this.document, 'svg/PWD/PWD.svg');
+  }
+
   sanitizePhoneNumber(event: Event): void {
     const input = event.target as HTMLInputElement;
     const sanitized = input.value.replace(/[^0-9+() ]/g, '');
@@ -486,6 +496,7 @@ export class BranchForm {
       link: form.googleMapLink?.trim() ?? '',
       branchRepresentativeName: form.representativeName?.trim() ?? '',
       branchPhoneNumber: form.phoneNumber?.trim() ?? '',
+      isPwdAvailable: !!form.pwdFriendly,
       ...(settingsLocationId ? { settingsLocationId } : {}),
       ...(latitude != null && longitude != null
         ? { geoPoint: { type: 'Point' as const, coordinates: [longitude, latitude] as [number, number] } }

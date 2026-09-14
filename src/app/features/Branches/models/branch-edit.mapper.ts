@@ -28,6 +28,7 @@ export function toEditableBranchData(requestData: Record<string, unknown> | null
     link: d['link'] ?? '',
     branchRepresentativeName: d['branchRepresentativeName'] ?? '',
     branchPhoneNumber: d['branchPhoneNumber'] ?? '',
+    isPwdAvailable: d['isPwdAvailable'] === true || d['isPwdAvailable'] === 'true',
     ...(d['settingsLocationId'] ? { settingsLocationId: d['settingsLocationId'] } : {}),
     geoPoint: normalizeGeoPoint(d),
   };

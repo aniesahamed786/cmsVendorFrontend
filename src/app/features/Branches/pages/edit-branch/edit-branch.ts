@@ -71,6 +71,7 @@ export class EditBranch {
           link: request.googleMapLink,
           branchRepresentativeName: request.representativeName,
           branchPhoneNumber: request.representativePhoneNumber,
+          isPwdAvailable: request.isPwdAvailable,
           // settingsLocationId: asText(model.settingsLocationId),
           // geoPoint: model.geoPoint ?? DEFAULT_GEOPOINT,
         };

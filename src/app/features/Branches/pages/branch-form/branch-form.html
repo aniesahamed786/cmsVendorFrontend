@@ -151,6 +151,18 @@
         <p class="branch-form__error">{{ 'branchForm.error.phoneNumberMaxLength' | translate }}</p>
         }
       </div>
+
+      <div class="branch-form__field branch-form__col-2">
+        <label class="app-check-card">
+          <p-checkbox formControlName="pwdFriendly" [binary]="true"></p-checkbox>
+          <span class="app-svg-icon" [style.webkitMaskImage]="pwdIconMask()"
+            [style.maskImage]="pwdIconMask()"></span>
+          <div class="app-check-card__content">
+            <span class="app-check-card__title">{{ 'branchForm.label.pwdFriendly' | translate }}</span>
+            <span class="app-check-card__subtitle">{{ 'branchForm.label.pwdFriendlyDesc' | translate }}</span>
+          </div>
+        </label>
+      </div>
     </div>
   </div>
 </form>

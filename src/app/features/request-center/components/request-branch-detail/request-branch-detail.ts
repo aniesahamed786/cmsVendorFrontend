@@ -12,6 +12,7 @@ import { BranchViewField } from '../../models/request-entity-view.mapper';
 })
 export class RequestBranchDetail {
   readonly fields = input.required<BranchViewField[]>();
+  readonly pwdFriendly = input<boolean>(false);
 
   isFullWidthField(key: string): boolean {
     return ['address', 'link', 'branchRepresentativeName', 'branchPhoneNumber'].includes(key);

@@ -9,6 +9,14 @@
         {{ 'requestCenter.detail.section.branchSubtitle' | translate }}
       </p>
     </div>
+    @if (pwdFriendly()) {
+    <span class="request-branch-detail__pwd-tag">
+      <span class="app-svg-icon request-branch-detail__pwd-icon"
+        [style.webkitMaskImage]="'url(assets/svg/PWD/PWD.svg)'"
+        [style.maskImage]="'url(assets/svg/PWD/PWD.svg)'"></span>
+      {{ 'branchForm.label.pwdFriendly' | translate }}
+    </span>
+    }
   </div>
 
   <div class="request-branch-detail__grid">
