@@ -152,8 +152,7 @@
 
       <!-- <p class="account-form__section-hint">{{ 'accountManagement.form.hint.scope' | translate }}</p> -->
 
-      <div class="account-form__grid">
-        <div class="account-form__field">
+      <div class="account-form__field">
           <label class="account-form__label">
             {{ 'accountManagement.form.label.branches' | translate }}
             <span class="account-form__required">*</span>
@@ -167,23 +166,6 @@
           @if (showError('locationIds', 'required')) {
           <p class="account-form__error">{{ 'accountManagement.form.error.branchesRequired' | translate }}</p>
           }
-        </div>
-
-        <div class="account-form__field">
-          <label class="account-form__label">
-            {{ 'accountManagement.form.label.categories' | translate }}
-            <span class="account-form__required">*</span>
-          </label>
-          <p-multiSelect formControlName="categoryIds" [options]="categories()" optionLabel="label"
-            optionValue="value" [loading]="categoriesLoading()" [filter]="true" filterBy="label"
-            display="chip" [placeholder]="'accountManagement.form.placeholder.categories' | translate"
-            [emptyMessage]="'accountManagement.form.empty.categories' | translate"
-            styleClass="account-form__select" panelStyleClass="account-form__overlay-panel"
-            appendTo="body" />
-          @if (showError('categoryIds', 'required')) {
-          <p class="account-form__error">{{ 'accountManagement.form.error.categoriesRequired' | translate }}</p>
-          }
-        </div>
       </div>
     </div>
 

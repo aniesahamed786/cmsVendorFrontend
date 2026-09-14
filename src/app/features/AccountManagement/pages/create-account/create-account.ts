@@ -66,9 +66,7 @@ export class CreateAccount implements OnInit {
   readonly permissionOptions = SUBACCOUNT_PERMISSION_OPTIONS;
 
   readonly locations = signal<SelectOption[]>([]);
-  readonly categories = signal<SelectOption[]>([]);
   readonly locationsLoading = signal(false);
-  readonly categoriesLoading = signal(false);
 
 
   readonly skeletonSections: number[][] = [new Array(4).fill(0), new Array(2).fill(0)];
@@ -140,7 +138,7 @@ export class CreateAccount implements OnInit {
   }
 
   private applyScopeRules(): void {
-    for (const field of ['permissions', 'locationIds', 'categoryIds']) {
+    for (const field of ['permissions', 'locationIds']) {
       const control = this.form.get(field)!;
       control.setValidators([nonEmptyArray]);
       control.updateValueAndValidity({ emitEvent: false });
@@ -154,12 +152,6 @@ export class CreateAccount implements OnInit {
       .listLocations()
       .pipe(finalize(() => this.locationsLoading.set(false)))
       .subscribe({ next: (list: SelectOption[]) => this.locations.set(list) });
-
-    this.categoriesLoading.set(true);
-    this.api
-      .listCategories()
-      .pipe(finalize(() => this.categoriesLoading.set(false)))
-      .subscribe({ next: (list: SelectOption[]) => this.categories.set(list) });
   }
 
   isPermissionOn(value: string): boolean {
