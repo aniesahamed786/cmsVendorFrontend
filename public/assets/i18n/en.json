@@ -1541,7 +1541,8 @@
   "branchActions": {
     "action": {
       "viewBranch": "View Branch",
-      "requestChanges": "Request Changes"
+      "requestChanges": "Request Changes",
+      "cancelBranch": "Cancel Branch"
     }
   },
   "login": {

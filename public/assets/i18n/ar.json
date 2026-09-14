@@ -1543,7 +1543,8 @@
   "branchActions": {
     "action": {
       "viewBranch": "عرض الفرع",
-      "requestChanges": "طلب تغييرات"
+      "requestChanges": "طلب تغييرات",
+      "cancelBranch": "إلغاء الفرع"
     }
   },
   "login": {

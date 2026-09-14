@@ -144,6 +144,8 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
           if (row) this.router.navigate(['edit', row.locationId], { relativeTo: this.route });
         },
       },
+      // ponytail: no command yet — no cancel-branch endpoint exists; mirrors offers' Deactivate item
+      { label: this.i18n.t('branchActions.action.cancelBranch'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
     ];
   });
 
@@ -222,7 +224,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     this.branchesService.getKPIs().subscribe(data => {
       this.kpis.set(data);
       this.animateTo('totalBranches', data.totalLocations);
-      this.animateTo('activeBranches', data.activeLocations);
       this.animateTo('totalRedemptions', data.totalRedemptions);
       this.animateTo('pendingRequests', data.pendingRequests);
     });
@@ -274,33 +275,6 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   sortIcon(field: keyof BranchRow): string {
     if (this.sortField() !== field) return 'pi-sort';
     return this.sortOrder() === 1 ? 'pi-sort-up' : 'pi-sort-down';
-  }
-
-  exportTable() {
-    const rows = this.filteredBranches();
-    if (!rows.length) return;
-    const headers = [
-      this.i18n.t('branches.column.name'),
-      this.i18n.t('branches.column.totalOffers'),
-      this.i18n.t('branches.column.city'),
-      this.i18n.t('branches.column.region'),
-      this.i18n.t('branches.column.country'),
-      this.i18n.t('branches.column.manager'),
-      this.i18n.t('branches.filter.status'),
-    ];
-    const csvContent = rows.map(r => [
-      `"${r.locationName}"`, r.totalOffers, `"${r.city}"`, `"${r.region || ''}"`, `"${r.country || ''}"`,
-      `"${r.representativeName}"`, `"${r.status || ''}"`
-    ].join(','));
-    const csvStr = '\ufeff' + headers.join(',') + '\n' + csvContent.join('\n');
-    const blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'branches_export.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   // ---- Count-up stats (shared/animation/count-up.ts) ------------------------
@@ -552,6 +526,14 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
         wrapper.appendChild(media);
         wrapper.appendChild(text);
         wrapper.appendChild(pointer);
+
+        // Zoom to 15+ so the marker leaves compact mode and shows the branch name.
+        wrapper.addEventListener('click', () => {
+          const map = (this as any).getMap();
+          if (!map) return;
+          map.panTo(this.markerPosition);
+          map.setZoom(Math.max(Number(map.getZoom() ?? 0), 15));
+        });
 
         this.div = wrapper;
         this.textDiv = text;
