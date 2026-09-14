@@ -238,6 +238,10 @@ export class OfferDetails {
         return this.i18n.t('offerDetails.mode.inStore');
     }
 
+    isPwdFriendly(offer: any): boolean {
+        return offer?.isPwdAvailable === true || offer?.isPwdAvailable === 'true';
+    }
+
     getOfferModeBadges(offer: any): Array<{ label: string; icon: string }> {
         const modes = (Array.isArray(offer?.offerMode) ? offer.offerMode : [offer?.offerMode])
             .map((mode: unknown) => String(mode ?? '').trim().toLowerCase())
