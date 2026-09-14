@@ -1031,7 +1031,7 @@ p-tag.app-status-tag .p-tag-label {
  * rather than asking 20 components to adopt a new class. `!important` is what
  * beats the component stylesheets, which load after this file.
  * ------------------------------------------------------------------------ */
-[class*="__label"]:not([class*="stat-label"]):not([class*="radio-label"]):not(.sidenav-item__label),
+[class*="__label"]:not([class*="stat-label"]):not([class*="radio-label"]):not(.sidenav-item__label):not(.offer-detail-tile__label),
 .app-filter-label,
 .app-field-label {
   display: block;
