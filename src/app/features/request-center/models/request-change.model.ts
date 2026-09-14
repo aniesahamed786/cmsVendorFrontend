@@ -89,6 +89,7 @@ const OFFER_SECTIONS: SectionDef[] = [
       { key: 'offerMode', labelKey: L + 'offerType' },
       { key: 'website', labelKey: L + 'website' },
       { key: 'locationIds', labelKey: L + 'locations' },
+      { key: 'isPwdAvailable', labelKey: 'offerForm.label.pwdFriendly' },
     ],
   },
   {
@@ -181,6 +182,9 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}(T|$)/;
 
 /** Renders a raw entity/diff value as display text. Returns '' for anything genuinely empty. */
 export function formatChangeValue(value: unknown, field?: string): string {
+  // Arrives as a boolean or a "true"/"false" string; absent means not PwD friendly.
+  if (field === 'isPwdAvailable') return value === true || value === 'true' ? 'Yes' : 'No';
+
   if (value === null || value === undefined || value === '') return '';
 
   if (typeof value === 'boolean') return value ? 'Yes' : 'No';
