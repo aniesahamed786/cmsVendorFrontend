@@ -26,6 +26,8 @@ export class OfferDetails {
      * a request is changing.
      */
     editedFields = input<Set<string>>(new Set<string>());
+    /** Request Center only: the request was saved as a draft, so edited sections also show "Drafted". */
+    drafted = input<boolean>(false);
 
     /** True when any of the given field names is being edited by the request being reviewed. */
     isEdited(...keys: string[]): boolean {

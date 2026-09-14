@@ -35,7 +35,9 @@
     [editableFormData]="offerFormData()"
     [isLoading]="saving()"
     [showBackNav]="false"
-    secondaryAction="cancel"
+    [secondaryAction]="isReturned() ? 'both' : 'cancel'"
+    (cancelEvent)="goBack()"
+    (saveDraftEvent)="onOfferSave($event, true)"
     (submitOfferFormEvent)="onOfferSave($event)"
   ></app-offer-form>
   }
@@ -46,8 +48,9 @@
     [editableFormData]="branchFormData()"
     [isLoading]="saving()"
     [showBackNav]="false"
-    secondaryAction="cancel"
+    [secondaryAction]="isReturned() ? 'both' : 'cancel'"
     (cancelEvent)="goBack()"
+    (saveDraftEvent)="onBranchSave($event, true)"
     (submitBranchFormEvent)="onBranchSave($event)"
   ></app-branch-form>
   }
@@ -57,11 +60,16 @@
       #profileFormRef
       [initialData]="profileData()"
       [isLoading]="saving()"
-      (saveDraft)="onProfileSave($event)"
+      (saveDraft)="onProfileSave($event, true)"
       (updateChanges)="onProfileSave($event)"
     />
     <div class="request-edit__actions">
       <!-- <app-cancel-button [disabled]="saving()" (click)="goBack()" /> -->
+      @if (isReturned()) {
+      <app-button variant="outline" [disabled]="saving()" (click)="profileFormRef.onSaveDraft()">
+        {{ 'requestCenter.edit.saveAsDraft' | translate }}
+      </app-button>
+      }
       <app-button variant="primary" icon="pi pi-check" [disabled]="saving()" (click)="triggerProfileSave()">
         {{ submitButtonLabel() }}
       </app-button>

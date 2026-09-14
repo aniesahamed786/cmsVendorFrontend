@@ -16,4 +16,5 @@ export class RequestOfferDetail {
   readonly locations = input<Record<string, unknown>[]>([]);
   readonly loading = input<boolean>(false);
   readonly editedFields = input<Set<string>>(new Set<string>());
+  readonly drafted = input<boolean>(false);
 }

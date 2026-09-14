@@ -117,7 +117,7 @@ export class BranchForm {
   saving = input<boolean>(false);
   showBackNav = input<boolean>(true);
   
-  secondaryAction = input<'draft' | 'cancel'>('draft');
+  secondaryAction = input<'draft' | 'cancel' | 'both'>('draft');
  
   submitBranchFormEvent = output<BranchFormSubmit>();
   saveDraftEvent = output<BranchFormSubmit>();

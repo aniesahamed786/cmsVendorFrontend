@@ -635,11 +635,17 @@ export class RequestDetail {
     }
   });
 
+  /** A RETURNED request the vendor already edited and saved as a draft — ready to submit as-is. */
+  readonly isDrafted = computed(() => this.status() === 'RETURNED' && !!this.details()?.isDrafted);
+
   // Mirrors the backend's ALLOWED_TRANSITIONS: submit from DRAFT, recall only from SUBMITTED.
-  readonly canSubmit = computed(() => this.status() === 'DRAFT');
+  // A drafted RETURNED request submits straight away; editing it moves to the action menu.
+  readonly canSubmit = computed(() => this.status() === 'DRAFT' || this.isDrafted());
   readonly canDiscardDraft = computed(() => this.status() === 'DRAFT');
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
-  readonly canEditAndResubmit = computed(() => this.status() === 'RETURNED' || this.status() === 'SUBMITTED');
+  readonly canEditAndResubmit = computed(
+    () => (this.status() === 'RETURNED' && !this.isDrafted()) || this.status() === 'SUBMITTED',
+  );
   readonly canCancel = computed(() => this.status() === 'RETURNED');
 
   /**
@@ -907,8 +913,9 @@ export class RequestDetail {
 
   onSubmitConfirmed(): void {
     this.actionLoading.set(true);
+    // resubmit() posts /submit for a DRAFT and PUTs actionType: 'SUBMIT' for a drafted RETURNED.
     this.api
-      .submit(this.requestId)
+      .resubmit(this.requestId, this.status() ?? undefined)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
         next: (res) => {
@@ -944,6 +951,7 @@ export class RequestDetail {
     this.details.update((details) => (details ? {
       ...details,
       status: 'SUBMITTED',
+      isDrafted: false,
       submittedOn: res?.submittedOn ?? details.submittedOn ?? new Date().toISOString()
     } : details));
     this.showSubmitConfirm = false;

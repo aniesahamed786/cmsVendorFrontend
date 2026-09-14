@@ -136,7 +136,7 @@ export class RequestEdit {
  
   // ---- Saves ---------------------------------------------------------------
  
-  onOfferSave(event: OfferFormSubmit): void {
+  onOfferSave(event: OfferFormSubmit, asDraft = false): void {
     // An UPDATE request stores the diff and a CREATE request the whole payload — exactly the
     // split create-offer/edit-offer already make when raising one.
     const payload = event.payload as unknown as Record<string, unknown>;
@@ -145,16 +145,16 @@ export class RequestEdit {
         ? getChangedFields(null, payload)
         : event.changedFields ?? {};
  
-    this.persist(data, String(payload?.['title'] ?? ''));
+    this.persist(data, String(payload?.['title'] ?? ''), asDraft);
   }
- 
-onBranchSave(event: BranchFormSubmit): void {
+
+onBranchSave(event: BranchFormSubmit, asDraft = false): void {
   const full = fromBranchFormSubmit(event);
   const data =
     this.requestType() === 'CREATE'
       ? full
       : getChangedFields(fromBranchFormModel(this.branchFormData() ?? {}), full);
-  this.persist(data, event.payload.branch_name ?? '');
+  this.persist(data, event.payload.branch_name ?? '', asDraft);
 }
  
   /** The profile form has no footer of its own — the hosting page owns the save button. */
@@ -162,7 +162,7 @@ onBranchSave(event: BranchFormSubmit): void {
     this.profileForm()?.onUpdateChanges();
   }
  
-  onProfileSave(payload: VendorProfileEditData): void {
+  onProfileSave(payload: VendorProfileEditData, asDraft = false): void {
     const full = toVendorSchemaPayload(payload);
     // Newly cropped images stay in as `File`s — the request is posted as multipart, so the
     // API service lifts them out into their own parts.
@@ -172,9 +172,12 @@ onBranchSave(event: BranchFormSubmit): void {
         : getChangedFields(toVendorSchemaPayload(this.profileData()), full);
  
     // Same fixed title the profile page sends, so editing a request never renames it.
-    this.persist(data, PROFILE_REQUEST_TITLE);
+    this.persist(data, PROFILE_REQUEST_TITLE, asDraft);
   }
- 
+
+  /** Only a RETURNED request offers "Save as draft" alongside cancel and resubmit. */
+  readonly isReturned = computed(() => this.details()?.status === 'RETURNED');
+
   readonly isResubmission = computed(() => {
     const status = this.details()?.status;
     return status === 'RETURNED' || status === 'SUBMITTED';
@@ -190,9 +193,10 @@ onBranchSave(event: BranchFormSubmit): void {
   /**
    * PUT /cmsVendor/requests/{id}. Only `title` and `requestData` are sent — entityType,
    * entityId and requestType are the request's identity and must not change. If the request
-   * was RETURNED or SUBMITTED, actionType: 'SUBMIT' is sent to resubmit it.
+   * was RETURNED or SUBMITTED, actionType: 'SUBMIT' is sent to resubmit it; `asDraft` sends
+   * actionType: 'DRAFT' instead.
    */
-  private persist(formData: Record<string, unknown>, title: string): void {
+  private persist(formData: Record<string, unknown>, title: string, asDraft = false): void {
     if (this.saving()) return;
  
     const details = this.details();
@@ -210,17 +214,19 @@ onBranchSave(event: BranchFormSubmit): void {
     }
  
     this.saving.set(true);
-    const isResubmit = this.isResubmission();
+    const isResubmit = !asDraft && this.isResubmission();
     this.api
       .update(this.requestId, {
         title: title || details.title,
         requestData,
-        ...(isResubmit ? { actionType: 'SUBMIT' as const } : {}),
+        ...(asDraft ? { actionType: 'DRAFT' as const } : isResubmit ? { actionType: 'SUBMIT' as const } : {}),
       })
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: () => {
-          if (isResubmit) {
+          if (asDraft) {
+            this.toast('success', 'requestCenter.edit.draftSavedSummary', 'requestCenter.edit.draftSavedDetail');
+          } else if (isResubmit) {
             this.toast('success', 'requestCenter.edit.resubmittedSummary', 'requestCenter.edit.resubmittedDetail');
           } else {
             this.toast('success', 'requestCenter.edit.savedSummary', 'requestCenter.edit.savedDetail');

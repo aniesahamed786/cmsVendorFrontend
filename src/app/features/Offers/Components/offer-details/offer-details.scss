@@ -591,3 +591,12 @@
   margin-left: 0;
   margin-right: auto;
 }
+/* Drafted sits left of Edited — only the first badge takes the auto margin. */
+.offer-card__drafted-badge + .offer-card__edited-badge {
+  margin-left: 0.5rem;
+}
+
+:host-context(html[lang="ar"]) .offer-card__drafted-badge + .offer-card__edited-badge {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}

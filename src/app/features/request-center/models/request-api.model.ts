@@ -107,6 +107,8 @@ export interface RequestEntityResponse {
   createdOn: string;
   updatedOn: string;
   submittedOn: string | null;
+  /** True when the vendor saved a RETURNED request as a draft without resubmitting it. */
+  isDrafted?: boolean;
 }
 
 /**

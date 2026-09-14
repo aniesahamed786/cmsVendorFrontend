@@ -1157,9 +1157,10 @@
 
     <div class="offer-form__footer">
       <div class="offer-form__footer-actions">
-        @if (secondaryAction() === 'cancel') {
+        @if (secondaryAction() !== 'draft') {
         <app-cancel-button [disabled]="isSubmitDisabled()" (click)="cancelEvent.emit()" />
-        } @else {
+        }
+        @if (secondaryAction() !== 'cancel') {
         <app-button variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
           {{ 'offerForm.footer.saveDraft' | translate }}
         </app-button>

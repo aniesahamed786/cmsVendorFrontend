@@ -175,9 +175,9 @@ export class OfferForm {
   }
   /**
    * What the footer's secondary button does. `draft` saves a draft (the offer pages);
-   * `cancel` just leaves (the request-edit page, where there is no separate draft to save).
+   * `cancel` just leaves (the request-edit page); `both` shows the two (a RETURNED request).
    */
-  secondaryAction = input<"draft" | "cancel">("draft");
+  secondaryAction = input<"draft" | "cancel" | "both">("draft");
   cancelEvent = output<void>();
   minDate = (() => {
     const d = new Date();

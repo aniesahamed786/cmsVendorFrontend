@@ -10,9 +10,10 @@
     }
 
     <div class="branch-form__topbar-actions">
-      @if (secondaryAction() === 'cancel') {
+      @if (secondaryAction() !== 'draft') {
       <app-cancel-button [disabled]="isSubmitDisabled()" (click)="cancelEvent.emit()" />
-      } @else {
+      }
+      @if (secondaryAction() !== 'cancel') {
       <app-button type="button" variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()" [loading]="saving()">
         {{ 'branchForm.footer.saveDraft' | translate }}
       </app-button>

@@ -33,6 +33,11 @@
     @if (status(); as currentStatus) {
     <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
     }
+    @if (isDrafted()) {
+    <span class="request-detail__edited-badge request-detail__edited-badge--field">
+      {{ 'requestCenter.detail.draftedBadge' | translate }}
+    </span>
+    }
   </div>
 
   <!-- Two views of the same request: the entity as it would look approved, and the raw
@@ -258,7 +263,7 @@
       @switch (entityType()) {
       @case ('OFFER') {
       <app-request-offer-detail [offer]="offerView()" [vendor]="heroVendor()" [locations]="offerLocations()"
-        [editedFields]="editedFieldSet()" />
+        [editedFields]="editedFieldSet()" [drafted]="isDrafted()" />
       }
       @case ('PROFILE') {
       @if (profileView(); as profile) {
@@ -418,6 +423,11 @@
               <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
               } @else {
               <span class="request-detail__summary-dash">--</span>
+              }
+              @if (isDrafted()) {
+              <span class="request-detail__edited-badge request-detail__edited-badge--field">
+                {{ 'requestCenter.detail.draftedBadge' | translate }}
+              </span>
               }
             </div>
           </div>
