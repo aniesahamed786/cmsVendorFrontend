@@ -55,7 +55,8 @@
   width: 100%;
 }
 
-.sidenav-item {
+.sidenav-item,
+.sidenav__item {
   position: relative;
   display: flex;
   align-items: center;
@@ -64,28 +65,33 @@
   width: 100%;
 }
 
-.sidenav-item__link {
+.sidenav-item__link,
+.sidenav__link {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   width: 100%;
+  color: inherit;
 }
 
-.sidenav-item__label {
+.sidenav-item__label,
+.sidenav__label {
   font-weight: 500;
   font-size: 0.875rem;
 }
 
 @media (min-width: 768px) {
-  .sidenav-item__label {
+  .sidenav-item__label,
+  .sidenav__label {
     font-size: 1rem;
   }
 }
 
 /* ponytail: name says "left", behaviour is now inline-start — mirrors in RTL.
    Renaming touches sidenav.html too; left alone as cosmetic. */
-.left-bar {
+.left-bar,
+.sidenav__bar {
   position: absolute;
   inset-inline-start: -30px;
   top: 0;
@@ -102,7 +108,8 @@
    dark->light, so the fill visibly reverses direction. That is expected — it is
    not a regression. In exchange the active item now follows an accent switch and
    picks up the dark-mode gradient, neither of which the hexes could do. */
-.active-link {
+.active-link,
+.sidenav__item--active {
   background: var(--app-primary-gradient);
   /* kept: on-primary contrast over the brand gradient — sanctioned literal. */
   color: #ffffff;
@@ -117,9 +124,10 @@
    element is very likely never visible. If that is confirmed, the fix is to
    delete .left-bar and its <div> in sidenav.html, and the colour question
    disappears with it. Needs a human eye; see the phase report. */
-.active-link .left-bar {
+.active-link .left-bar,
+.sidenav__item--active .sidenav__bar {
   opacity: 1;
-  background: linear-gradient(to bottom, #6668e1, #0033a0);
+  background: var(--app-primary-gradient);
 }
 
 .active-link .sidenav-icon {
@@ -150,17 +158,24 @@
     opacity 220ms ease;
 }
 
-.sidenav-item:not(.active-link):hover {
-  background-color: var(--app-primary-hover-soft);
+.sidenav-item:hover:not(.active-link),
+.sidenav__item:hover:not(.sidenav__item--active) {
+  background: var(--app-primary-hover-soft);
+  color: var(--app-primary);
 }
 
-/* converted: rgba(0,51,160) was exactly --app-primary-rgb, so the icon-lift
-   glow now follows an accent switch instead of staying brand-blue. This is a
-   drop-shadow on an icon (a hover micro-interaction), not a surface shadow, so
-   Step 5 rule 6 is read as not applying — noted in the report for the gate. */
+.sidenav-item:hover:not(.active-link) .left-bar,
+.sidenav__item:hover:not(.sidenav__item--active) .sidenav__bar {
+  opacity: 1;
+  background: var(--app-primary-gradient);
+}
+
 li:hover .sidenav-icon,
-li:focus-within .sidenav-icon {
-  filter: drop-shadow(0 6px 8px rgba(var(--app-primary-rgb), 0.22));
+li:focus-within .sidenav-icon,
+.sidenav-item:hover .sidenav-icon,
+.sidenav__item:hover .sidenav__icon,
+.sidenav__item:focus-within .sidenav__icon {
+  filter: drop-shadow(0 6px 8px var(--app-primary-ring));
   transform: translateY(-2px) scale(1.12) rotate(-5deg);
 }
 

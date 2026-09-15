@@ -64,7 +64,7 @@ export const ACCENT_THEMES: AccentTheme[] = [
       950: '#001238',
     },
     rgb: '0, 51, 160',
-    gradient: 'linear-gradient(91.48deg, #0033A0 10%, #5C87F6 90%)',
+    gradient: 'linear-gradient(91.48deg, #0033A0 10%, #6668E1 90%)',
     darkSwatch: '#2F6BFF',
     darkBackground: {
       appBg: '#1B1F2A',

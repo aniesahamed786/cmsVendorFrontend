@@ -102,7 +102,7 @@ export class ThemeService {
     // derived alpha tokens track the active accent
     set('--app-primary-soft', `rgba(${rgb}, 0.08)`);
     set('--app-primary-subtle', `rgba(${rgb}, 0.16)`);
-    set('--app-primary-hover-soft', `rgba(${rgb}, 0.24)`);
-    set('--app-primary-ring', `rgba(${rgb}, 0.40)`);
+    set('--app-primary-hover-soft', `rgba(${rgb}, 0.06)`);
+    set('--app-primary-ring', `rgba(${rgb}, 0.16)`);
   }
 }
