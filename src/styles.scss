@@ -133,6 +133,18 @@ html[lang="ar"] {
   --table-row-padding-x: 1rem;
   --table-row-hover-bg: color-mix(in srgb, var(--app-primary-soft) 40%, var(--app-surface) 60%);
   --table-row-hover-bar: var(--app-primary);
+
+  /* Paginator tokens — baseline circular pagination matching uploaded design */
+  --paginator-btn-size: 2.5rem;
+  --paginator-btn-radius: 50%;
+  --paginator-btn-font-size: 0.9375rem;
+  --paginator-btn-font-weight: 500;
+  --paginator-btn-text: var(--app-text);
+  --paginator-btn-hover-bg: color-mix(in srgb, var(--app-text) 5%, transparent);
+  --paginator-btn-active-bg: var(--app-primary-soft);
+  --paginator-btn-active-text: var(--app-text);
+  --paginator-btn-active-weight: 600;
+  --paginator-btn-disabled-text: var(--app-muted);
 }
 
 html,
@@ -158,6 +170,8 @@ body {
   --app-muted: #94a3b8;
   --app-border: #334155;
   --table-header-bg: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
+  --paginator-btn-hover-bg: color-mix(in srgb, var(--app-text) 8%, transparent);
+  --paginator-btn-active-bg: rgba(var(--app-primary-rgb), 0.22);
   color-scheme: dark;
 }
 
@@ -1679,7 +1693,7 @@ html body [data-pc-name="toggleswitch"],
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 0.25rem !important;
+  gap: 0.375rem !important;
   min-height: 0 !important;
   box-shadow: none !important;
 
@@ -1691,63 +1705,144 @@ html body [data-pc-name="toggleswitch"],
     font-size: 0.8125rem;
   }
 
+  .p-paginator-pages {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.375rem !important;
+  }
+
+  /* Base / Not Selected (Default) & Navigation Arrows */
   .p-paginator-page,
   .p-paginator-first,
   .p-paginator-prev,
   .p-paginator-next,
-  .p-paginator-last {
-    color: var(--app-muted) !important;
-    background: transparent !important;
-    border-radius: 50% !important;
-    width: 2rem !important;
-    height: 2rem !important;
-    min-width: 2rem !important;
-    font-size: 0.8125rem !important;
-    padding: 0 !important;
+  .p-paginator-last,
+  .page-btn,
+  .page-arrow {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
+    width: var(--paginator-btn-size) !important;
+    height: var(--paginator-btn-size) !important;
+    min-width: var(--paginator-btn-size) !important;
+    border-radius: var(--paginator-btn-radius) !important;
     border: none !important;
+    background: transparent !important;
+    color: var(--paginator-btn-text) !important;
+    font-size: var(--paginator-btn-font-size) !important;
+    font-weight: var(--paginator-btn-font-weight, 500) !important;
+    padding: 0 !important;
     box-shadow: none !important;
     outline: none !important;
     cursor: pointer;
-    transition: background-color 160ms ease, color 160ms ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 
-    &:hover {
-      background: var(--app-primary-hover-soft) !important;
-      color: var(--app-text) !important;
-      border-radius: 50% !important;
+    .p-paginator-icon {
+      font-size: 0.875rem;
+      color: inherit !important;
+    }
+
+    /* Hover State (as seen on "2") — subtle soft gray circle */
+    &:hover:not(.p-highlight):not(.p-paginator-page-selected):not(.active):not([aria-selected="true"]):not([data-p-selected="true"]):not([data-p-highlight="true"]):not(:disabled):not(.p-disabled):not(.disabled) {
+      background: var(--paginator-btn-hover-bg) !important;
+      color: var(--paginator-btn-text) !important;
+      border-radius: var(--paginator-btn-radius) !important;
       box-shadow: none !important;
       outline: none !important;
     }
 
     &:focus,
     &:focus-visible {
-      border-radius: 50% !important;
+      border-radius: var(--paginator-btn-radius) !important;
       box-shadow: none !important;
       outline: none !important;
     }
   }
 
-  /* Selected page: clean filled primary circle */
+  /* Selected / Active State (as seen on "1") — soft pastel light blue circle */
   .p-paginator-page.p-highlight,
   .p-paginator-page.p-paginator-page-selected,
   .p-paginator-page-selected,
   .p-paginator-page[aria-selected="true"],
   .p-paginator-page[data-p-selected="true"],
-  .p-paginator-page[data-p-highlight="true"] {
-    background: var(--app-primary) !important;
-    color: #ffffff !important;
-    border-radius: 50% !important;
-    font-weight: 700 !important;
+  .p-paginator-page[data-p-highlight="true"],
+  .page-btn.active {
+    background: var(--paginator-btn-active-bg) !important;
+    color: var(--paginator-btn-active-text) !important;
+    border-radius: var(--paginator-btn-radius) !important;
+    font-weight: var(--paginator-btn-active-weight, 600) !important;
+    cursor: default !important;
     box-shadow: none !important;
     outline: none !important;
 
     &:hover {
-      background: var(--app-primary-700) !important;
-      color: #ffffff !important;
-      border-radius: 50% !important;
+      background: var(--paginator-btn-active-bg) !important;
+      color: var(--paginator-btn-active-text) !important;
+      border-radius: var(--paginator-btn-radius) !important;
     }
+  }
+
+  /* Navigation Arrows / Items (Disabled - as seen on left arrows) */
+  .p-paginator-page:disabled,
+  .p-paginator-page.p-disabled,
+  .p-paginator-first:disabled,
+  .p-paginator-first.p-disabled,
+  .p-paginator-prev:disabled,
+  .p-paginator-prev.p-disabled,
+  .p-paginator-next:disabled,
+  .p-paginator-next.p-disabled,
+  .p-paginator-last:disabled,
+  .p-paginator-last.p-disabled,
+  .page-btn:disabled,
+  .page-arrow.disabled {
+    color: var(--paginator-btn-disabled-text) !important;
+    background: transparent !important;
+    cursor: not-allowed !important;
+    opacity: 0.65 !important;
+    pointer-events: none;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+/* Standalone pagination button utilities */
+.page-btn,
+.page-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--paginator-btn-size);
+  height: var(--paginator-btn-size);
+  min-width: var(--paginator-btn-size);
+  border-radius: var(--paginator-btn-radius);
+  border: none;
+  background-color: transparent;
+  color: var(--paginator-btn-text);
+  font-size: var(--paginator-btn-font-size);
+  font-weight: var(--paginator-btn-font-weight, 500);
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover:not(.active):not(:disabled):not(.disabled) {
+    background-color: var(--paginator-btn-hover-bg);
+    color: var(--paginator-btn-text);
+  }
+
+  &.active {
+    background-color: var(--paginator-btn-active-bg);
+    color: var(--paginator-btn-active-text);
+    font-weight: var(--paginator-btn-active-weight, 600);
+    cursor: default;
+  }
+
+  &:disabled,
+  &.disabled {
+    color: var(--paginator-btn-disabled-text);
+    background-color: transparent;
+    cursor: not-allowed;
+    opacity: 0.65;
+    pointer-events: none;
   }
 }
 
