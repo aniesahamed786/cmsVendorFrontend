@@ -247,6 +247,16 @@
       <section class="request-detail__card">
         <p class="request-detail__error">{{ error }}</p>
       </section>
+      } @else if (isBranchDeletion()) {
+      <section class="request-detail__card">
+        <div class="request-detail__section-header">
+          <span class="request-detail__section-icon"><i class="pi pi-trash"></i></span>
+          <h3 class="request-detail__section-title">
+            {{ 'requestCenter.detail.section.requestedChanges' | translate }}
+          </h3>
+        </div>
+        <p class="request-detail__empty">{{ 'requestCenter.detail.branchDeletion' | translate }}</p>
+      </section>
       } @else if (hasNoChanges()) {
       <section class="request-detail__card">
         <div class="request-detail__section-header">

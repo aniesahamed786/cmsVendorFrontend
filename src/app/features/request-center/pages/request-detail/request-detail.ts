@@ -259,6 +259,10 @@ export class RequestDetail {
     const rowType = this.row()?.type?.toUpperCase();
     return rowType ?? null;
   });
+  /** STORE + DELETE: there is nothing to preview, so the branch details are replaced by a notice. */
+  readonly isBranchDeletion = computed(
+    () => this.entityType() === 'STORE' && (this.details()?.requestType as string | undefined) === 'DELETE',
+  );
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
 
   // ---- Tabs -----------------------------------------------------------------

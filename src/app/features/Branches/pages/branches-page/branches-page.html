@@ -230,4 +230,30 @@
       </p-table>
     </div>
   </section>
+
+  <!-- Empty state: no branches yet -->
+  @if (!branchesLoading() && allBranches().length === 0) {
+  <div class="branches-page__empty-overlay">
+    <div class="branches-page__empty-overlay-action">
+      <app-button variant="primary" icon="pi pi-plus" [routerLink]="'/branches/create'">{{ 'branches.addBranch' | translate }}</app-button>
+    </div>
+  </div>
+  }
+
+  <!-- Cancel branch confirmation -->
+  <app-confirmation-pop-up
+    [visible]="!!cancelTarget()"
+    [title]="'branchActions.cancel.title' | translate"
+    [message]="cancelMessage()"
+    [confirmLabel]="'branchActions.cancel.confirm' | translate"
+    [cancelLabel]="'common.cancel' | translate"
+    confirmVariant="danger"
+    [loading]="cancelling()"
+    (confirm)="confirmCancelBranch()"
+    (cancel)="!cancelling() && cancelTarget.set(null)">
+    <label class="branches-page__cancel-label" for="branch-cancel-remarks">{{ 'branchActions.cancel.remarksLabel' | translate }}</label>
+    <textarea id="branch-cancel-remarks" pInputTextarea rows="3" class="branches-page__cancel-remarks"
+      [ngModel]="cancelRemarks()" (ngModelChange)="cancelRemarks.set($event)"
+      [placeholder]="'branchActions.cancel.remarksPlaceholder' | translate"></textarea>
+  </app-confirmation-pop-up>
 </div>

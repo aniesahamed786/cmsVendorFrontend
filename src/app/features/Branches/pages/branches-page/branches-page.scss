@@ -3,6 +3,39 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
+
+  /* Empty state overlay — backdrop matches app-bottom-sheet */
+  &__empty-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1000; // above Google Maps' internal layers
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  /* Cancel branch dialog — projected into app-confirmation-pop-up */
+  &__cancel-label {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__cancel-remarks {
+    width: 100%;
+    resize: vertical;
+  }
+
+  // sticky keeps the button mid-screen however tall the page is
+  &__empty-overlay-action {
+    position: sticky;
+    top: calc(50vh - 1.5rem);
+    display: flex;
+    justify-content: center;
+  }
 
   /* Header */
   &__header {

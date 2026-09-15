@@ -16,7 +16,7 @@ import {
 } from '../models/request-api.model';
 
 /** Top-level request fields, sent as their own form parts rather than inside `requestData`. */
-const SCALAR_FIELDS = ['entityType', 'entityId', 'requestType', 'title', 'actionType'] as const;
+const SCALAR_FIELDS = ['entityType', 'entityId', 'requestType', 'title', 'actionType', 'remarks'] as const;
 
 /**
  * Serializes a request payload as `multipart/form-data`.

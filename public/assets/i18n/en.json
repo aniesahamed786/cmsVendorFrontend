@@ -168,7 +168,6 @@
     "subtitle": "Manage and track all promotional offers across your catalog.",
     "addNew": "Add New Offer",
     "cardTitle": "Offers",
-    "export": "Export",
     "rowActionsAria": "Row actions",
     "empty": "No offers found.",
     "stats": {
@@ -414,6 +413,7 @@
       "editedBadge": "Edited",
       "draftedBadge": "Drafted",
       "noChanges": "This request has no field-level changes recorded.",
+      "branchDeletion": "This branch request is for deletion.",
       "timelineUnavailable": "Timeline unavailable for this request.",
       "changesFailed": "Could not load the requested changes. Please try again.",
       "previousValue": "Previous",
@@ -1063,7 +1063,6 @@
     "title": "Branches",
     "subtitle": "Manage and monitor all of your branches across the enterprise ecosystem.",
     "addBranch": "Add Branch",
-    "export": "Export",
     "kpi": {
       "totalBranches": "Total Branches",
       "totalBranchesSub": "All branches",
@@ -1543,6 +1542,16 @@
       "viewBranch": "View Branch",
       "requestChanges": "Request Changes",
       "cancelBranch": "Cancel Branch"
+    },
+    "cancel": {
+      "title": "Cancel Branch",
+      "message": "A request to delete {{name}} will be sent for admin review. The branch stays active until the request is approved.",
+      "confirm": "Submit Request",
+      "remarksLabel": "Remarks",
+      "remarksPlaceholder": "Reason for cancelling this branch (optional)",
+      "successSummary": "Cancel branch request submitted",
+      "successDetail": "Request {{requestId}} was sent for admin review.",
+      "offersDeactivated": "{{count}} offer(s) will be deactivated: {{titles}}"
     }
   },
   "login": {

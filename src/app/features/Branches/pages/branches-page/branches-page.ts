@@ -14,11 +14,16 @@ import { createCountUp } from '../../../../shared/animation/count-up';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
+import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
+import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
 
 @Component({
   selector: 'app-branches-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, AppBottomSheet, TranslatePipe, RouterLink],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, AppBottomSheet, TranslatePipe, RouterLink, ConfirmationPopUp],
   templateUrl: './branches-page.html',
   styleUrl: './branches-page.scss'
 })
@@ -30,6 +35,8 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly i18n = inject(I18nService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private readonly requestApi = inject(RequestCenterApiService);
+  private readonly messageService = inject(MessageService);
 
   kpis = signal<BranchKPIs | null>(null);
   topPerformers = signal<TopPerformer[]>([]);
@@ -124,7 +131,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   debug = { scriptLoaded: false, mapsAvailable: false, mapCreated: false };
 
-  readonly selectedRow = signal<{ locationId: string } | null>(null);
+  readonly selectedRow = signal<BranchRow | null>(null);
 
   readonly rowActions = computed(() => {
     this.i18n.loadSeq();
@@ -144,8 +151,16 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
           if (row) this.router.navigate(['edit', row.locationId], { relativeTo: this.route });
         },
       },
-      // ponytail: no command yet — no cancel-branch endpoint exists; mirrors offers' Deactivate item
-      { label: this.i18n.t('branchActions.action.cancelBranch'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
+      {
+        label: this.i18n.t('branchActions.action.cancelBranch'),
+        icon: 'pi pi-ban',
+        styleClass: 'p-menuitem-danger',
+        command: () => {
+          if (!row) return;
+          this.cancelRemarks.set('');
+          this.cancelTarget.set(row);
+        },
+      },
     ];
   });
 
@@ -603,5 +618,69 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
 
   navigateBranchDetail(id:any){
     this.router.navigate(['/branches/view/', id]);
+  }
+
+  // ---- Cancel branch: raises a DELETE request for admin review ----
+  readonly cancelTarget = signal<BranchRow | null>(null);
+  readonly cancelRemarks = signal('');
+  readonly cancelling = signal(false);
+
+  readonly cancelMessage = computed(() => {
+    this.i18n.loadSeq();
+    return this.i18n.t('branchActions.cancel.message', { name: this.cancelTarget()?.locationName ?? '' });
+  });
+
+  confirmCancelBranch(): void {
+    const branch = this.cancelTarget();
+    if (!branch || this.cancelling()) return;
+
+    this.cancelling.set(true);
+    this.requestApi
+      .create({
+        entityType: 'STORE',
+        requestType: 'DELETE',
+        entityId: branch.locationId,
+        title: `Delete branch - ${branch.locationName}`,
+        remarks: this.cancelRemarks().trim() || undefined,
+        requestData: {},
+        actionType: 'SUBMIT',
+      })
+      .subscribe({
+        next: (res) => {
+          this.cancelling.set(false);
+          this.cancelTarget.set(null);
+          const offers = res.deletionImpact?.offersDeactivated ?? [];
+          const detail = [this.i18n.t('branchActions.cancel.successDetail', { requestId: res.requestId })];
+          if (offers.length) {
+            detail.push(
+              this.i18n.t('branchActions.cancel.offersDeactivated', {
+                count: String(offers.length),
+                titles: offers.map((o) => o.title).join(', '),
+              }),
+            );
+          }
+          this.messageService.add({
+            severity: 'success',
+            summary: this.i18n.t('branchActions.cancel.successSummary'),
+            detail: detail.join(' '),
+            life: 8000,
+            closable: true,
+          });
+        },
+        error: (err: HttpErrorResponse) => {
+          this.cancelling.set(false);
+          console.error('Failed to raise branch delete request', err);
+          const isConflict = err?.status === 409;
+          this.messageService.add({
+            severity: isConflict ? 'warn' : 'error',
+            summary: this.i18n.t(isConflict ? 'branchForm.toast.requestConflictSummary' : 'branchForm.toast.requestFailedSummary'),
+            detail:
+              extractApiErrorMessage(err) ??
+              this.i18n.t(isConflict ? 'branchForm.toast.requestConflictDetail' : 'branchForm.toast.requestFailedDetail'),
+            life: isConflict ? 10000 : 5000,
+            closable: true,
+          });
+        },
+      });
   }
 }

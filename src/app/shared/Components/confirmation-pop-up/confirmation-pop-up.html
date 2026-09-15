@@ -18,6 +18,7 @@
   <div class="confirmation-pop-up__body">
     <p class="confirmation-pop-up__message" *ngIf="!allowHtml()">{{ message() }}</p>
     <p class="confirmation-pop-up__message" *ngIf="allowHtml()" [innerHTML]="message()"></p>
+    <ng-content />
   </div>
 
   <ng-template pTemplate="footer">

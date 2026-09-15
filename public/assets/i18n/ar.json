@@ -168,7 +168,6 @@
     "subtitle": "إدارة وتتبع جميع العروض الترويجية في كتالوجك.",
     "addNew": "إضافة عرض جديد",
     "cardTitle": "العروض",
-    "export": "تصدير",
     "rowActionsAria": "إجراءات الصف",
     "empty": "لا توجد عروض.",
     "stats": {
@@ -414,6 +413,7 @@
       "editedBadge": "تم التعديل",
       "draftedBadge": "مسودة",
       "noChanges": "لا توجد تغييرات مسجلة على مستوى الحقول لهذا الطلب.",
+      "branchDeletion": "هذا الطلب خاص بحذف الفرع.",
       "timelineUnavailable": "الجدول الزمني غير متاح لهذا الطلب.",
       "changesFailed": "تعذر تحميل التغييرات المطلوبة. يرجى المحاولة مرة أخرى.",
       "previousValue": "السابق",
@@ -1063,7 +1063,6 @@
     "title": "الفروع",
     "subtitle": "إدارة ومتابعة جميع فروعك عبر منظومة المؤسسة.",
     "addBranch": "إضافة فرع",
-    "export": "تصدير",
     "kpi": {
       "totalBranches": "إجمالي الفروع",
       "totalBranchesSub": "جميع الفروع",
@@ -1545,6 +1544,16 @@
       "viewBranch": "عرض الفرع",
       "requestChanges": "طلب تغييرات",
       "cancelBranch": "إلغاء الفرع"
+    },
+    "cancel": {
+      "title": "إلغاء الفرع",
+      "message": "سيتم إرسال طلب حذف الفرع {{name}} إلى المسؤول للمراجعة. يبقى الفرع نشطًا حتى تتم الموافقة على الطلب.",
+      "confirm": "إرسال الطلب",
+      "remarksLabel": "الملاحظات",
+      "remarksPlaceholder": "سبب إلغاء الفرع (اختياري)",
+      "successSummary": "تم إرسال طلب إلغاء الفرع",
+      "successDetail": "تم إرسال الطلب {{requestId}} لمراجعة المسؤول.",
+      "offersDeactivated": "سيتم إيقاف {{count}} من العروض: {{titles}}"
     }
   },
   "login": {
