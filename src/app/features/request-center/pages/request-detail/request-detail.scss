@@ -201,6 +201,30 @@
     margin: 0;
   }
 
+  // ---- Branch deletion request: red notice in place of the branch details ----
+  &__card--deletion {
+    background: color-mix(in srgb, var(--app-danger) 10%, var(--app-surface));
+    border-color: var(--app-danger);
+    border-inline-start-width: 6px;
+  }
+
+  &__section-icon--deletion {
+    background: var(--app-danger);
+    color: #ffffff; // sanctioned: on-danger contrast over the solid red tile
+  }
+
+  &__deletion-message {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--app-danger);
+
+    // --app-danger is 2.63:1 on the dark surface (see styles.scss) — lighten for AA
+    :host-context(.dark-mode) & {
+      color: color-mix(in srgb, var(--app-danger) 45%, #ffffff);
+    }
+  }
+
   // ---- Edited field: accent bar on the left, "Edited" chip beside the label ----
   &__field--edited {
     border-left: 3px solid var(--app-primary);
