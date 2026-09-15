@@ -78,7 +78,7 @@
     },
     "quickActions": {
       "title": "Quick Actions",
-      "createOffer": "Create New Offer",
+      "createOffer": "Add New Offer",
       "editProfile": "Edit Profile",
       "contactSupport": "Contact Support",
       "addBranch": "Add Branch"
