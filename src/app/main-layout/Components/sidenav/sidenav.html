@@ -18,6 +18,13 @@
         >
           <div class="left-bar"></div>
           <a pRipple class="sidenav-item__link">
+            @if (item.icon.startsWith('pi')) {
+            <i
+              class="sidenav-icon {{ item.icon }}"
+              role="img"
+              [attr.aria-label]="item.labelKey | translate"
+            ></i>
+            } @else {
             <span
               class="sidenav-icon"
               [style.webkitMaskImage]="'url(' + item.icon + ')'"
@@ -25,6 +32,7 @@
               role="img"
               [attr.aria-label]="item.labelKey | translate"
             ></span>
+            }
             <span class="sidenav-item__label">{{ item.labelKey | translate }}</span>
           </a>
         </li>

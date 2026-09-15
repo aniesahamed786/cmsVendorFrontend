@@ -35,8 +35,8 @@
       [subtitle]="'dashboard.stats.activeOffers.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-active-offers.svg" iconColor="var(--app-primary)"
       iconContainerBg="var(--app-primary-soft)" [trendUp]="true" (tileClick)="goToOffers()" />
-    <app-offer-tile [title]="'dashboard.stats.pendingOffers.title' | translate" [value]="animatedCount('pendingRequests')"
-      [subtitle]="'dashboard.stats.pendingOffers.subtitle' | translate"
+    <app-offer-tile [title]="'dashboard.stats.pendingRequests.title' | translate" [value]="animatedCount('pendingRequests')"
+      [subtitle]="'dashboard.stats.pendingRequests.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-pending-requests.svg" iconColor="var(--app-primary)"
       iconContainerBg="var(--app-primary-soft)" (tileClick)="goToRequestCenter()" />
     <app-offer-tile [title]="'dashboard.stats.expiringSoon.title' | translate" [value]="animatedCount('expiringSoonOffers')"
@@ -47,7 +47,7 @@
   </div>
 
   <app-vendor-quick-actions (createOffer)="goToCreateOffer()" (editProfile)="goToEditProfile()"
-    (contactSupport)="goToContactSupport()" />
+    (addBranch)="goToAddBranch()" />
 
   <div class="dashboard-page__columns">
     <section class="dashboard-page__panel">

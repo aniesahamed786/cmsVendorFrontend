@@ -64,7 +64,11 @@
         "subtitle": "نشطة حالياً"
       },
       "pendingOffers": {
-        "title": "العروض قيد المراجعة",
+        "title": "الطلبات المعلقة",
+        "subtitle": "بانتظار الموافقة"
+      },
+      "pendingRequests": {
+        "title": "الطلبات المعلقة",
         "subtitle": "بانتظار الموافقة"
       },
       "expiringSoon": {
@@ -76,7 +80,8 @@
       "title": "إجراءات سريعة",
       "createOffer": "إنشاء عرض جديد",
       "editProfile": "تعديل الملف الشخصي",
-      "contactSupport": "التواصل مع الدعم"
+      "contactSupport": "التواصل مع الدعم",
+      "addBranch": "إضافة فرع"
     }
   },
   "navbar": {

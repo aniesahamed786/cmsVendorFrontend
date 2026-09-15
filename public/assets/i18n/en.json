@@ -64,7 +64,11 @@
         "subtitle": "Currently live"
       },
       "pendingOffers": {
-        "title": "Pending Offers",
+        "title": "Pending Requests",
+        "subtitle": "Awaiting approval"
+      },
+      "pendingRequests": {
+        "title": "Pending Requests",
         "subtitle": "Awaiting approval"
       },
       "expiringSoon": {
@@ -76,7 +80,8 @@
       "title": "Quick Actions",
       "createOffer": "Create New Offer",
       "editProfile": "Edit Profile",
-      "contactSupport": "Contact Support"
+      "contactSupport": "Contact Support",
+      "addBranch": "Add Branch"
     }
   },
   "navbar": {

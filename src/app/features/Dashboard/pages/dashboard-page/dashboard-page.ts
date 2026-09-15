@@ -194,8 +194,8 @@ export class DashboardPage implements OnInit {
     this.router.navigate(['/profile/edit']);
   }
 
-  goToContactSupport(): void {
-    this.router.navigate(['/messaging-center']);
+  goToAddBranch(): void {
+    this.router.navigate(['/branches/create']);
   }
 
   goToTopOffer(): void {

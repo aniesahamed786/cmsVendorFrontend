@@ -11,16 +11,16 @@
 
     <button type="button" class="vendor-quick-actions__card" (click)="onEditProfile()">
       <span class="vendor-quick-actions__icon">
-        <i class="pi pi-user"></i>
+        <span class="vendor-quick-actions__icon-mask vendor-quick-actions__icon-mask--profile"></span>
       </span>
       <span class="vendor-quick-actions__label">{{ 'dashboard.quickActions.editProfile' | translate }}</span>
     </button>
 
-    <button type="button" class="vendor-quick-actions__card" (click)="onContactSupport()">
+    <button type="button" class="vendor-quick-actions__card" (click)="onAddBranch()">
       <span class="vendor-quick-actions__icon">
-        <i class="pi pi-headphones"></i>
+        <i class="pi pi-shop"></i>
       </span>
-      <span class="vendor-quick-actions__label">{{ 'dashboard.quickActions.contactSupport' | translate }}</span>
+      <span class="vendor-quick-actions__label">{{ 'dashboard.quickActions.addBranch' | translate }}</span>
     </button>
   </div>
 </div>

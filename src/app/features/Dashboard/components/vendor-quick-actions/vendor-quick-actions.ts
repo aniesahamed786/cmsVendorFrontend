@@ -11,7 +11,7 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 export class VendorQuickActions {
   createOffer = output<void>();
   editProfile = output<void>();
-  contactSupport = output<void>();
+  addBranch = output<void>();
 
   onCreateOffer(): void {
     this.createOffer.emit();
@@ -21,7 +21,7 @@ export class VendorQuickActions {
     this.editProfile.emit();
   }
 
-  onContactSupport(): void {
-    this.contactSupport.emit();
+  onAddBranch(): void {
+    this.addBranch.emit();
   }
 }
