@@ -174,8 +174,12 @@ const PROFILE_SECTIONS: SectionDef[] = [
 
 const OFFER_MODE_LABELS: Record<string, string> = {
   'in store': 'In-Store',
+  'in-store': 'In-Store',
+  instore: 'In-Store',
   online: 'Digital',
+  digital: 'Digital',
   both: 'In-Store & Digital',
+  'in-store, digital': 'In-Store & Digital',
 };
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}(T|$)/;

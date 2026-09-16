@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { mapFormModeToOfferMode, mapOfferModeToFormMode } from './createOffer';
 
 describe('offerMode mapping', () => {

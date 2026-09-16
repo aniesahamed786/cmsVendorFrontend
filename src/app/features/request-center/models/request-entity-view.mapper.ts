@@ -1,4 +1,5 @@
 import { RequestDetailsResponse } from './request-api.model';
+import { mapFormModeToOfferMode, mapOfferModeToFormMode } from '../../Offers/models/createOffer';
 
 /**
  * Field-name aliases between a stored document and the payload that a request submits.
@@ -16,6 +17,7 @@ const ALIASES: Record<string, string[]> = {
   roomDetails: ['room_details'],
   taxValue: ['tax_value'],
   taxValue_ar: ['tax_value_ar'],
+  offerMode: ['offer_mode', 'availability', 'offerType'],
 };
 
 /** Every spelling categories travel under, in any of the three sources. */
@@ -155,13 +157,12 @@ export function toOfferDetailsView(proposed: Record<string, unknown>): Record<st
     })
     .filter((category) => !!category.name || !!category.icon);
 
-  // offerMode is a string[] on the document but a single string in the create payload.
-  const rawMode = proposed['offerMode'];
-  const offerMode = Array.isArray(rawMode)
-    ? rawMode.length > 1
-      ? 'both'
-      : asString(rawMode[0])
-    : asString(rawMode);
+  // offerMode can arrive as a string[], comma-separated string, or single string.
+  const rawMode = proposed['offerMode'] ?? proposed['offer_mode'] ?? proposed['availability'];
+  const formMode = mapOfferModeToFormMode(
+    Array.isArray(rawMode) ? rawMode.join(' ') : (rawMode as string | null | undefined),
+  );
+  const offerMode = mapFormModeToOfferMode(formMode);
 
   const hotelDetails = proposed['hotel_details']
     ? (proposed['hotel_details'] as Record<string, unknown>)
@@ -197,7 +198,7 @@ export function toOfferDetailsView(proposed: Record<string, unknown>): Record<st
     discount_amount: asString(proposed['Discount_amount']),
     discount_amount_ar: asString(proposed['Discount_amount_ar']),
     discountCode: asString(proposed['discountCode']),
-    offerMode: offerMode || 'in store',
+    offerMode: offerMode || 'in-store',
     isPwdAvailable: isPwdAvailable(proposed),
     howToAvail: asString(proposed['howToAvail']),
     howToAvail_ar: asString(proposed['howToAvail_ar']),

@@ -6,6 +6,7 @@ import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { environment } from '../../../../../environments/environment';
 import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
+import { mapOfferModeToFormMode } from '../../models/createOffer';
 
 @Component({
     selector: 'app-offer-details',
@@ -232,9 +233,10 @@ export class OfferDetails {
     }
 
     formatOfferMode(offer: any): string {
-        const mode = (offer?.offerMode || 'in store').toLowerCase();
-        if (mode === 'online') return this.i18n.t('offerDetails.mode.digital');
-        if (mode === 'both') return this.i18n.t('offerDetails.mode.hybrid');
+        const raw = Array.isArray(offer?.offerMode) ? offer.offerMode.join(' ') : offer?.offerMode;
+        const formMode = mapOfferModeToFormMode(raw);
+        if (formMode === 'Digital') return this.i18n.t('offerDetails.mode.digital');
+        if (formMode === 'In-Store & Digital') return this.i18n.t('offerDetails.mode.hybrid');
         return this.i18n.t('offerDetails.mode.inStore');
     }
 
@@ -243,15 +245,16 @@ export class OfferDetails {
     }
 
     getOfferModeBadges(offer: any): Array<{ label: string; icon: string }> {
-        const modes = (Array.isArray(offer?.offerMode) ? offer.offerMode : [offer?.offerMode])
-            .map((mode: unknown) => String(mode ?? '').trim().toLowerCase())
-            .filter(Boolean);
-        const hasInStore = modes.some((mode: string) => mode === 'in store' || mode === 'in-store' || mode === 'store' || mode === 'both');
-        const hasDigital = modes.some((mode: string) => mode === 'online' || mode === 'digital' || mode === 'both');
+        const raw = Array.isArray(offer?.offerMode) ? offer.offerMode.join(' ') : offer?.offerMode;
+        const formMode = mapOfferModeToFormMode(raw);
         const badges: Array<{ label: string; icon: string }> = [];
 
-        if (hasInStore || !hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.inStore') || 'In-Store', icon: `${this.offerDetailIconBasePath}/in-store.svg` });
-        if (hasDigital) badges.push({ label: this.i18n.t('offerDetails.mode.digital') || 'Digital', icon: `${this.offerDetailIconBasePath}/online.svg` });
+        if (formMode === 'In-Store' || formMode === 'In-Store & Digital') {
+            badges.push({ label: this.i18n.t('offerDetails.mode.inStore') || 'In-Store', icon: `${this.offerDetailIconBasePath}/in-store.svg` });
+        }
+        if (formMode === 'Digital' || formMode === 'In-Store & Digital') {
+            badges.push({ label: this.i18n.t('offerDetails.mode.digital') || 'Digital', icon: `${this.offerDetailIconBasePath}/online.svg` });
+        }
         return badges;
     }
 

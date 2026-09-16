@@ -3,6 +3,7 @@ import { Component, input, signal } from '@angular/core';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
+import { mapOfferModeToFormMode } from '../../models/createOffer';
 
 /** The vendor an offer belongs to, as the hero needs it. */
 export interface OfferHeroVendor {
@@ -61,11 +62,11 @@ export class OfferHeroCard {
   }
 
   getOfferMode(offer: any): 'in store' | 'online' | 'both' {
-    const mode = (offer?.offerMode ?? '').toString().trim().toLowerCase();
-    if (mode === 'in store' || mode === 'instore') return 'in store';
-    if (mode === 'online') return 'online';
-    if (mode === 'both') return 'both';
-    return 'both';
+    const raw = Array.isArray(offer?.offerMode) ? offer.offerMode.join(' ') : offer?.offerMode;
+    const formMode = mapOfferModeToFormMode(raw);
+    if (formMode === 'Digital') return 'online';
+    if (formMode === 'In-Store & Digital') return 'both';
+    return 'in store';
   }
 
   getOfferModeBadges(offer: any): { label: string; icon: string }[] {

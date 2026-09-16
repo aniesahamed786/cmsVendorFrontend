@@ -13,6 +13,7 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 import { OfferHeroCard, OfferHeroVendor } from '../../Components/offer-hero-card/offer-hero-card';
 import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
 import { BranchesService } from '../../../Branches/services/branches.service';
+import { mapOfferModeToFormMode } from '../../models/createOffer';
 
 type RedemptionTab = 'in-store' | 'online';
 
@@ -169,11 +170,11 @@ export class OfferDetailsPage {
   }
 
   getOfferMode(offer: any): 'in store' | 'online' | 'both' {
-    const m = (offer?.offerMode ?? '').toString().trim().toLowerCase();
-    if (m === 'in store' || m === 'instore') return 'in store';
-    if (m === 'online') return 'online';
-    if (m === 'both') return 'both';
-    return 'both';
+    const raw = Array.isArray(offer?.offerMode) ? offer.offerMode.join(' ') : offer?.offerMode;
+    const formMode = mapOfferModeToFormMode(raw);
+    if (formMode === 'Digital') return 'online';
+    if (formMode === 'In-Store & Digital') return 'both';
+    return 'in store';
   }
 
   onTabChange(value: string | number | undefined) {
