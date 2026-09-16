@@ -111,7 +111,7 @@ export interface RequestEntityResponse {
   updatedOn: string;
   submittedOn: string | null;
   /** True when the vendor saved a RETURNED request as a draft without resubmitting it. */
-  isDrafted?: boolean;
+  vendorDraft?: boolean;
   /** DELETE requests only: what approving the deletion will switch off. */
   deletionImpact?: {
     offersDeactivated: { offerId: string; title: string }[];

@@ -120,6 +120,11 @@ export class RequestCenterApiService {
     return this.http.post<RequestEntityResponse>(`${this.baseUrl}/${requestId}/cancel`, payload);
   }
 
+  /** DELETE /cmsVendor/requests/{id}/draft â€” permanently discard a draft request. */
+  discardDraft(requestId: string): Observable<unknown> {
+    return this.http.delete(`${this.baseUrl}/${requestId}/draft`);
+  }
+
   /**
    * Resubmit a request. For a RETURNED or SUBMITTED request, saving with actionType: 'SUBMIT'
    * moves it to SUBMITTED and creates a submission log entry.

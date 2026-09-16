@@ -703,7 +703,7 @@ export class RequestDetail {
   });
 
   /** A RETURNED request the vendor already edited and saved as a draft — ready to submit as-is. */
-  readonly isDrafted = computed(() => this.status() === 'RETURNED' && !!this.details()?.isDrafted);
+  readonly isDrafted = computed(() => this.status() === 'RETURNED' && !!this.details()?.vendorDraft);
 
   // Mirrors the backend's ALLOWED_TRANSITIONS: submit from DRAFT, recall only from SUBMITTED.
   // A drafted RETURNED request submits straight away; editing it moves to the action menu.
@@ -954,8 +954,9 @@ export class RequestDetail {
     this.router.navigate(['/request-center']);
   }
 
-  statusClass(status: RequestStatus): string {
-    return `request-detail__status request-detail__status--${status.toLowerCase()}`;
+  statusClass(status: string): string {
+    const modifier = status.toUpperCase() === 'DRAFT_SAVED' ? 'draft' : status.toLowerCase();
+    return `request-detail__status request-detail__status--${modifier}`;
   }
 
   statusKey(status: RequestStatus): string {
@@ -1018,7 +1019,7 @@ export class RequestDetail {
     this.details.update((details) => (details ? {
       ...details,
       status: 'SUBMITTED',
-      isDrafted: false,
+      vendorDraft: false,
       submittedOn: res?.submittedOn ?? details.submittedOn ?? new Date().toISOString()
     } : details));
     this.showSubmitConfirm = false;
@@ -1062,7 +1063,7 @@ export class RequestDetail {
     this.showRecallConfirm = false;
   }
 
-  // ---- Discard Draft confirmation (POST /cmsVendor/requests/{id}/cancel) -----
+  // ---- Discard Draft confirmation (DELETE /cmsVendor/requests/{id}/draft) ----
   showDiscardDraftConfirm = false;
 
   confirmDiscardDraft(): void {
@@ -1072,7 +1073,7 @@ export class RequestDetail {
   onDiscardDraftConfirmed(): void {
     this.actionLoading.set(true);
     this.api
-      .cancel(this.requestId)
+      .discardDraft(this.requestId)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
         next: () => {
