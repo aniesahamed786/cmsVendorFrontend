@@ -82,7 +82,17 @@
     flex-direction: column;
     gap: 1.5rem;
     max-height: calc(100vh - 2rem);
+    // Only kicks in when the rail is too short even for the timeline's minimum —
+    // normally the timeline absorbs the height and this never scrolls.
     overflow-y: auto;
+  }
+
+  // Takes whatever height is left over so Request Details below it stays fully visible.
+  &__timeline-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
   }
 
   &__card {
@@ -96,6 +106,7 @@
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 1.25rem;
+    flex-shrink: 0;
   }
 
   &__section-icon {
@@ -572,6 +583,7 @@
   &__summary-card {
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
   }
 
   &__summary-list {
@@ -689,6 +701,12 @@
 
 // ---- Request Timeline (p-timeline) — forced flex layout + tokens ----
 ::ng-deep .request-detail__timeline {
+  flex: 1 1 auto;
+  // Never shorter than roughly one step: below that the sidebar scrolls instead.
+  min-height: 8rem;
+  overflow-y: auto;
+  padding-inline-end: 0.35rem;
+
   .p-timeline-event-opposite {
     display: none;
   }
@@ -696,6 +714,7 @@
   .p-timeline-event {
     display: flex;
     align-items: stretch;
+    flex-shrink: 0;
   }
 
   .p-timeline-event-separator {
@@ -860,6 +879,7 @@
   border-top: 1px solid var(--app-border);
   display: flex;
   justify-content: flex-start;
+  flex-shrink: 0;
 }
 
 .request-detail__timeline-view-all {
@@ -962,6 +982,7 @@
 }
 
 .request-detail__diff-cell {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -973,6 +994,108 @@
   &--new {
     background: var(--app-primary-soft);
     border-color: var(--app-primary);
+  }
+
+  /* An admin's edit reads as green rather than the vendor's own blue, so a reviewer can tell
+     at a glance which side of the conversation changed the field. */
+  &--admin {
+    background: color-mix(in srgb, var(--app-status-active, #16a34a) 12%, var(--app-surface));
+    border-color: var(--app-status-active, #16a34a);
+  }
+}
+
+/* An image value shows as a small square, not a storage path. Fixed 1:1 so a landscape and a
+   portrait asset take the same room in the grid. */
+.request-detail__diff-thumb {
+  width: 4rem;
+  height: 4rem;
+  padding: 0;
+  margin-top: 0.15rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  cursor: zoom-in;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &:hover {
+    border-color: var(--app-primary);
+  }
+}
+
+.request-detail__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgb(0 0 0 / 0.75);
+}
+
+.request-detail__lightbox-img {
+  max-width: min(90vw, 900px);
+  max-height: 85vh;
+  object-fit: contain;
+  cursor: grab;
+  /* The drag is handled in JS, so the browser must not claim the gesture for scrolling. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+
+  /* Snaps back when the drag ends short of the dismiss threshold; no transition mid-drag,
+     which would lag the finger. */
+  transition: transform 0.2s ease;
+
+  &--dragging {
+    transition: none;
+    cursor: grabbing;
+  }
+}
+
+.request-detail__lightbox-close {
+  position: absolute;
+  top: 1rem;
+  inset-inline-end: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #ffffff;
+  background: rgb(255 255 255 / 0.15);
+  border: 1px solid rgb(255 255 255 / 0.3);
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(255 255 255 / 0.28);
+  }
+}
+
+/* Sits on the cell's leading top corner — logical inset so it flips with RTL. */
+.request-detail__diff-admin-tag {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  top: 0;
+  inset-inline-start: 0;
+  transform: translateY(-50%);
+  padding: 0.1rem 0.45rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: #ffffff;
+  background: var(--app-status-active, #16a34a);
+
+  i {
+    font-size: 0.7rem;
   }
 }
 

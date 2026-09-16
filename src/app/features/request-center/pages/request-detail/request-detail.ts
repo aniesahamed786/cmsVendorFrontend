@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, HostListener, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
@@ -38,6 +38,7 @@ import {
   RequestHistoryResponse,
 } from '../../models/request-api.model';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
+import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
 import { RequestOfferDetail } from '../../components/request-offer-detail/request-offer-detail';
 import { RequestProfileDetail } from '../../components/request-profile-detail/request-profile-detail';
 import { RequestBranchDetail } from '../../components/request-branch-detail/request-branch-detail';
@@ -166,6 +167,19 @@ function parseAmenitiesList(value: unknown): string[] {
     list.push(...parts);
   }
   return list;
+}
+
+const IMAGE_PATH = /\.(png|jpe?g|webp|gif|avif|svg)(\?|$)/i;
+
+/**
+ * A diff value that is an image, as a renderable URL — '' for anything else.
+ *
+ * Keyed off the value, not a list of field names: every image field the backend ever adds
+ * renders as a thumbnail without this having to know about it.
+ */
+function toImageUrl(value: unknown): string {
+  const raw = typeof value === 'string' ? value : (value as { url?: string } | null)?.url;
+  return typeof raw === 'string' && IMAGE_PATH.test(raw) ? toVendorMediaUrl(raw) : '';
 }
 
 /**
@@ -310,6 +324,11 @@ export class RequestDetail {
         return {
           key: change._id ?? change.field,
           label: this.i18n.t(changeFieldLabelKey(change.field, entityType)),
+          // Drives the green "By Admin" treatment — an admin edited this field, not the vendor.
+          byAdmin: !!change.isChangedByAdmin,
+          // An image field shows the picture, not its storage path.
+          oldImage: toImageUrl(change.oldValue),
+          newImage: toImageUrl(change.newValue),
           isRoomDetails,
           oldRooms,
           newRooms,
@@ -330,6 +349,48 @@ export class RequestDetail {
         };
       });
   });
+
+  // ---- Image lightbox -------------------------------------------------------
+  /** The image being previewed full-size, or null. */
+  readonly imagePreview = signal<string | null>(null);
+  /** How far the preview has been dragged down, in px — 0 unless a drag is in progress. */
+  readonly previewDragY = signal(0);
+  private dragStartY: number | null = null;
+
+  openImagePreview(url: string): void {
+    this.previewDragY.set(0);
+    this.imagePreview.set(url);
+  }
+
+  @HostListener('document:keydown.escape')
+  closeImagePreview(): void {
+    this.dragStartY = null;
+    this.previewDragY.set(0);
+    this.imagePreview.set(null);
+  }
+
+  // Pointer events rather than touch: one set of handlers covers a finger drag and a
+  // mouse drag. `touch-action: none` on the image is what keeps the page from scrolling
+  // underneath instead.
+  onPreviewDragStart(event: PointerEvent): void {
+    this.dragStartY = event.clientY;
+    (event.target as HTMLElement).setPointerCapture?.(event.pointerId);
+  }
+
+  onPreviewDragMove(event: PointerEvent): void {
+    if (this.dragStartY === null) return;
+    // Downwards only — dragging up does nothing rather than lifting the image off-screen.
+    this.previewDragY.set(Math.max(0, event.clientY - this.dragStartY));
+  }
+
+  /** Past ~a fifth of the viewport the drag reads as a dismissal; short of that it snaps back. */
+  onPreviewDragEnd(): void {
+    if (this.dragStartY === null) return;
+    const dismissed = this.previewDragY() > Math.min(160, window.innerHeight * 0.2);
+    this.dragStartY = null;
+    if (dismissed) this.closeImagePreview();
+    else this.previewDragY.set(0);
+  }
 
   /** History audit trail rows for the History tab. */
   readonly historyRows = computed(() => {

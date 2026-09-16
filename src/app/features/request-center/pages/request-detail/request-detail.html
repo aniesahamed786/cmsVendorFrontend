@@ -183,11 +183,22 @@
               } @else {
                 <p class="request-detail__diff-value">—</p>
               }
+            } @else if (row.oldImage) {
+              <button type="button" class="request-detail__diff-thumb" (click)="openImagePreview(row.oldImage)"
+                [attr.aria-label]="row.label">
+                <img [src]="row.oldImage" [alt]="row.label" loading="lazy" />
+              </button>
             } @else {
               <p class="request-detail__diff-value">{{ row.oldValue || '—' }}</p>
             }
           </div>
-          <div class="request-detail__diff-cell request-detail__diff-cell--new">
+          <div class="request-detail__diff-cell request-detail__diff-cell--new"
+            [class.request-detail__diff-cell--admin]="row.byAdmin">
+            @if (row.byAdmin) {
+            <span class="request-detail__diff-admin-tag">
+              <i class="pi pi-thumbtack"></i>{{ 'requestCenter.detail.byAdminBadge' | translate }}
+            </span>
+            }
             <span class="request-detail__diff-label">{{ row.label }}</span>
             @if (row.isRoomDetails) {
               @if (row.newRooms && row.newRooms.length > 0) {
@@ -207,6 +218,11 @@
               } @else {
                 <p class="request-detail__diff-value">—</p>
               }
+            } @else if (row.newImage) {
+              <button type="button" class="request-detail__diff-thumb" (click)="openImagePreview(row.newImage)"
+                [attr.aria-label]="row.label">
+                <img [src]="row.newImage" [alt]="row.label" loading="lazy" />
+              </button>
             } @else {
               <p class="request-detail__diff-value">{{ row.newValue || '—' }}</p>
             }
@@ -317,7 +333,7 @@
     </div>
 
     <aside class="request-detail__sidebar">
-      <section class="request-detail__card">
+      <section class="request-detail__card request-detail__timeline-card">
         <div class="request-detail__section-header">
           <span class="request-detail__section-icon"><i class="pi pi-list"></i></span>
           <h3 class="request-detail__section-title">{{ 'requestCenter.detail.timeline.title' | translate }}</h3>
@@ -355,6 +371,7 @@
               @case ('done') { <i class="pi pi-check"></i> }
               @case ('danger') { <i class="pi pi-times"></i> }
               @case ('muted') { <i class="pi pi-replay"></i> }
+              @case ('warning') { <i class="pi pi-reply"></i> }
               }
             </span>
           </ng-template>
@@ -480,6 +497,24 @@
     </aside>
   </div>
 </div>
+
+<!-- Image lightbox. Dismissed by the X, by clicking the backdrop, by dragging the image down,
+     or with Escape. -->
+@if (imagePreview(); as previewUrl) {
+<div class="request-detail__lightbox" role="dialog" aria-modal="true" (click)="closeImagePreview()">
+  <button type="button" class="request-detail__lightbox-close" (click)="closeImagePreview()"
+    [attr.aria-label]="'common.close' | translate">
+    <i class="pi pi-times"></i>
+  </button>
+
+  <img class="request-detail__lightbox-img" [src]="previewUrl" alt=""
+    [style.transform]="'translateY(' + previewDragY() + 'px)'"
+    [class.request-detail__lightbox-img--dragging]="previewDragY() > 0"
+    (click)="$event.stopPropagation()" (pointerdown)="onPreviewDragStart($event)"
+    (pointermove)="onPreviewDragMove($event)" (pointerup)="onPreviewDragEnd()"
+    (pointercancel)="onPreviewDragEnd()" />
+</div>
+}
 
 <app-confirmation-pop-up [visible]="showSubmitConfirm" [title]="'requestCenter.submitConfirm.title' | translate"
   [message]="'requestCenter.submitConfirm.message' | translate"

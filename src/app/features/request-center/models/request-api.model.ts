@@ -154,4 +154,9 @@ export interface RequestChangeResponse {
   oldValue: unknown;
   newValue: unknown;
   displayOrder: number | null;
+  /**
+   * True when an admin made this edit rather than the vendor. Optional so the copies embedded
+   * in the details response, which omit it, simply read as a vendor edit.
+   */
+  isChangedByAdmin?: boolean;
 }
