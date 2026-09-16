@@ -320,7 +320,8 @@
     },
     "actionType": {
       "created": "تم الإنشاء",
-      "updated": "تم التحديث"
+      "updated": "تم التحديث",
+      "cancelled": "تم الإلغاء"
     },
     "action": {
       "view": "عرض الطلب",

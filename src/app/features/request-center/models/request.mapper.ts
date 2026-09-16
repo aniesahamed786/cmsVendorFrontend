@@ -12,6 +12,7 @@ const ENTITY_TO_TYPE: Record<string, RequestType> = {
 const REQUEST_TO_ACTION: Record<ApiRequestType, RequestActionType> = {
   CREATE: 'Created',
   UPDATE: 'Updated',
+  CANCEL: 'Cancelled',
 };
 
 /** "Sep. 15, 2026 | 8:32 am" — matches the timestamp format used across the Request Center. */

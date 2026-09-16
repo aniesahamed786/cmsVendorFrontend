@@ -1,7 +1,7 @@
 // The view-model for the Request Center. `type`/`actionType`/`status` carry the backend
 // enum values (see request-api.model.ts); display text + pill colors are derived from them.
 export type RequestType = 'Offer' | 'Store' | 'Profile' | 'Highlight';
-export type RequestActionType = 'Created' | 'Updated';
+export type RequestActionType = 'Created' | 'Updated' | 'Cancelled';
 export type RequestStatus =
   | 'DRAFT'
   | 'SUBMITTED'

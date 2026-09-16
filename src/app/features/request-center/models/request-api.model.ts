@@ -3,7 +3,7 @@
 // wire shape and the view-model can evolve independently.
 
 export type ApiRequestEntityType = 'OFFER' | 'STORE' | 'HIGHLIGHT' | 'PROFILE';
-export type ApiRequestType = 'CREATE' | 'UPDATE';
+export type ApiRequestType = 'CREATE' | 'UPDATE' | 'CANCEL';
 export type ApiRequestStatus =
   | 'DRAFT'
   | 'SUBMITTED'
@@ -63,8 +63,7 @@ export interface CreateRequestPayload {
   entityType: ApiRequestEntityType;
   /** Required for UPDATE requests, must be omitted/null for CREATE. */
   entityId?: string | null;
-  // ponytail: CANCEL only here — Request Center lists still map CREATE/UPDATE; add a 'Deleted' action type when it must display them
-  requestType: ApiRequestType | 'CANCEL';
+  requestType: ApiRequestType;
   title: string;
   /**
    * For UPDATE requests the backend stores only the *changed* fields here, so send a diff

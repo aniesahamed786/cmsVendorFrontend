@@ -2,6 +2,7 @@ import { BranchFormModel, BranchFormSubmit, GeoPoint } from '../../Branches/page
 import { VendorProfileEditData } from '../../Profile/models/vendor-profile-edit.model';
 import { toVendorMediaUrl } from '../../../shared/utils/media-url';
 import { normalizeVendorSocialLinks } from '../../vendors/models/vendordetails';
+import { ApiRequestType } from './request-api.model';
 
 /**
  * Adapters between a pending request's proposed entity (see buildProposedEntity) and the
@@ -186,7 +187,7 @@ export function toProfileEditData(proposed: Record<string, unknown>): VendorProf
  * Merging over the stored data therefore keeps the earlier edits and layers the new ones.
  */
 export function mergeRequestData(
-  requestType: 'CREATE' | 'UPDATE',
+  requestType: ApiRequestType,
   storedRequestData: Record<string, unknown>,
   formData: Record<string, unknown>,
 ): Record<string, unknown> {

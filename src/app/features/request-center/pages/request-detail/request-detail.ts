@@ -284,7 +284,7 @@ export class RequestDetail {
   });
   /** STORE + CANCEL: a cancellation notice, followed by the live branch it will remove. */
   readonly isBranchDeletion = computed(
-    () => this.entityType() === 'STORE' && (this.details()?.requestType as string | undefined) === 'CANCEL',
+    () => this.entityType() === 'STORE' && this.details()?.requestType === 'CANCEL',
   );
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
 
@@ -567,11 +567,12 @@ export class RequestDetail {
 
   readonly summaryActionType = computed(() => {
     this.i18n.loadSeq();
-    const type = this.details()?.requestType ?? (this.row()?.actionType === 'Created' ? 'CREATE' : 'UPDATE');
-    if (type === 'CREATE') {
-      return this.i18n.t('requestCenter.actionType.created');
-    }
-    return this.i18n.t('requestCenter.actionType.updated');
+    const type = this.details()?.requestType;
+    if (type === 'CANCEL') return this.i18n.t('requestCenter.actionType.cancelled');
+    if (type === 'CREATE') return this.i18n.t('requestCenter.actionType.created');
+    if (type === 'UPDATE') return this.i18n.t('requestCenter.actionType.updated');
+    // Details not loaded yet — fall back to the list row's mapped action type.
+    return this.i18n.t(`requestCenter.actionType.${(this.row()?.actionType ?? 'Updated').toLowerCase()}`);
   });
 
   readonly summaryRequestType = this.summaryActionType;

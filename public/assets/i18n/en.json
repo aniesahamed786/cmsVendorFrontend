@@ -320,7 +320,8 @@
     },
     "actionType": {
       "created": "Created",
-      "updated": "Updated"
+      "updated": "Updated",
+      "cancelled": "Cancelled"
     },
     "action": {
       "view": "View Request",
