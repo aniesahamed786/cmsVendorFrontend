@@ -620,7 +620,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['/branches/view/', id]);
   }
 
-  // ---- Cancel branch: raises a DELETE request for admin review ----
+  // ---- Cancel branch: raises a CANCEL request for admin review ----
   readonly cancelTarget = signal<BranchRow | null>(null);
   readonly cancelRemarks = signal('');
   readonly cancelling = signal(false);
@@ -638,7 +638,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     this.requestApi
       .create({
         entityType: 'STORE',
-        requestType: 'DELETE',
+        requestType: 'CANCEL',
         entityId: branch.locationId,
         title: `Delete branch - ${branch.locationName}`,
         remarks: this.cancelRemarks().trim() || undefined,
@@ -649,7 +649,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
         next: (res) => {
           this.cancelling.set(false);
           this.cancelTarget.set(null);
-          const offers = res.deletionImpact?.offersDeactivated ?? [];
+          const offers = res.cancellationImpact?.offersDeactivated ?? [];
           const detail = [this.i18n.t('branchActions.cancel.successDetail', { requestId: res.requestId })];
           if (offers.length) {
             detail.push(

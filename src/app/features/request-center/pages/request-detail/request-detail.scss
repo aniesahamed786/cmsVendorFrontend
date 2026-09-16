@@ -241,6 +241,70 @@
     }
   }
 
+  // ---- Offers deactivated by a deletion: app-style offer cards ----
+  &__affected-title {
+    margin: 1.25rem 0 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__affected-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 1rem;
+  }
+
+  &__affected-offer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--app-text) 8%, transparent);
+    text-align: start;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--app-primary);
+    }
+  }
+
+  &__affected-image {
+    flex-shrink: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: cover;
+
+    &--empty {
+      display: grid;
+      place-items: center;
+      background: var(--app-bg);
+      color: var(--app-muted);
+    }
+  }
+
+  &__affected-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  &__affected-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__affected-sub {
+    color: var(--app-muted);
+  }
+
   // ---- Edited field: accent bar on the left, "Edited" chip beside the label ----
   &__field--edited {
     border-left: 3px solid var(--app-primary);

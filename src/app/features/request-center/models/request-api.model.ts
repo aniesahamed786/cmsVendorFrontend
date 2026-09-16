@@ -63,8 +63,8 @@ export interface CreateRequestPayload {
   entityType: ApiRequestEntityType;
   /** Required for UPDATE requests, must be omitted/null for CREATE. */
   entityId?: string | null;
-  // ponytail: DELETE only here — Request Center lists still map CREATE/UPDATE; add a 'Deleted' action type when it must display them
-  requestType: ApiRequestType | 'DELETE';
+  // ponytail: CANCEL only here — Request Center lists still map CREATE/UPDATE; add a 'Deleted' action type when it must display them
+  requestType: ApiRequestType | 'CANCEL';
   title: string;
   /**
    * For UPDATE requests the backend stores only the *changed* fields here, so send a diff
@@ -76,7 +76,7 @@ export interface CreateRequestPayload {
    * so no follow-up submit() is needed.
    */
   actionType?: 'DRAFT' | 'SUBMIT';
-  /** Vendor's reason — used by DELETE requests. */
+  /** Vendor's reason — used by CANCEL requests. */
   remarks?: string;
 }
 
@@ -112,8 +112,8 @@ export interface RequestEntityResponse {
   submittedOn: string | null;
   /** True when the vendor saved a RETURNED request as a draft without resubmitting it. */
   isDrafted?: boolean;
-  /** DELETE requests only: what approving the deletion will switch off. */
-  deletionImpact?: {
+  /** CANCEL requests only: what approving the deletion will switch off. */
+  cancellationImpact?: {
     offersDeactivated: { offerId: string; title: string }[];
   };
 }

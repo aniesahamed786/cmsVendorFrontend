@@ -270,7 +270,29 @@
           </h3>
         </div>
         <p class="request-detail__deletion-message">{{ 'requestCenter.detail.branchDeletion' | translate }}</p>
+        @if (affectedOffers().length) {
+        <h4 class="request-detail__affected-title">{{ 'requestCenter.detail.affectedOffers' | translate }}</h4>
+        <div class="request-detail__affected-list">
+          @for (offer of affectedOffers(); track offer.offerId) {
+          <button type="button" class="request-detail__affected-offer" (click)="openOffer(offer.offerId)">
+            @if (offer.image) {
+            <img class="request-detail__affected-image" [src]="offer.image" [alt]="offer.title" />
+            } @else {
+            <span class="request-detail__affected-image request-detail__affected-image--empty"><i class="pi pi-image"></i></span>
+            }
+            <span class="request-detail__affected-text">
+              <span class="request-detail__affected-name">{{ offer.title }}</span>
+              @if (offer.subtitle) {
+              <span class="request-detail__affected-sub">{{ offer.subtitle }}</span>
+              }
+            </span>
+          </button>
+          }
+        </div>
+        }
       </section>
+      <!-- requestData is empty, so branchView() is the live branch from `current`. -->
+      <app-request-branch-detail [fields]="branchView()" [pwdFriendly]="branchPwdFriendly()" />
       } @else if (hasNoChanges()) {
       <section class="request-detail__card">
         <div class="request-detail__section-header">

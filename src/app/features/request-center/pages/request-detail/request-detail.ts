@@ -3,7 +3,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
+import { catchError, finalize, forkJoin, map, of } from 'rxjs';
+import { OfferDetailService } from '../../../Offers/services/offer-detail.service';
+
+interface AffectedOffer {
+  offerId: string;
+  title: string;
+  subtitle: string;
+  image: string;
+}
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -232,6 +240,7 @@ export class RequestDetail {
   private readonly api = inject(RequestCenterApiService);
   private readonly branchesService = inject(BranchesService);
   private readonly vendorProfileService = inject(VendorProfileService);
+  private readonly offerDetailService = inject(OfferDetailService);
 
   private readonly rowKey = this.route.snapshot.paramMap.get('id') ?? '';
   readonly row = this.requestCenterService.getRow(this.rowKey);
@@ -273,9 +282,9 @@ export class RequestDetail {
     const rowType = this.row()?.type?.toUpperCase();
     return rowType ?? null;
   });
-  /** STORE + DELETE: there is nothing to preview, so the branch details are replaced by a notice. */
+  /** STORE + CANCEL: a cancellation notice, followed by the live branch it will remove. */
   readonly isBranchDeletion = computed(
-    () => this.entityType() === 'STORE' && (this.details()?.requestType as string | undefined) === 'DELETE',
+    () => this.entityType() === 'STORE' && (this.details()?.requestType as string | undefined) === 'CANCEL',
   );
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
 
@@ -599,6 +608,42 @@ export class RequestDetail {
       });
   }
 
+  // ---- Offers a CANCEL request will deactivate (cancellationImpact) ---------------
+  readonly affectedOffers = signal<AffectedOffer[]>([]);
+
+  /** Fetches each impacted offer for its image/discount; a failed fetch keeps the title from the impact list. */
+  private loadAffectedOffers(impact: { offerId: string; title: string }[]): void {
+    if (!impact.length) return;
+    this.affectedOffers.set(impact.map((o) => ({ offerId: o.offerId, title: o.title, subtitle: '', image: '' })));
+    forkJoin(
+      impact.map((o) =>
+        this.offerDetailService.getOfferDetail(o.offerId).pipe(
+          map((offer): AffectedOffer => {
+            const isAr = this.i18n.lang() === 'ar';
+            const type = (offer.discountType ?? '').toLowerCase();
+            const amount = isAr ? offer.discountAmountAr || offer.discount : offer.discount;
+            const discountWord = isAr ? 'خصم' : 'Discount';
+            const title =
+              amount && type === 'percentage' ? `${String(amount).replace('%', '')}% ${discountWord}`
+              : amount && type === 'fixed' ? `${amount} ${discountWord}`
+              : (isAr && offer.offerTitleAr) || offer.offerTitle || o.title;
+            return {
+              offerId: o.offerId,
+              title,
+              subtitle: (isAr && offer.vendorNameAr) || offer.vendorName || '',
+              image: toVendorMediaUrl(offer.offerImages?.image || offer.offerLogo),
+            };
+          }),
+          catchError(() => of<AffectedOffer>({ offerId: o.offerId, title: o.title, subtitle: '', image: '' })),
+        ),
+      ),
+    ).subscribe((offers) => this.affectedOffers.set(offers));
+  }
+
+  openOffer(offerId: string): void {
+    this.router.navigate(['/offers', offerId]);
+  }
+
   private loadDetails(): void {
     // The route param is the requestId every workflow endpoint keys on.
     if (!this.rowKey) {
@@ -620,6 +665,7 @@ export class RequestDetail {
             this.loadVendorLocations();
             this.loadHeroVendor();
           }
+          this.loadAffectedOffers(details?.cancellationImpact?.offersDeactivated ?? []);
         },
         error: (err) => {
           console.error('Failed to load request details', err);
