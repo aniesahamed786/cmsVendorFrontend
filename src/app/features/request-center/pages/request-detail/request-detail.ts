@@ -708,7 +708,7 @@ export class RequestDetail {
   // Mirrors the backend's ALLOWED_TRANSITIONS: submit from DRAFT, recall only from SUBMITTED.
   // A drafted RETURNED request submits straight away; editing it moves to the action menu.
   readonly canSubmit = computed(() => this.status() === 'DRAFT' || this.isDrafted());
-  readonly canDiscardDraft = computed(() => this.status() === 'DRAFT');
+  readonly canDiscardDraft = computed(() => this.status() === 'DRAFT' || this.isDrafted());
   readonly canRecall = computed(() => this.status() === 'SUBMITTED');
   readonly canEditAndResubmit = computed(
     () => (this.status() === 'RETURNED' && !this.isDrafted()) || this.status() === 'SUBMITTED',
@@ -1071,6 +1071,7 @@ export class RequestDetail {
   }
 
   onDiscardDraftConfirmed(): void {
+    const returnedDraft = this.isDrafted();
     this.actionLoading.set(true);
     this.api
       .discardDraft(this.requestId)
@@ -1078,7 +1079,7 @@ export class RequestDetail {
       .subscribe({
         next: () => {
           this.toast('success', 'requestCenter.detail.discardSuccessSummary', 'requestCenter.detail.discardSuccessDetail');
-          this.afterDiscardDraft();
+          this.afterDiscardDraft(returnedDraft);
         },
         error: (err: HttpErrorResponse) => {
           console.error('Discard draft request failed', err);
@@ -1094,9 +1095,16 @@ export class RequestDetail {
       });
   }
 
-  private afterDiscardDraft(): void {
-    this.requestCenterService.remove(this.rowKey);
+  private afterDiscardDraft(returnedDraft: boolean): void {
     this.showDiscardDraftConfirm = false;
+
+    if (returnedDraft) {
+      this.loadDetails();
+      this.loadHistory();
+      return;
+    }
+
+    this.requestCenterService.remove(this.rowKey);
     this.goBack();
   }
 
