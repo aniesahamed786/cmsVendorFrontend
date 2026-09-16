@@ -1,67 +1,67 @@
 <div class="request-detail">
-  <div class="request-detail__topbar">
-    <app-back-button label="requestCenter.detail.backToRequestCenter" (click)="goBack()" />
-
-    <div class="request-detail__topbar-actions">
-      @if (canSubmit()) {
-      <app-button variant="primary" (click)="confirmSubmit()">
-        {{ 'requestCenter.detail.submitRequest' | translate }}
-      </app-button>
-      }
-
-      @if (canEditAndResubmit()) {
-      <app-button variant="primary" icon="pi pi-file-edit" (click)="goToEdit()">
-        {{ 'requestCenter.action.editAndResubmit' | translate }}
-      </app-button>
-      }
-
-      @if (menuActions().length > 0) {
-      <button type="button" class="request-detail__menu-btn"
-        (click)="actionMenu.toggle($event)"
-        [attr.aria-label]="'common.actions' | translate">
-        <i class="pi pi-ellipsis-v"></i>
-      </button>
-      <p-menu #actionMenu [model]="menuActions()" [popup]="true" appendTo="body" />
-      }
-    </div>
-  </div>
-
-  <div class="request-detail__meta">
-    <!-- On a deep link the summary row isn't in the session store; the id from the URL still
-         identifies the request, and the changes below load regardless. -->
-    <span class="request-detail__meta-id">{{ requestIdParam }}</span>
-    @if (status(); as currentStatus) {
-    <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
-    }
-    @if (isDrafted()) {
-    <span class="request-detail__edited-badge request-detail__edited-badge--field">
-      {{ 'requestCenter.detail.draftedBadge' | translate }}
-    </span>
-    }
-  </div>
-
-  <!-- Two views of the same request: the entity as it would look approved, and the raw
-       field-by-field diff behind it. -->
-  <div class="request-detail__tabs" role="tablist">
-    <button type="button" role="tab" class="request-detail__tab"
-      [class.request-detail__tab--active]="activeTab() === 'details'" [attr.aria-selected]="activeTab() === 'details'"
-      (click)="selectTab('details')">
-      {{ 'requestCenter.detail.tab.details' | translate }}
-    </button>
-    <button type="button" role="tab" class="request-detail__tab"
-      [class.request-detail__tab--active]="activeTab() === 'changes'" [attr.aria-selected]="activeTab() === 'changes'"
-      (click)="selectTab('changes')">
-      {{ 'requestCenter.detail.tab.changes' | translate }}
-    </button>
-    <button type="button" role="tab" class="request-detail__tab"
-      [class.request-detail__tab--active]="activeTab() === 'history'" [attr.aria-selected]="activeTab() === 'history'"
-      (click)="selectTab('history')">
-      {{ 'requestCenter.detail.tab.history' | translate }}
-    </button>
-  </div>
-
   <div class="request-detail__layout">
     <div class="request-detail__main">
+      <div class="request-detail__topbar">
+        <app-back-button label="requestCenter.detail.backToRequestCenter" (click)="goBack()" />
+
+        <div class="request-detail__topbar-actions">
+          @if (canSubmit()) {
+          <app-button variant="primary" (click)="confirmSubmit()">
+            {{ 'requestCenter.detail.submitRequest' | translate }}
+          </app-button>
+          }
+
+          @if (canEditAndResubmit()) {
+          <app-button variant="primary" icon="pi pi-file-edit" (click)="goToEdit()">
+            {{ 'requestCenter.action.editAndResubmit' | translate }}
+          </app-button>
+          }
+
+          @if (menuActions().length > 0) {
+          <button type="button" class="request-detail__menu-btn"
+            (click)="actionMenu.toggle($event)"
+            [attr.aria-label]="'common.actions' | translate">
+            <i class="pi pi-ellipsis-v"></i>
+          </button>
+          <p-menu #actionMenu [model]="menuActions()" [popup]="true" appendTo="body" />
+          }
+        </div>
+      </div>
+
+      <div class="request-detail__meta">
+        <!-- On a deep link the summary row isn't in the session store; the id from the URL still
+             identifies the request, and the changes below load regardless. -->
+        <span class="request-detail__meta-id">{{ requestIdParam }}</span>
+        @if (status(); as currentStatus) {
+        <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
+        }
+        @if (isDrafted()) {
+        <span class="request-detail__edited-badge request-detail__edited-badge--field">
+          {{ 'requestCenter.detail.draftedBadge' | translate }}
+        </span>
+        }
+      </div>
+
+      <!-- Two views of the same request: the entity as it would look approved, and the raw
+           field-by-field diff behind it. -->
+      <div class="request-detail__tabs" role="tablist">
+        <button type="button" role="tab" class="request-detail__tab"
+          [class.request-detail__tab--active]="activeTab() === 'details'" [attr.aria-selected]="activeTab() === 'details'"
+          (click)="selectTab('details')">
+          {{ 'requestCenter.detail.tab.details' | translate }}
+        </button>
+        <button type="button" role="tab" class="request-detail__tab"
+          [class.request-detail__tab--active]="activeTab() === 'changes'" [attr.aria-selected]="activeTab() === 'changes'"
+          (click)="selectTab('changes')">
+          {{ 'requestCenter.detail.tab.changes' | translate }}
+        </button>
+        <button type="button" role="tab" class="request-detail__tab"
+          [class.request-detail__tab--active]="activeTab() === 'history'" [attr.aria-selected]="activeTab() === 'history'"
+          (click)="selectTab('history')">
+          {{ 'requestCenter.detail.tab.history' | translate }}
+        </button>
+      </div>
+
       @if (activeTab() === 'history') {
       <section class="request-detail__card request-detail__history-card">
         <div class="request-detail__section-header">
@@ -195,9 +195,7 @@
           <div class="request-detail__diff-cell request-detail__diff-cell--new"
             [class.request-detail__diff-cell--admin]="row.byAdmin">
             @if (row.byAdmin) {
-            <span class="request-detail__diff-admin-tag">
-              <i class="pi pi-thumbtack"></i>{{ 'requestCenter.detail.byAdminBadge' | translate }}
-            </span>
+            <span class="request-detail__diff-admin-tag">{{ 'requestCenter.detail.byAdminBadge' | translate }}</span>
             }
             <span class="request-detail__diff-label">{{ row.label }}</span>
             @if (row.isRoomDetails) {
@@ -333,7 +331,7 @@
     </div>
 
     <aside class="request-detail__sidebar">
-      <section class="request-detail__card request-detail__timeline-card">
+      <section class="request-detail__card">
         <div class="request-detail__section-header">
           <span class="request-detail__section-icon"><i class="pi pi-list"></i></span>
           <h3 class="request-detail__section-title">{{ 'requestCenter.detail.timeline.title' | translate }}</h3>
@@ -371,7 +369,6 @@
               @case ('done') { <i class="pi pi-check"></i> }
               @case ('danger') { <i class="pi pi-times"></i> }
               @case ('muted') { <i class="pi pi-replay"></i> }
-              @case ('warning') { <i class="pi pi-reply"></i> }
               }
             </span>
           </ng-template>
