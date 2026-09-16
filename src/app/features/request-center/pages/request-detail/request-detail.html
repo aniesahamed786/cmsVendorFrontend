@@ -502,9 +502,10 @@
           <div class="request-detail__summary-item">
             <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.lastUpdated' | translate
               }}</span>
-            <span class="request-detail__summary-value request-detail__summary-value--bold">
-              {{ summaryLastUpdated() }}
-            </span>
+            <div class="request-detail__summary-date">
+              <i class="pi pi-calendar"></i>
+              <span>{{ summaryLastUpdated() }}</span>
+            </div>
           </div>
         </div>
         }

@@ -521,20 +521,17 @@ export class RequestDetail {
 
   readonly summaryCreatedDate = computed(() => {
     this.i18n.loadSeq();
-    const raw = this.details()?.createdOn ?? this.row()?.date ?? '';
-    if (!raw) return '—';
-    const date = new Date(raw);
-    if (Number.isNaN(date.getTime())) return String(raw);
-    return date.toLocaleDateString(this.i18n.lang() === 'ar' ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
+    return this.formatSummaryDateTime(this.details()?.createdOn ?? this.row()?.date ?? '');
   });
 
   readonly summaryLastUpdated = computed(() => {
     this.i18n.loadSeq();
-    const raw = this.details()?.updatedOn ?? this.row()?.timestamp ?? this.details()?.createdOn ?? '';
+    return this.formatSummaryDateTime(
+      this.details()?.updatedOn ?? this.row()?.timestamp ?? this.details()?.createdOn ?? '',
+    );
+  });
+
+  private formatSummaryDateTime(raw: string | number | Date): string {
     if (!raw) return '—';
     const date = new Date(raw);
     if (Number.isNaN(date.getTime())) return String(raw);
@@ -549,7 +546,7 @@ export class RequestDetail {
       hour12: true,
     });
     return `${datePart} • ${timePart}`;
-  });
+  }
 
   readonly summaryEntityType = computed(() => {
     this.i18n.loadSeq();
