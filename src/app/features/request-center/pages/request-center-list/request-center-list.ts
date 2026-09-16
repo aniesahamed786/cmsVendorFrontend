@@ -303,14 +303,21 @@ export class RequestCenterList {
             command: () => this.confirmRecall(activeRow),
           }]
         : []),
-      ...(activeRow?.status !== 'RECALLED' && activeRow?.status !== 'SUBMITTED'
+      // Mirrors request-detail: discard only from DRAFT, cancel only from RETURNED.
+      ...(activeRow?.status === 'DRAFT'
         ? [{
-            label: this.i18n.t('requestCenter.action.delete'),
+            label: this.i18n.t('requestCenter.action.discard'),
             icon: 'pi pi-trash',
             styleClass: 'p-menuitem-danger',
-            command: () => {
-              if (activeRow) this.confirmDelete(activeRow);
-            },
+            command: () => this.discardTarget.set(activeRow),
+          }]
+        : []),
+      ...(activeRow?.status === 'RETURNED'
+        ? [{
+            label: this.i18n.t('requestCenter.action.cancel'),
+            icon: 'pi pi-times',
+            styleClass: 'p-menuitem-danger',
+            command: () => this.cancelTarget.set(activeRow),
           }]
         : []),
     ];
@@ -334,44 +341,57 @@ export class RequestCenterList {
       .recall(row.id)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterMutation('recall'),
+        next: () => this.afterMutation(),
         error: (err) => {
           console.error('Recall request failed', err);
-          this.afterMutation('recall');
+          this.afterMutation();
         },
       });
   }
 
-  // ---- Delete confirmation (POST /cmsVendor/requests/{id}/cancel) -----------
-  readonly deleteTarget = signal<RequestRow | null>(null);
+  // ---- Cancel confirmation (POST /cmsVendor/requests/{id}/cancel) -----------
+  readonly cancelTarget = signal<RequestRow | null>(null);
 
-  confirmDelete(row: RequestRow): void {
-    this.deleteTarget.set(row);
-  }
-
-  onDeleteConfirmed(): void {
-    const row = this.deleteTarget();
+  onCancelConfirmed(): void {
+    const row = this.cancelTarget();
     if (!row) return;
     this.actionLoading.set(true);
     this.api
       .cancel(row.id)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterMutation('delete'),
+        next: () => this.afterMutation(),
         error: (err) => {
           console.error('Cancel request failed', err);
-          this.afterMutation('delete');
+          this.afterMutation();
         },
       });
   }
 
-  /** Apply the local list change and close the matching dialog once its call settles. */
-  private afterMutation(kind: 'recall' | 'delete'): void {
-    if (kind === 'recall') {
-      this.recallTarget.set(null);
-    } else {
-      this.deleteTarget.set(null);
-    }
+  // ---- Discard confirmation (DELETE /cmsVendor/requests/{id}/draft) ---------
+  readonly discardTarget = signal<RequestRow | null>(null);
+
+  onDiscardConfirmed(): void {
+    const row = this.discardTarget();
+    if (!row) return;
+    this.actionLoading.set(true);
+    this.api
+      .discardDraft(row.id)
+      .pipe(finalize(() => this.actionLoading.set(false)))
+      .subscribe({
+        next: () => this.afterMutation(),
+        error: (err) => {
+          console.error('Discard draft request failed', err);
+          this.afterMutation();
+        },
+      });
+  }
+
+  /** Close whichever dialog was open and refresh once its call settles. */
+  private afterMutation(): void {
+    this.recallTarget.set(null);
+    this.cancelTarget.set(null);
+    this.discardTarget.set(null);
     this.loadRequests();
     this.loadMetrics();
   }

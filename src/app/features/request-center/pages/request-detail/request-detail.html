@@ -551,8 +551,8 @@
   (cancel)="showDiscardDraftConfirm = false">
 </app-confirmation-pop-up>
 
-<app-confirmation-pop-up [visible]="showCancelConfirm" [title]="'requestCenter.deleteConfirm.title' | translate"
-  [message]="'requestCenter.deleteConfirm.message' | translate"
+<app-confirmation-pop-up [visible]="showCancelConfirm" [title]="'requestCenter.cancelConfirm.title' | translate"
+  [message]="'requestCenter.cancelConfirm.message' | translate"
   [confirmLabel]="'requestCenter.detail.cancelRequest' | translate" [cancelLabel]="'common.cancel' | translate"
   confirmVariant="danger" [loading]="actionLoading()" (confirm)="onCancelConfirmed()"
   (cancel)="showCancelConfirm = false">

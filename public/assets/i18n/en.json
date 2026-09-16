@@ -325,7 +325,8 @@
     "action": {
       "view": "View Request",
       "recall": "Recall Request",
-      "delete": "Delete Request",
+      "cancel": "Cancel Request",
+      "discard": "Discard Request",
       "resubmit": "Resubmit",
       "editAndResubmit": "Edit & Resubmit"
     },
@@ -344,10 +345,10 @@
       "message": "Send this request back for review? Make sure you have addressed the reviewer's note first.",
       "confirm": "Resubmit"
     },
-    "deleteConfirm": {
-      "title": "Delete Request",
-      "message": "Are you sure you want to delete this request? This action cannot be undone.",
-      "confirm": "Delete Request"
+    "cancelConfirm": {
+      "title": "Cancel Request",
+      "message": "Are you sure you want to cancel this request? This action cannot be undone.",
+      "confirm": "Cancel Request"
     },
     "discardDraftConfirm": {
       "title": "Discard Draft",

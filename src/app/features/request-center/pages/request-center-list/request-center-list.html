@@ -238,8 +238,14 @@
   [loading]="actionLoading()" (confirm)="onRecallConfirmed()" (cancel)="recallTarget.set(null)">
 </app-confirmation-pop-up>
 
-<app-confirmation-pop-up [visible]="!!deleteTarget()" [title]="'requestCenter.deleteConfirm.title' | translate"
-  [message]="'requestCenter.deleteConfirm.message' | translate"
-  [confirmLabel]="'requestCenter.deleteConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
-  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onDeleteConfirmed()" (cancel)="deleteTarget.set(null)">
+<app-confirmation-pop-up [visible]="!!cancelTarget()" [title]="'requestCenter.cancelConfirm.title' | translate"
+  [message]="'requestCenter.cancelConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.cancelConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
+  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onCancelConfirmed()" (cancel)="cancelTarget.set(null)">
+</app-confirmation-pop-up>
+
+<app-confirmation-pop-up [visible]="!!discardTarget()" [title]="'requestCenter.discardDraftConfirm.title' | translate"
+  [message]="'requestCenter.discardDraftConfirm.message' | translate"
+  [confirmLabel]="'requestCenter.discardDraftConfirm.confirm' | translate" [cancelLabel]="'common.cancel' | translate"
+  confirmVariant="danger" [loading]="actionLoading()" (confirm)="onDiscardConfirmed()" (cancel)="discardTarget.set(null)">
 </app-confirmation-pop-up>
