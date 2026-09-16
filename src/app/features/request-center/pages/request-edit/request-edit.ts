@@ -255,5 +255,3 @@ onBranchSave(event: BranchFormSubmit, asDraft = false): void {
     });
   }
 }
- 
- 

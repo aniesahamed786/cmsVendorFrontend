@@ -36,9 +36,7 @@
         <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
         }
         @if (isDrafted()) {
-        <span class="request-detail__edited-badge request-detail__edited-badge--field">
-          {{ 'requestCenter.detail.draftedBadge' | translate }}
-        </span>
+        <span [class]="statusClass('DRAFT')">{{ 'requestCenter.value.draft' | translate }}</span>
         }
       </div>
 
@@ -471,9 +469,7 @@
               <span class="request-detail__summary-dash">--</span>
               }
               @if (isDrafted()) {
-              <span class="request-detail__edited-badge request-detail__edited-badge--field">
-                {{ 'requestCenter.detail.draftedBadge' | translate }}
-              </span>
+              <span [class]="statusClass('DRAFT')">{{ 'requestCenter.value.draft' | translate }}</span>
               }
             </div>
           </div>

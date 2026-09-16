@@ -303,6 +303,8 @@
     },
     "value": {
       "draft": "Draft",
+      "draft_saved": "Draft",
+      "draft_discarded": "Draft Discarded",
       "submitted": "Submitted",
       "returned": "Returned",
       "approved": "Approved",

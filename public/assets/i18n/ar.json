@@ -303,6 +303,8 @@
     },
     "value": {
       "draft": "مسودة",
+      "draft_saved": "مسودة",
+      "draft_discarded": "تم استبعاد المسودة",
       "submitted": "تم الإرسال",
       "returned": "معاد",
       "approved": "تمت الموافقة",
