@@ -54,6 +54,10 @@ export interface CollectiveRedemptionPayload extends RedemptionPayloadBase {
 
 export type RecordRedemptionPayload = SingleRedemptionPayload | CollectiveRedemptionPayload;
 
+export type OffersForRedemptionPayload =
+  | { transactionType: 'SINGLE'; transactionDate: string }
+  | { transactionType: 'COLLECTIVE'; startDate: string; endDate: string };
+
 export interface RedemptionRow {
   membershipId: number;
   offerTitle: string;

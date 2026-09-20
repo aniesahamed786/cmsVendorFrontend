@@ -1159,7 +1159,8 @@
       "membershipId": "e.g. 1111111111",
       "mobileNumber": "e.g. 0555555555",
       "branchNeedsOffer": "Select an offer first...",
-      "offerNeedsDate": "Select a transaction date first..."
+      "offerNeedsDate": "Select a transaction date first...",
+      "offerNeedsRange": "Select a start and end date first..."
     },
     "submit": "Redeem Offer",
     "list": {
@@ -1200,7 +1201,9 @@
       "uploadRejectedSummary": "Nothing was uploaded",
       "uploadRejectedDetail": "All {{failed}} row(s) were rejected. Each row shows why — fix them and submit again.",
       "offerNeedsDateSummary": "Transaction date required",
-      "offerNeedsDateDetail": "Select a transaction date first to see the offers available that day."
+      "offerNeedsDateDetail": "Select a transaction date first to see the offers available that day.",
+      "offerNeedsRangeSummary": "Date range required",
+      "offerNeedsRangeDetail": "Select a start and end date first to see the offers available in that period."
     },
     "emptyOffers": "No active in-store offers available.",
     "emptyBranches": "No branches available for this offer.",

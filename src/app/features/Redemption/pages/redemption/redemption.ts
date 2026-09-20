@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
-import { Observable, finalize, firstValueFrom, forkJoin, from, of, switchMap } from 'rxjs';
+import { Observable, finalize, firstValueFrom, forkJoin, from, merge, of, switchMap } from 'rxjs';
 import { catchError, map, mergeMap, toArray } from 'rxjs/operators';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
@@ -21,6 +21,7 @@ import {
   ActiveStoreOffer,
   BulkUploadResponse,
   OfferLocation,
+  OffersForRedemptionPayload,
   RecordRedemptionPayload,
   RedemptionRow,
   RedemptionTransactionType,
@@ -203,9 +204,23 @@ export class Redemption {
   readonly listType = signal<RedemptionTransactionType>('SINGLE');
   @ViewChild(Table) private listTable!: Table;
 
-  /** COLLECTIVE splits the date column into start + end. */
+  /** One skeleton-width modifier per column, so the loading row can't drift out of
+   *  step with the header. COLLECTIVE adds membership ID and splits the date column. */
+  get skeletonCells(): string[] {
+    const collective = this.listType() === 'COLLECTIVE';
+    return [
+      ...(collective ? ['id'] : []),
+      'text', // transaction type
+      'wide', // offer
+      'text', // current price
+      'text', // discount price
+      'text', // amount saved
+      ...(collective ? ['text', 'text'] : ['text']), // dates
+    ];
+  }
+
   get columnCount(): number {
-    return this.listType() === 'COLLECTIVE' ? 8 : 7;
+    return this.skeletonCells.length;
   }
 
   selectListType(value: RedemptionTransactionType): void {
@@ -269,27 +284,54 @@ export class Redemption {
       if (offerId) this.loadOfferLocations(offerId);
     });
 
-    // Offers depend on the transaction date: only offers active that day can be redeemed.
-    this.redemptionForm
-      .get('transactionDate')!
-      .valueChanges.pipe(
-        switchMap((date: unknown) => {
-          this.redemptionForm.get('offer')!.reset(null);
-          this.activeOffers.set([]);
-          if (!date) return of<ActiveStoreOffer[]>([]);
-
-          this.offersLoading.set(true);
-          return this.api.getOffersForRedemption(this.toIsoDate(date)).pipe(
-            catchError((err: HttpErrorResponse) => {
-              console.error('Failed to load offers for the transaction date', err);
-              this.showError('redemption.toast.offersFailed', err);
-              return of<ActiveStoreOffer[]>([]);
-            }),
-            finalize(() => this.offersLoading.set(false)),
-          );
-        }),
-      )
+    // Offers depend on the dates: only offers active then can be redeemed.
+    // transactionType is in here because updateTransactionValidators clears the dates
+    // silently — without it, an in-flight request would land in the other mode.
+    merge(
+      this.redemptionForm.get('transactionType')!.valueChanges,
+      this.redemptionForm.get('transactionDate')!.valueChanges,
+      this.redemptionForm.get('startDate')!.valueChanges,
+      this.redemptionForm.get('endDate')!.valueChanges,
+    )
+      .pipe(switchMap(() => this.offersForDates()))
       .subscribe((offers) => this.activeOffers.set(asOfferArray(offers)));
+  }
+
+  /** Re-reads the form, so one stream covers both SINGLE and COLLECTIVE. */
+  private offersForDates(): Observable<ActiveStoreOffer[]> {
+    this.redemptionForm.get('offer')!.reset(null);
+    this.activeOffers.set([]);
+
+    const payload = this.offersPayload();
+    if (!payload) return of<ActiveStoreOffer[]>([]);
+
+    this.offersLoading.set(true);
+    return this.api.getOffersForRedemption(payload).pipe(
+      catchError((err: HttpErrorResponse) => {
+        console.error('Failed to load offers for the selected dates', err);
+        this.showError('redemption.toast.offersFailed', err);
+        return of<ActiveStoreOffer[]>([]);
+      }),
+      finalize(() => this.offersLoading.set(false)),
+    );
+  }
+
+  /** null while the dates needed for a lookup are missing or contradictory. */
+  private offersPayload(): OffersForRedemptionPayload | null {
+    const { transactionDate, startDate, endDate } = this.redemptionForm.getRawValue();
+
+    if (!this.isCollectiveTransaction) {
+      return transactionDate
+        ? { transactionType: 'SINGLE', transactionDate: this.toIsoDate(transactionDate) }
+        : null;
+    }
+
+    if (!startDate || !endDate || this.isDateRangeInvalid) return null;
+    return {
+      transactionType: 'COLLECTIVE',
+      startDate: this.toIsoDate(startDate),
+      endDate: this.toIsoDate(endDate, true),
+    };
   }
 
   // The list loads itself: p-table is lazy, so it emits onLazyLoad on init.
@@ -302,17 +344,22 @@ export class Redemption {
     return !this.submitting();
   }
 
-  /** SINGLE offers come from the transaction date, so the select stays shut until one is picked. */
+  /** Offers come from the dates, so the select stays shut until they are picked. */
   get isOfferLocked(): boolean {
-    return !this.isCollectiveTransaction && !this.redemptionForm.get('transactionDate')?.value;
+    return !this.offersPayload();
   }
 
   warnOfferNeedsDate(): void {
     if (!this.isOfferLocked) return;
+    const range = this.isCollectiveTransaction;
     this.messageService.add({
       severity: 'warn',
-      summary: this.i18n.t('redemption.toast.offerNeedsDateSummary'),
-      detail: this.i18n.t('redemption.toast.offerNeedsDateDetail'),
+      summary: this.i18n.t(
+        range ? 'redemption.toast.offerNeedsRangeSummary' : 'redemption.toast.offerNeedsDateSummary',
+      ),
+      detail: this.i18n.t(
+        range ? 'redemption.toast.offerNeedsRangeDetail' : 'redemption.toast.offerNeedsDateDetail',
+      ),
       life: 4000,
     });
   }
@@ -339,12 +386,6 @@ export class Redemption {
     for (const field of toClear) {
       this.redemptionForm.get(field)!.reset('', { emitEvent: false });
     }
-
-    // The clears above are silent, so refresh the offer source by hand.
-    this.redemptionForm.get('offer')!.reset(null);
-    this.activeOffers.set([]);
-    // ponytail: COLLECTIVE has no transaction date, so it keeps the whole active list.
-    if (collective) this.loadActiveOffers();
   }
 
   get isDateRangeInvalid(): boolean {
@@ -352,21 +393,6 @@ export class Redemption {
     const { startDate, endDate } = this.redemptionForm.getRawValue();
     if (!startDate || !endDate) return false;
     return new Date(startDate).getTime() > new Date(endDate).getTime();
-  }
-
-  private loadActiveOffers(): void {
-    this.offersLoading.set(true);
-    this.api
-      .getActiveStoreOffers()
-      .pipe(finalize(() => this.offersLoading.set(false)))
-      .subscribe({
-        next: (offers) => this.activeOffers.set(asOfferArray(offers)),
-        error: (err: HttpErrorResponse) => {
-          console.error('Failed to load active store offers', err);
-          this.activeOffers.set([]);
-          this.showError('redemption.toast.offersFailed', err);
-        },
-      });
   }
 
   private loadOfferLocations(offerId: string): void {

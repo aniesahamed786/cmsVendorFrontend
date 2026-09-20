@@ -6,6 +6,7 @@ import {
   ActiveStoreOffer,
   BulkUploadResponse,
   OfferLocation,
+  OffersForRedemptionPayload,
   RecordRedemptionPayload,
   RedemptionListResponse,
   RedemptionTransactionType,
@@ -20,10 +21,8 @@ export class RedemptionService {
     return this.http.get<ActiveStoreOffer[]>(`${this.baseUrl}/getActiveStoreOffers`);
   }
 
-  getOffersForRedemption(transactionDate: string): Observable<ActiveStoreOffer[]> {
-    return this.http.post<ActiveStoreOffer[]>(`${this.baseUrl}/getOffersForRedemption`, {
-      transactionDate,
-    });
+  getOffersForRedemption(payload: OffersForRedemptionPayload): Observable<ActiveStoreOffer[]> {
+    return this.http.post<ActiveStoreOffer[]>(`${this.baseUrl}/getOffersForRedemption`, payload);
   }
 
   getOfferLocations(offerId: string): Observable<OfferLocation[]> {

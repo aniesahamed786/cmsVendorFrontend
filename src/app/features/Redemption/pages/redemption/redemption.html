@@ -43,7 +43,8 @@
     <form class="redemption-form" [formGroup]="redemptionForm" (ngSubmit)="submit()">
       <div class="redemption-form__grid">
         <div class="redemption-form__field-wrapper redemption-form__field-wrapper--full">
-          <label class="redemption-form__label">{{ 'redemption.label.transactionType' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.transactionType' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <p-select formControlName="transactionType" [options]="transactionTypes" optionLabel="label"
             optionValue="value" styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
@@ -66,7 +67,8 @@
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.transactionDate' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.transactionDate' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="transactionDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
@@ -74,7 +76,8 @@
         </div>
         } @else {
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.startDate' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.startDate' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="startDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
@@ -82,7 +85,8 @@
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.endDate' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.endDate' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="endDate" iconDisplay="input" showIcon="true"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
@@ -93,12 +97,15 @@
         </div>
         }
 
-        <div class="redemption-form__field-wrapper" (click)="warnOfferNeedsDate()"
-          (keydown)="warnOfferNeedsDate()">
-          <label class="redemption-form__label">{{ 'redemption.label.offer' | translate }} <span class="redemption-form__required">*</span></label>
+        <div class="redemption-form__field-wrapper" (click)="warnOfferNeedsDate()" (keydown)="warnOfferNeedsDate()">
+          <label class="redemption-form__label">{{ 'redemption.label.offer' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <p-select formControlName="offer" [options]="offerOptions()" optionLabel="label" optionValue="value"
-            [loading]="offersLoading()" [filter]="true" filterBy="label" [readonly]="isOfferLocked"
-            [placeholder]="(isOfferLocked ? 'redemption.placeholder.offerNeedsDate' : 'redemption.placeholder.offer') | translate"
+            [loading]="offersLoading()" [filter]="true" filterBy="label" [readonly]="isOfferLocked" [placeholder]="(!isOfferLocked
+                ? 'redemption.placeholder.offer'
+                : isCollectiveTransaction
+                  ? 'redemption.placeholder.offerNeedsRange'
+                  : 'redemption.placeholder.offerNeedsDate') | translate"
             [emptyMessage]="'redemption.emptyOffers' | translate"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
@@ -116,25 +123,29 @@
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.totalInvoiceAmount' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.totalInvoiceAmount' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalInvoiceAmount"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.totalAmountPaid' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.totalAmountPaid' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalAmountPaid"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.currency' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.currency' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <input type="text" pInputText formControlName="currency"
             [placeholder]="'redemption.placeholder.currency' | translate" class="redemption-form__input--full" />
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.discountAmount' | translate }} <span class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.discountAmount' | translate }} <span
+              class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="discountAmount"
             [placeholder]="'redemption.placeholder.discountAmount' | translate" class="redemption-form__input--full" />
         </div>
@@ -163,11 +174,13 @@
     </div>
 
     <p-table [value]="redemptionRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
-      [paginator]="true" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]"
-      paginatorDropdownAppendTo="body" styleClass="redemption-table">
+      [paginator]="true" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
+      styleClass="redemption-table">
       <ng-template pTemplate="header">
         <tr>
+          @if (listType() === 'COLLECTIVE') {
           <th>{{ 'redemption.column.membershipId' | translate }}</th>
+          }
           <th>{{ 'redemption.label.transactionType' | translate }}</th>
           <th>{{ 'redemption.column.offer' | translate }}</th>
           <th>{{ 'redemption.column.currentPrice' | translate }}</th>
@@ -183,7 +196,9 @@
       </ng-template>
       <ng-template pTemplate="body" let-item>
         <tr>
+          @if (listType() === 'COLLECTIVE') {
           <td>{{ item.membershipId }}</td>
+          }
           <td>{{ item.type }}</td>
           <td><span class="redemption-table__row-title">{{ item.offer }}</span></td>
           <td>{{ item.currency }} {{ item.totalAmountPaid }}</td>
@@ -202,15 +217,9 @@
            redemptionRows() feeds while listLoading(). -->
       <ng-template pTemplate="loadingbody">
         <tr class="redemption-table__row--skeleton">
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--id"></span></td>
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--wide"></span></td>
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
-          @if (listType() === 'COLLECTIVE') {
-          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
+          @for (width of skeletonCells; track $index) {
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--{{ width }}"></span>
+          </td>
           }
         </tr>
       </ng-template>
@@ -225,7 +234,7 @@
 
   <app-redemption-upload-preview [visible]="previewVisible()" [drafts]="previewDrafts()"
     [catalogue]="previewCatalogue()" [errors]="previewErrors()" [serverErrors]="previewServerErrors()"
-    [branchesLoading]="previewBranchesLoading()"
-    [submitting]="uploading()" [fileName]="previewFileName()" (patch)="onPreviewPatch($event)"
-    (removeRow)="onPreviewRemoveRow($event)" (submitRows)="submitPreview()" (cancel)="cancelPreview()" />
+    [branchesLoading]="previewBranchesLoading()" [submitting]="uploading()" [fileName]="previewFileName()"
+    (patch)="onPreviewPatch($event)" (removeRow)="onPreviewRemoveRow($event)" (submitRows)="submitPreview()"
+    (cancel)="cancelPreview()" />
 </div>

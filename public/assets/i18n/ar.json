@@ -1161,7 +1161,8 @@
       "membershipId": "مثال: 1111111111",
       "mobileNumber": "مثال: 0555555555",
       "branchNeedsOffer": "اختر العرض أولاً...",
-      "offerNeedsDate": "اختر تاريخ العملية أولاً..."
+      "offerNeedsDate": "اختر تاريخ العملية أولاً...",
+      "offerNeedsRange": "اختر تاريخ البداية والنهاية أولاً..."
     },
     "submit": "استرداد العرض",
     "list": {
@@ -1202,7 +1203,9 @@
       "uploadRejectedSummary": "لم يتم رفع أي بيانات",
       "uploadRejectedDetail": "تم رفض جميع الصفوف ({{failed}}). يوضّح كل صف سبب الرفض — صحّحها ثم أعد الإرسال.",
       "offerNeedsDateSummary": "تاريخ العملية مطلوب",
-      "offerNeedsDateDetail": "اختر تاريخ العملية أولاً لعرض العروض المتاحة في ذلك اليوم."
+      "offerNeedsDateDetail": "اختر تاريخ العملية أولاً لعرض العروض المتاحة في ذلك اليوم.",
+      "offerNeedsRangeSummary": "نطاق التاريخ مطلوب",
+      "offerNeedsRangeDetail": "اختر تاريخ البداية والنهاية أولاً لعرض العروض المتاحة في تلك الفترة."
     },
     "emptyOffers": "لا توجد عروض نشطة في المتجر.",
     "emptyBranches": "لا توجد فروع متاحة لهذا العرض.",
