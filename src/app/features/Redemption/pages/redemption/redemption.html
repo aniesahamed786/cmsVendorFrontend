@@ -178,7 +178,7 @@
       styleClass="redemption-table">
       <ng-template pTemplate="header">
         <tr>
-          @if (listType() === 'COLLECTIVE') {
+          @if (listType() !== 'COLLECTIVE') {
           <th>{{ 'redemption.column.membershipId' | translate }}</th>
           }
           <th>{{ 'redemption.label.transactionType' | translate }}</th>
@@ -196,7 +196,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-item>
         <tr>
-          @if (listType() === 'COLLECTIVE') {
+          @if (listType() !== 'COLLECTIVE') {
           <td>{{ item.membershipId }}</td>
           }
           <td>{{ item.type }}</td>

@@ -205,11 +205,11 @@ export class Redemption {
   @ViewChild(Table) private listTable!: Table;
 
   /** One skeleton-width modifier per column, so the loading row can't drift out of
-   *  step with the header. COLLECTIVE adds membership ID and splits the date column. */
+   *  step with the header. COLLECTIVE drops membership ID and splits the date column. */
   get skeletonCells(): string[] {
     const collective = this.listType() === 'COLLECTIVE';
     return [
-      ...(collective ? ['id'] : []),
+      ...(collective ? [] : ['id']),
       'text', // transaction type
       'wide', // offer
       'text', // current price
