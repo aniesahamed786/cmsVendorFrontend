@@ -1158,7 +1158,8 @@
       "discountAmount": "e.g. 50.00",
       "membershipId": "e.g. 1111111111",
       "mobileNumber": "e.g. 0555555555",
-      "branchNeedsOffer": "Select an offer first..."
+      "branchNeedsOffer": "Select an offer first...",
+      "offerNeedsDate": "Select a transaction date first..."
     },
     "submit": "Redeem Offer",
     "list": {
@@ -1169,7 +1170,8 @@
       "offer": "Offer",
       "currentPrice": "Current Price",
       "discountPrice": "Discount Price",
-      "amountSaved": "Amount Saved"
+      "amountSaved": "Amount Saved",
+      "timestamp": "Timestamp"
     },
     "currency": "SAR.",
     "empty": "No redemptions found.",
@@ -1193,7 +1195,9 @@
       "uploadPartialSummary": "Partially uploaded",
       "uploadPartialDetail": "The upload was not all-or-nothing: the server saved {{inserted}} row(s) and rejected {{failed}}. The saved rows are already recorded — check the list below before retrying the rest.",
       "uploadRejectedSummary": "Nothing was uploaded",
-      "uploadRejectedDetail": "All {{failed}} row(s) were rejected. Each row shows why — fix them and submit again."
+      "uploadRejectedDetail": "All {{failed}} row(s) were rejected. Each row shows why — fix them and submit again.",
+      "offerNeedsDateSummary": "Transaction date required",
+      "offerNeedsDateDetail": "Select a transaction date first to see the offers available that day."
     },
     "emptyOffers": "No active in-store offers available.",
     "emptyBranches": "No branches available for this offer.",

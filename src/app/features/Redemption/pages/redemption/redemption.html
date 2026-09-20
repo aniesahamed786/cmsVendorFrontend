@@ -49,23 +49,22 @@
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
 
+        <!-- Membership ID and Mobile Number identify one member, so they are single-transaction only. -->
+        @if (!isCollectiveTransaction) {
         <div class="redemption-form__field-wrapper">
           <label class="redemption-form__label">
-            {{ 'redemption.label.membershipId' | translate }}
-            @if (!isCollectiveTransaction) {<span class="redemption-form__required">*</span>}
+            {{ 'redemption.label.membershipId' | translate }} <span class="redemption-form__required">*</span>
           </label>
           <input type="text" inputmode="numeric" pInputText formControlName="membershipId"
             [placeholder]="'redemption.placeholder.membershipId' | translate" class="redemption-form__input--full" />
         </div>
 
-        <!-- Mobile Number — optional in both modes -->
         <div class="redemption-form__field-wrapper">
           <label class="redemption-form__label">{{ 'redemption.label.mobileNumber' | translate }}</label>
           <input type="tel" pInputText formControlName="mobileNumber"
             [placeholder]="'redemption.placeholder.mobileNumber' | translate" class="redemption-form__input--full" />
         </div>
 
-        @if (!isCollectiveTransaction) {
         <div class="redemption-form__field-wrapper">
           <label class="redemption-form__label">{{ 'redemption.label.transactionDate' | translate }} <span class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="transactionDate" iconDisplay="input" showIcon="true"
@@ -94,11 +93,12 @@
         </div>
         }
 
-        <div class="redemption-form__field-wrapper">
+        <div class="redemption-form__field-wrapper" (click)="warnOfferNeedsDate()"
+          (keydown)="warnOfferNeedsDate()">
           <label class="redemption-form__label">{{ 'redemption.label.offer' | translate }} <span class="redemption-form__required">*</span></label>
           <p-select formControlName="offer" [options]="offerOptions()" optionLabel="label" optionValue="value"
-            [loading]="offersLoading()" [filter]="true" filterBy="label"
-            [placeholder]="'redemption.placeholder.offer' | translate"
+            [loading]="offersLoading()" [filter]="true" filterBy="label" [readonly]="isOfferLocked"
+            [placeholder]="(isOfferLocked ? 'redemption.placeholder.offerNeedsDate' : 'redemption.placeholder.offer') | translate"
             [emptyMessage]="'redemption.emptyOffers' | translate"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
@@ -158,19 +158,23 @@
       <ng-template pTemplate="header">
         <tr>
           <th>{{ 'redemption.column.membershipId' | translate }}</th>
+          <th>{{ 'redemption.label.transactionType' | translate }}</th>
           <th>{{ 'redemption.column.offer' | translate }}</th>
           <th>{{ 'redemption.column.currentPrice' | translate }}</th>
           <th>{{ 'redemption.column.discountPrice' | translate }}</th>
           <th>{{ 'redemption.column.amountSaved' | translate }}</th>
+          <th>{{ 'redemption.column.timestamp' | translate }}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-item>
         <tr>
           <td>{{ item.membershipId }}</td>
+          <td>{{ item.type }}</td>
           <td><span class="redemption-table__row-title">{{ item.offer }}</span></td>
           <td>{{ item.currency }} {{ item.totalAmountPaid }}</td>
           <td>{{ item.currency }} {{ item.discountAmount }}</td>
           <td>{{ item.currency }} {{ item.amountSaved }}</td>
+          <td>{{ item.timestamp }}</td>
         </tr>
       </ng-template>
 
@@ -179,7 +183,9 @@
       <ng-template pTemplate="loadingbody">
         <tr class="redemption-table__row--skeleton">
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--id"></span></td>
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--wide"></span></td>
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
@@ -188,7 +194,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5" class="redemption-table__empty">{{ 'redemption.empty' | translate }}</td>
+          <td colspan="7" class="redemption-table__empty">{{ 'redemption.empty' | translate }}</td>
         </tr>
       </ng-template>
     </p-table>

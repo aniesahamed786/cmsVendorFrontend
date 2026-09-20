@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -113,7 +113,7 @@ function toTemplateOffer(entry: CatalogueEntry): TemplateOffer {
   templateUrl: './redemption.html',
   styleUrl: './redemption.scss',
 })
-export class Redemption implements OnInit {
+export class Redemption {
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(RedemptionService);
   private readonly messageService = inject(MessageService);
@@ -205,8 +205,23 @@ export class Redemption implements OnInit {
       : this.redemptions().map((r) => ({
           ...r,
           offer: this.localized(r.offerTitle, r.offerTitleAr),
+          type: this.transactionTypes.find((t) => t.value === r.transactionType)?.label ?? '—',
+          timestamp: this.formatTimestamp(r.createdAt),
         })),
   );
+
+  private formatTimestamp(value: string | undefined): string {
+    if (!value) return '—';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return '—';
+    return parsed.toLocaleString(this.i18n.lang() === 'ar' ? 'ar' : 'en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
 
   constructor() {
     this.redemptionForm = this.fb.group({
@@ -233,12 +248,31 @@ export class Redemption implements OnInit {
       this.offerLocations.set([]);
       if (offerId) this.loadOfferLocations(offerId);
     });
+
+    // Offers depend on the transaction date: only offers active that day can be redeemed.
+    this.redemptionForm
+      .get('transactionDate')!
+      .valueChanges.pipe(
+        switchMap((date: unknown) => {
+          this.redemptionForm.get('offer')!.reset(null);
+          this.activeOffers.set([]);
+          if (!date) return of<ActiveStoreOffer[]>([]);
+
+          this.offersLoading.set(true);
+          return this.api.getOffersForRedemption(this.toIsoDate(date)).pipe(
+            catchError((err: HttpErrorResponse) => {
+              console.error('Failed to load offers for the transaction date', err);
+              this.showError('redemption.toast.offersFailed', err);
+              return of<ActiveStoreOffer[]>([]);
+            }),
+            finalize(() => this.offersLoading.set(false)),
+          );
+        }),
+      )
+      .subscribe((offers) => this.activeOffers.set(asOfferArray(offers)));
   }
 
-  ngOnInit(): void {
-    this.loadActiveOffers();
-    this.loadRedemptions(1, this.pageSize());
-  }
+  // The list loads itself: p-table is lazy, so it emits onLazyLoad on init.
 
   get isCollectiveTransaction(): boolean {
     return this.redemptionForm.get('transactionType')?.value === 'COLLECTIVE';
@@ -248,11 +282,26 @@ export class Redemption implements OnInit {
     return !this.submitting();
   }
 
+  /** SINGLE offers come from the transaction date, so the select stays shut until one is picked. */
+  get isOfferLocked(): boolean {
+    return !this.isCollectiveTransaction && !this.redemptionForm.get('transactionDate')?.value;
+  }
+
+  warnOfferNeedsDate(): void {
+    if (!this.isOfferLocked) return;
+    this.messageService.add({
+      severity: 'warn',
+      summary: this.i18n.t('redemption.toast.offerNeedsDateSummary'),
+      detail: this.i18n.t('redemption.toast.offerNeedsDateDetail'),
+      life: 4000,
+    });
+  }
+
   private updateTransactionValidators(): void {
     const collective = this.isCollectiveTransaction;
 
     const rules: Record<string, ValidatorFn[]> = {
-      membershipId: collective ? [Validators.pattern(/^\d+$/)] : [Validators.required, Validators.pattern(/^\d+$/)],
+      membershipId: collective ? [] : [Validators.required, Validators.pattern(/^\d+$/)],
       transactionDate: collective ? [] : [Validators.required],
       startDate: collective ? [Validators.required] : [],
       endDate: collective ? [Validators.required] : [],
@@ -264,10 +313,18 @@ export class Redemption implements OnInit {
       control.updateValueAndValidity({ emitEvent: false });
     }
 
-    const toClear = collective ? ['transactionDate'] : ['startDate', 'endDate'];
+    const toClear = collective
+      ? ['transactionDate', 'membershipId', 'mobileNumber']
+      : ['startDate', 'endDate'];
     for (const field of toClear) {
       this.redemptionForm.get(field)!.reset('', { emitEvent: false });
     }
+
+    // The clears above are silent, so refresh the offer source by hand.
+    this.redemptionForm.get('offer')!.reset(null);
+    this.activeOffers.set([]);
+    // ponytail: COLLECTIVE has no transaction date, so it keeps the whole active list.
+    if (collective) this.loadActiveOffers();
   }
 
   get isDateRangeInvalid(): boolean {

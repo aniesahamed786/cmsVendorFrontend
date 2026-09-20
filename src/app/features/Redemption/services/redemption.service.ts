@@ -19,6 +19,12 @@ export class RedemptionService {
     return this.http.get<ActiveStoreOffer[]>(`${this.baseUrl}/getActiveStoreOffers`);
   }
 
+  getOffersForRedemption(transactionDate: string): Observable<ActiveStoreOffer[]> {
+    return this.http.post<ActiveStoreOffer[]>(`${this.baseUrl}/getOffersForRedemption`, {
+      transactionDate,
+    });
+  }
+
   getOfferLocations(offerId: string): Observable<OfferLocation[]> {
     return this.http.get<OfferLocation[]>(`${this.baseUrl}/offer/${offerId}/locations`);
   }

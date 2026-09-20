@@ -58,6 +58,9 @@ export interface RedemptionRow {
   membershipId: number;
   offerTitle: string;
   offerTitleAr: string;
+  /** Both optional until the list endpoint starts returning them. */
+  transactionType?: RedemptionTransactionType;
+  createdAt?: string;
   totalAmountPaid: number;
   discountAmount: number;
   amountSaved: number;

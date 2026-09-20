@@ -1160,7 +1160,8 @@
       "discountAmount": "مثال: 50.00",
       "membershipId": "مثال: 1111111111",
       "mobileNumber": "مثال: 0555555555",
-      "branchNeedsOffer": "اختر العرض أولاً..."
+      "branchNeedsOffer": "اختر العرض أولاً...",
+      "offerNeedsDate": "اختر تاريخ العملية أولاً..."
     },
     "submit": "استرداد العرض",
     "list": {
@@ -1171,7 +1172,8 @@
       "offer": "العرض",
       "currentPrice": "السعر الحالي",
       "discountPrice": "السعر بعد الخصم",
-      "amountSaved": "المبلغ الموفَّر"
+      "amountSaved": "المبلغ الموفَّر",
+      "timestamp": "التاريخ والوقت"
     },
     "currency": "ر.س",
     "empty": "لا توجد عمليات استبدال.",
@@ -1195,7 +1197,9 @@
       "uploadPartialSummary": "تم الرفع جزئياً",
       "uploadPartialDetail": "لم يكن الرفع كاملاً أو لا شيء: حفظ الخادم {{inserted}} صفاً ورفض {{failed}}. الصفوف المحفوظة مسجّلة بالفعل — راجع القائمة أدناه قبل إعادة إرسال الباقي.",
       "uploadRejectedSummary": "لم يتم رفع أي بيانات",
-      "uploadRejectedDetail": "تم رفض جميع الصفوف ({{failed}}). يوضّح كل صف سبب الرفض — صحّحها ثم أعد الإرسال."
+      "uploadRejectedDetail": "تم رفض جميع الصفوف ({{failed}}). يوضّح كل صف سبب الرفض — صحّحها ثم أعد الإرسال.",
+      "offerNeedsDateSummary": "تاريخ العملية مطلوب",
+      "offerNeedsDateDetail": "اختر تاريخ العملية أولاً لعرض العروض المتاحة في ذلك اليوم."
     },
     "emptyOffers": "لا توجد عروض نشطة في المتجر.",
     "emptyBranches": "لا توجد فروع متاحة لهذا العرض.",
