@@ -94,27 +94,42 @@ export class VendorAnalyticsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
-  /** ponytail: `days` is the duration filter the UI already sends; the analytics
-   *  endpoints ignore it until the backend adds it. Rename here if the API lands
-   *  on another param name — the pages only pass a number. */
-  private daysParams(days?: number): { params?: Record<string, number> } {
-    return days ? { params: { days } } : {};
+  /**
+   * UI duration (in days) → the reporting window the analytics endpoints take:
+   * `dateRange` preset, or `custom` + ISO `startDate`/`endDate` for any duration
+   * without a preset (14 days). The deprecated `from`/`to` pair is not used.
+   */
+  dateRangeParams(days?: number): Record<string, string> {
+    if (!days) return { dateRange: 'allTime' }; // 0 / omitted = lifetime
+
+    const preset = days === 7 ? 'last7Days' : days === 30 ? 'last30Days' : days === 365 ? 'lastYear' : null;
+    if (preset) return { dateRange: preset };
+
+    const end = new Date();
+    const start = new Date(end);
+    start.setUTCDate(start.getUTCDate() - (days - 1)); // inclusive of today
+    return {
+      dateRange: 'custom',
+      startDate: start.toISOString().slice(0, 10),
+      endDate: end.toISOString().slice(0, 10),
+    };
   }
 
   getOverview(days?: number): Observable<AnalyticsOverview> {
-    return this.http.get<AnalyticsOverview>(`${this.baseUrl}/analytics/overview`, this.daysParams(days));
+    return this.http.get<AnalyticsOverview>(`${this.baseUrl}/analytics/overview`, { params: this.dateRangeParams(days) });
   }
 
   getOffersSummary(days?: number): Observable<AnalyticsOffersSummary> {
-    return this.http.get<AnalyticsOffersSummary>(`${this.baseUrl}/analytics/offersSummary`, this.daysParams(days));
+    return this.http.get<AnalyticsOffersSummary>(`${this.baseUrl}/analytics/offersSummary`, { params: this.dateRangeParams(days) });
   }
 
   getRedemptionsByLocation(days?: number): Observable<AnalyticsRedemptionsByLocation[]> {
-    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${this.baseUrl}/analytics/getRedemptionsByLocation`, this.daysParams(days));
+    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${this.baseUrl}/analytics/getRedemptionsByLocation`, { params: this.dateRangeParams(days) });
   }
 
-  getRedemptionsByDays(days?: number): Observable<AnalyticsRedemptionsByDay[]> {
-    return this.http.get<AnalyticsRedemptionsByDay[]>(`${this.baseUrl}/analytics/redemptionsByDays`, this.daysParams(days));
+  /** No date params — the endpoint always returns its own fixed day series. */
+  getRedemptionsByDays(): Observable<AnalyticsRedemptionsByDay[]> {
+    return this.http.get<AnalyticsRedemptionsByDay[]>(`${this.baseUrl}/analytics/redemptionsByDays`);
   }
 
   /** Server-paginated + server-sorted + server-searched offer insights. */
@@ -126,8 +141,7 @@ export class VendorAnalyticsService {
     search?: string,
     days?: number,
   ): Observable<OfferInsightsResponse> {
-    const params: Record<string, string | number> = { page, pageSize };
-    if (days) params['days'] = days;
+    const params: Record<string, string | number> = { page, pageSize, ...this.dateRangeParams(days) };
     if (sortBy) {
       params['sortBy'] = sortBy;
       params['sortOrder'] = sortOrder ?? 'asc';

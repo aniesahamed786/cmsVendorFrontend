@@ -1482,6 +1482,7 @@
     },
     "duration": {
       "label": "Duration",
+      "all": "All Time",
       "d7": "7 Days",
       "d14": "14 Days",
       "d30": "30 Days",

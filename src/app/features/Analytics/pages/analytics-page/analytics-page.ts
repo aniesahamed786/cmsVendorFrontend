@@ -47,16 +47,19 @@ export class AnalyticsPage implements OnInit {
 
   /* ─── Duration filter (per card + table) ─── */
 
+  /** 0 = all time (the default window). */
   readonly durationOptions = computed(() => {
     this.i18n.loadSeq();
-    return [7, 14, 30, 365].map((days) => ({ label: this.i18n.t(`analytics.duration.d${days}`), value: days }));
+    return [
+      { label: this.i18n.t('analytics.duration.all'), value: 0 },
+      ...[7, 14, 30, 365].map((days) => ({ label: this.i18n.t(`analytics.duration.d${days}`), value: days })),
+    ];
   });
 
-  // ponytail: default is the first option; no "All time" until the API defines one.
-  readonly locationDays = signal(7);
-  readonly topDays = signal(7);
-  readonly summaryDays = signal(7);
-  readonly tableDays = signal(7);
+  readonly locationDays = signal(0);
+  readonly topDays = signal(0);
+  readonly summaryDays = signal(0);
+  readonly tableDays = signal(0);
 
   readonly tableRows = computed(() =>
     this.insightLoading() ? new Array(5).fill(null) : this.insightRows()
@@ -217,7 +220,8 @@ export class AnalyticsPage implements OnInit {
     this.chartLoading.set(true);
 
     if (mode === 'day') {
-      this.analytics.getRedemptionsByDays(days)
+      // The day series has no date params — the duration select is disabled in this mode.
+      this.analytics.getRedemptionsByDays()
         .pipe(finalize(() => this.chartLoading.set(false)))
         .subscribe({
           next: (rows) => this.redemptionsByDay.set(rows),
