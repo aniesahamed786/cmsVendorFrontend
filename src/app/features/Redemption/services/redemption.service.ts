@@ -8,6 +8,7 @@ import {
   OfferLocation,
   RecordRedemptionPayload,
   RedemptionListResponse,
+  RedemptionOffersQuery,
 } from '../models/redemption.model';
 
 @Injectable({ providedIn: 'root' })
@@ -19,10 +20,8 @@ export class RedemptionService {
     return this.http.get<ActiveStoreOffer[]>(`${this.baseUrl}/getActiveStoreOffers`);
   }
 
-  getOffersForRedemption(transactionDate: string): Observable<ActiveStoreOffer[]> {
-    return this.http.post<ActiveStoreOffer[]>(`${this.baseUrl}/getOffersForRedemption`, {
-      transactionDate,
-    });
+  getOffersForRedemption(query: RedemptionOffersQuery): Observable<ActiveStoreOffer[]> {
+    return this.http.post<ActiveStoreOffer[]>(`${this.baseUrl}/getOffersForRedemption`, query);
   }
 
   getOfferLocations(offerId: string): Observable<OfferLocation[]> {

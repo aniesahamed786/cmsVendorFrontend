@@ -4,6 +4,14 @@ export interface ActiveStoreOffer {
   offerTitle: string;
   offerTitleAr: string;
 }
+
+/**
+ * Body of POST getOffersForRedemption. Mirrors RecordRedemptionPayload's transactionType rule, so
+ * the dates asked about here are the dates the redemption will later be submitted with.
+ */
+export type RedemptionOffersQuery =
+  | { transactionType: 'SINGLE'; transactionDate: string }
+  | { transactionType: 'COLLECTIVE'; startDate: string; endDate: string };
 export interface OfferLocation {
   locationId: string;
   locationName: string;
