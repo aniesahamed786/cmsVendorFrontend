@@ -133,7 +133,16 @@
       <div class="dashboard-page__top-offer">
         <div class="dashboard-page__top-offer-card-top">
           <div class="dashboard-page__top-offer-icon-box">
+            @if (topOfferLogo()) {
+            <img
+              class="dashboard-page__top-offer-logo"
+              [src]="topOfferLogo()"
+              [alt]="displayOfferTitle()"
+              (error)="markTopOfferLogoFailed()"
+            />
+            } @else {
             <i class="pi pi-tag"></i>
+            }
           </div>
           <div class="dashboard-page__top-offer-info">
             <h3 class="dashboard-page__top-offer-title" [title]="displayOfferTitle()">{{ displayOfferTitle() }}</h3>

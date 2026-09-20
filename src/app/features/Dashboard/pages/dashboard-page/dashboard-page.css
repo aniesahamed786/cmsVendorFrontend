@@ -304,6 +304,12 @@
   border-radius: 0;
 }
 
+.dashboard-page__top-offer-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .dashboard-page__top-offer-info {
   display: flex;
   flex-direction: column;

@@ -53,20 +53,23 @@
             {{ (redemptionChartMode() === 'day' ? 'analytics.location.daySubtitle' : 'analytics.location.subtitle') |
             translate }}
           </p>
+          <p-select [options]="durationOptions()" [ngModel]="locationDays()"
+            (ngModelChange)="selectLocationDays($event)" optionLabel="label" optionValue="value"
+            [ariaLabel]="'analytics.duration.label' | translate" styleClass="duration-select" />
         </div>
         <div class="period-filter" role="group" [attr.aria-label]="'analytics.location.filterLabel' | translate">
           <button type="button" [class.is-active]="redemptionChartMode() === 'location'"
-            [attr.aria-pressed]="redemptionChartMode() === 'location'" (click)="redemptionChartMode.set('location')">
+            [attr.aria-pressed]="redemptionChartMode() === 'location'" (click)="showRedemptions('location')">
             {{ 'analytics.location.byLocation' | translate }}
           </button>
           <button type="button" [class.is-active]="redemptionChartMode() === 'day'"
-            [attr.aria-pressed]="redemptionChartMode() === 'day'" (click)="showRedemptionsByDay()">
+            [attr.aria-pressed]="redemptionChartMode() === 'day'" (click)="showRedemptions('day')">
             {{ 'analytics.location.byDay' | translate }}
           </button>
         </div>
       </div>
 
-      @if (loading() || (redemptionChartMode() === 'day' && dayLoading())) {
+      @if (loading() || chartLoading()) {
       <span class="app-skeleton chart-skeleton"></span>
       } @else {
       <div class="chart-scroll-wrapper">
@@ -82,9 +85,12 @@
       <div class="panel__header">
         <h2>{{ 'analytics.topOffers.title' | translate }}</h2>
         <p>{{ 'analytics.topOffers.subtitle' | translate }}</p>
+        <p-select [options]="durationOptions()" [ngModel]="topDays()" (ngModelChange)="selectTopDays($event)"
+          optionLabel="label" optionValue="value" [ariaLabel]="'analytics.duration.label' | translate"
+          styleClass="duration-select" />
       </div>
 
-      @if (loading()) {
+      @if (loading() || topLoading()) {
       @for (i of [1, 2, 3]; track i) {
       <div class="top-offer top-offer--skeleton">
         <span class="app-skeleton top-offer__skeleton-icon"></span>
@@ -117,13 +123,14 @@
   <div class="analytics-grid analytics-grid--secondary">
     <section class="panel overview-panel">
       <div class="panel__header">
-        <div>
-          <h2>{{ 'analytics.overview.title' | translate }}</h2>
-          <p>{{ 'analytics.overview.subtitle' | translate }}</p>
-        </div>
+        <h2>{{ 'analytics.overview.title' | translate }}</h2>
+        <p>{{ 'analytics.overview.subtitle' | translate }}</p>
+        <p-select [options]="durationOptions()" [ngModel]="summaryDays()" (ngModelChange)="selectSummaryDays($event)"
+          optionLabel="label" optionValue="value" [ariaLabel]="'analytics.duration.label' | translate"
+          styleClass="duration-select" />
       </div>
       <div class="overview-metrics">
-        @if (loading()) {
+        @if (loading() || summaryLoading()) {
         @for (i of [1, 2, 3, 4]; track i) {
         <div>
           <span class="app-skeleton overview-metrics__skeleton-value"></span>
@@ -158,6 +165,9 @@
       <div>
         <h2>{{ 'analytics.insights.title' | translate }}</h2>
         <p>{{ 'analytics.insights.subtitle' | translate }}</p>
+        <p-select [options]="durationOptions()" [ngModel]="tableDays()"
+          (ngModelChange)="selectTableDays($event, insightTable)" optionLabel="label" optionValue="value"
+          [ariaLabel]="'analytics.duration.label' | translate" styleClass="duration-select" />
       </div>
       <app-search class="insights-search" (valueChange)="insightTable.filterGlobal($event, 'contains')" />
     </div>

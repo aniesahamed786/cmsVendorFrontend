@@ -94,20 +94,27 @@ export class VendorAnalyticsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
-  getOverview(): Observable<AnalyticsOverview> {
-    return this.http.get<AnalyticsOverview>(`${this.baseUrl}/analytics/overview`);
+  /** ponytail: `days` is the duration filter the UI already sends; the analytics
+   *  endpoints ignore it until the backend adds it. Rename here if the API lands
+   *  on another param name — the pages only pass a number. */
+  private daysParams(days?: number): { params?: Record<string, number> } {
+    return days ? { params: { days } } : {};
   }
 
-  getOffersSummary(): Observable<AnalyticsOffersSummary> {
-    return this.http.get<AnalyticsOffersSummary>(`${this.baseUrl}/analytics/offersSummary`);
+  getOverview(days?: number): Observable<AnalyticsOverview> {
+    return this.http.get<AnalyticsOverview>(`${this.baseUrl}/analytics/overview`, this.daysParams(days));
   }
 
-  getRedemptionsByLocation(): Observable<AnalyticsRedemptionsByLocation[]> {
-    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${this.baseUrl}/analytics/getRedemptionsByLocation`);
+  getOffersSummary(days?: number): Observable<AnalyticsOffersSummary> {
+    return this.http.get<AnalyticsOffersSummary>(`${this.baseUrl}/analytics/offersSummary`, this.daysParams(days));
   }
 
-  getRedemptionsByDays(): Observable<AnalyticsRedemptionsByDay[]> {
-    return this.http.get<AnalyticsRedemptionsByDay[]>(`${this.baseUrl}/analytics/redemptionsByDays`);
+  getRedemptionsByLocation(days?: number): Observable<AnalyticsRedemptionsByLocation[]> {
+    return this.http.get<AnalyticsRedemptionsByLocation[]>(`${this.baseUrl}/analytics/getRedemptionsByLocation`, this.daysParams(days));
+  }
+
+  getRedemptionsByDays(days?: number): Observable<AnalyticsRedemptionsByDay[]> {
+    return this.http.get<AnalyticsRedemptionsByDay[]>(`${this.baseUrl}/analytics/redemptionsByDays`, this.daysParams(days));
   }
 
   /** Server-paginated + server-sorted + server-searched offer insights. */
@@ -117,8 +124,10 @@ export class VendorAnalyticsService {
     sortBy?: string,
     sortOrder?: 'asc' | 'desc',
     search?: string,
+    days?: number,
   ): Observable<OfferInsightsResponse> {
     const params: Record<string, string | number> = { page, pageSize };
+    if (days) params['days'] = days;
     if (sortBy) {
       params['sortBy'] = sortBy;
       params['sortOrder'] = sortOrder ?? 'asc';

@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
+import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'primeng/chart';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { SelectModule } from 'primeng/select';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import {
   AnalyticsOffersSummary,
@@ -23,20 +25,38 @@ import { createCountUp } from '../../../../shared/animation/count-up';
 @Component({
   selector: 'app-analytics-page',
   standalone: true,
-  imports: [CommonModule, ChartModule, TableModule, TranslatePipe, AppSearch],
+  imports: [CommonModule, FormsModule, ChartModule, SelectModule, TableModule, TranslatePipe, AppSearch],
   templateUrl: './analytics-page.html',
   styleUrl: './analytics-page.scss',
 })
 export class AnalyticsPage implements OnInit {
   readonly overview = signal<AnalyticsOverview | null>(null);
+  /** Top Offers reads its own copy so its duration filter never skews the
+   *  lifecycle KPI counts, which come from the same `overview` endpoint. */
+  readonly topOverview = signal<AnalyticsOverview | null>(null);
   readonly offersSummary = signal<AnalyticsOffersSummary | null>(null);
   readonly redemptionsByLocation = signal<AnalyticsRedemptionsByLocation[]>([]);
   readonly redemptionsByDay = signal<AnalyticsRedemptionsByDay[]>([]);
-  readonly dayLoading = signal(false);
+  readonly chartLoading = signal(false);
+  readonly topLoading = signal(false);
+  readonly summaryLoading = signal(false);
   readonly insightRows = signal<OfferInsightRow[]>([]);
   readonly insightTotal = signal(0);
   readonly insightLoading = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
+
+  /* ─── Duration filter (per card + table) ─── */
+
+  readonly durationOptions = computed(() => {
+    this.i18n.loadSeq();
+    return [7, 14, 30, 365].map((days) => ({ label: this.i18n.t(`analytics.duration.d${days}`), value: days }));
+  });
+
+  // ponytail: default is the first option; no "All time" until the API defines one.
+  readonly locationDays = signal(7);
+  readonly topDays = signal(7);
+  readonly summaryDays = signal(7);
+  readonly tableDays = signal(7);
 
   readonly tableRows = computed(() =>
     this.insightLoading() ? new Array(5).fill(null) : this.insightRows()
@@ -158,15 +178,20 @@ export class AnalyticsPage implements OnInit {
 
   ngOnInit(): void {
     forkJoin({
+      // Unfiltered — the KPI lifecycle counts are "right now", not a time window.
       overview: this.analytics.getOverview().pipe(catchError((error) => {
         console.error('Failed to load analytics overview', error);
         return of(null);
       })),
-      offersSummary: this.analytics.getOffersSummary().pipe(catchError((error) => {
+      topOverview: this.analytics.getOverview(this.topDays()).pipe(catchError((error) => {
+        console.error('Failed to load analytics overview', error);
+        return of(null);
+      })),
+      offersSummary: this.analytics.getOffersSummary(this.summaryDays()).pipe(catchError((error) => {
         console.error('Failed to load analytics offers summary', error);
         return of(null);
       })),
-      redemptionsByLocation: this.analytics.getRedemptionsByLocation().pipe(catchError((error) => {
+      redemptionsByLocation: this.analytics.getRedemptionsByLocation(this.locationDays()).pipe(catchError((error) => {
         console.error('Failed to load redemptions by location', error);
         return of([]);
       })),
@@ -175,23 +200,77 @@ export class AnalyticsPage implements OnInit {
         this.loading.set(false);
         this.startCountUp();
       }))
-      .subscribe(({ overview, offersSummary, redemptionsByLocation }) => {
+      .subscribe(({ overview, topOverview, offersSummary, redemptionsByLocation }) => {
         this.overview.set(overview);
+        this.topOverview.set(topOverview);
         this.offersSummary.set(offersSummary);
         this.redemptionsByLocation.set(redemptionsByLocation);
       });
   }
 
-  showRedemptionsByDay(): void {
-    this.redemptionChartMode.set('day');
-    if (this.dayLoading()) return;
+  /* ─── Redemption by Location ─── */
 
-    this.dayLoading.set(true);
-    this.analytics.getRedemptionsByDays()
-      .pipe(finalize(() => this.dayLoading.set(false)))
+  /** Loads whichever breakdown the panel is showing, for the selected duration. */
+  showRedemptions(mode: 'location' | 'day'): void {
+    this.redemptionChartMode.set(mode);
+    const days = this.locationDays();
+    this.chartLoading.set(true);
+
+    if (mode === 'day') {
+      this.analytics.getRedemptionsByDays(days)
+        .pipe(finalize(() => this.chartLoading.set(false)))
+        .subscribe({
+          next: (rows) => this.redemptionsByDay.set(rows),
+          error: (error) => console.error('Failed to load redemptions by day', error),
+        });
+      return;
+    }
+
+    this.analytics.getRedemptionsByLocation(days)
+      .pipe(finalize(() => this.chartLoading.set(false)))
       .subscribe({
-        next: (rows) => this.redemptionsByDay.set(rows),
-        error: (error) => console.error('Failed to load redemptions by day', error),
+        next: (rows) => this.redemptionsByLocation.set(rows),
+        error: (error) => console.error('Failed to load redemptions by location', error),
+      });
+  }
+
+  selectLocationDays(days: number): void {
+    if (this.locationDays() === days) return;
+    this.locationDays.set(days);
+    this.showRedemptions(this.redemptionChartMode());
+  }
+
+  /* ─── Top Offers ─── */
+
+  selectTopDays(days: number): void {
+    if (this.topDays() === days) return;
+    this.topDays.set(days);
+    this.topLoading.set(true);
+    this.analytics.getOverview(days)
+      .pipe(finalize(() => {
+        this.topLoading.set(false);
+        this.animateTopOffers();
+      }))
+      .subscribe({
+        next: (data) => this.topOverview.set(data),
+        error: (error) => console.error('Failed to load analytics overview', error),
+      });
+  }
+
+  /* ─── Offers Overview ─── */
+
+  selectSummaryDays(days: number): void {
+    if (this.summaryDays() === days) return;
+    this.summaryDays.set(days);
+    this.summaryLoading.set(true);
+    this.analytics.getOffersSummary(days)
+      .pipe(finalize(() => {
+        this.summaryLoading.set(false);
+        this.animateSummary();
+      }))
+      .subscribe({
+        next: (data) => this.offersSummary.set(data),
+        error: (error) => console.error('Failed to load analytics offers summary', error),
       });
   }
 
@@ -202,19 +281,25 @@ export class AnalyticsPage implements OnInit {
 
   private startCountUp(): void {
     const ov = this.overview();
-    const sum = this.offersSummary();
 
     this.animateTo('activeOffers', ov?.activeOffersCount ?? 0);
     this.animateTo('inactiveOffers', ov?.inactiveOffersCount ?? 0);
     this.animateTo('draftOffers', ov?.draftOffersCount ?? 0);
     this.animateTo('pendingRequests', ov?.pendingRequestsCount ?? 0);
 
-    const totalOffers = sum?.totalOffers ?? (ov ? (ov.activeOffersCount + ov.inactiveOffersCount + ov.draftOffersCount) : 0);
-    this.animateTo('totalOffers', totalOffers);
-    this.animateTo('totalOfferViews', sum?.totalViews ?? 0);
+    this.animateSummary();
+    this.animateTopOffers();
+  }
+
+  private animateSummary(): void {
+    this.animateTo('totalOffers', this.totalOfferCount);
+    this.animateTo('totalOfferViews', this.offersSummary()?.totalViews ?? 0);
     this.animateTo('totalRedemptions', this.redemptionTotal);
     this.animateTo('locations', this.locationCount);
+  }
 
+  private animateTopOffers(): void {
+    const ov = this.topOverview();
     this.animateTo('top_favorites', ov?.mostFavouritedOffer?.count ?? 0);
     this.animateTo('top_views', ov?.mostViewedOffer?.count ?? 0);
     this.animateTo('top_shares', ov?.mostSharedOffer?.count ?? 0);
@@ -272,7 +357,7 @@ export class AnalyticsPage implements OnInit {
 
     this.insightLoading.set(true);
     this.insightRows.set([]); // skeleton rows only — don't leave the previous page on screen
-    this.analytics.getOfferInsights(page, rows, sortBy, event.sortOrder === -1 ? 'desc' : 'asc', search)
+    this.analytics.getOfferInsights(page, rows, sortBy, event.sortOrder === -1 ? 'desc' : 'asc', search, this.tableDays())
       .pipe(finalize(() => this.insightLoading.set(false)))
       .subscribe({
         next: (response) => {
@@ -281,6 +366,14 @@ export class AnalyticsPage implements OnInit {
         },
         error: (error) => console.error('Failed to load offer insights', error),
       });
+  }
+
+  /** Duration filter for the insights table. `filter()` re-runs the lazy load and
+   *  resets to page 1 for us — the value is read back from `tableDays` above. */
+  selectTableDays(days: number, table: Table): void {
+    if (this.tableDays() === days) return;
+    this.tableDays.set(days);
+    table.filter(days, 'days', 'equals');
   }
 
   /** One card per metric: most favorited, most viewed, most shared. */
@@ -292,7 +385,7 @@ export class AnalyticsPage implements OnInit {
     metricId: string;
     value: number;
   }> {
-    const overview = this.overview();
+    const overview = this.topOverview();
     return [
       this.topOfferCard(overview?.mostFavouritedOffer, 'pi pi-bookmark', 'analytics.topOffers.mostFavorited', 'analytics.common.favorites', 'top_favorites'),
       this.topOfferCard(overview?.mostViewedOffer, 'pi pi-eye', 'analytics.topOffers.mostViewed', 'analytics.common.views', 'top_views'),

@@ -1476,10 +1476,17 @@
       "locations": "Locations",
       "locationsHint": "Branches offering your deals"
     },
+    "duration": {
+      "label": "Duration",
+      "d7": "7 Days",
+      "d14": "14 Days",
+      "d30": "30 Days",
+      "d365": "365 Days"
+    },
     "location": {
       "title": "Redemption by Location",
       "subtitle": "Distribution of redemptions across locations",
-      "daySubtitle": "Redemptions during the last 7 days",
+      "daySubtitle": "Redemptions per day",
       "filterLabel": "Group redemptions by",
       "byLocation": "Location",
       "byDay": "Day",
@@ -1512,12 +1519,7 @@
     },
     "overview": {
       "title": "Offers Overview",
-      "subtitle": "A quick summary of your current performance",
-      "filterLabel": "Overview period",
-      "sevenDays": "7 Days",
-      "thirtyDays": "30 Days",
-      "ninetyDays": "90 Days",
-      "allTime": "All Time"
+      "subtitle": "A quick summary of your current performance"
     },
     "activity": {
       "title": "Redemptions by Day",

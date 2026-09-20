@@ -137,7 +137,14 @@
       justify-content: space-between;
       gap: 1rem;
     }
+
   }
+}
+
+/* Every panel puts its duration select under the title + description. */
+:host ::ng-deep .duration-select {
+  min-width: 9.5rem;
+  margin-top: 0.85rem;
 }
 
 .analytics-grid--primary {
@@ -468,6 +475,10 @@
     button {
       flex: 1;
     }
+  }
+
+  :host ::ng-deep .duration-select {
+    width: 100%;
   }
 
   ::ng-deep .insights-search .app-search {

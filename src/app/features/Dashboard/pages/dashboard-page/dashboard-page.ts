@@ -22,6 +22,7 @@ interface TopOfferData {
   offerTitle: string;
   offerTitleAr?: string;
   offerMode: string[];
+  offerLogo?: string;
   redemptions: number;
 }
 
@@ -63,6 +64,15 @@ export class DashboardPage implements OnInit {
     if (!offer) return '';
     return this.localized(offer.offerTitle, offer.offerTitleAr);
   });
+
+  private readonly topOfferLogoFailed = signal(false);
+  readonly topOfferLogo = computed(() =>
+    this.topOfferLogoFailed() ? '' : this.mediaUrl(this.topOffer()?.offerLogo),
+  );
+
+  markTopOfferLogoFailed(): void {
+    this.topOfferLogoFailed.set(true);
+  }
 
   readonly offerModeInfo = computed(() => {
     const offer = this.topOffer();
@@ -130,18 +140,29 @@ export class DashboardPage implements OnInit {
 
   private loadTopOffer(): void {
     this.topOfferLoading.set(true);
-    // Placeholder data until dedicated top-performing offer API is provided
-    setTimeout(() => {
-      this.topOffer.set({
-        offerId: '',
-        offerTitle: 'Summer Sale 2026',
-        offerTitleAr: 'تخفيضات صيف 2026',
-        offerMode: ['online'],
-        redemptions: 0,
+    this.dashboardService
+      .getTopPerformingOffer()
+      .pipe(finalize(() => this.topOfferLoading.set(false)))
+      .subscribe({
+        next: (res) => {
+          const offer = res?.offer;
+          if (!offer?.offerTitle && !offer?.offerTitleAr) {
+            this.topOffer.set(null);
+            return;
+          }
+          const redemptions = res?.redemptions?.total ?? 0;
+          this.topOffer.set({
+            offerId: offer.offerId ?? '',
+            offerTitle: offer.offerTitle ?? '',
+            offerTitleAr: offer.offerTitleAr,
+            offerMode: offer.availability ?? [],
+            offerLogo: offer.offerLogo,
+            redemptions,
+          });
+          this.animateTo('topOfferRedemptions', redemptions);
+        },
+        error: () => this.topOffer.set(null),
       });
-      this.animateTo('topOfferRedemptions', 0);
-      this.topOfferLoading.set(false);
-    }, 200);
   }
 
   private loadVendorProfile(): void {
