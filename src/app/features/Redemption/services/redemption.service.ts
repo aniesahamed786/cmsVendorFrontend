@@ -8,6 +8,7 @@ import {
   OfferLocation,
   RecordRedemptionPayload,
   RedemptionListResponse,
+  RedemptionTransactionType,
 } from '../models/redemption.model';
 
 @Injectable({ providedIn: 'root' })
@@ -37,9 +38,13 @@ export class RedemptionService {
     return this.http.post<BulkUploadResponse>(`${this.baseUrl}/uploadBulkRedemptions`, payloads);
   }
 
-  getRedemptions(page: number, pageSize: number): Observable<RedemptionListResponse> {
+  getRedemptions(
+    page: number,
+    pageSize: number,
+    transactionType: RedemptionTransactionType,
+  ): Observable<RedemptionListResponse> {
     return this.http.get<RedemptionListResponse>(`${this.baseUrl}/getRedemptions`, {
-      params: { page, pageSize },
+      params: { page, pageSize, transactionType },
     });
   }
 }

@@ -58,9 +58,12 @@ export interface RedemptionRow {
   membershipId: number;
   offerTitle: string;
   offerTitleAr: string;
-  /** Both optional until the list endpoint starts returning them. */
+  /** All optional until the list endpoint starts returning them.
+   *  transactionDate is SINGLE-only; startDate/endDate are COLLECTIVE-only. */
   transactionType?: RedemptionTransactionType;
-  createdAt?: string;
+  transactionDate?: string;
+  startDate?: string;
+  endDate?: string;
   totalAmountPaid: number;
   discountAmount: number;
   amountSaved: number;

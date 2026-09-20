@@ -1165,13 +1165,16 @@
     "list": {
       "title": "Redemption List"
     },
+    "filter": {
+      "single": "Single",
+      "collective": "Collective"
+    },
     "column": {
       "membershipId": "Membership ID",
       "offer": "Offer",
       "currentPrice": "Current Price",
       "discountPrice": "Discount Price",
-      "amountSaved": "Amount Saved",
-      "timestamp": "Timestamp"
+      "amountSaved": "Amount Saved"
     },
     "currency": "SAR.",
     "empty": "No redemptions found.",

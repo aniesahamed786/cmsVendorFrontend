@@ -150,6 +150,16 @@
   <section class="redemption-card">
     <div class="redemption-card__header redemption-card__header--table">
       <h2 class="redemption-card__title">{{ 'redemption.list.title' | translate }}</h2>
+      <div class="redemption-list__filter-group">
+        <button type="button" class="redemption-list__filter-btn" [class.is-active]="listType() === 'SINGLE'"
+          [attr.aria-pressed]="listType() === 'SINGLE'" (click)="selectListType('SINGLE')">
+          {{ 'redemption.filter.single' | translate }}
+        </button>
+        <button type="button" class="redemption-list__filter-btn" [class.is-active]="listType() === 'COLLECTIVE'"
+          [attr.aria-pressed]="listType() === 'COLLECTIVE'" (click)="selectListType('COLLECTIVE')">
+          {{ 'redemption.filter.collective' | translate }}
+        </button>
+      </div>
     </div>
 
     <p-table [value]="redemptionRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
@@ -163,7 +173,12 @@
           <th>{{ 'redemption.column.currentPrice' | translate }}</th>
           <th>{{ 'redemption.column.discountPrice' | translate }}</th>
           <th>{{ 'redemption.column.amountSaved' | translate }}</th>
-          <th>{{ 'redemption.column.timestamp' | translate }}</th>
+          @if (listType() === 'COLLECTIVE') {
+          <th>{{ 'redemption.label.startDate' | translate }}</th>
+          <th>{{ 'redemption.label.endDate' | translate }}</th>
+          } @else {
+          <th>{{ 'redemption.label.transactionDate' | translate }}</th>
+          }
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-item>
@@ -174,7 +189,12 @@
           <td>{{ item.currency }} {{ item.totalAmountPaid }}</td>
           <td>{{ item.currency }} {{ item.discountAmount }}</td>
           <td>{{ item.currency }} {{ item.amountSaved }}</td>
-          <td>{{ item.timestamp }}</td>
+          @if (listType() === 'COLLECTIVE') {
+          <td>{{ item.startDate }}</td>
+          <td>{{ item.endDate }}</td>
+          } @else {
+          <td>{{ item.transactionDate }}</td>
+          }
         </tr>
       </ng-template>
 
@@ -189,12 +209,15 @@
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
           <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
+          @if (listType() === 'COLLECTIVE') {
+          <td><span class="app-skeleton redemption-table__skeleton-cell redemption-table__skeleton-cell--text"></span></td>
+          }
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="7" class="redemption-table__empty">{{ 'redemption.empty' | translate }}</td>
+          <td [attr.colspan]="columnCount" class="redemption-table__empty">{{ 'redemption.empty' | translate }}</td>
         </tr>
       </ng-template>
     </p-table>

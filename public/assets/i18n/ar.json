@@ -1167,13 +1167,16 @@
     "list": {
       "title": "قائمة الاستردادات"
     },
+    "filter": {
+      "single": "فردي",
+      "collective": "جماعي"
+    },
     "column": {
       "membershipId": "رقم العضوية",
       "offer": "العرض",
       "currentPrice": "السعر الحالي",
       "discountPrice": "السعر بعد الخصم",
-      "amountSaved": "المبلغ الموفَّر",
-      "timestamp": "التاريخ والوقت"
+      "amountSaved": "المبلغ الموفَّر"
     },
     "currency": "ر.س",
     "empty": "لا توجد عمليات استبدال.",

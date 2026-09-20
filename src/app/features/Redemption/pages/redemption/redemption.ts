@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, ViewChild, computed, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { TableLazyLoadEvent } from 'primeng/table';
+import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { Observable, finalize, firstValueFrom, forkJoin, from, of, switchMap } from 'rxjs';
 import { catchError, map, mergeMap, toArray } from 'rxjs/operators';
 import { PrimeUIModules } from '../../../../core/prime.import';
@@ -23,6 +23,7 @@ import {
   OfferLocation,
   RecordRedemptionPayload,
   RedemptionRow,
+  RedemptionTransactionType,
 } from '../../models/redemption.model';
 import { RedemptionService } from '../../services/redemption.service';
 import {
@@ -198,6 +199,22 @@ export class Redemption {
   readonly listLoading = signal(true);
   readonly pageSize = signal(10);
 
+  /** Which transaction type the list is filtered to. */
+  readonly listType = signal<RedemptionTransactionType>('SINGLE');
+  @ViewChild(Table) private listTable!: Table;
+
+  /** COLLECTIVE splits the date column into start + end. */
+  get columnCount(): number {
+    return this.listType() === 'COLLECTIVE' ? 8 : 7;
+  }
+
+  selectListType(value: RedemptionTransactionType): void {
+    if (this.listType() === value) return;
+    this.listType.set(value);
+    // reset() sends the paginator back to page 1 and re-emits onLazyLoad.
+    this.listTable.reset();
+  }
+
   /** While loading, feed the table falsy rows so PrimeNG renders the skeleton body. */
   readonly redemptionRows = computed(() =>
     this.listLoading()
@@ -206,20 +223,23 @@ export class Redemption {
           ...r,
           offer: this.localized(r.offerTitle, r.offerTitleAr),
           type: this.transactionTypes.find((t) => t.value === r.transactionType)?.label ?? '—',
-          timestamp: this.formatTimestamp(r.createdAt),
+          transactionDate: this.formatDate(r.transactionDate),
+          startDate: this.formatDate(r.startDate),
+          endDate: this.formatDate(r.endDate),
         })),
   );
 
-  private formatTimestamp(value: string | undefined): string {
+  /** Read in UTC: the API sends day boundaries (00:00:00Z / 23:59:59Z), so a local
+   *  offset would drag the end date onto the next day. */
+  private formatDate(value: string | undefined): string {
     if (!value) return '—';
     const parsed = new Date(value);
     if (Number.isNaN(parsed.getTime())) return '—';
-    return parsed.toLocaleString(this.i18n.lang() === 'ar' ? 'ar' : 'en-US', {
+    return parsed.toLocaleDateString(this.i18n.lang() === 'ar' ? 'ar' : 'en-US', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      timeZone: 'UTC',
     });
   }
 
@@ -373,7 +393,7 @@ export class Redemption {
   private loadRedemptions(page: number, pageSize: number): void {
     this.listLoading.set(true);
     this.api
-      .getRedemptions(page, pageSize)
+      .getRedemptions(page, pageSize, this.listType())
       .pipe(finalize(() => this.listLoading.set(false)))
       .subscribe({
         next: (res) => {
