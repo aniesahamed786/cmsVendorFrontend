@@ -1143,7 +1143,7 @@
       "totalInvoiceAmount": "Total Invoice Amount (Including VAT)",
       "totalAmountPaid": "Total Amount Paid",
       "currency": "Currency",
-      "discountAmount": "Discount Amount",
+      "discountAmount": "Amount Saved",
       "discountAmountHint": "Calculated automatically: Total Invoice Amount (Including VAT) − Total Amount Paid.",
       "membershipId": "Membership ID",
       "mobileNumber": "Mobile Number",

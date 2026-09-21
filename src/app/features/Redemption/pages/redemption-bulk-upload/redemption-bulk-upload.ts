@@ -156,7 +156,7 @@ export class RedemptionBulkUpload {
       totalAmountIncVat: this.i18n.t('redemption.label.totalInvoiceAmount'),
       totalAmountPaid: this.i18n.t('redemption.label.totalAmountPaid'),
       currency: this.i18n.t('redemption.label.currency'),
-      discountAmount: this.i18n.t('redemption.label.discountAmount'),
+      discountAmount: this.i18n.t('redemption.column.amountSaved'),
     };
   }
 
