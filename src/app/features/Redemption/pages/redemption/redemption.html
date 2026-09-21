@@ -4,36 +4,10 @@
     <div class="redemption-header__actions">
       <app-button variant="outline" icon="pi pi-download" [loading]="downloadingTemplate()"
         (click)="downloadTemplate()">{{ 'redemption.downloadExcel' | translate }}</app-button>
-      <app-button variant="primary" icon="pi pi-upload" [loading]="uploading()" (click)="triggerUpload(excelInput)">{{
+      <app-button variant="primary" icon="pi pi-upload" [routerLink]="'/redemption/bulk-upload'">{{
         'redemption.uploadExcel' | translate }}</app-button>
-      <input #excelInput type="file" class="redemption-header__file-input"
-        accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        (change)="onFileSelected($event)" />
     </div>
   </div>
-
-  @if (uploadErrors().length) {
-  <div class="redemption-upload-errors">
-    <div class="redemption-upload-errors__header">
-      <i class="pi pi-exclamation-triangle"></i>
-      <span>{{ 'redemption.upload.errorsTitle' | translate }}</span>
-      <button type="button" class="redemption-upload-errors__close" (click)="clearUploadErrors()"
-        [attr.aria-label]="'redemption.upload.dismiss' | translate">
-        <i class="pi pi-times"></i>
-      </button>
-    </div>
-    <ul class="redemption-upload-errors__list">
-      @for (err of uploadErrors(); track $index) {
-      <li>
-        @if (err.row) {
-        <strong>{{ 'redemption.upload.row' | translate }} {{ err.row }}:</strong>
-        }
-        {{ err.message }}
-      </li>
-      }
-    </ul>
-  </div>
-  }
 
   <p-card styleClass="redemption-card redemption-card--spaced">
     <div class="redemption-card__header">
@@ -161,12 +135,12 @@
   <section class="redemption-card">
     <div class="redemption-card__header redemption-card__header--table">
       <h2 class="redemption-card__title">{{ 'redemption.list.title' | translate }}</h2>
-      <div class="redemption-list__filter-group">
-        <button type="button" class="redemption-list__filter-btn" [class.is-active]="listType() === 'SINGLE'"
+      <div class="app-segmented">
+        <button type="button" class="app-segmented__btn" [class.is-active]="listType() === 'SINGLE'"
           [attr.aria-pressed]="listType() === 'SINGLE'" (click)="selectListType('SINGLE')">
           {{ 'redemption.filter.single' | translate }}
         </button>
-        <button type="button" class="redemption-list__filter-btn" [class.is-active]="listType() === 'COLLECTIVE'"
+        <button type="button" class="app-segmented__btn" [class.is-active]="listType() === 'COLLECTIVE'"
           [attr.aria-pressed]="listType() === 'COLLECTIVE'" (click)="selectListType('COLLECTIVE')">
           {{ 'redemption.filter.collective' | translate }}
         </button>
@@ -231,10 +205,4 @@
       </ng-template>
     </p-table>
   </section>
-
-  <app-redemption-upload-preview [visible]="previewVisible()" [drafts]="previewDrafts()"
-    [catalogue]="previewCatalogue()" [errors]="previewErrors()" [serverErrors]="previewServerErrors()"
-    [branchesLoading]="previewBranchesLoading()" [submitting]="uploading()" [fileName]="previewFileName()"
-    (patch)="onPreviewPatch($event)" (removeRow)="onPreviewRemoveRow($event)" (submitRows)="submitPreview()"
-    (cancel)="cancelPreview()" />
 </div>

@@ -1,0 +1,155 @@
+:host {
+  display: block;
+}
+
+.bulk-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+
+  > * {
+    min-width: 0;
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--app-muted);
+  }
+
+  &__file-input {
+    display: none;
+  }
+
+  &__file-errors {
+    border: 1px solid var(--app-status-expired);
+    background: color-mix(in srgb, var(--app-status-expired) 8%, var(--app-surface));
+    padding: 1rem 1.25rem;
+  }
+
+  &__file-errors-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--app-status-expired);
+    margin-bottom: 0.5rem;
+  }
+
+  &__file-errors-close {
+    margin-inline-start: auto;
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+  }
+
+  &__file-errors-list {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+    max-height: 14rem;
+    overflow-y: auto;
+    color: var(--app-text);
+    font-size: 0.875rem;
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  &__file-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__file-icon {
+    font-size: 1.5rem;
+    color: var(--app-status-active);
+  }
+
+  &__file-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin-inline-end: auto;
+    min-width: 0;
+  }
+
+  &__file-name {
+    font-weight: 600;
+    color: var(--app-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__file-count {
+    font-size: 0.8rem;
+    color: var(--app-muted);
+  }
+
+  // Step 1: one big click target.
+  &__drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 16rem;
+    padding: 2rem;
+    background: var(--app-surface);
+    border: 2px dashed var(--app-border);
+    color: var(--app-text);
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+
+    &:hover:not(:disabled) {
+      border-color: var(--app-primary);
+      background: var(--app-primary-hover-soft);
+    }
+
+    &:disabled {
+      cursor: progress;
+    }
+  }
+
+  &__drop-icon {
+    font-size: 2.5rem;
+    color: var(--app-primary);
+  }
+
+  &__drop-title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  &__drop-hint {
+    font-size: 0.85rem;
+    color: var(--app-muted);
+  }
+}
+
+::ng-deep .bulk-upload__spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+}

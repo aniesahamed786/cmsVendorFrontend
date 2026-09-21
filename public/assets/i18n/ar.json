@@ -1193,7 +1193,7 @@
       "genericErrorDetail": "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
       "templateFailed": "تعذّر تنزيل النموذج",
       "uploadFailed": "تعذّر قراءة الملف",
-      "uploadInvalidSummary": "الملف يحتوي على أخطاء",
+      "uploadInvalidSummary": "الملف يحتوي على صفوف غير صالحة",
       "uploadInvalidDetail": "لم يتم رفع أي بيانات. صحّح الصفوف المذكورة ثم أعد المحاولة.",
       "uploadSuccessSummary": "تم رفع الاستردادات",
       "uploadSuccessDetail": "تم رفع {{count}} عملية استرداد بنجاح.",
@@ -1241,14 +1241,28 @@
       "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
     },
     "preview": {
-      "title": "المراجعة قبل الرفع",
-      "subtitle": "راجع الصفوف أدناه وصحّح ما هو مُعلَّم، ثم أرسل.",
       "invalidBanner": "بعض الصفوف تحتاج إلى تصحيح قبل الرفع",
       "readyBanner": "جميع الصفوف جاهزة للرفع",
       "removeRow": "حذف هذا الصف",
       "noRows": "لا توجد صفوف للرفع.",
       "submit": "إرسال",
-      "rejectedBanner": "رفض الخادم هذه الصفوف — صحّحها ثم أعد الإرسال"
+      "rejectedBanner": "رفض الخادم هذه الصفوف — صحّحها ثم أعد الإرسال",
+      "totalRows": "إجمالي الصفوف",
+      "validRows": "الصفوف الصالحة",
+      "errorRows": "الصفوف غير الصالحة",
+      "filterAll": "كل الصفوف",
+      "filterErrors": "غير الصالحة فقط",
+      "filterValid": "الصالحة فقط"
+    },
+    "bulk": {
+      "backToRedemption": "الرجوع إلى الاسترداد",
+      "title": "الرفع الجماعي",
+      "subtitle": "ارفع نموذج الاسترداد بعد تعبئته، صحّح ما هو مُعلَّم، ثم أرسل.",
+      "chooseFile": "اختر ملف إكسل",
+      "chooseFileHint": "استخدم نموذج الاسترداد الذي نزّلته (.xlsx).",
+      "parsing": "جارٍ قراءة الملف...",
+      "replaceFile": "استبدال الملف",
+      "rowsDetected": "الصفوف المكتشفة"
     }
   },
   "messaging": {

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, output } from '@angular/core';
+import { Component, ViewChild, computed, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Table } from 'primeng/table';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -24,6 +25,8 @@ interface SelectOption {
   value: string;
 }
 
+export type RowFilter = 'all' | 'errors' | 'valid';
+
 @Component({
   selector: 'app-redemption-upload-preview',
   standalone: true,
@@ -32,14 +35,12 @@ interface SelectOption {
   styleUrl: './redemption-upload-preview.scss',
 })
 export class RedemptionUploadPreview {
-  readonly visible = input<boolean>(false);
   readonly drafts = input<RedemptionDraftRow[]>([]);
   readonly catalogue = input<DraftCatalogue>(emptyDraftCatalogue());
   readonly errors = input<Map<string, DraftErrors>>(new Map());
   readonly serverErrors = input<Map<string, string>>(new Map());
   readonly branchesLoading = input<ReadonlySet<string>>(new Set<string>());
   readonly submitting = input<boolean>(false);
-  readonly fileName = input<string>('');
 
   readonly patch = output<DraftPatch>();
   readonly removeRow = output<string>();
@@ -68,9 +69,30 @@ export class RedemptionUploadPreview {
     return this.drafts().filter((d) => server.has(d.id)).length;
   });
 
-  readonly canSubmit = computed(
-    () => this.drafts().length > 0 && this.invalidCount() === 0 && !this.submitting(),
-  );
+  readonly validCount = computed(() => this.drafts().length - this.invalidCount());
+
+  /** Invalid rows do not disable the button — the page answers the click with a toast. */
+  readonly canSubmit = computed(() => this.drafts().length > 0 && !this.submitting());
+
+  /** View-only. The counts and canSubmit above deliberately read drafts(), never this —
+   *  filtering to "valid only" must not hide broken rows from the submit guard. */
+  readonly rowFilter = signal<RowFilter>('all');
+
+  @ViewChild(Table) private table?: Table;
+
+  readonly visibleDrafts = computed(() => {
+    const filter = this.rowFilter();
+    if (filter === 'all') return this.drafts();
+    const broken = filter === 'errors';
+    return this.drafts().filter((d) => this.hasRowError(d) === broken);
+  });
+
+  setRowFilter(value: RowFilter): void {
+    this.rowFilter.set(value);
+    // Swapping [value] leaves the paginator on its old page, which can land past
+    // the end of a shorter filtered list and read as "no rows".
+    if (this.table) this.table.first = 0;
+  }
 
   readonly trackDraftById = (_index: number, draft: RedemptionDraftRow): string => draft.id;
 

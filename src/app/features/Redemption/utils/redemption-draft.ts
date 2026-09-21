@@ -136,11 +136,11 @@ export function validateDraft(
   const errors: DraftErrors = {};
   const collective = draft.transactionType === 'COLLECTIVE';
 
+  // Collective rows have no member, so the column is hidden and never checked.
   const membershipRaw = draft.membershipId.trim();
-  if (!membershipRaw) {
-    if (!collective) errors.membershipId = fill(messages.required, { field: labels.membershipId });
-  } else if (membershipNumber(membershipRaw) === null) {
-    errors.membershipId = messages.invalidMembershipId;
+  if (!collective) {
+    if (!membershipRaw) errors.membershipId = fill(messages.required, { field: labels.membershipId });
+    else if (membershipNumber(membershipRaw) === null) errors.membershipId = messages.invalidMembershipId;
   }
 
   if (!draft.offerId) {
@@ -250,22 +250,23 @@ export function draftToPayload(draft: RedemptionDraftRow): RecordRedemptionPaylo
     totalAmountPaid: parseAmount(draft.totalAmountPaid)!,
     currency: draft.currency.trim().toUpperCase(),
     discountAmount: parseAmount(draft.discountAmount)!,
-    ...(mobileNumber ? { mobileNumber } : {}),
     ...(branchId ? { branchId } : {}),
   };
 
+  // Same rule as the single-entry form: member fields belong to SINGLE only,
+  // so a value left in a hidden collective cell never reaches the API.
   if (draft.transactionType === 'COLLECTIVE') {
     return {
       ...common,
       transactionType: 'COLLECTIVE',
       startDate: toIsoDay(draft.startDate!),
       endDate: toIsoDay(draft.endDate!, true),
-      ...(membershipRaw ? { membershipId: Number(membershipRaw) } : {}),
     };
   }
 
   return {
     ...common,
+    ...(mobileNumber ? { mobileNumber } : {}),
     transactionType: 'SINGLE',
     membershipId: Number(membershipRaw),
     transactionDate: toIsoDay(draft.transactionDate!),

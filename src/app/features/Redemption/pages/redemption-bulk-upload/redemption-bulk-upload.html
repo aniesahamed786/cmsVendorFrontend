@@ -1,0 +1,64 @@
+<div class="bulk-upload">
+  <app-back-button label="redemption.bulk.backToRedemption" (click)="goBack()" />
+
+  <div class="bulk-upload__head">
+    <h1 class="bulk-upload__title">{{ 'redemption.bulk.title' | translate }}</h1>
+    <p class="bulk-upload__subtitle">{{ 'redemption.bulk.subtitle' | translate }}</p>
+  </div>
+
+  <input #excelInput type="file" class="bulk-upload__file-input"
+    accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    (change)="onFileSelected($event)" />
+
+  @if (fileErrors().length) {
+  <div class="bulk-upload__file-errors">
+    <div class="bulk-upload__file-errors-head">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ 'redemption.upload.errorsTitle' | translate }}</span>
+      <button type="button" class="bulk-upload__file-errors-close" (click)="clearFileErrors()"
+        [attr.aria-label]="'redemption.upload.dismiss' | translate">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+    <ul class="bulk-upload__file-errors-list">
+      @for (err of fileErrors(); track $index) {
+      <li>
+        @if (err.row) { <strong>{{ 'redemption.upload.row' | translate }} {{ err.row }}:</strong> }
+        {{ err.message }}
+      </li>
+      }
+    </ul>
+  </div>
+  }
+
+  @if (hasRows()) {
+  <div class="bulk-upload__file-card">
+    <i class="pi pi-file-excel bulk-upload__file-icon"></i>
+    <div class="bulk-upload__file-meta">
+      <span class="bulk-upload__file-name">{{ fileName() }}</span>
+      <span class="bulk-upload__file-count">
+        {{ 'redemption.bulk.rowsDetected' | translate }}: {{ drafts().length }}
+      </span>
+    </div>
+    <app-button variant="outline" icon="pi pi-refresh" [disabled]="busy()" (click)="pickFile(excelInput)">
+      {{ 'redemption.bulk.replaceFile' | translate }}
+    </app-button>
+  </div>
+
+  <app-redemption-upload-preview [drafts]="drafts()" [catalogue]="catalogue()" [errors]="errors()"
+    [serverErrors]="serverErrors()" [branchesLoading]="branchesLoading()" [submitting]="busy()"
+    (patch)="onPatch($event)" (removeRow)="onRemoveRow($event)" (submitRows)="submit()" (cancel)="goBack()" />
+  } @else {
+  <!-- Step 1. A plain click target, not p-fileupload: the parsing is ours anyway. -->
+  <button type="button" class="bulk-upload__drop" [disabled]="busy()" (click)="pickFile(excelInput)">
+    @if (busy()) {
+    <p-progressSpinner styleClass="bulk-upload__spinner" strokeWidth="4" />
+    <span class="bulk-upload__drop-title">{{ 'redemption.bulk.parsing' | translate }}</span>
+    } @else {
+    <i class="pi pi-cloud-upload bulk-upload__drop-icon"></i>
+    <span class="bulk-upload__drop-title">{{ 'redemption.bulk.chooseFile' | translate }}</span>
+    <span class="bulk-upload__drop-hint">{{ 'redemption.bulk.chooseFileHint' | translate }}</span>
+    }
+  </button>
+  }
+</div>

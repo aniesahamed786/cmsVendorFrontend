@@ -1102,6 +1102,41 @@ html body [data-pc-name="toggleswitch"],
 }
 
 /* ---------------------------------------------------------------------------
+ * Segmented switch — two or three mutually exclusive views in one control
+ * (analytics period, redemption list type, upload row filter). Plain <button>s
+ * so the active one is styling, not a PrimeNG theme fight; mark it with
+ * .is-active and aria-pressed.
+ * ------------------------------------------------------------------------ */
+.app-segmented {
+  display: inline-flex;
+  background: var(--field-bg);
+  padding: 0.25rem;
+  gap: 0.25rem;
+}
+
+.app-segmented__btn {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--app-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover:not(.is-active) {
+    color: var(--app-primary);
+  }
+
+  &.is-active {
+    background: var(--app-primary);
+    /* On-primary contrast, not a colour — same sanctioned #fff as the skeleton. */
+    color: #ffffff;
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * Skeleton loading
  *
  * The fill and the pulse are global; each call site adds a BEM class that sets

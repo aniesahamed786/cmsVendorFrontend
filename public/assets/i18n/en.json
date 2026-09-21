@@ -1191,7 +1191,7 @@
       "genericErrorDetail": "Something went wrong. Please try again.",
       "templateFailed": "Could not download template",
       "uploadFailed": "Could not read the file",
-      "uploadInvalidSummary": "File has errors",
+      "uploadInvalidSummary": "File has invalid rows",
       "uploadInvalidDetail": "Nothing was uploaded. Fix the listed rows and try again.",
       "uploadSuccessSummary": "Redemptions uploaded",
       "uploadSuccessDetail": "{{count}} redemption(s) were uploaded successfully.",
@@ -1239,14 +1239,28 @@
       "endBeforeStart": "End date cannot be before the start date."
     },
     "preview": {
-      "title": "Review before uploading",
-      "subtitle": "Check the rows below and correct anything highlighted, then submit.",
       "invalidBanner": "Some rows need attention before they can be uploaded",
       "readyBanner": "All rows are ready to upload",
       "removeRow": "Remove this row",
       "noRows": "No rows left to upload.",
       "submit": "Submit",
-      "rejectedBanner": "The server rejected these rows — fix them and submit again"
+      "rejectedBanner": "The server rejected these rows — fix them and submit again",
+      "totalRows": "Total rows",
+      "validRows": "Valid rows",
+      "errorRows": "Invalid rows",
+      "filterAll": "All rows",
+      "filterErrors": "Invalid only",
+      "filterValid": "Valid only"
+    },
+    "bulk": {
+      "backToRedemption": "Back to Redemption",
+      "title": "Bulk upload",
+      "subtitle": "Upload a filled redemption template, fix anything highlighted, then submit.",
+      "chooseFile": "Choose an Excel file",
+      "chooseFileHint": "Use the downloaded redemption template (.xlsx).",
+      "parsing": "Reading the file...",
+      "replaceFile": "Replace file",
+      "rowsDetected": "Rows detected"
     }
   },
   "messaging": {
