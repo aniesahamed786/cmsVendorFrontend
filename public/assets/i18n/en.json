@@ -1224,9 +1224,9 @@
       "membershipIdPrompt": "SINGLE transactions only (required). Leave empty for COLLECTIVE transactions.",
       "mobileNumberPrompt": "SINGLE transactions only (optional). Leave empty for COLLECTIVE transactions.",
       "badgeNumberPrompt": "SINGLE transactions only (optional). Leave empty for COLLECTIVE transactions.",
-      "transactionDatePrompt": "SINGLE transactions only (required). Leave empty for COLLECTIVE — use Start Date and End Date instead. Must fall within the selected offer's dates (see the Lists sheet).",
-      "startDatePrompt": "COLLECTIVE transactions only (required). Leave empty for SINGLE — use Transaction Date instead. Must fall within the selected offer's dates (see the Lists sheet).",
-      "endDatePrompt": "COLLECTIVE transactions only (required). Leave empty for SINGLE. Must fall within the selected offer's dates and not before the Start Date."
+      "transactionDatePrompt": "Format: yyyy-mm-dd (e.g. 2026-01-15). SINGLE transactions only (required). Leave empty for COLLECTIVE — use Start Date and End Date instead. Must fall within the selected offer's dates (see the Lists sheet).",
+      "startDatePrompt": "Format: yyyy-mm-dd (e.g. 2026-01-15). COLLECTIVE transactions only (required). Leave empty for SINGLE — use Transaction Date instead. Must fall within the selected offer's dates (see the Lists sheet).",
+      "endDatePrompt": "Format: yyyy-mm-dd (e.g. 2026-01-15). COLLECTIVE transactions only (required). Leave empty for SINGLE. Must fall within the selected offer's dates and not before the Start Date."
     },
     "upload": {
       "errorsTitle": "This file could not be uploaded",
