@@ -1142,6 +1142,7 @@
       "totalAmountPaid": "إجمالي المبلغ المدفوع",
       "currency": "العملة",
       "discountAmount": "مبلغ الخصم",
+      "discountAmountHint": "يُحسب تلقائيًا: إجمالي مبلغ الفاتورة (شامل ضريبة القيمة المضافة) − إجمالي المبلغ المدفوع.",
       "offer": "العرض",
       "branch": "الفرع",
       "totalAmount": "المبلغ الإجمالي",
@@ -1177,8 +1178,6 @@
     "column": {
       "membershipId": "رقم العضوية",
       "offer": "العرض",
-      "currentPrice": "السعر الحالي",
-      "discountPrice": "السعر بعد الخصم",
       "amountSaved": "المبلغ الموفَّر"
     },
     "currency": "ر.س",

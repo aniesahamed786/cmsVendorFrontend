@@ -227,11 +227,11 @@
             }
           </td>
 
-          <td>
-            <input pInputText type="text" inputmode="decimal" class="upload-preview__control"
+          <!-- Tooltip on the cell: a disabled input gets no mouse events. -->
+          <td [pTooltip]="'redemption.label.discountAmountHint' | translate" tooltipPosition="top">
+            <input pInputText type="text" class="upload-preview__control" disabled
               [class.upload-preview__control--invalid]="errorFor(draft, 'discountAmount')"
-              [ngModel]="draft.discountAmount"
-              (ngModelChange)="onEdit(draft, 'discountAmount', $event)" />
+              [value]="draft.discountAmount" [attr.aria-label]="'redemption.label.discountAmountHint' | translate" />
             @if (errorFor(draft, 'discountAmount'); as msg) {
             <small class="upload-preview__cell-error">{{ msg }}</small>
             }

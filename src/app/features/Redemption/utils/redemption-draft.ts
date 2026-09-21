@@ -128,6 +128,14 @@ export function parseAmount(raw: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/** Discount is never typed in: invoice − paid, '' until both amounts are numbers. */
+export function computedDiscount(draft: Pick<RedemptionDraftRow, 'totalAmountIncVat' | 'totalAmountPaid'>): string {
+  const invoice = parseAmount(draft.totalAmountIncVat);
+  const paid = parseAmount(draft.totalAmountPaid);
+  if (invoice === null || paid === null) return '';
+  return (Math.round((invoice - paid) * 100) / 100).toFixed(2);
+}
+
 export function validateDraft(
   draft: RedemptionDraftRow,
   catalogue: DraftCatalogue,
@@ -209,7 +217,6 @@ export function validateDraft(
   const amounts: [DraftField, string, string][] = [
     ['totalAmountIncVat', draft.totalAmountIncVat, labels.totalAmountIncVat],
     ['totalAmountPaid', draft.totalAmountPaid, labels.totalAmountPaid],
-    ['discountAmount', draft.discountAmount, labels.discountAmount],
   ];
 
   for (const [field, raw, label] of amounts) {
@@ -221,6 +228,12 @@ export function validateDraft(
     const value = parseAmount(text);
     if (value === null) errors[field] = fill(messages.notANumber, { field: label });
     else if (value < 0) errors[field] = fill(messages.negativeAmount, { field: label });
+  }
+
+  // Only worth flagging once both amounts are fine — otherwise their own errors say it.
+  const discount = parseAmount(computedDiscount(draft));
+  if (!errors.totalAmountIncVat && !errors.totalAmountPaid && discount !== null && discount < 0) {
+    errors.discountAmount = fill(messages.negativeAmount, { field: labels.discountAmount });
   }
 
   if (!draft.currency.trim()) {
@@ -252,7 +265,7 @@ export function draftToPayload(draft: RedemptionDraftRow): RecordRedemptionPaylo
     totalAmountIncVat: parseAmount(draft.totalAmountIncVat)!,
     totalAmountPaid: parseAmount(draft.totalAmountPaid)!,
     currency: draft.currency.trim().toUpperCase(),
-    discountAmount: parseAmount(draft.discountAmount)!,
+    discountAmount: parseAmount(computedDiscount(draft))!,
     ...(branchId ? { branchId } : {}),
   };
 

@@ -110,6 +110,18 @@ section.redemption-card {
     color: #dc2626;
   }
 
+  // Beats PrimeNG's disabled look, so a calculated field can still read as invalid.
+  input.redemption-form__input--invalid {
+    border-color: var(--app-status-expired);
+    background: color-mix(in srgb, var(--app-status-expired) 8%, var(--app-surface));
+  }
+
+  &__hint {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--app-muted);
+  }
+
   &__error {
     margin-top: 0.25rem;
     font-size: 0.75rem;

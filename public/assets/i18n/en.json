@@ -1144,6 +1144,7 @@
       "totalAmountPaid": "Total Amount Paid",
       "currency": "Currency",
       "discountAmount": "Discount Amount",
+      "discountAmountHint": "Calculated automatically: Total Invoice Amount (Including VAT) − Total Amount Paid.",
       "membershipId": "Membership ID",
       "mobileNumber": "Mobile Number",
       "badgeNumber": "Badge Number",
@@ -1175,8 +1176,6 @@
     "column": {
       "membershipId": "Membership ID",
       "offer": "Offer",
-      "currentPrice": "Current Price",
-      "discountPrice": "Discount Price",
       "amountSaved": "Amount Saved"
     },
     "currency": "SAR.",

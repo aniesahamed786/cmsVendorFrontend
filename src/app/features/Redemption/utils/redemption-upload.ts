@@ -3,6 +3,7 @@ import {
   DraftBranch,
   DraftCatalogue,
   RedemptionDraftRow,
+  computedDiscount,
   emptyDraftCatalogue,
 } from './redemption-draft';
 
@@ -253,7 +254,6 @@ export async function parseRedemptionUpload(
     const totalAmountIncVat = get(COLS.totalAmountIncVat);
     const totalAmountPaid = get(COLS.totalAmountPaid);
     const currency = get(COLS.currency);
-    const discountAmount = get(COLS.discountAmount);
 
     const isBlank =
       !membershipId &&
@@ -263,8 +263,7 @@ export async function parseRedemptionUpload(
       !startRaw &&
       !endRaw &&
       !totalAmountIncVat &&
-      !totalAmountPaid &&
-      !discountAmount;
+      !totalAmountPaid;
     if (isBlank) return;
 
     const typeRaw = get(COLS.transactionType).trim().toUpperCase();
@@ -303,7 +302,8 @@ export async function parseRedemptionUpload(
       totalAmountIncVat,
       totalAmountPaid,
       currency,
-      discountAmount,
+      // Whatever the cell holds (formula, typed value, old template) is ignored.
+      discountAmount: computedDiscount({ totalAmountIncVat, totalAmountPaid }),
     });
   });
 

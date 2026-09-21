@@ -124,10 +124,14 @@
         </div>
 
         <div class="redemption-form__field-wrapper">
-          <label class="redemption-form__label">{{ 'redemption.label.discountAmount' | translate }} <span
-              class="redemption-form__required">*</span></label>
-          <input type="text" inputmode="decimal" pInputText formControlName="discountAmount"
-            [placeholder]="'redemption.placeholder.discountAmount' | translate" class="redemption-form__input--full" />
+          <label class="redemption-form__label" for="discountAmount">{{ 'redemption.label.discountAmount' | translate }}</label>
+          <input id="discountAmount" type="text" pInputText formControlName="discountAmount"
+            aria-describedby="discountAmountHint" class="redemption-form__input--full"
+            [class.redemption-form__input--invalid]="isDiscountNegative" [attr.aria-invalid]="isDiscountNegative" />
+          @if (isDiscountNegative) {
+          <small class="redemption-form__error">{{ discountNegativeMessage }}</small>
+          }
+          <small id="discountAmountHint" class="redemption-form__hint">{{ 'redemption.label.discountAmountHint' | translate }}</small>
         </div>
       </div>
 
@@ -163,8 +167,8 @@
           }
           <th>{{ 'redemption.label.transactionType' | translate }}</th>
           <th>{{ 'redemption.column.offer' | translate }}</th>
-          <th>{{ 'redemption.column.currentPrice' | translate }}</th>
-          <th>{{ 'redemption.column.discountPrice' | translate }}</th>
+          <th>{{ 'redemption.label.totalInvoiceAmount' | translate }}</th>
+          <th>{{ 'redemption.label.totalAmountPaid' | translate }}</th>
           <th>{{ 'redemption.column.amountSaved' | translate }}</th>
           @if (listType() === 'COLLECTIVE') {
           <th>{{ 'redemption.label.startDate' | translate }}</th>
@@ -181,9 +185,9 @@
           }
           <td>{{ item.type }}</td>
           <td><span class="redemption-table__row-title">{{ item.offer }}</span></td>
+          <td>{{ item.currency }} {{ item.totalAmountIncVat }}</td>
           <td>{{ item.currency }} {{ item.totalAmountPaid }}</td>
           <td>{{ item.currency }} {{ item.discountAmount }}</td>
-          <td>{{ item.currency }} {{ item.amountSaved }}</td>
           @if (listType() === 'COLLECTIVE') {
           <td>{{ item.startDate }}</td>
           <td>{{ item.endDate }}</td>

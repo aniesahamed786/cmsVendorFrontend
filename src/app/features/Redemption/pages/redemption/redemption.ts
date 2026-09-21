@@ -113,9 +113,9 @@ export class Redemption {
       ...(collective ? [] : ['id']),
       'text', // transaction type
       'wide', // offer
-      'text', // current price
-      'text', // discount price
-      'text', // amount saved
+      'text', // total amount (inc. VAT)
+      'text', // total amount paid
+      'text', // discount amount
       ...(collective ? ['text', 'text'] : ['text']), // dates
     ];
   }
@@ -173,8 +173,14 @@ export class Redemption {
       totalInvoiceAmount: ['', Validators.required],
       totalAmountPaid: ['', Validators.required],
       currency: ['SAR', Validators.required],
-      discountAmount: ['', Validators.required],
+      // Derived from the two amounts below, never typed in.
+      discountAmount: [{ value: '', disabled: true }],
     });
+
+    merge(
+      this.redemptionForm.get('totalInvoiceAmount')!.valueChanges,
+      this.redemptionForm.get('totalAmountPaid')!.valueChanges,
+    ).subscribe(() => this.updateDiscountAmount());
 
     this.redemptionForm
       .get('transactionType')!
@@ -290,6 +296,18 @@ export class Redemption {
     }
   }
 
+  /** Paid more than the invoice — same rule the bulk upload applies per row. */
+  get isDiscountNegative(): boolean {
+    const { totalInvoiceAmount, totalAmountPaid } = this.redemptionForm.getRawValue();
+    return this.discountFor(totalInvoiceAmount, totalAmountPaid) < 0;
+  }
+
+  get discountNegativeMessage(): string {
+    return this.i18n.t('redemption.upload.negativeAmount', {
+      field: this.i18n.t('redemption.label.discountAmount'),
+    });
+  }
+
   get isDateRangeInvalid(): boolean {
     if (!this.isCollectiveTransaction) return false;
     const { startDate, endDate } = this.redemptionForm.getRawValue();
@@ -377,6 +395,7 @@ export class Redemption {
         totalAmountPaid: this.i18n.t('redemption.label.totalAmountPaid'),
         currency: this.i18n.t('redemption.label.currency'),
         discountAmount: this.i18n.t('redemption.label.discountAmount'),
+        discountAmountPrompt: this.i18n.t('redemption.label.discountAmountHint'),
         listsOfferHeader: this.i18n.t('redemption.label.offer'),
         listsRefHeader: this.i18n.t('redemption.template.reference'),
         listsStartHeader: this.i18n.t('redemption.template.offerStart'),
@@ -409,14 +428,16 @@ export class Redemption {
   }
 
   submit(): void {
-    if (this.redemptionForm.invalid || this.isDateRangeInvalid) {
+    if (this.redemptionForm.invalid || this.isDateRangeInvalid || this.isDiscountNegative) {
       this.redemptionForm.markAllAsTouched();
       this.messageService.add({
         severity: 'warn',
         summary: this.i18n.t('redemption.toast.invalidSummary'),
-        detail: this.isDateRangeInvalid
-          ? this.i18n.t('redemption.toast.dateRangeInvalidDetail')
-          : this.i18n.t('redemption.toast.invalidDetail'),
+        detail: this.redemptionForm.invalid
+          ? this.i18n.t('redemption.toast.invalidDetail')
+          : this.isDateRangeInvalid
+            ? this.i18n.t('redemption.toast.dateRangeInvalidDetail')
+            : this.discountNegativeMessage,
         life: 4000,
       });
       return;
@@ -435,7 +456,7 @@ export class Redemption {
       currency: String(v.currency ?? '')
         .trim()
         .toUpperCase(),
-      discountAmount: this.toNumber(v.discountAmount),
+      discountAmount: this.discountFor(v.totalInvoiceAmount, v.totalAmountPaid),
       ...(mobileNumber ? { mobileNumber } : {}),
       ...(branchId ? { branchId } : {}),
     };
@@ -495,6 +516,20 @@ export class Redemption {
       discountAmount: '',
     });
     this.offerLocations.set([]);
+  }
+
+  private discountFor(invoice: unknown, paid: unknown): number {
+    return Math.round((this.toNumber(invoice) - this.toNumber(paid)) * 100) / 100;
+  }
+
+  private updateDiscountAmount(): void {
+    const { totalInvoiceAmount, totalAmountPaid } = this.redemptionForm.getRawValue();
+    const ready = String(totalInvoiceAmount ?? '').trim() && String(totalAmountPaid ?? '').trim();
+    this.redemptionForm
+      .get('discountAmount')!
+      .setValue(ready ? this.discountFor(totalInvoiceAmount, totalAmountPaid).toFixed(2) : '', {
+        emitEvent: false,
+      });
   }
 
   private toNumber(value: unknown): number {

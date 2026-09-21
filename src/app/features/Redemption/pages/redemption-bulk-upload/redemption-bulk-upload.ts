@@ -33,6 +33,7 @@ import {
   DraftMessages,
   OfferWindow,
   RedemptionDraftRow,
+  computedDiscount,
   draftToPayload,
   emptyDraftCatalogue,
   isDraftValid,
@@ -327,6 +328,7 @@ export class RedemptionBulkUpload {
           }
         }
 
+        next.discountAmount = computedDiscount(next);
         return next;
       }),
     );

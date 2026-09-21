@@ -37,6 +37,7 @@ export interface TemplateLabels {
   totalAmountPaid: string;
   currency: string;
   discountAmount: string;
+  discountAmountPrompt: string;
   listsOfferHeader: string;
   listsRefHeader: string;
   listsStartHeader: string;
@@ -124,9 +125,14 @@ export const REF_COL = {
   branchJson: 6,
 } as const;
 
+/** Discount Amount (M): calculated from J − K, never entered. */
+const DISCOUNT_COL = 13;
+
 const FILL_REQUIRED = 'FFFFF2CC'; // amber: required for this row's type and still empty
 const FILL_UNUSED = 'FFEDEDED'; // grey: this row's type does not use the column
 const TEXT_UNUSED = 'FF9E9E9E';
+const FILL_NEGATIVE = 'FFFDE2E2'; // red: invalid value
+const TEXT_NEGATIVE = 'FFB91C1C';
 
 /** Colours each row once its Transaction Type (column A) is picked: amber where a field
  *  the type needs is still empty, grey where the type does not use the column.
@@ -168,7 +174,23 @@ function highlightByTransactionType(sheet: import('exceljs').Worksheet, last: nu
   required(`G2:G${last}`, single); // transaction date
   required(`H2:I${last}`, collective); // start + end date
   required(`E2:E${last}`, anyType); // offer
-  required(`J2:M${last}`, anyType); // amounts + currency
+  required(`J2:L${last}`, anyType); // amounts + currency; M is calculated
+
+  // Paid more than the invoice: the calculated discount went negative.
+  sheet.addConditionalFormatting({
+    ref: `M2:M${last}`,
+    rules: [
+      {
+        type: 'expression',
+        priority: 1,
+        formulae: ['AND(ISNUMBER(M2),M2<0)'],
+        style: {
+          fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: FILL_NEGATIVE } },
+          font: { color: { argb: TEXT_NEGATIVE } },
+        },
+      },
+    ],
+  });
 
   unused(`B2:D${last}`, collective); // membership ID, badge number, mobile
   unused(`G2:G${last}`, collective);
@@ -358,6 +380,17 @@ export async function buildRedemptionTemplate(
     // Text, so a badge keeps its leading zeros.
     sheet.getCell(`C${row}`).numFmt = '@';
 
+    // Everything the user fills stays editable once the sheet is protected below.
+    for (let col = 1; col < DISCOUNT_COL; col++) {
+      sheet.getRow(row).getCell(col).protection = { locked: false };
+    }
+    // Discount = invoice − paid; locked, so it can't be typed over.
+    const discount = sheet.getRow(row).getCell(DISCOUNT_COL);
+    discount.value = { formula: `IF(AND(ISNUMBER(J${row}),ISNUMBER(K${row})),ROUND(J${row}-K${row},2),"")` };
+    discount.numFmt = '0.00';
+    discount.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: FILL_UNUSED } };
+    discount.font = { color: { argb: TEXT_UNUSED } };
+
     if (titles.length) {
       // The row's offer period, looked up from Lists. 1/(1/x) turns a blank (0) into an
       // error, so an offer with no start/end — or no offer picked yet — falls back to
@@ -378,6 +411,7 @@ export async function buildRedemptionTemplate(
     promptRule(`B2:B${last}`, labels.membershipId, labels.membershipIdPrompt),
     promptRule(`C2:C${last}`, labels.badgeNumber, labels.badgeNumberPrompt),
     promptRule(`D2:D${last}`, labels.mobileNumber, labels.mobileNumberPrompt),
+    promptRule(`M2:M${last}`, labels.discountAmount, labels.discountAmountPrompt),
     ...(titles.length
       ? [
           // G: SINGLE only; H/I: COLLECTIVE only — all within the row's offer period.
@@ -390,6 +424,15 @@ export async function buildRedemptionTemplate(
   ];
 
   highlightByTransactionType(sheet, last);
+  // ponytail: no password — it stops accidental edits to Discount, not a determined user.
+  await sheet.protect('', {
+    selectLockedCells: true,
+    selectUnlockedCells: true,
+    formatColumns: true,
+    formatRows: true,
+    sort: true,
+    autoFilter: true,
+  });
   const buffer = await addValidationRules(await workbook.xlsx.writeBuffer(), rules);
   return new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

@@ -69,9 +69,9 @@ export interface RedemptionRow {
   transactionDate?: string;
   startDate?: string;
   endDate?: string;
+  totalAmountIncVat: number;
   totalAmountPaid: number;
   discountAmount: number;
-  amountSaved: number;
   currency: string;
 }
 
