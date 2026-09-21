@@ -24,7 +24,7 @@
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
 
-        <!-- Membership ID and Mobile Number identify one member, so they are single-transaction only. -->
+        <!-- Membership ID, Mobile Number and Badge Number identify one member, so they are single-transaction only. -->
         @if (!isCollectiveTransaction) {
         <div class="redemption-form__field-wrapper">
           <label class="redemption-form__label">
@@ -32,6 +32,12 @@
           </label>
           <input type="text" inputmode="numeric" pInputText formControlName="membershipId"
             [placeholder]="'redemption.placeholder.membershipId' | translate" class="redemption-form__input--full" />
+        </div>
+
+        <div class="redemption-form__field-wrapper">
+          <label class="redemption-form__label">{{ 'redemption.label.badgeNumber' | translate }}</label>
+          <input type="text" inputmode="numeric" maxlength="10" pInputText formControlName="badgeNumber"
+            [placeholder]="'redemption.placeholder.badgeNumber' | translate" class="redemption-form__input--full" />
         </div>
 
         <div class="redemption-form__field-wrapper">

@@ -317,6 +317,7 @@ export class RedemptionBulkUpload {
             next.transactionDate = null;
             next.membershipId = '';
             next.mobileNumber = '';
+            next.badgeNumber = '';
           } else {
             next.startDate = null;
             next.endDate = null;

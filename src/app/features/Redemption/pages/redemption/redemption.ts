@@ -164,6 +164,7 @@ export class Redemption {
       transactionType: ['SINGLE', Validators.required],
       membershipId: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       mobileNumber: [''],
+      badgeNumber: [''],
       transactionDate: ['', Validators.required],
       startDate: [''],
       endDate: [''],
@@ -282,7 +283,7 @@ export class Redemption {
     }
 
     const toClear = collective
-      ? ['transactionDate', 'membershipId', 'mobileNumber']
+      ? ['transactionDate', 'membershipId', 'mobileNumber', 'badgeNumber']
       : ['startDate', 'endDate'];
     for (const field of toClear) {
       this.redemptionForm.get(field)!.reset('', { emitEvent: false });
@@ -347,7 +348,7 @@ export class Redemption {
     if (this.downloadingTemplate()) return;
     this.downloadingTemplate.set(true);
 
-    this.catalogueApi.loadOfferCatalogue()
+    this.catalogueApi.loadOfferCatalogue(true)
       .pipe(finalize(() => this.downloadingTemplate.set(false)))
       .subscribe({
         next: (catalogue) => this.generateTemplateFile(catalogue.map(toTemplateOffer)),
@@ -365,6 +366,7 @@ export class Redemption {
         listsSheetName: this.i18n.t('redemption.template.listsSheetName'),
         membershipId: this.i18n.t('redemption.label.membershipId'),
         mobileNumber: this.i18n.t('redemption.label.mobileNumber'),
+        badgeNumber: this.i18n.t('redemption.label.badgeNumber'),
         transactionType: this.i18n.t('redemption.label.transactionType'),
         offer: this.i18n.t('redemption.label.offer'),
         branch: this.i18n.t('redemption.label.branch'),
@@ -377,6 +379,16 @@ export class Redemption {
         discountAmount: this.i18n.t('redemption.label.discountAmount'),
         listsOfferHeader: this.i18n.t('redemption.label.offer'),
         listsRefHeader: this.i18n.t('redemption.template.reference'),
+        listsStartHeader: this.i18n.t('redemption.template.offerStart'),
+        listsEndHeader: this.i18n.t('redemption.template.offerEnd'),
+        membershipIdPrompt: this.i18n.t('redemption.template.membershipIdPrompt'),
+        mobileNumberPrompt: this.i18n.t('redemption.template.mobileNumberPrompt'),
+        badgeNumberPrompt: this.i18n.t('redemption.template.badgeNumberPrompt'),
+        transactionDatePrompt: this.i18n.t('redemption.template.transactionDatePrompt'),
+        startDatePrompt: this.i18n.t('redemption.template.startDatePrompt'),
+        endDatePrompt: this.i18n.t('redemption.template.endDatePrompt'),
+        dateInvalidTitle: this.i18n.t('redemption.template.dateInvalidTitle'),
+        dateInvalidMessage: this.i18n.t('redemption.template.dateInvalidMessage'),
         noBranches: this.i18n.t('redemption.template.noBranches'),
         invalidValueTitle: this.i18n.t('redemption.template.invalidTitle'),
         invalidValueMessage: this.i18n.t('redemption.template.invalidMessage'),
@@ -412,6 +424,7 @@ export class Redemption {
 
     const v = this.redemptionForm.getRawValue();
     const mobileNumber = String(v.mobileNumber ?? '').trim();
+    const badgeNumber = String(v.badgeNumber ?? '').trim();
     const branchId = String(v.branch ?? '').trim();
     const membershipRaw = String(v.membershipId ?? '').trim();
 
@@ -440,6 +453,7 @@ export class Redemption {
           transactionType: 'SINGLE',
           membershipId: Number(membershipRaw),
           transactionDate: this.toIsoDate(v.transactionDate),
+          ...(badgeNumber ? { badgeNumber } : {}),
         };
 
     this.submitting.set(true);
@@ -469,6 +483,7 @@ export class Redemption {
       transactionType: 'SINGLE',
       membershipId: '',
       mobileNumber: '',
+      badgeNumber: '',
       transactionDate: '',
       startDate: '',
       endDate: '',

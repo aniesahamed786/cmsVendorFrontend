@@ -43,6 +43,7 @@ export interface SingleRedemptionPayload extends RedemptionPayloadBase {
   transactionType: 'SINGLE';
   membershipId: number;
   transactionDate: string;
+  badgeNumber?: string;
 }
 
 export interface CollectiveRedemptionPayload extends RedemptionPayloadBase {

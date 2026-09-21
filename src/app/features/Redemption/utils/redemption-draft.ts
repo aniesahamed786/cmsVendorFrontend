@@ -6,6 +6,7 @@ export interface RedemptionDraftRow {
   transactionType: 'SINGLE' | 'COLLECTIVE';
   membershipId: string;
   mobileNumber: string;
+  badgeNumber: string;
   offerId: string | null;
   offerText: string;
   branchId: string | null;
@@ -23,6 +24,7 @@ export type DraftField =
   | 'transactionType'
   | 'membershipId'
   | 'mobileNumber'
+  | 'badgeNumber'
   | 'offerId'
   | 'branchId'
   | 'transactionDate'
@@ -241,6 +243,7 @@ export function toIsoDay(date: Date, endOfDay = false): string {
 
 export function draftToPayload(draft: RedemptionDraftRow): RecordRedemptionPayload {
   const mobileNumber = draft.mobileNumber.trim();
+  const badgeNumber = draft.badgeNumber.trim();
   const branchId = (draft.branchId ?? '').trim();
   const membershipRaw = draft.membershipId.trim().replace(/\.0+$/, '');
 
@@ -267,6 +270,7 @@ export function draftToPayload(draft: RedemptionDraftRow): RecordRedemptionPaylo
   return {
     ...common,
     ...(mobileNumber ? { mobileNumber } : {}),
+    ...(badgeNumber ? { badgeNumber } : {}),
     transactionType: 'SINGLE',
     membershipId: Number(membershipRaw),
     transactionDate: toIsoDay(draft.transactionDate!),

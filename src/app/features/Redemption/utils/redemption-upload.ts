@@ -7,6 +7,23 @@ import {
 } from './redemption-draft';
 
 const COL = {
+  transactionType: 1,
+  membershipId: 2,
+  badgeNumber: 3,
+  mobileNumber: 4,
+  offer: 5,
+  branch: 6,
+  transactionDate: 7,
+  startDate: 8,
+  endDate: 9,
+  totalAmountIncVat: 10,
+  totalAmountPaid: 11,
+  currency: 12,
+  discountAmount: 13,
+} as const;
+
+/** The original template: member fields first, type in C, and no badge column. */
+const LEGACY_COL: Record<keyof typeof COL, number> = {
   membershipId: 1,
   mobileNumber: 2,
   transactionType: 3,
@@ -19,9 +36,14 @@ const COL = {
   totalAmountPaid: 10,
   currency: 11,
   discountAmount: 12,
-} as const;
+  badgeNumber: 13, // ponytail: past the last column there, so it always reads empty
+};
 
 const FIRST_DATA_ROW = 2;
+
+function isTransactionType(value: unknown): boolean {
+  return /^(single|collective)$/i.test(cellText(value).trim());
+}
 
 export interface RedemptionUploadError {
   row: number;
@@ -208,21 +230,30 @@ export async function parseRedemptionUpload(
 
   const drafts: RedemptionDraftRow[] = [];
 
+  // An old template has the type in C, not A. Reading it with the new map would
+  // silently put the mobile number into Membership ID, so pick the map per file.
+  let legacy = false;
+  sheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+    if (rowNumber < FIRST_DATA_ROW) return;
+    if (!isTransactionType(row.getCell(1).value) && isTransactionType(row.getCell(3).value)) legacy = true;
+  });
+  const COLS: Record<keyof typeof COL, number> = legacy ? LEGACY_COL : COL;
+
   sheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
     if (rowNumber < FIRST_DATA_ROW) return;
 
     const get = (col: number) => cellText(row.getCell(col).value);
 
-    const membershipId = get(COL.membershipId);
-    const offerText = get(COL.offer);
-    const branchText = get(COL.branch);
-    const dateRaw = get(COL.transactionDate);
-    const startRaw = get(COL.startDate);
-    const endRaw = get(COL.endDate);
-    const totalAmountIncVat = get(COL.totalAmountIncVat);
-    const totalAmountPaid = get(COL.totalAmountPaid);
-    const currency = get(COL.currency);
-    const discountAmount = get(COL.discountAmount);
+    const membershipId = get(COLS.membershipId);
+    const offerText = get(COLS.offer);
+    const branchText = get(COLS.branch);
+    const dateRaw = get(COLS.transactionDate);
+    const startRaw = get(COLS.startDate);
+    const endRaw = get(COLS.endDate);
+    const totalAmountIncVat = get(COLS.totalAmountIncVat);
+    const totalAmountPaid = get(COLS.totalAmountPaid);
+    const currency = get(COLS.currency);
+    const discountAmount = get(COLS.discountAmount);
 
     const isBlank =
       !membershipId &&
@@ -236,7 +267,7 @@ export async function parseRedemptionUpload(
       !discountAmount;
     if (isBlank) return;
 
-    const typeRaw = get(COL.transactionType).trim().toUpperCase();
+    const typeRaw = get(COLS.transactionType).trim().toUpperCase();
     const transactionType = typeRaw === 'COLLECTIVE' ? 'COLLECTIVE' : 'SINGLE';
 
     const offerRef = index.offerByTitle.get(offerText.toLowerCase());
@@ -251,7 +282,8 @@ export async function parseRedemptionUpload(
       sourceRow: rowNumber,
       transactionType,
       membershipId,
-      mobileNumber: get(COL.mobileNumber),
+      mobileNumber: get(COLS.mobileNumber),
+      badgeNumber: get(COLS.badgeNumber),
       offerId,
       offerText,
       branchId: branchRef?.branchId ?? null,
@@ -259,14 +291,14 @@ export async function parseRedemptionUpload(
       transactionDate:
         transactionType === 'COLLECTIVE'
           ? null
-          : toLocalDate(row.getCell(COL.transactionDate).value, dateRaw),
+          : toLocalDate(row.getCell(COLS.transactionDate).value, dateRaw),
       startDate:
         transactionType === 'COLLECTIVE'
-          ? toLocalDate(row.getCell(COL.startDate).value, startRaw)
+          ? toLocalDate(row.getCell(COLS.startDate).value, startRaw)
           : null,
       endDate:
         transactionType === 'COLLECTIVE'
-          ? toLocalDate(row.getCell(COL.endDate).value, endRaw)
+          ? toLocalDate(row.getCell(COLS.endDate).value, endRaw)
           : null,
       totalAmountIncVat,
       totalAmountPaid,

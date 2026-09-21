@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, of } from 'rxjs';
+import { Observable, forkJoin, from, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { I18nService } from '../../../shared/i18n/i18n.service';
+import { OfferDetailApi } from '../../Offers/models/offerList';
+import { OfferDetailService } from '../../Offers/services/offer-detail.service';
 import { ActiveStoreOffer, OfferLocation } from '../models/redemption.model';
 import { DraftBranch } from '../utils/redemption-draft';
 import { TemplateOffer, branchLabel } from '../utils/redemption-template';
@@ -14,6 +16,19 @@ export interface CatalogueEntry {
   title: string;
   raw: unknown;
   locations: { id: string; name: string; city: string; raw: unknown }[];
+  /** Only filled when loaded with dates (the Excel template). UTC midnight, see offerDayUtc. */
+  startDate?: Date | null;
+  endDate?: Date | null;
+}
+
+/** The offer's calendar day as UTC midnight. exceljs serialises a Date from its UTC
+ *  time, so a local-midnight date would land on the previous day east of UTC. */
+function offerDayUtc(value: { $date: string } | string | undefined): Date | null {
+  const iso = typeof value === 'string' ? value : value?.$date;
+  if (!iso) return null;
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return new Date(Date.UTC(parsed.getUTCFullYear(), parsed.getUTCMonth(), parsed.getUTCDate()));
 }
 
 function unwrapArray<T>(response: unknown, keys: string[]): T[] {
@@ -39,6 +54,8 @@ export function toTemplateOffer(entry: CatalogueEntry): TemplateOffer {
     offerId: entry.offerId,
     title: entry.title,
     raw: entry.raw,
+    startDate: entry.startDate ?? null,
+    endDate: entry.endDate ?? null,
     branches: entry.locations.map((l) => ({
       id: l.id,
       label: branchLabel(l.name, l.city),
@@ -51,6 +68,7 @@ export function toTemplateOffer(entry: CatalogueEntry): TemplateOffer {
 export class RedemptionCatalogueService {
   private readonly api = inject(RedemptionService);
   private readonly i18n = inject(I18nService);
+  private readonly offerDetail = inject(OfferDetailService);
 
   private static readonly LOCATION_FETCH_CONCURRENCY = 6;
 
@@ -60,8 +78,10 @@ export class RedemptionCatalogueService {
     return value ?? '';
   }
 
-  /** Active offers, each with its branches fetched in parallel and the source order kept. */
-  loadOfferCatalogue(): Observable<CatalogueEntry[]> {
+  /** Active offers, each with its branches fetched in parallel and the source order kept.
+   *  withDates also pulls each offer's detail for its active period — one extra request
+   *  per offer, so only the template download asks for it. */
+  loadOfferCatalogue(withDates = false): Observable<CatalogueEntry[]> {
     return this.api.getActiveStoreOffers().pipe(
       switchMap((offers) => {
         const list = asOfferArray(offers);
@@ -70,10 +90,21 @@ export class RedemptionCatalogueService {
         return from(list).pipe(
           mergeMap(
             (offer) =>
-              this.api.getOfferLocations(offer.offerId).pipe(
-                catchError(() => of<OfferLocation[]>([])),
-                map<unknown, CatalogueEntry>((locations) => ({
+              forkJoin({
+                locations: this.api
+                  .getOfferLocations(offer.offerId)
+                  .pipe(catchError(() => of<OfferLocation[]>([]))),
+                detail: withDates
+                  ? this.offerDetail
+                      .getOfferDetail(offer.offerId)
+                      .pipe(catchError(() => of<OfferDetailApi | null>(null)))
+                  : of<OfferDetailApi | null>(null),
+              }).pipe(
+                map<{ locations: unknown; detail: OfferDetailApi | null }, CatalogueEntry>(
+                  ({ locations, detail }) => ({
                   offerId: offer.offerId,
+                  startDate: offerDayUtc(detail?.startDate),
+                  endDate: offerDayUtc(detail?.endDate),
                   title: this.localized(offer.offerTitle, offer.offerTitleAr),
                   raw: offer,
                   locations: asLocationArray(locations).map((l) => {
@@ -85,7 +116,8 @@ export class RedemptionCatalogueService {
                       raw: l,
                     };
                   }),
-                })),
+                  }),
+                ),
               ),
             RedemptionCatalogueService.LOCATION_FETCH_CONCURRENCY,
           ),

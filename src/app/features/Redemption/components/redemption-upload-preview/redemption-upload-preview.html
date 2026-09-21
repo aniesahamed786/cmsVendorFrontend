@@ -75,6 +75,7 @@
           <th class="upload-preview__col-info"></th>
           <th class="upload-preview__col-type">{{ 'redemption.label.transactionType' | translate }}</th>
           <th class="upload-preview__col-id">{{ 'redemption.label.membershipId' | translate }}</th>
+          <th class="upload-preview__col-id">{{ 'redemption.label.badgeNumber' | translate }}</th>
           <th class="upload-preview__col-id">{{ 'redemption.label.mobileNumber' | translate }}</th>
           <th class="upload-preview__col-wide">{{ 'redemption.label.offer' | translate }}</th>
           <th class="upload-preview__col-wide">{{ 'redemption.label.branch' | translate }}</th>
@@ -113,6 +114,15 @@
             @if (errorFor(draft, 'membershipId'); as msg) {
             <small class="upload-preview__cell-error">{{ msg }}</small>
             }
+            } @else {
+            <span class="upload-preview__na">—</span>
+            }
+          </td>
+
+          <td>
+            @if (draft.transactionType === 'SINGLE') {
+            <input pInputText type="text" inputmode="numeric" maxlength="10" class="upload-preview__control"
+              [ngModel]="draft.badgeNumber" (ngModelChange)="onEdit(draft, 'badgeNumber', $event)" />
             } @else {
             <span class="upload-preview__na">—</span>
             }

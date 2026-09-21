@@ -1146,6 +1146,7 @@
       "discountAmount": "Discount Amount",
       "membershipId": "Membership ID",
       "mobileNumber": "Mobile Number",
+      "badgeNumber": "Badge Number",
       "startDate": "Start Date",
       "endDate": "End Date"
     },
@@ -1158,6 +1159,7 @@
       "discountAmount": "e.g. 50.00",
       "membershipId": "e.g. 1111111111",
       "mobileNumber": "e.g. 0555555555",
+      "badgeNumber": "Enter the employee badge number",
       "branchNeedsOffer": "Select an offer first...",
       "offerNeedsDate": "Select a transaction date first...",
       "offerNeedsRange": "Select a start and end date first..."
@@ -1215,7 +1217,17 @@
       "reference": "Reference",
       "noBranches": "No branches available",
       "invalidTitle": "Invalid value",
-      "invalidMessage": "Please pick a value from the dropdown list."
+      "invalidMessage": "Please pick a value from the dropdown list.",
+      "offerStart": "Offer start",
+      "offerEnd": "Offer end",
+      "dateInvalidTitle": "Date outside the offer period",
+      "dateInvalidMessage": "Enter a date in yyyy-mm-dd format within the selected offer's start and end dates (see the Lists sheet).",
+      "membershipIdPrompt": "SINGLE transactions only (required). Leave empty for COLLECTIVE transactions.",
+      "mobileNumberPrompt": "SINGLE transactions only (optional). Leave empty for COLLECTIVE transactions.",
+      "badgeNumberPrompt": "SINGLE transactions only (optional). Leave empty for COLLECTIVE transactions.",
+      "transactionDatePrompt": "SINGLE transactions only (required). Leave empty for COLLECTIVE — use Start Date and End Date instead. Must fall within the selected offer's dates (see the Lists sheet).",
+      "startDatePrompt": "COLLECTIVE transactions only (required). Leave empty for SINGLE — use Transaction Date instead. Must fall within the selected offer's dates (see the Lists sheet).",
+      "endDatePrompt": "COLLECTIVE transactions only (required). Leave empty for SINGLE. Must fall within the selected offer's dates and not before the Start Date."
     },
     "upload": {
       "errorsTitle": "This file could not be uploaded",
