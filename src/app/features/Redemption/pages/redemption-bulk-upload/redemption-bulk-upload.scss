@@ -123,13 +123,9 @@
     cursor: pointer;
     transition: border-color 0.2s, background-color 0.2s;
 
-    &:hover:not(:disabled) {
+    &:hover {
       border-color: var(--app-primary);
       background: var(--app-primary-hover-soft);
-    }
-
-    &:disabled {
-      cursor: progress;
     }
   }
 
@@ -147,9 +143,58 @@
     font-size: 0.85rem;
     color: var(--app-muted);
   }
-}
 
-::ng-deep .bulk-upload__spinner {
-  width: 2.5rem;
-  height: 2.5rem;
+  // Parsing placeholder — mirrors the review page so nothing jumps when rows land.
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__skeleton-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &__skeleton-bar {
+    height: 0.8rem;
+
+    &--name {
+      width: 12rem;
+      max-width: 100%;
+    }
+
+    &--count {
+      width: 6rem;
+      height: 0.65rem;
+    }
+  }
+
+  &__skeleton-btn {
+    width: 7.5rem;
+    height: 2.25rem;
+  }
+
+  &__skeleton-tiles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  &__skeleton-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__skeleton-row {
+    height: 2.25rem;
+  }
 }

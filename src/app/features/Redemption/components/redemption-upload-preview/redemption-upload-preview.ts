@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Table } from 'primeng/table';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
+import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import {
   DraftBranch,
@@ -30,7 +31,7 @@ export type RowFilter = 'all' | 'errors' | 'valid';
 @Component({
   selector: 'app-redemption-upload-preview',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, Button, TranslatePipe],
+  imports: [CommonModule, FormsModule, PrimeUIModules, Button, OfferTile, TranslatePipe],
   templateUrl: './redemption-upload-preview.html',
   styleUrl: './redemption-upload-preview.scss',
 })

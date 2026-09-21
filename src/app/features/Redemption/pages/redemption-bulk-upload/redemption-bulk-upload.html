@@ -48,17 +48,36 @@
   <app-redemption-upload-preview [drafts]="drafts()" [catalogue]="catalogue()" [errors]="errors()"
     [serverErrors]="serverErrors()" [branchesLoading]="branchesLoading()" [submitting]="busy()"
     (patch)="onPatch($event)" (removeRow)="onRemoveRow($event)" (submitRows)="submit()" (cancel)="goBack()" />
+  } @else if (busy()) {
+  <!-- Parsing: the review page's shape (file card, tiles, table) in skeleton form. -->
+  <div class="bulk-upload__skeleton" aria-busy="true" [attr.aria-label]="'redemption.bulk.parsing' | translate">
+    <div class="bulk-upload__file-card">
+      <span class="app-skeleton bulk-upload__skeleton-icon"></span>
+      <div class="bulk-upload__file-meta">
+        <span class="app-skeleton bulk-upload__skeleton-bar bulk-upload__skeleton-bar--name"></span>
+        <span class="app-skeleton bulk-upload__skeleton-bar bulk-upload__skeleton-bar--count"></span>
+      </div>
+      <span class="app-skeleton bulk-upload__skeleton-btn"></span>
+    </div>
+
+    <div class="bulk-upload__skeleton-tiles">
+      @for (tile of skeletonTiles; track tile) {
+      <app-offer-tile [loading]="true" />
+      }
+    </div>
+
+    <div class="bulk-upload__skeleton-table">
+      @for (row of skeletonRows; track row) {
+      <span class="app-skeleton bulk-upload__skeleton-row"></span>
+      }
+    </div>
+  </div>
   } @else {
   <!-- Step 1. A plain click target, not p-fileupload: the parsing is ours anyway. -->
-  <button type="button" class="bulk-upload__drop" [disabled]="busy()" (click)="pickFile(excelInput)">
-    @if (busy()) {
-    <p-progressSpinner styleClass="bulk-upload__spinner" strokeWidth="4" />
-    <span class="bulk-upload__drop-title">{{ 'redemption.bulk.parsing' | translate }}</span>
-    } @else {
+  <button type="button" class="bulk-upload__drop" (click)="pickFile(excelInput)">
     <i class="pi pi-cloud-upload bulk-upload__drop-icon"></i>
     <span class="bulk-upload__drop-title">{{ 'redemption.bulk.chooseFile' | translate }}</span>
     <span class="bulk-upload__drop-hint">{{ 'redemption.bulk.chooseFileHint' | translate }}</span>
-    }
   </button>
   }
 </div>

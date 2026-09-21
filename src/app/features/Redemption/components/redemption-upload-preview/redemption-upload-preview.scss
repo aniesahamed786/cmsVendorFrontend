@@ -17,46 +17,8 @@
     gap: 1rem;
 
     @media (min-width: 640px) {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-  }
-
-  &__stat {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 1rem 1.25rem;
-    background: var(--app-surface);
-    border: 1px solid var(--app-border);
-
-    &--ok .upload-preview__stat-icon {
-      color: var(--app-status-active);
-    }
-
-    &--error .upload-preview__stat-icon {
-      color: var(--app-status-expired);
-    }
-  }
-
-  &__stat-icon {
-    font-size: 1.35rem;
-    color: var(--app-primary);
-  }
-
-  &__stat-text {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__stat-label {
-    font-size: 0.8rem;
-    color: var(--app-muted);
-  }
-
-  &__stat-value {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--app-text);
   }
 
   &__toolbar {

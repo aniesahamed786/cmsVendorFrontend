@@ -8,6 +8,7 @@ import { catchError, finalize, map, mergeMap, switchMap, toArray } from 'rxjs/op
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { BackButton } from '../../../../shared/Components/back-button/back-button';
 import { Button } from '../../../../shared/Components/button/button';
+import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
@@ -48,7 +49,7 @@ import {
 @Component({
   selector: 'app-redemption-bulk-upload',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, BackButton, Button, TranslatePipe, RedemptionUploadPreview],
+  imports: [CommonModule, PrimeUIModules, BackButton, Button, OfferTile, TranslatePipe, RedemptionUploadPreview],
   templateUrl: './redemption-bulk-upload.html',
   styleUrl: './redemption-bulk-upload.scss',
 })
@@ -63,6 +64,8 @@ export class RedemptionBulkUpload {
   private static readonly OFFER_FETCH_CONCURRENCY = 6;
 
   readonly busy = signal(false);
+  readonly skeletonTiles = [0, 1, 2];
+  readonly skeletonRows = [0, 1, 2, 3, 4, 5];
   readonly fileName = signal('');
   readonly fileErrors = signal<RedemptionUploadError[]>([]);
   readonly drafts = signal<RedemptionDraftRow[]>([]);
