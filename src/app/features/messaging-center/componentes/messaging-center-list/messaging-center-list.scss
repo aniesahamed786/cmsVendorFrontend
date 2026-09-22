@@ -111,6 +111,9 @@
     flex-direction: column;
     gap: 0.25rem;
     width: 100%;
+    // Column flex items shrink by default: without this the cards squeeze to
+    // fit the viewport and clip their own text instead of letting the list scroll.
+    flex: 0 0 auto;
     text-align: start;
     appearance: none;
     cursor: pointer;
@@ -190,12 +193,15 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
   }
 
   &__card-right {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
   }
 
   &__category {
@@ -204,6 +210,9 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--app-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__badge {
@@ -254,6 +263,9 @@
   &__reference {
     font-size: 0.6875rem;
     color: var(--app-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__unread-badge,
