@@ -8,43 +8,40 @@
   </header>
 
   <section class="offers__stats">
-    @if (statsLoading()) {
-    <!-- whole card contents, matching the branches KPI cards. Blocks sit in the
-         real __stat article, so its padding, border and column gap are shared. -->
-    @for (i of [1,2,3,4]; track i) {
-    <article class="offers__stat">
-      <span class="app-skeleton offers__skeleton-stat-icon"></span>
-      <span class="app-skeleton offers__skeleton-stat-value"></span>
-      <span class="app-skeleton offers__skeleton-stat-label"></span>
-      <span class="app-skeleton offers__skeleton-stat-hint"></span>
-    </article>
-    }
-    } @else {
-    <article class="offers__stat">
-      <span class="offers__stat-icon"><i class="pi pi-bolt"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('active') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.active.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.active.hint' | translate }}</span>
-    </article>
-    <article class="offers__stat">
-      <span class="offers__stat-icon"><i class="pi pi-calendar"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('scheduled') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.scheduled.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.scheduled.hint' | translate }}</span>
-    </article>
-    <article class="offers__stat">
-      <span class="offers__stat-icon offers__stat-icon--danger"><i class="pi pi-stopwatch"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('expiringSoon') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.expiringSoon.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.expiringSoon.hint' | translate }}</span>
-    </article>
-    <article class="offers__stat">
-      <span class="offers__stat-icon"><i class="pi pi-tag"></i></span>
-      <span class="offers__stat-value">{{ animatedCount('total') }}</span>
-      <span class="offers__stat-label">{{ 'offers.stats.total.label' | translate }}</span>
-      <span class="offers__stat-hint">{{ 'offers.stats.total.hint' | translate }}</span>
-    </article>
-    }
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('active')"
+      [title]="'offers.stats.active.label' | translate"
+      [subtitle]="'offers.stats.active.hint' | translate"
+      icon="pi pi-bolt"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" />
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('scheduled')"
+      [title]="'offers.stats.scheduled.label' | translate"
+      [subtitle]="'offers.stats.scheduled.hint' | translate"
+      icon="pi pi-calendar"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" />
+    <!-- expiring-soon keeps its red chip. Literals, not tokens: the --app-danger
+         migration is still deferred (see the FLAGGED note this replaced). -->
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('expiringSoon')"
+      [title]="'offers.stats.expiringSoon.label' | translate"
+      [subtitle]="'offers.stats.expiringSoon.hint' | translate"
+      icon="pi pi-stopwatch"
+      iconColor="#dc2626"
+      iconContainerBg="rgba(239, 68, 68, 0.16)" />
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('total')"
+      [title]="'offers.stats.total.label' | translate"
+      [subtitle]="'offers.stats.total.hint' | translate"
+      icon="pi pi-tag"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" />
   </section>
 
   <section class="offers__card">

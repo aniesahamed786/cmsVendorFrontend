@@ -38,58 +38,6 @@
     margin-bottom: 1.5rem;
   }
 
-  &__stat {
-    display: flex;
-    flex-direction: column;
-    background: var(--app-surface);
-    border: 1px solid var(--app-border);
-    padding: 1.25rem;
-  }
-
-  &__stat-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-bottom: 1rem;
-    background: var(--app-primary-soft);
-    color: var(--app-primary);
-    font-size: 1.1rem;
-
-    /* FLAGGED for the Phase 5 gate — danger/expiring-soon red. --app-danger
-       exists (#b41340) but is a different hue from this #dc2626, and
-       styles.scss's own .p-menuitem-danger rule (line ~259) still uses the
-       literal #dc2626 rather than the token — that migration hasn't happened
-       at the global level yet, so mapping this local instance to --app-danger
-       would be a visual change styles.scss itself hasn't made. Left literal,
-       same call as branches-page's flagged trend green. */
-    &--danger {
-      background: rgba(239, 68, 68, 0.16);
-      color: #dc2626;
-    }
-  }
-
-  &__stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.1;
-    color: var(--app-text);
-  }
-
-  &__stat-label {
-    margin-top: 0.4rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--app-text);
-  }
-
-  &__stat-hint {
-    margin-top: 0.15rem;
-    font-size: 0.82rem;
-    color: var(--app-muted);
-  }
-
   // ---- Filter bar ----
   &__filters {
     display: flex;
@@ -260,29 +208,6 @@
   // Stat cards: the whole card contents, matching the branches KPI cards. Each
   // block mirrors the element it replaces, including that element's margin, so
   // the card is the same height loading and loaded.
-  &__skeleton-stat-icon {
-    width: 2.5rem; // square, like the real __stat-icon — not branches' circle
-    height: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  &__skeleton-stat-value {
-    width: 3.5rem;
-    height: 2rem; // the 2rem font-size line it stands in for
-  }
-
-  &__skeleton-stat-label {
-    width: 6rem;
-    height: 0.95rem;
-    margin-top: 0.4rem;
-  }
-
-  &__skeleton-stat-hint {
-    width: 8rem;
-    height: 0.82rem;
-    margin-top: 0.15rem;
-  }
-
   // Table: the header and the row boxes are real, so these size only the block
   // standing in for each cell. Widths differ per column so it reads as content
   // rather than a bar — all comfortably under the column's real width.

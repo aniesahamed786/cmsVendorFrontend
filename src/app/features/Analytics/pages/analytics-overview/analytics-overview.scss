@@ -16,6 +16,7 @@
 
   &__title {
     margin: 0;
+    font-family: "Manifa Pro 2", var(--font-family);
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--app-text);
@@ -85,6 +86,7 @@
 
   &__status-value {
     margin: 0;
+    font-family: "Manifa Pro 2", var(--font-family);
     font-size: 1.875rem;
     font-weight: 700;
     line-height: 1;
@@ -94,7 +96,7 @@
   &__status-label {
     margin: 0.5rem 0 0;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--app-text);
   }
 
@@ -128,7 +130,7 @@
   &__card-title {
     margin: 0;
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--app-text);
   }
 
@@ -201,7 +203,7 @@
     margin: 0;
     text-align: center;
     font-size: 0.7rem;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--app-muted);
     white-space: nowrap;
     overflow: hidden;
@@ -270,7 +272,7 @@
   &__highlight-label {
     margin: 0;
     font-size: 0.7rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--app-muted);
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -279,7 +281,7 @@
   &__highlight-subtitle {
     margin: 0.2rem 0 0;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--app-text);
   }
 
@@ -292,6 +294,7 @@
   }
 
   &__highlight-value {
+    font-family: "Manifa Pro 2", var(--font-family);
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--app-primary);
@@ -299,7 +302,7 @@
 
   &__highlight-trend {
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
 
     &--up {
@@ -371,6 +374,7 @@
 
   &__summary-value {
     margin: 0;
+    font-family: "Manifa Pro 2", var(--font-family);
     font-size: 1.75rem;
     font-weight: 700;
     line-height: 1;
@@ -386,7 +390,7 @@
   &__summary-trend {
     margin: 0.375rem 0 0;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
 
     &--up {
       color: #047857;

@@ -11,47 +11,32 @@
 
   <!-- KPI Cards -->
   <section class="branches-page__kpis">
-    @if (kpis()) {
     <div class="overview-kpi-grid">
-      <article class="overview-kpi-card">
-        <div class="overview-kpi-icon">
-          <i class="pi pi-shop branches-page__icon-lg"></i>
-        </div>
-        <p class="overview-kpi-value">{{ animatedCount('totalBranches') }}</p>
-        <p class="overview-kpi-label">{{ 'branches.kpi.totalBranches' | translate }}</p>
-        <p class="overview-kpi-subtext">{{ 'branches.kpi.totalBranchesSub' | translate }}</p>
-      </article>
-
-      <article class="overview-kpi-card">
-        <div class="overview-kpi-icon">
-          <i class="pi pi-gift branches-page__icon-lg"></i>
-        </div>
-        <p class="overview-kpi-value">{{ animatedCount('totalRedemptions') }}</p>
-        <p class="overview-kpi-label">{{ 'branches.kpi.totalRedemptions' | translate }}</p>
-        <p class="overview-kpi-subtext">{{ 'branches.kpi.totalRedemptionsSub' | translate }}</p>
-      </article>
-
-      <article class="overview-kpi-card">
-        <div class="overview-kpi-icon">
-          <i class="pi pi-clock branches-page__icon-lg"></i>
-        </div>
-        <p class="overview-kpi-value">{{ animatedCount('pendingRequests') }}</p>
-        <p class="overview-kpi-label">{{ 'branches.kpi.pendingRequests' | translate }}</p>
-        <p class="overview-kpi-subtext">{{ 'branches.kpi.pendingRequestsSub' | translate }}</p>
-      </article>
+      <app-offer-tile
+        [loading]="!kpis()"
+        [value]="animatedCount('totalBranches')"
+        [title]="'branches.kpi.totalBranches' | translate"
+        [subtitle]="'branches.kpi.totalBranchesSub' | translate"
+        icon="pi pi-shop"
+        iconColor="var(--app-primary)"
+        iconContainerBg="var(--app-primary-soft)" />
+      <app-offer-tile
+        [loading]="!kpis()"
+        [value]="animatedCount('totalRedemptions')"
+        [title]="'branches.kpi.totalRedemptions' | translate"
+        [subtitle]="'branches.kpi.totalRedemptionsSub' | translate"
+        icon="pi pi-gift"
+        iconColor="var(--app-primary)"
+        iconContainerBg="var(--app-primary-soft)" />
+      <app-offer-tile
+        [loading]="!kpis()"
+        [value]="animatedCount('pendingRequests')"
+        [title]="'branches.kpi.pendingRequests' | translate"
+        [subtitle]="'branches.kpi.pendingRequestsSub' | translate"
+        icon="pi pi-clock"
+        iconColor="var(--app-primary)"
+        iconContainerBg="var(--app-primary-soft)" />
     </div>
-    } @else {
-    <!-- Skeletons -->
-    <div class="overview-kpi-grid">
-      @for (i of [1,2,3]; track i) {
-      <article class="overview-kpi-card">
-        <span class="app-skeleton app-skeleton--circle branches-page__skeleton-kpi-icon"></span>
-        <span class="app-skeleton branches-page__skeleton-kpi-value"></span>
-        <span class="app-skeleton branches-page__skeleton-kpi-label"></span>
-      </article>
-      }
-    </div>
-    }
   </section>
 
   <!-- Middle Section: Map and Top Performers -->

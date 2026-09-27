@@ -42,7 +42,7 @@
 
       <!-- Offer title -->
       @if (getFormattedDiscountEn(offer)) {
-      <h2 class="offer-hero-card__title">
+      <h2 class="offer-hero-card__title offer-hero-card__title--split">
         <div dir="ltr" class="offer-hero-card__discount">
           @if (isPercentageDiscount(offer)) {
           <span>%</span>
@@ -108,13 +108,13 @@
           <i class="pi pi-image"></i>
         </div>
         }
-        <span class="offer-hero-card__vendor-name">{{ vendorNameAr() }}</span>
+        <span class="offer-hero-card__vendor-name offer-hero-card__vendor-name--ar">{{ vendorNameAr() }}</span>
       </div>
       }
 
       <!-- Offer title (Arabic) -->
       @if (getFormattedDiscountAr(offer)) {
-      <h2 class="offer-hero-card__title">
+      <h2 class="offer-hero-card__title offer-hero-card__title--split offer-hero-card__title--ar">
         <div dir="ltr" class="offer-hero-card__discount">
           @if (isPercentageDiscount(offer)) {
           <span>%</span>
@@ -129,7 +129,7 @@
         }
       </h2>
       } @else if (getOfferTitleAr(offer)) {
-      <h2 class="offer-hero-card__title">{{ getOfferTitleAr(offer) }}</h2>
+      <h2 class="offer-hero-card__title offer-hero-card__title--ar">{{ getOfferTitleAr(offer) }}</h2>
       }
     </div>
     }

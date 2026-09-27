@@ -69,30 +69,8 @@
     margin-bottom: 1.5rem;
   }
 
-  &__icon-lg {
-    font-size: 1.125rem;
-    color: var(--app-primary);
-  }
-
   // ---- Skeletons (.app-skeleton owns fill + pulse; these own size only) ----
   // KPI cards: the card itself is real, so only the icon/value/label boxes stand in.
-  &__skeleton-kpi-icon {
-    width: 2.75rem;
-    height: 2.75rem;
-  }
-
-  &__skeleton-kpi-value {
-    width: 7rem;
-    height: 1.9rem;
-    margin-top: 1rem;
-  }
-
-  &__skeleton-kpi-label {
-    width: 5rem;
-    height: 0.9rem;
-    margin-top: 0.5rem;
-  }
-
   // Top performers: the blocks sit inside a real __performer-row, so the
   // border, padding and gap all come from the loaded layout — nothing shifts.
   &__skeleton-avatar {
@@ -133,45 +111,6 @@
 
     @media (min-width: 1024px) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  .overview-kpi-card {
-    background: var(--app-surface);
-    padding: 1.25rem;
-    border: 1px solid var(--app-border);
-    display: flex;
-    flex-direction: column;
-
-    .overview-kpi-icon {
-      width: 2.5rem;
-      height: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--app-primary-soft);
-      margin-bottom: 1rem;
-    }
-
-    .overview-kpi-value {
-      margin: 0;
-      font-size: 1.875rem;
-      font-weight: 700;
-      color: var(--app-text);
-      line-height: 1.2;
-    }
-
-    .overview-kpi-label {
-      margin: 0.25rem 0 0;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--app-text);
-    }
-
-    .overview-kpi-subtext {
-      margin: 0.25rem 0 0;
-      font-size: 0.75rem;
-      color: var(--app-muted);
     }
   }
 

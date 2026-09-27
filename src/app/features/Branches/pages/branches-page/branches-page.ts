@@ -6,6 +6,7 @@ import { BranchesService, BranchKPIs, TopPerformer, BranchRow } from '../../serv
 import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { ThemeService } from '../../../../shared/services/theme.service';
 import { environment } from '../../../../../environments/environment';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
@@ -23,7 +24,7 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 @Component({
   selector: 'app-branches-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, AppBottomSheet, TranslatePipe, RouterLink, ConfirmationPopUp],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, AppBottomSheet, TranslatePipe, RouterLink, ConfirmationPopUp, OfferTile],
   templateUrl: './branches-page.html',
   styleUrl: './branches-page.scss'
 })

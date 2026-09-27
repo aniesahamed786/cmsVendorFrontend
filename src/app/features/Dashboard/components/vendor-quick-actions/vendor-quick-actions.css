@@ -7,9 +7,11 @@
 .vendor-quick-actions__title {
   margin: 0 0 1.5rem;
   color: #fff;
-  font-size: 1.25rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-family: "Manifa Pro 2", var(--font-family);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  line-height: 1.75rem;
 }
 
 .vendor-quick-actions__grid {

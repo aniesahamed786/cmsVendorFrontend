@@ -55,8 +55,6 @@
 }
 
 .offer-tile__value {
-  font-size: 2.25rem;
-  font-weight: 700;
   color: var(--app-text);
   margin: 1rem 0 0;
   overflow: hidden;
@@ -66,14 +64,11 @@
 
 .offer-tile__title {
   color: var(--app-text);
-  font-size: 0.875rem;
-  font-weight: 600;
   margin: 0.25rem 0 0;
 }
 
 .offer-tile__subtitle {
   color: var(--app-muted);
-  font-size: 0.75rem;
   margin: 0.25rem 0 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -82,12 +77,9 @@
 
 .offer-tile__badge {
   padding: 0.25rem 0.625rem;
-  font-size: 0.75rem;
-  font-weight: 500;
   flex-shrink: 0;
   text-align: center;
   white-space: nowrap;
-  line-height: 1.25;
   background: var(--app-primary-soft);
   color: var(--app-primary);
 }
@@ -97,8 +89,6 @@
   align-items: center;
   gap: 0.125rem;
   padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
   flex-shrink: 0;
 }
 

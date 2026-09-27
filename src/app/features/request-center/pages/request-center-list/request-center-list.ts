@@ -9,6 +9,7 @@ import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
 import {
@@ -27,7 +28,7 @@ type TabKey = 'all' | 'completed' | 'incomplete';
 @Component({
   selector: 'app-request-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp, AppBottomSheet],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp, AppBottomSheet, OfferTile],
   templateUrl: './request-center-list.html',
   styleUrl: './request-center-list.scss',
 })

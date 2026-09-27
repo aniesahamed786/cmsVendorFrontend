@@ -78,22 +78,24 @@
 }
 
 .vendor-profile-page__hero-title {
+  font-family: "Manifa Pro 2", var(--font-family);
   font-size: 2.25rem;
   /* on-primary contrast: white text over the brand hero fill */
   color: #ffffff;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.025em;
   margin: 0;
-  line-height: 1.2;
+  line-height: 2.5rem;
 }
 
 .vendor-profile-page__hero-subtitle {
+  font-family: "Manifa Pro 2", var(--font-family);
   font-size: 1.875rem;
   /* on-primary contrast: white text over the brand hero fill */
   color: #ffffff;
-  font-weight: 300;
+  font-weight: 600;
   margin: 0 0 0.75rem 0;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .vendor-profile-page__status-badge {
@@ -145,6 +147,7 @@
   color: var(--app-primary);
   font-weight: 600;
   font-size: 1.25rem;
+  line-height: 1.75rem;
   margin-bottom: 1rem;
 }
 
@@ -176,7 +179,7 @@
   /* Use text token for normal text */
   font-size: 1rem;
   font-weight: 600;
-  line-height: 1.6;
+  line-height: 1.5rem;
   margin: 0;
   flex: 1;
 }
@@ -285,6 +288,7 @@
 
 .vendor-profile-page__image-label {
   font-size: 0.75rem;
+  font-weight: 500;
   color: var(--app-muted);
 }
 

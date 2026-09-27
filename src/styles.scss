@@ -11,8 +11,45 @@
 
 @font-face {
   font-family: "Ghawar";
+  src: url("/assets/fonts/GHAWAR_1.311-SMEIBOLD.OTF") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ghawar";
+  src: url("/assets/fonts/GHAWAR_1.311-BOLD.OTF") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ghawar";
   src: url("/assets/fonts/GHAWAR_1.311-HEFTY.OTF") format("opentype");
   font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Hefty as its own family, for the sidenav labels the type spec wants at 300.
+   Same OTF as Ghawar 800 — the foundry ships one Hefty cut; naming it separately
+   is how a 300-weight rule can reach it without lying about Ghawar's scale. */
+@font-face {
+  font-family: "Ghawar Hefty";
+  src: url("/assets/fonts/GHAWAR_1.311-HEFTY.OTF") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Display face for titles and big numbers. Variable, so one file covers the
+   whole 100–900 range the type spec draws from. */
+@font-face {
+  font-family: "Manifa Pro 2";
+  src: url("/assets/fonts/ManifaPro2_2.224-Variable.ttf") format("truetype");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -59,8 +96,11 @@ html[lang="ar"] {
   /* Surface / chrome tokens (flip per appearance mode) */
   --app-bg: #F6F6F8;
   --app-surface: #ffffff;
-  --app-text: #111827;
+  --app-text: #323232;
   --app-muted: #6b7280;
+  /* Softer body/meta grey from the type spec. Distinct from --app-muted, which is
+     for de-emphasised chrome; this one is for descriptions and field meta. */
+  --app-light-text: #4C444E;
   --app-border: #e5e7eb;
 
   /* Semantic danger / destructive. Accent-independent on purpose: a destructive
@@ -168,6 +208,8 @@ body {
   --app-surface: #111827;
   --app-text: #e5e7eb;
   --app-muted: #94a3b8;
+  /* #4C444E is a near-black on the dark surface; invert the role instead. */
+  --app-light-text: #cbd5e1;
   --app-border: #334155;
   --table-header-bg: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
   --paginator-btn-hover-bg: color-mix(in srgb, var(--app-text) 8%, transparent);
@@ -255,6 +297,14 @@ body {
   box-sizing: border-box;
 }
 
+/* One rule owns button type for the whole app, so feature CSS never restates it.
+   PrimeNG puts its own family/weight on .p-button-label, hence the !important. */
+button,
+.p-button-label {
+  font-family: var(--font-family) !important;
+  font-weight: 600 !important;
+}
+
 .p-button:not(.p-button-secondary):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-danger),
 p-button[severity="primary"] .p-button,
 .p-button.p-button-primary {
@@ -305,6 +355,54 @@ p-tag.app-status-tag .p-tag-label {
   font-weight: 600 !important;
   text-transform: capitalize !important;
   line-height: 1.25 !important;
+}
+
+/* ── Stat / KPI tile type scale ──────────────────────────────────────────────
+   One source of truth for the type on every status-count card in the app:
+   the dashboard, offers, request centre, branches and redemption all render
+   <app-offer-tile>, and the four pages used to carry four different scales
+   (2rem/1.875rem values, 0.95rem labels, 0.82rem hints) which is why the same
+   card read differently page to page.
+
+   It lives here rather than in offer-tile.css so the scale is visible next to
+   the other cross-page conventions (.app-status-tag above, .app-skeleton) and
+   so a page that hand-rolls a card can still land on the right type. The tile
+   keeps its own layout, colour and spacing locally — type only, here.
+
+   ponytail: plain global selectors, no !important. Component styles compile
+   with an [_ngcontent] attribute and would out-specify these, so the matching
+   declarations were *moved* out of offer-tile.css, not copied. If a font rule
+   ever reappears there on these selectors it will silently win — grep before
+   adding one. */
+.offer-tile__value {
+  font-family: "Manifa Pro 2", var(--font-family);
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+}
+
+.offer-tile__title {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+}
+
+.offer-tile__subtitle {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 400;
+}
+
+.offer-tile__badge {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.offer-tile__trend {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
 }
 
 /* Status variants */

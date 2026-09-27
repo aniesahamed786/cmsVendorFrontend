@@ -116,12 +116,16 @@
   }
 
   &__vendor-name {
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: #ffffff; /* on-primary contrast */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  &__vendor-name--ar {
+    font-weight: 400;
   }
 
   &__title {
@@ -130,30 +134,48 @@
     line-height: 1.25;
     color: #ffffff; /* on-primary contrast */
     margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
 
     @media (min-width: 768px) {
       font-size: 2.25rem;
     }
   }
 
-  &__discount {
+  /* The discount headline (amount + "Discount") is the only title that gets the
+     display face — a plain offer title stays on Ghawar 700. */
+  &__title--split {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    font-family: "Manifa Pro 2", var(--font-family);
+    font-weight: 600;
+  }
+
+  /* Arabic renders heavier in the fallback face, so it sits a step lighter —
+     except in the split headline, where it has to match the English weight. */
+  &__title--ar {
+    font-weight: 500;
+  }
+
+  &__title--split.offer-hero-card__title--ar {
+    flex-direction: row-reverse;
+    font-weight: 600;
+  }
+
+  &__discount {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   &__currency-icon {
-    width: 1.875rem;
-    height: 1.875rem;
+    width: 1.5rem;
+    height: 1.5rem;
     object-fit: contain;
     filter: brightness(0) invert(1) !important;
 
     @media (min-width: 768px) {
-      width: 2.25rem;
-      height: 2.25rem;
+      width: 2.5rem;
+      height: 2.5rem;
     }
   }
 

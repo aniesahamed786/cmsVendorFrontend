@@ -27,6 +27,7 @@ import { inject } from '@angular/core';
 import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { OfferListService } from '../../services/offer-list.service';
@@ -40,7 +41,7 @@ import { finalize } from 'rxjs';
 @Component({
   selector: 'app-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch, AppBottomSheet, TranslatePipe],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch, AppBottomSheet, TranslatePipe, OfferTile],
   templateUrl: './offers.html',
   styleUrl: './offers.scss',
 })

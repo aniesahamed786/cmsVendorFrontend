@@ -62,22 +62,24 @@
   }
 
   &__title {
+    font-family: "Manifa Pro 2", var(--font-family);
     font-size: 2.25rem;
     /* on-primary contrast: white text over the brand hero fill */
     color: #ffffff;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.025em;
     margin: 0;
-    line-height: 1.2;
+    line-height: 2.5rem;
   }
 
   &__subtitle {
+    font-family: "Manifa Pro 2", var(--font-family);
     font-size: 1.875rem;
     /* on-primary contrast: white text over the brand hero fill */
     color: #ffffff;
-    font-weight: 300;
+    font-weight: 600;
     margin: 0 0 0.75rem 0;
-    line-height: 1.2;
+    line-height: 1.25;
   }
 
   &__skeleton-logo {

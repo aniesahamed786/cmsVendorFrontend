@@ -12,23 +12,19 @@
 }
 
 .sidenav__brand-title {
-  font-size: 1.25rem;
+  font-family: "Manifa Pro 2", var(--font-family);
+  font-size: 1.375rem;
+  font-weight: 600;
   line-height: 1.25;
   color: var(--app-primary);
   margin: 0;
 }
 
-.sidenav__brand-light {
-  font-weight: 400;
-}
-
+/* The brand reads as one lockup now, so name and role share the title's weight
+   rather than splitting 400/600. The spans stay for the divider's spacing. */
 .sidenav__brand-divider {
   color: var(--app-primary);
   margin: 0 0.25rem;
-}
-
-.sidenav__brand-strong {
-  font-weight: 600;
 }
 
 .sidenav__nav {
@@ -77,8 +73,10 @@
 
 .sidenav-item__label,
 .sidenav__label {
-  font-weight: 500;
+  font-family: "Ghawar Hefty", var(--font-family);
+  font-weight: 300;
   font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 @media (min-width: 768px) {

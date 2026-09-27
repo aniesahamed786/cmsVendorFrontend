@@ -5,43 +5,40 @@
   </header>
 
   <section class="request-center__stats">
-    @if (statsLoading()) {
-    <!-- Blocks sit in the real __stat article so its padding, border and gaps are shared —
-         the card is the same height loading and loaded, matching the Offers stat skeleton. -->
-    @for (i of [1, 2, 3, 4]; track i) {
-    <article class="request-center__stat">
-      <span class="app-skeleton request-center__skeleton-stat-icon"></span>
-      <span class="app-skeleton request-center__skeleton-stat-value"></span>
-      <span class="app-skeleton request-center__skeleton-stat-label"></span>
-      <span class="app-skeleton request-center__skeleton-stat-hint"></span>
-    </article>
-    }
-    } @else {
-    <article class="request-center__stat">
-      <span class="request-center__stat-icon"><i class="pi pi-calendar-plus"></i></span>
-      <span class="request-center__stat-value">{{ animatedCount('pendingOffer') }}</span>
-      <span class="request-center__stat-label">{{ 'requestCenter.stats.pendingOffer.label' | translate }}</span>
-      <span class="request-center__stat-hint">{{ 'requestCenter.stats.pendingOffer.hint' | translate }}</span>
-    </article>
-    <article class="request-center__stat">
-      <span class="request-center__stat-icon"><i class="pi pi-building"></i></span>
-      <span class="request-center__stat-value">{{ animatedCount('pendingStore') }}</span>
-      <span class="request-center__stat-label">{{ 'requestCenter.stats.pendingStore.label' | translate }}</span>
-      <span class="request-center__stat-hint">{{ 'requestCenter.stats.pendingStore.hint' | translate }}</span>
-    </article>
-    <article class="request-center__stat">
-      <span class="request-center__stat-icon"><i class="pi pi-shopping-bag"></i></span>
-      <span class="request-center__stat-value">{{ animatedCount('pendingProfile') }}</span>
-      <span class="request-center__stat-label">{{ 'requestCenter.stats.pendingProfile.label' | translate }}</span>
-      <span class="request-center__stat-hint">{{ 'requestCenter.stats.pendingProfile.hint' | translate }}</span>
-    </article>
-    <article class="request-center__stat">
-      <span class="request-center__stat-icon request-center__stat-icon--danger"><i class="pi pi-file-excel"></i></span>
-      <span class="request-center__stat-value">{{ animatedCount('rejected') }}</span>
-      <span class="request-center__stat-label">{{ 'requestCenter.stats.rejected.label' | translate }}</span>
-      <span class="request-center__stat-hint">{{ 'requestCenter.stats.rejected.hint' | translate }}</span>
-    </article>
-    }
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('pendingOffer')"
+      [title]="'requestCenter.stats.pendingOffer.label' | translate"
+      [subtitle]="'requestCenter.stats.pendingOffer.hint' | translate"
+      icon="pi pi-calendar-plus"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" />
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('pendingStore')"
+      [title]="'requestCenter.stats.pendingStore.label' | translate"
+      [subtitle]="'requestCenter.stats.pendingStore.hint' | translate"
+      icon="pi pi-building"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" />
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('pendingProfile')"
+      [title]="'requestCenter.stats.pendingProfile.label' | translate"
+      [subtitle]="'requestCenter.stats.pendingProfile.hint' | translate"
+      icon="pi pi-shopping-bag"
+      iconColor="var(--app-primary)"
+      iconContainerBg="var(--app-primary-soft)" />
+    <!-- rejected keeps its red chip; literals because the --app-danger migration
+         is still deferred (see the note this replaced). -->
+    <app-offer-tile
+      [loading]="statsLoading()"
+      [value]="animatedCount('rejected')"
+      [title]="'requestCenter.stats.rejected.label' | translate"
+      [subtitle]="'requestCenter.stats.rejected.hint' | translate"
+      icon="pi pi-file-excel"
+      iconColor="#dc2626"
+      iconContainerBg="rgba(239, 68, 68, 0.16)" />
   </section>
 
   <section class="request-center__card">
