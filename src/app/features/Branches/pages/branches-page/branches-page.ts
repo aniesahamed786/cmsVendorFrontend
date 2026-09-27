@@ -267,11 +267,14 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       this.allBranches.set(branches);
       this.branchesLoading.set(false);
 
-      const performers: TopPerformer[] = branches.slice(0, 4).map(branch => ({
-        id: branch.locationId,
-        name: branch.locationName,
-        redemptions: 0,
-      }));
+      const performers: TopPerformer[] = [...branches]
+        .sort((a, b) => (b.totalRedemptions ?? 0) - (a.totalRedemptions ?? 0))
+        .slice(0, 4)
+        .map(branch => ({
+          id: branch.locationId,
+          name: branch.locationName,
+          redemptions: branch.totalRedemptions ?? 0,
+        }));
       this.topPerformers.set(performers);
       this.performersLoading.set(false);
       // keyed per performer, so re-fetching animates from each row's current value

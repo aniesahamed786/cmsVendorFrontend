@@ -27,6 +27,7 @@ export interface BranchRow {
   country?: string;
   countryAr?: string;
   totalOffers: number;
+  totalRedemptions: number;
   representativeName: string;
   representativeNameAr: string;
   latitude: string | number;
