@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { openRowMenu } from '../../../../shared/utils/row-menu';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -41,6 +42,8 @@ const ACTION_PAST_TENSE: Record<RowAction, string> = {
   styleUrl: './account-management-page.scss',
 })
 export class AccountManagementPage implements OnInit {
+  /** Closes any other row's menu first — see shared/utils/row-menu.ts. */
+  readonly openRowMenu = openRowMenu;
   private readonly api = inject(AccountsService);
   private readonly messageService = inject(MessageService);
   private readonly i18n = inject(I18nService);

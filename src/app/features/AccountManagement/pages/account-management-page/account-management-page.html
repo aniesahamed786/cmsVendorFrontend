@@ -41,7 +41,7 @@
           <td class="account-management__td-center">
             <button type="button" class="account-management__action-btn"
               [attr.aria-label]="'accountManagement.column.action' | translate"
-              (click)="selectedRow.set(row); menu.toggle($event)">
+              (click)="selectedRow.set(row); openRowMenu(menu, $event)">
               <i class="pi pi-ellipsis-v"></i>
             </button>
             <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body" />

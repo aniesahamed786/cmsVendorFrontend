@@ -1,4 +1,5 @@
 import { Component, Signal, computed, signal } from '@angular/core';
+import { openRowMenu } from '../../../../shared/utils/row-menu';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -46,6 +47,8 @@ import { finalize } from 'rxjs';
   styleUrl: './offers.scss',
 })
 export class Offers implements OnInit {
+  /** Closes any other row's menu first — see shared/utils/row-menu.ts. */
+  readonly openRowMenu = openRowMenu;
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private readonly i18n = inject(I18nService);

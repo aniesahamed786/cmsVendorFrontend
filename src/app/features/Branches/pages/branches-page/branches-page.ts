@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, computed, AfterViewInit, OnDestroy, ElementRef, ViewChild, NgZone, effect } from '@angular/core';
+import { openRowMenu } from '../../../../shared/utils/row-menu';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InfoTip } from '../../../../shared/Components/info-tip/info-tip';
@@ -30,6 +31,8 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
   styleUrl: './branches-page.scss'
 })
 export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
+  /** Closes any other row's menu first — see shared/utils/row-menu.ts. */
+  readonly openRowMenu = openRowMenu;
   private readonly branchesService = inject(BranchesService);
   private readonly document = inject(DOCUMENT);
   private readonly themeService = inject(ThemeService);
