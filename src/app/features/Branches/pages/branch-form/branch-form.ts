@@ -13,6 +13,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { catchError, debounceTime, firstValueFrom, of, switchMap } from 'rxjs';
+import { InfoTip } from '../../../../shared/Components/info-tip/info-tip';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
 import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
@@ -97,6 +98,7 @@ export interface BranchFormSubmit {
     Button,
     CancelButton,
     TranslatePipe,
+    InfoTip,
   ],
   templateUrl: './branch-form.html',
   styleUrl: './branch-form.scss',

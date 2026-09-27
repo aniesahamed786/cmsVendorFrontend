@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed, AfterViewInit, OnDestroy, ElementRef, ViewChild, NgZone, effect } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { InfoTip } from '../../../../shared/Components/info-tip/info-tip';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { BranchesService, BranchKPIs, TopPerformer, BranchRow } from '../../services/branches.service';
 import { Button } from '../../../../shared/Components/button/button';
@@ -24,7 +25,7 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 @Component({
   selector: 'app-branches-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, AppBottomSheet, TranslatePipe, RouterLink, ConfirmationPopUp, OfferTile],
+  imports: [CommonModule, PrimeUIModules, FormsModule, Button, AppSearch, AppBottomSheet, TranslatePipe, RouterLink, ConfirmationPopUp, OfferTile, InfoTip],
   templateUrl: './branches-page.html',
   styleUrl: './branches-page.scss'
 })

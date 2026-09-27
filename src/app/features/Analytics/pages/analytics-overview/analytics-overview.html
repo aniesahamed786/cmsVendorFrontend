@@ -13,7 +13,8 @@
           <i [class]="card.icon"></i>
         </div>
         <p class="analytics-overview__status-value">{{ animatedCount(card.id) }}</p>
-        <p class="analytics-overview__status-label">{{ card.label }}</p>
+        <p class="analytics-overview__status-label">{{ card.label }}<app-info-tip
+            [text]="'analytics.tooltip.status.' + card.id | translate" /></p>
         <p class="analytics-overview__status-sublabel">{{ card.sublabel }}</p>
       </article>
       }
@@ -23,7 +24,8 @@
   <!-- Redemption by location + top offer highlights -->
   <section class="analytics-overview__section analytics-overview__row analytics-overview__row--location">
     <div class="analytics-overview__card analytics-overview__card--location">
-      <h3 class="analytics-overview__card-title">Redemption by Location</h3>
+      <h3 class="analytics-overview__card-title">Redemption by Location<app-info-tip
+          [text]="'analytics.tooltip.redemptionByLocation' | translate" /></h3>
       <p class="analytics-overview__card-subtitle">Redemption across branches</p>
 
       @if (loading()) {
@@ -60,7 +62,8 @@
             <i [class]="offer.icon"></i>
           </div>
           <div class="analytics-overview__highlight-text">
-            <p class="analytics-overview__highlight-label">{{ offer.label }}</p>
+            <p class="analytics-overview__highlight-label">{{ offer.label }}<app-info-tip
+              [text]="'analytics.tooltip.highlight.' + offer.id | translate" /></p>
             <p class="analytics-overview__highlight-subtitle">{{ offer.offerTitle }}</p>
           </div>
         </div>
@@ -82,7 +85,9 @@
     <div class="analytics-overview__card analytics-overview__card--summary">
       <div class="analytics-overview__summary-header">
         <h3 class="analytics-overview__card-title">Offers Overview</h3>
-        <div class="analytics-overview__period-group">
+        <div class="analytics-overview__period-group"
+          [pTooltip]="'analytics.tooltip.reportingPeriod' | translate" tooltipPosition="top"
+          tooltipStyleClass="app-tooltip">
           @for (opt of periodOptions; track opt.value) {
           <button type="button" class="analytics-overview__period-btn" [class.is-active]="period() === opt.value"
             (click)="selectPeriod(opt.value)">
@@ -95,7 +100,8 @@
       <div class="analytics-overview__summary-grid">
         <div class="analytics-overview__summary-cell">
           <p class="analytics-overview__summary-value">{{ animatedCount('totalOffers') }}</p>
-          <p class="analytics-overview__summary-label">Total Offers</p>
+          <p class="analytics-overview__summary-label">Total Offers<app-info-tip
+            [text]="'analytics.tooltip.totalOffers' | translate" /></p>
           <p class="analytics-overview__summary-trend" [class]="trendClass(overviewStats().totalOffersTrend, 'analytics-overview__summary-trend')">
             {{ formatTrend(overviewStats().totalOffersTrend) }} vs Last period
           </p>
@@ -103,21 +109,24 @@
         <div class="analytics-overview__summary-divider"></div>
         <div class="analytics-overview__summary-cell">
           <p class="analytics-overview__summary-value">{{ animatedCount('totalRedemption') }}</p>
-          <p class="analytics-overview__summary-label">Total Redemption</p>
+          <p class="analytics-overview__summary-label">Total Redemption<app-info-tip
+            [text]="'analytics.tooltip.totalRedemptions' | translate" /></p>
           <p class="analytics-overview__summary-trend" [class]="trendClass(overviewStats().totalRedemptionTrend, 'analytics-overview__summary-trend')">
             {{ formatTrend(overviewStats().totalRedemptionTrend) }} vs Last period
           </p>
         </div>
         <div class="analytics-overview__summary-cell">
           <p class="analytics-overview__summary-value">{{ formatCompact(animatedValue('costSavings')) }}</p>
-          <p class="analytics-overview__summary-label">Cost Savings</p>
+          <p class="analytics-overview__summary-label">Cost Savings<app-info-tip
+            [text]="'analytics.tooltip.costSavings' | translate" /></p>
           <p class="analytics-overview__summary-trend" [class]="trendClass(overviewStats().costSavingsTrend, 'analytics-overview__summary-trend')">
             {{ formatTrend(overviewStats().costSavingsTrend) }} vs Last period
           </p>
         </div>
         <div class="analytics-overview__summary-cell">
           <p class="analytics-overview__summary-value">{{ animatedCount('successRate') }}%</p>
-          <p class="analytics-overview__summary-label">Success Rate</p>
+          <p class="analytics-overview__summary-label">Success Rate<app-info-tip
+            [text]="'analytics.tooltip.successRate' | translate" /></p>
           <p class="analytics-overview__summary-trend" [class]="trendClass(overviewStats().successRateTrend, 'analytics-overview__summary-trend')">
             {{ formatTrend(overviewStats().successRateTrend) }} vs Last period
           </p>
@@ -126,7 +135,8 @@
     </div>
 
     <div class="analytics-overview__card analytics-overview__card--day">
-      <h3 class="analytics-overview__card-title">Redemptions by Day</h3>
+      <h3 class="analytics-overview__card-title">Redemptions by Day<app-info-tip
+          [text]="'analytics.tooltip.redemptionsByDay' | translate" /></h3>
       <p class="analytics-overview__card-subtitle">Last 7 Days</p>
 
       @if (loading()) {

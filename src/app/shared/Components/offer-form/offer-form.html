@@ -125,6 +125,7 @@
           <label for="discountExpireDate" class="offer-form__label">
             {{ 'offerForm.label.expiryDate' | translate }}
             <span class="offer-form__required">*</span>
+            <app-info-tip [text]="'offerForm.tooltip.expiryDate' | translate" />
           </label>
           <p-datepicker formControlName="expiry" iconDisplay="input" showIcon="true" inputId="discountExpireDate"
             [minDate]="minExpiryDate()" styleClass="offer-form__datepicker offer-form__input"
@@ -138,7 +139,8 @@
 
         <div class="offer-form__col-2 offer-form__field-group">
           <app-category-dropdown [label]="'offerForm.label.category' | translate" [placeholder]="'offerForm.placeholder.category' | translate" [multiple]="true"
-            [required]="true" [control]="category">
+            [required]="true" [control]="category"
+            [tooltip]="'offerForm.tooltip.category' | translate">
           </app-category-dropdown>
         </div>
 
@@ -148,7 +150,8 @@
         </div>
 
         <div class="offer-form__col-2 offer-form__field-group">
-          <label class="offer-form__label">{{ 'offerForm.label.tags' | translate }}</label>
+          <label class="offer-form__label">{{ 'offerForm.label.tags' | translate }}<app-info-tip
+            [text]="'offerForm.tooltip.tags' | translate" /></label>
           <p-multiselect
             [options]="tagOptions()"
             formControlName="selectedTags"
@@ -200,6 +203,7 @@
           <label class="offer-form__label">
             {{ 'offerForm.label.taxValueEn' | translate }}
             <span class="offer-form__required">*</span>
+            <app-info-tip [text]="'offerForm.tooltip.taxValue' | translate" />
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="taxValue" class="offer-form__input offer-form__input--pl4"
@@ -214,6 +218,7 @@
           <label class="offer-form__label">
             {{ 'offerForm.label.taxValueAr' | translate }}
             <span class="offer-form__required">*</span>
+            <app-info-tip [text]="'offerForm.tooltip.taxValue' | translate" />
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="taxValueAr" class="offer-form__input offer-form__input--pr4 offer-form__input--right"
@@ -228,6 +233,7 @@
           <label class="offer-form__label">
             {{ 'offerForm.label.currency' | translate }}
             <span class="offer-form__required">*</span>
+            <app-info-tip [text]="'offerForm.tooltip.currency' | translate" />
           </label>
           <div class="offer-form__input-wrap">
             <input pInputText formControlName="currency" class="offer-form__input offer-form__input--pl4"
@@ -242,6 +248,7 @@
           <label class="offer-form__label">
             {{ 'offerForm.label.amenitiesEn' | translate }}
             <span class="offer-form__required">*</span>
+            <app-info-tip [text]="'offerForm.tooltip.amenities' | translate" />
           </label>
           <div class="offer-form__input-action-wrap">
             <input #amenityEnInput pInputText type="text"
@@ -277,6 +284,7 @@
           <label class="offer-form__label">
             {{ 'offerForm.label.amenitiesAr' | translate }}
             <span class="offer-form__required">*</span>
+            <app-info-tip [text]="'offerForm.tooltip.amenities' | translate" />
           </label>
           <div class="offer-form__input-action-wrap">
             <input #amenityArInput pInputText type="text"
@@ -310,7 +318,8 @@
 
         <div class="offer-form__col-2">
           <div>
-            <h3 class="offer-form__subheading">{{ 'offerForm.label.roomDetails' | translate }}</h3>
+            <h3 class="offer-form__subheading">{{ 'offerForm.label.roomDetails' | translate }}<app-info-tip
+              [text]="'offerForm.tooltip.roomDetails' | translate" /></h3>
           </div>
 
           @if (roomItems().length) {
@@ -376,18 +385,21 @@
               <p-radiobutton name="hotelRating" value="Fixed" formControlName="discountType">
               </p-radiobutton>
               <span class="offer-form__radio-label offer-form__radio-label--medium">{{ 'offerForm.value.fixedAmount' | translate }}</span>
+              <app-info-tip [text]="'offerForm.tooltip.fixedAmount' | translate" />
             </label>
 
             <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Percentage" formControlName="discountType">
               </p-radiobutton>
               <span class="offer-form__radio-label offer-form__radio-label--medium">{{ 'offerForm.value.percentage' | translate }}</span>
+              <app-info-tip [text]="'offerForm.tooltip.percentage' | translate" />
             </label>
 
             <label class="offer-form__radio-pill">
               <p-radiobutton name="hotelRating" value="Others" formControlName="discountType">
               </p-radiobutton>
               <span class="offer-form__radio-label offer-form__radio-label--medium">{{ 'offerForm.value.others' | translate }}</span>
+              <app-info-tip [text]="'offerForm.tooltip.otherDiscountType' | translate" />
             </label>
           </div>
           @if (hasRequiredError('discountType')) {
@@ -401,6 +413,7 @@
             <label class="offer-form__label">
               {{ (offerForm.get('discountType')?.value === 'Others' ? 'offerForm.label.amountEn' : 'offerForm.label.discountAmountEn') | translate }}
               <span class="offer-form__required">*</span>
+              <app-info-tip [text]="(offerForm.get('discountType')?.value === 'Others' ? 'offerForm.tooltip.amountOther' : 'offerForm.tooltip.discountAmount') | translate" />
             </label>
             <div class="offer-form__input-wrap">
               <input pInputText formControlName="discountEn" class="offer-form__input offer-form__input--pl4 offer-form__input--pr8"
@@ -435,6 +448,7 @@
             <label class="offer-form__label">
               {{ (offerForm.get('discountType')?.value === 'Others' ? 'offerForm.label.amountAr' : 'offerForm.label.discountAmountAr') | translate }}
               <span class="offer-form__required">*</span>
+              <app-info-tip [text]="(offerForm.get('discountType')?.value === 'Others' ? 'offerForm.tooltip.amountOther' : 'offerForm.tooltip.discountAmount') | translate" />
             </label>
             <div class="offer-form__input-wrap">
               <input pInputText formControlName="discountAr" class="offer-form__input offer-form__input--pr4 offer-form__input--right offer-form__input--h11"
@@ -467,6 +481,7 @@
             <label class="offer-form__label offer-form__label--block">
               {{ 'offerForm.label.instructionsEn' | translate }}
               <span class="offer-form__required">*</span>
+              <app-info-tip [text]="'offerForm.tooltip.instructions' | translate" />
             </label>
             <textarea pInputTextarea formControlName="instructionsEn" (focus)="setPreviewLanguage('en')" rows="4"
               class="offer-form__textarea"
@@ -483,6 +498,7 @@
             <label class="offer-form__label offer-form__label--block">
               {{ 'offerForm.label.instructionsAr' | translate }}
               <span class="offer-form__required">*</span>
+              <app-info-tip [text]="'offerForm.tooltip.instructions' | translate" />
             </label>
             <textarea pInputTextarea formControlName="instructionsAr" (focus)="setPreviewLanguage('ar')" rows="4"
               class="offer-form__textarea offer-form__textarea--right"
@@ -1161,11 +1177,15 @@
         <app-cancel-button [disabled]="isSubmitDisabled()" (click)="cancelEvent.emit()" />
         }
         @if (secondaryAction() !== 'cancel') {
-        <app-button variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()">
+        <app-button variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()"
+          [pTooltip]="'offerForm.tooltip.saveDraft' | translate" tooltipPosition="top" tooltipStyleClass="app-tooltip"
+          [life]="3000">
           {{ 'offerForm.footer.saveDraft' | translate }}
         </app-button>
         }
-        <app-button variant="primary" type="submit" icon="pi pi-check" [disabled]="isSubmitDisabled()">
+        <app-button variant="primary" type="submit" icon="pi pi-check" [disabled]="isSubmitDisabled()"
+          [pTooltip]="'offerForm.tooltip.submit' | translate" tooltipPosition="top" tooltipStyleClass="app-tooltip"
+          [life]="3000">
           {{ buttonName() }}
         </app-button>
       </div>

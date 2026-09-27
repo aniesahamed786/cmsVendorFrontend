@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'primeng/chart';
 import { SelectModule } from 'primeng/select';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import {
   AnalyticsOffersSummary,
@@ -16,6 +17,7 @@ import {
   OfferInsightRow,
   VendorAnalyticsService,
 } from '../../services/analytics.service';
+import { InfoTip } from '../../../../shared/Components/info-tip/info-tip';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -25,7 +27,7 @@ import { createCountUp } from '../../../../shared/animation/count-up';
 @Component({
   selector: 'app-analytics-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ChartModule, SelectModule, TableModule, TranslatePipe, AppSearch],
+  imports: [CommonModule, FormsModule, ChartModule, SelectModule, TableModule, TooltipModule, TranslatePipe, AppSearch, InfoTip],
   templateUrl: './analytics-page.html',
   styleUrl: './analytics-page.scss',
 })
@@ -385,15 +387,16 @@ export class AnalyticsPage implements OnInit {
     offer: OfferInsightRow;
     icon: string;
     labelKey: string;
+    tooltipKey: string;
     metricKey: string;
     metricId: string;
     value: number;
   }> {
     const overview = this.topOverview();
     return [
-      this.topOfferCard(overview?.mostFavouritedOffer, 'pi pi-bookmark', 'analytics.topOffers.mostFavorited', 'analytics.common.favorites', 'top_favorites'),
-      this.topOfferCard(overview?.mostViewedOffer, 'pi pi-eye', 'analytics.topOffers.mostViewed', 'analytics.common.views', 'top_views'),
-      this.topOfferCard(overview?.mostSharedOffer, 'pi pi-share-alt', 'analytics.topOffers.mostShared', 'analytics.common.shares', 'top_shares'),
+      this.topOfferCard(overview?.mostFavouritedOffer, 'pi pi-bookmark', 'analytics.topOffers.mostFavorited', 'analytics.tooltip.highlight.favourited', 'analytics.common.favorites', 'top_favorites'),
+      this.topOfferCard(overview?.mostViewedOffer, 'pi pi-eye', 'analytics.topOffers.mostViewed', 'analytics.tooltip.highlight.viewed', 'analytics.common.views', 'top_views'),
+      this.topOfferCard(overview?.mostSharedOffer, 'pi pi-share-alt', 'analytics.topOffers.mostShared', 'analytics.tooltip.highlight.shared', 'analytics.common.shares', 'top_shares'),
     ];
   }
 
@@ -401,12 +404,14 @@ export class AnalyticsPage implements OnInit {
     topOffer: AnalyticsTopOffer | null | undefined,
     icon: string,
     labelKey: string,
+    tooltipKey: string,
     metricKey: string,
     metricId: string,
   ): {
     offer: OfferInsightRow;
     icon: string;
     labelKey: string;
+    tooltipKey: string;
     metricKey: string;
     metricId: string;
     value: number;
@@ -424,6 +429,7 @@ export class AnalyticsPage implements OnInit {
       },
       icon,
       labelKey,
+      tooltipKey,
       metricKey,
       metricId,
       value: topOffer?.count ?? 0,

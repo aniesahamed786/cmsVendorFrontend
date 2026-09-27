@@ -33,6 +33,7 @@ export interface BranchRow {
   longitude: string | number;
   googleMapLink?: string;
   status?: string;
+  isPwdAvailable?: boolean;
 }
 
 export interface BranchesResponse {

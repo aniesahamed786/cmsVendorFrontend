@@ -343,6 +343,16 @@
     padding: 2rem 0;
     color: var(--app-muted);
   }
+
+  // Masked SVG needs explicit dimensions — .app-svg-icon only sets the mask.
+  &__pwd-icon {
+    width: 1rem;
+    height: 0.9rem;
+    margin-inline-start: 0.5rem;
+    vertical-align: middle;
+    color: var(--app-muted);
+    cursor: help;
+  }
 }
 
 // Full-bleed table sides & bottom inside the card

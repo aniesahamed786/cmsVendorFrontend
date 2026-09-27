@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { InfoTip } from '../../../../shared/Components/info-tip/info-tip';
+import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import {
   DayRedemption,
   HighlightOffer,
@@ -30,7 +32,7 @@ import {
 @Component({
   selector: 'app-analytics-overview',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules],
+  imports: [CommonModule, PrimeUIModules, TranslatePipe, InfoTip],
   templateUrl: './analytics-overview.html',
   styleUrl: './analytics-overview.scss',
 })

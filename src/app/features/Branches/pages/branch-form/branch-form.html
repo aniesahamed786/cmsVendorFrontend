@@ -14,11 +14,15 @@
       <app-cancel-button [disabled]="isSubmitDisabled()" (click)="cancelEvent.emit()" />
       }
       @if (secondaryAction() !== 'cancel') {
-      <app-button type="button" variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()" [loading]="saving()">
+      <app-button type="button" variant="outline" (click)="onSaveDraft()" [disabled]="isSubmitDisabled()" [loading]="saving()"
+        [pTooltip]="'branchForm.tooltip.saveDraft' | translate" tooltipPosition="top" tooltipStyleClass="app-tooltip"
+        [life]="3000">
         {{ 'branchForm.footer.saveDraft' | translate }}
       </app-button>
       }
-      <app-button type="submit" variant="primary" icon="pi pi-plus" [disabled]="isSubmitDisabled()" [loading]="saving()">
+      <app-button type="submit" variant="primary" icon="pi pi-plus" [disabled]="isSubmitDisabled()" [loading]="saving()"
+        [pTooltip]="'branchForm.tooltip.submit' | translate" tooltipPosition="top" tooltipStyleClass="app-tooltip"
+        [life]="3000">
         {{ buttonName() }}
       </app-button>
     </div>
@@ -39,6 +43,7 @@
         <label class="branch-form__label">
           {{ 'branchForm.label.locationNameEn' | translate }}
           <span class="branch-form__required">*</span>
+        <app-info-tip [text]="'branchForm.tooltip.locationName' | translate" />
         </label>
         <input pInputText formControlName="locationNameEn" class="branch-form__input"
           [placeholder]="'branchForm.placeholder.locationNameEn' | translate" />
@@ -51,6 +56,7 @@
         <label class="branch-form__label">
           {{ 'branchForm.label.locationNameAr' | translate }}
           <span class="branch-form__required">*</span>
+        <app-info-tip [text]="'branchForm.tooltip.locationName' | translate" />
         </label>
         <input pInputText formControlName="locationNameAr" dir="rtl"
           class="branch-form__input branch-form__input--right"
@@ -64,6 +70,7 @@
         <label class="branch-form__label">
           {{ 'branchForm.label.country' | translate }}
           <span class="branch-form__required">*</span>
+        <app-info-tip [text]="'branchForm.tooltip.country' | translate" />
         </label>
         <p-select [options]="countryOptions()" optionLabel="label" optionValue="value"
           [placeholder]="'branchForm.placeholder.country' | translate" appendTo="body"
@@ -79,6 +86,7 @@
       <div class="branch-form__field">
         <label class="branch-form__label">
           {{ 'branchForm.label.region' | translate }}
+        <app-info-tip [text]="'branchForm.tooltip.region' | translate" />
         </label>
         <p-select [options]="regionOptions()" optionLabel="label" optionValue="value"
           [placeholder]="'branchForm.placeholder.region' | translate" appendTo="body"
@@ -91,6 +99,7 @@
         <label class="branch-form__label">
           {{ 'branchForm.label.city' | translate }}
           <span class="branch-form__required">*</span>
+        <app-info-tip [text]="'branchForm.tooltip.city' | translate" />
         </label>
         <p-select [options]="cityOptions()" optionLabel="label" optionValue="value"
           [placeholder]="'branchForm.placeholder.city' | translate" appendTo="body"
@@ -106,6 +115,7 @@
         <label class="branch-form__label">
           {{ 'branchForm.label.address' | translate }}
           <span class="branch-form__required">*</span>
+        <app-info-tip [text]="'branchForm.tooltip.address' | translate" />
         </label>
         <textarea pInputTextarea formControlName="address" rows="3" class="branch-form__textarea"
           [placeholder]="'branchForm.placeholder.address' | translate"></textarea>
@@ -118,6 +128,7 @@
         <label class="branch-form__label">
           {{ 'branchForm.label.googleMapLink' | translate }}
           <span class="branch-form__required">*</span>
+        <app-info-tip [text]="'branchForm.tooltip.googleMapLink' | translate" />
         </label>
         <input pInputText formControlName="googleMapLink" class="branch-form__input"
           [placeholder]="'branchForm.placeholder.googleMapLink' | translate" />
@@ -131,6 +142,7 @@
       <div class="branch-form__field branch-form__col-2">
         <label class="branch-form__label">
           {{ 'branchForm.label.representativeName' | translate }}
+        <app-info-tip [text]="'branchForm.tooltip.representativeName' | translate" />
         </label>
         <input pInputText formControlName="representativeName" class="branch-form__input"
           [placeholder]="'branchForm.placeholder.representativeName' | translate" />
@@ -139,6 +151,7 @@
       <div class="branch-form__field branch-form__col-2">
         <label class="branch-form__label">
           {{ 'branchForm.label.phoneNumber' | translate }}
+        <app-info-tip [text]="'branchForm.tooltip.phoneNumber' | translate" />
         </label>
         <input pInputText formControlName="phoneNumber" class="branch-form__input"
           [placeholder]="'branchForm.placeholder.phoneNumber' | translate"

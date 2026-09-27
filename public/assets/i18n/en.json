@@ -882,6 +882,23 @@
       "locations": "Selected locations",
       "offerImageMobile": "Offer image (mobile)",
       "offerImageDesktop": "Offer image (desktop)"
+    },
+    "tooltip": {
+      "expiryDate": "The offer will automatically become unavailable after this date.",
+      "category": "Select the category that best represents the offer and helps users find it.",
+      "tags": "Add relevant keywords to improve the offer's visibility in search and filters.",
+      "taxValue": "Enter the applicable tax percentage. Enter 0 if tax does not apply.",
+      "currency": "Select the currency used for the offer's prices and discount values.",
+      "amenities": "Enter the main amenities included in the offer, separated by commas.",
+      "roomDetails": "Add the room types eligible for this offer and their related details.",
+      "fixedAmount": "Applies a specific monetary discount to the original price.",
+      "percentage": "Applies a percentage discount to the original price.",
+      "otherDiscountType": "Select this when the benefit is not a fixed amount or percentage, then describe it clearly.",
+      "discountAmount": "Enter the discount value only, without a currency or percentage symbol.",
+      "instructions": "Explain how customers can redeem the offer, including any required code, document, or booking step.",
+      "saveDraft": "Save your progress without submitting the offer for review.",
+      "submit": "Submit the completed offer for review and publishing.",
+      "amountOther": "Describe the benefit in words, since it is not a fixed amount or percentage."
     }
   },
   "roomDialog": {
@@ -1127,7 +1144,14 @@
       "manager": "Manager",
       "action": "Action"
     },
-    "empty": "No branches found."
+    "empty": "No branches found.",
+    "tooltip": {
+      "branchLocations": "Displays registered branch locations and their redemption activity on the map.",
+      "topPerformers": "Ranks branches based on the selected performance metric.",
+      "regionFilter": "Display branches located within the selected region.",
+      "totalOffers": "Total number of offers assigned or available at this store.",
+      "actionMenu": "View the selected branch, request changes to it, or cancel it."
+    }
   },
   "redemption": {
     "title": "Offer Redemption",
@@ -1431,6 +1455,18 @@
       "noChangesDetail": "You haven't changed anything on this branch yet.",
       "missingFieldsSummary": "Missing Required Fields",
       "missingFieldsDetail": "Please fill in all required fields before continuing."
+    },
+    "tooltip": {
+      "locationName": "Enter the official branch or location name as it should appear to customers.",
+      "country": "Select the country where the branch is located.",
+      "region": "Select the administrative region where the branch is located.",
+      "city": "Select the city where the branch is located.",
+      "address": "Enter the complete physical address of the branch.",
+      "googleMapLink": "Paste the branch's shared Google Maps location link.",
+      "representativeName": "Enter the name of the person responsible for this branch.",
+      "phoneNumber": "Enter an active contact number, including the country code.",
+      "saveDraft": "Save the branch information without submitting or activating it.",
+      "submit": "Submit the branch information and add it to the store list."
     }
   },
   "settingsPage": {
@@ -1584,6 +1620,26 @@
       "redemptions": "Redemptions",
       "uniqueClicks": "Unique Clicks",
       "favorites": "Favorites"
+    },
+    "tooltip": {
+      "status": {
+        "active": "Total number of offers currently published and available to customers.",
+        "draft": "Total number of offers saved but not yet submitted or published.",
+        "pending": "Total number of submitted offers or requests currently awaiting review.",
+        "inactive": "Total number of expired, disabled, or unpublished offers."
+      },
+      "highlight": {
+        "favourited": "The offer added to customers' favorites the highest number of times.",
+        "viewed": "The offer that received the highest number of views during the selected period.",
+        "shared": "The offer shared by customers the highest number of times."
+      },
+      "redemptionByLocation": "Shows the number of successful offer redemptions recorded in each location.",
+      "redemptionsByDay": "Shows the number of successful redemptions recorded each day.",
+      "totalOffers": "Total number of offers included in the selected reporting period.",
+      "totalRedemptions": "Total number of successful offer redemptions during the selected period.",
+      "costSavings": "Estimated total amount saved by customers through redeemed offers.",
+      "successRate": "Percentage of successful redemptions compared with total redemption attempts.",
+      "reportingPeriod": "Select the period used to calculate and display the analytics."
     }
   },
   "branchActions": {

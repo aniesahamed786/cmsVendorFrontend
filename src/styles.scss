@@ -2047,6 +2047,33 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
 }
 
 /* ---------------------------------------------------------------------------
+ * Tooltips (PrimeNG pTooltip)
+ *
+ * THE place to change how every tooltip in the app looks — the <app-info-tip>
+ * glyph tooltips, the form-footer button tooltips, and the analytics bar-chart
+ * ones all render through this. Tokens keep dark mode working for free.
+ * ------------------------------------------------------------------------ */
+.p-tooltip .p-tooltip-text {
+  max-width: 17rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--app-text) !important;
+  color: var(--app-surface) !important;
+  border-radius: 0; /* square corners, per the style guide */
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: start;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.p-tooltip .p-tooltip-arrow {
+  border-top-color: var(--app-text) !important;
+  border-bottom-color: var(--app-text) !important;
+  border-left-color: var(--app-text) !important;
+  border-right-color: var(--app-text) !important;
+}
+
+/* ---------------------------------------------------------------------------
  * Checkbox card / pill (.app-check-card, .app-check-pill)
  *
  * A <label> wrapping a p-checkbox, an .app-svg-icon, and title + subtitle copy —

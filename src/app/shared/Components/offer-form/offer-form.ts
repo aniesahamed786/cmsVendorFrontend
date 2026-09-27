@@ -37,6 +37,7 @@ import {
   getVendorStatus,
   isVendorInactive,
 } from "../../../features/vendors/models/vendordetails";
+import { InfoTip } from "../info-tip/info-tip";
 import { CategoryDropdownComponent } from "../category-dropdown/category-dropdown";
 import { TargetAudienceDropdownComponent } from "../target-audience-dropdown/target-audience-dropdown";
 import { PreviewOfferDetails } from "../../../features/Offers/Components/preview-offer-details/preview-offer-details";
@@ -113,6 +114,7 @@ export interface OfferFormSubmit {
     Button,
     CancelButton,
     TranslatePipe,
+    InfoTip,
   ],
   templateUrl: "./offer-form.html",
   styleUrl: "./offer-form.css",

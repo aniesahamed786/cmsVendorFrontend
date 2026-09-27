@@ -43,7 +43,8 @@
   <section class="branches-page__middle">
     <!-- Map Area -->
     <div class="insight-card branches-page__map-card">
-      <h3 class="insight-card-title branches-page__card-title">{{ 'branches.map.title' | translate }}</h3>
+      <h3 class="insight-card-title branches-page__card-title">{{ 'branches.map.title' | translate }}<app-info-tip
+          [text]="'branches.tooltip.branchLocations' | translate" /></h3>
       <div class="branches-page__map-wrapper">
         @if (!hasMapsKey) {
         <div class="branches-page__map-empty">
@@ -68,7 +69,8 @@
 
     <!-- Top Performers -->
     <div class="insight-card branches-page__performers-card">
-      <h3 class="insight-card-title">{{ 'branches.performers.title' | translate }}</h3>
+      <h3 class="insight-card-title">{{ 'branches.performers.title' | translate }}<app-info-tip
+        [text]="'branches.tooltip.topPerformers' | translate" /></h3>
       <p class="branches-page__performers-subtitle">{{ 'branches.performers.subtitle' | translate }}</p>
 
       <div class="branches-page__performers-list">
@@ -120,7 +122,8 @@
 
       <div class="app-filters-row app-desktop-filters">
         <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'branches.filter.region' | translate }}</label>
+          <label class="app-filter-label">{{ 'branches.filter.region' | translate }}<app-info-tip
+            [text]="'branches.tooltip.regionFilter' | translate" /></label>
           <p-select [options]="regionOptions()" [ngModel]="selectedRegion()" (ngModelChange)="selectedRegion.set($event)"
             optionLabel="label" optionValue="value" [placeholder]="'branches.filter.region' | translate" styleClass="branches-page__filter-select"
             panelStyleClass="branches-page__filter-panel"></p-select>
@@ -151,7 +154,8 @@
     <app-bottom-sheet [(visible)]="showMobileFilters" [title]="'common.filters' | translate"
       [activeFilterCount]="activeFilterCount()" (cleared)="clearFilters()">
       <div class="app-filter-group">
-        <label class="app-filter-label">{{ 'branches.filter.region' | translate }}</label>
+        <label class="app-filter-label">{{ 'branches.filter.region' | translate }}<app-info-tip
+            [text]="'branches.tooltip.regionFilter' | translate" /></label>
         <p-select [options]="regionOptions()" [ngModel]="selectedRegion()" (ngModelChange)="selectedRegion.set($event)"
           optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'branches.filter.region' | translate" styleClass="branches-page__filter-select"
           panelStyleClass="branches-page__filter-panel" appendTo="body"></p-select>
@@ -165,18 +169,30 @@
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name">{{ 'branches.column.name' | translate }} <p-sortIcon field="name" /></th>
-            <th pSortableColumn="totalOffers">{{ 'branches.column.totalOffers' | translate }} <p-sortIcon field="totalOffers" /></th>
+            <th pSortableColumn="totalOffers">{{ 'branches.column.totalOffers' | translate }}<app-info-tip
+              [text]="'branches.tooltip.totalOffers' | translate" /> <p-sortIcon field="totalOffers" /></th>
             <th pSortableColumn="city">{{ 'branches.column.city' | translate }} <p-sortIcon field="city" /></th>
             <th pSortableColumn="region">{{ 'branches.column.region' | translate }} <p-sortIcon field="region" /></th>
             <th pSortableColumn="country">{{ 'branches.column.country' | translate }} <p-sortIcon field="country" /></th>
             <th pSortableColumn="manager">{{ 'branches.column.manager' | translate }} <p-sortIcon field="manager" /></th>
-            <th>{{ 'branches.column.action' | translate }}</th>
+            <th>{{ 'branches.column.action' | translate }}<app-info-tip
+              [text]="'branches.tooltip.actionMenu' | translate" /></th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-branch>
           <tr>
-            <td><span class="branches-page__row-title" (click)="navigateBranchDetail(branch.locationId)">{{ branch.locationName }}</span></td>
+            <td>
+              <span class="branches-page__row-title" (click)="navigateBranchDetail(branch.locationId)">{{ branch.locationName }}</span>
+              @if (branch.isPwdAvailable) {
+              <span class="app-svg-icon branches-page__pwd-icon"
+                [style.webkitMaskImage]="'url(assets/svg/PWD/PWD.svg)'"
+                [style.maskImage]="'url(assets/svg/PWD/PWD.svg)'"
+                [pTooltip]="'branchForm.label.pwdFriendly' | translate" tooltipPosition="top"
+                tooltipStyleClass="app-tooltip" [attr.aria-label]="'branchForm.label.pwdFriendly' | translate"
+                role="img"></span>
+              }
+            </td>
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.totalOffers }}</td>
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.city }}</td>
             <td (click)="navigateBranchDetail(branch.locationId)">{{ branch.region }}</td>

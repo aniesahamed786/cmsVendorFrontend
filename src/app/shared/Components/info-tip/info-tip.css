@@ -1,0 +1,32 @@
+/* The glyph only. The tooltip bubble is styled globally in src/styles.scss
+   (`.p-tooltip`) so plain pTooltip usages match this component. */
+
+.info-tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: 0.3rem; /* logical: flips for RTL */
+  vertical-align: middle;
+  cursor: help;
+  /* Matches whatever label it sits next to — including white on the active
+     pill of a toggle group. Hover dims instead of recoloring, so it reads the
+     same on a light label and on a filled button. */
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.15s ease;
+}
+
+.info-tip:hover,
+.info-tip:focus-visible {
+  opacity: 1;
+}
+
+.info-tip:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.info-tip__glyph {
+  font-size: 0.8125rem;
+  line-height: 1;
+}

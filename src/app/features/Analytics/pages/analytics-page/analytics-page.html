@@ -20,25 +20,29 @@
     <article class="kpi-card">
       <span class="icon-box"><i class="pi pi-tag"></i></span>
       <strong>{{ animatedCount('activeOffers') }}</strong>
-      <h2>{{ 'analytics.kpi.activeOffers' | translate }}</h2>
+      <h2>{{ 'analytics.kpi.activeOffers' | translate }}<app-info-tip
+          [text]="'analytics.tooltip.status.active' | translate" /></h2>
       <p>{{ 'analytics.kpi.activeOffersHint' | translate }}</p>
     </article>
     <article class="kpi-card kpi-card--danger">
       <span class="icon-box"><i class="pi pi-times-circle"></i></span>
       <strong>{{ animatedCount('inactiveOffers') }}</strong>
-      <h2>{{ 'analytics.kpi.inactiveOffers' | translate }}</h2>
+      <h2>{{ 'analytics.kpi.inactiveOffers' | translate }}<app-info-tip
+          [text]="'analytics.tooltip.status.inactive' | translate" /></h2>
       <p>{{ 'analytics.kpi.inactiveOffersHint' | translate }}</p>
     </article>
     <article class="kpi-card">
       <span class="icon-box"><i class="pi pi-file-edit"></i></span>
       <strong>{{ animatedCount('draftOffers') }}</strong>
-      <h2>{{ 'analytics.kpi.draftOffers' | translate }}</h2>
+      <h2>{{ 'analytics.kpi.draftOffers' | translate }}<app-info-tip
+          [text]="'analytics.tooltip.status.draft' | translate" /></h2>
       <p>{{ 'analytics.kpi.draftOffersHint' | translate }}</p>
     </article>
     <article class="kpi-card kpi-card--warning">
       <span class="icon-box"><i class="pi pi-clock"></i></span>
       <strong>{{ animatedCount('pendingRequests') }}</strong>
-      <h2>{{ 'analytics.kpi.pendingRequests' | translate }}</h2>
+      <h2>{{ 'analytics.kpi.pendingRequests' | translate }}<app-info-tip
+          [text]="'analytics.tooltip.status.pending' | translate" /></h2>
       <p>{{ 'analytics.kpi.pendingRequestsHint' | translate }}</p>
     </article>
     }
@@ -56,16 +60,20 @@
           <p-select [options]="durationOptions()" [ngModel]="locationDays()"
             (ngModelChange)="selectLocationDays($event)" [disabled]="redemptionChartMode() === 'day'"
             optionLabel="label" optionValue="value" [ariaLabel]="'analytics.duration.label' | translate"
-            styleClass="duration-select" />
+            styleClass="duration-select"
+            [pTooltip]="'analytics.tooltip.reportingPeriod' | translate" tooltipPosition="top"
+            tooltipStyleClass="app-tooltip" />
         </div>
         <div class="period-filter" role="group" [attr.aria-label]="'analytics.location.filterLabel' | translate">
           <button type="button" [class.is-active]="redemptionChartMode() === 'location'"
             [attr.aria-pressed]="redemptionChartMode() === 'location'" (click)="showRedemptions('location')">
             {{ 'analytics.location.byLocation' | translate }}
+            <app-info-tip [text]="'analytics.tooltip.redemptionByLocation' | translate" />
           </button>
           <button type="button" [class.is-active]="redemptionChartMode() === 'day'"
             [attr.aria-pressed]="redemptionChartMode() === 'day'" (click)="showRedemptions('day')">
             {{ 'analytics.location.byDay' | translate }}
+            <app-info-tip [text]="'analytics.tooltip.redemptionsByDay' | translate" />
           </button>
         </div>
       </div>
@@ -88,7 +96,9 @@
         <p>{{ 'analytics.topOffers.subtitle' | translate }}</p>
         <p-select [options]="durationOptions()" [ngModel]="topDays()" (ngModelChange)="selectTopDays($event)"
           optionLabel="label" optionValue="value" [ariaLabel]="'analytics.duration.label' | translate"
-          styleClass="duration-select" />
+          styleClass="duration-select"
+          [pTooltip]="'analytics.tooltip.reportingPeriod' | translate" tooltipPosition="top"
+          tooltipStyleClass="app-tooltip" />
       </div>
 
       @if (loading() || topLoading()) {
@@ -109,7 +119,8 @@
           <i [class]="card.icon"></i>
         </span>
         <span class="top-offer__copy">
-          <small>{{ card.labelKey | translate }}</small>
+          <small>{{ card.labelKey | translate }}<app-info-tip
+              [text]="card.tooltipKey | translate" /></small>
           <strong>{{ card.offer.title }}</strong>
         </span>
         <span class="top-offer__metric">
@@ -128,7 +139,9 @@
         <p>{{ 'analytics.overview.subtitle' | translate }}</p>
         <p-select [options]="durationOptions()" [ngModel]="summaryDays()" (ngModelChange)="selectSummaryDays($event)"
           optionLabel="label" optionValue="value" [ariaLabel]="'analytics.duration.label' | translate"
-          styleClass="duration-select" />
+          styleClass="duration-select"
+          [pTooltip]="'analytics.tooltip.reportingPeriod' | translate" tooltipPosition="top"
+          tooltipStyleClass="app-tooltip" />
       </div>
       <div class="overview-metrics">
         @if (loading() || summaryLoading()) {
@@ -141,7 +154,8 @@
         } @else {
         <div>
           <strong>{{ animatedCount('totalOffers') }}</strong>
-          <span>{{ 'analytics.kpi.totalOffers' | translate }}</span>
+          <span>{{ 'analytics.kpi.totalOffers' | translate }}<app-info-tip
+            [text]="'analytics.tooltip.totalOffers' | translate" /></span>
         </div>
         <div>
           <strong>{{ animatedCount('totalOfferViews') }}</strong>
@@ -149,7 +163,8 @@
         </div>
         <div>
           <strong>{{ animatedCount('totalRedemptions') }}</strong>
-          <span>{{ 'analytics.common.redemptions' | translate }}</span>
+          <span>{{ 'analytics.common.redemptions' | translate }}<app-info-tip
+            [text]="'analytics.tooltip.totalRedemptions' | translate" /></span>
         </div>
         <div>
           <strong>{{ animatedCount('locations') }}</strong>
@@ -168,7 +183,9 @@
         <p>{{ 'analytics.insights.subtitle' | translate }}</p>
         <p-select [options]="durationOptions()" [ngModel]="tableDays()"
           (ngModelChange)="selectTableDays($event, insightTable)" optionLabel="label" optionValue="value"
-          [ariaLabel]="'analytics.duration.label' | translate" styleClass="duration-select" />
+          [ariaLabel]="'analytics.duration.label' | translate" styleClass="duration-select"
+          [pTooltip]="'analytics.tooltip.reportingPeriod' | translate" tooltipPosition="top"
+          tooltipStyleClass="app-tooltip" />
       </div>
       <app-search class="insights-search" (valueChange)="insightTable.filterGlobal($event, 'contains')" />
     </div>
