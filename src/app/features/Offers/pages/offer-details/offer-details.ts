@@ -1,4 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Component, inject, linkedSignal, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrimeUIModules } from '../../../../core/prime.import';
@@ -26,6 +27,7 @@ type RedemptionTab = 'in-store' | 'online';
   providers: [PendingRequestCheck],
 })
 export class OfferDetailsPage {
+  readonly auth = inject(AuthService);
   private readonly i18n = inject(I18nService);
   private readonly offerDetailService = inject(OfferDetailService);
   private readonly branchesService = inject(BranchesService);

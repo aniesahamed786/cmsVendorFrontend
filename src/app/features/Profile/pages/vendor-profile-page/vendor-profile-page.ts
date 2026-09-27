@@ -34,6 +34,7 @@ export class VendorProfilePage implements OnInit {
   readonly profile = signal<any | null>(null);
   readonly backendUrl = environment.backendUrl;
   readonly pendingRequest = inject(PendingRequestCheck);
+  readonly auth = inject(AuthService);
   private readonly i18n = inject(I18nService);
   private readonly document = inject(DOCUMENT);
 

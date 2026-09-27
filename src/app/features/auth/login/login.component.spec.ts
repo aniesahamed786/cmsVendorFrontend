@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 
 import { AuthService, LoginResponse } from '../../../core/services/auth.service';
@@ -41,6 +41,7 @@ describe('LoginComponent', () => {
         { provide: I18nService, useValue: i18n },
         { provide: ThemeService, useValue: theme },
         { provide: Router, useValue: router },
+        { provide: ActivatedRoute, useValue: { queryParamMap: of(convertToParamMap({})) } },
       ],
     })
     .compileComponents();
@@ -61,6 +62,8 @@ describe('LoginComponent', () => {
         id: 'account-1',
         vendorId: 'vendor-1',
         roleId: 'role-1',
+        roleName: 'VENDOR_ADMIN',
+        permissions: ['cms_profile:manage'],
         name: 'Vendor',
         email: 'vendor@example.com',
         accountStatus: 'ACTIVE',

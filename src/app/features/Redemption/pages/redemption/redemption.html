@@ -4,11 +4,15 @@
     <div class="redemption-header__actions">
       <app-button variant="outline" icon="pi pi-download" [loading]="downloadingTemplate()"
         (click)="downloadTemplate()">{{ 'redemption.downloadExcel' | translate }}</app-button>
-      <app-button variant="primary" icon="pi pi-upload" [routerLink]="'/redemption/bulk-upload'">{{
-        'redemption.uploadExcel' | translate }}</app-button>
+      @if (auth.canManage('redemptions')) {
+        <app-button variant="primary" icon="pi pi-upload" [routerLink]="'/redemption/bulk-upload'">{{
+          'redemption.uploadExcel' | translate }}</app-button>
+      }
     </div>
   </div>
 
+  <!-- Recording a redemption is a write; cms_redemptions:read only sees the history below. -->
+  @if (auth.canManage('redemptions')) {
   <p-card styleClass="redemption-card redemption-card--spaced">
     <div class="redemption-card__header">
       <span>{{ 'redemption.section.basicInfo' | translate }}</span>
@@ -141,6 +145,7 @@
       </div>
     </form>
   </p-card>
+  }
 
   <section class="redemption-card">
     <div class="redemption-card__header redemption-card__header--table">

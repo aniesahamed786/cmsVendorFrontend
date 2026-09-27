@@ -1,16 +1,16 @@
 <div class="recent-activities">
   <header class="recent-activities__header">
-    <h1 class="recent-activities__title">Recent Activity</h1>
-    <p class="recent-activities__subtitle">Manage and monitor all your activities.</p>
+    <h1 class="recent-activities__title">{{ 'recentActivities.title' | translate }}</h1>
+    <p class="recent-activities__subtitle">{{ 'recentActivities.subtitle' | translate }}</p>
   </header>
 
   <section class="recent-activities__card">
     <div class="recent-activities__toolbar">
       <div class="recent-activities__toolbar-header">
-        <h2 class="recent-activities__card-title">Recent Activity</h2>
+        <h2 class="recent-activities__card-title">{{ 'recentActivities.cardTitle' | translate }}</h2>
         <div class="recent-activities__controls">
           <app-search [value]="search()" (valueChange)="onSearchInput($event)"
-            placeholder="Search title or request ID" />
+            [placeholder]="'recentActivities.searchPlaceholder' | translate" />
           <button type="button" class="app-filter-trigger-btn" [class.has-active]="activeFilterCount() > 0"
             (click)="showMobileFilters.set(true)">
             <i class="pi pi-filter"></i>
@@ -24,31 +24,31 @@
 
       <div class="app-filters-row app-desktop-filters">
         <div class="app-filter-group">
-          <label class="app-filter-label">Type</label>
-          <p-select [options]="entityTypeOptions" [ngModel]="entityType()"
+          <label class="app-filter-label">{{ 'recentActivities.filter.type' | translate }}</label>
+          <p-select [options]="entityTypeOptions()" [ngModel]="entityType()"
             (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
-            placeholder="Type" styleClass="recent-activities__filter" />
+            [placeholder]="'recentActivities.filter.type' | translate" styleClass="recent-activities__filter" />
         </div>
 
         <div class="app-filter-group">
-          <label class="app-filter-label">Action</label>
-          <p-select [options]="actionOptions" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
-            optionLabel="label" optionValue="value" placeholder="Action"
+          <label class="app-filter-label">{{ 'recentActivities.filter.action' | translate }}</label>
+          <p-select [options]="actionOptions()" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
+            optionLabel="label" optionValue="value" [placeholder]="'recentActivities.filter.action' | translate"
             styleClass="recent-activities__filter" />
         </div>
 
         <div class="app-filter-group">
-          <label class="app-filter-label">Period</label>
-          <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
-            optionLabel="label" optionValue="value" placeholder="Period"
+          <label class="app-filter-label">{{ 'recentActivities.filter.period' | translate }}</label>
+          <p-select [options]="periodOptions()" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
+            optionLabel="label" optionValue="value" [placeholder]="'recentActivities.filter.period' | translate"
             styleClass="recent-activities__filter" />
         </div>
 
         @if (period() === 'custom') {
         <div class="app-filter-group">
-          <label class="app-filter-label">Custom Dates</label>
+          <label class="app-filter-label">{{ 'recentActivities.filter.customDates' | translate }}</label>
           <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
-            selectionMode="range" [readonlyInput]="true" placeholder="Select dates" dateFormat="M d, yy"
+            selectionMode="range" [readonlyInput]="true" [placeholder]="'recentActivities.filter.selectDates' | translate" dateFormat="M d, yy"
             appendTo="body" styleClass="recent-activities__filter" />
         </div>
         }
@@ -78,31 +78,31 @@
     <app-bottom-sheet [(visible)]="showMobileFilters" [title]="'common.filters' | translate"
       [activeFilterCount]="activeFilterCount()" (cleared)="clearFilters()">
       <div class="app-filter-group">
-        <label class="app-filter-label">Type</label>
-        <p-select [options]="entityTypeOptions" [ngModel]="entityType()"
+        <label class="app-filter-label">{{ 'recentActivities.filter.type' | translate }}</label>
+        <p-select [options]="entityTypeOptions()" [ngModel]="entityType()"
           (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
-          [showClear]="true" placeholder="Type" styleClass="recent-activities__filter" appendTo="body" />
+          [showClear]="true" [placeholder]="'recentActivities.filter.type' | translate" styleClass="recent-activities__filter" appendTo="body" />
       </div>
 
       <div class="app-filter-group">
-        <label class="app-filter-label">Action</label>
-        <p-select [options]="actionOptions" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
-          optionLabel="label" optionValue="value" [showClear]="true" placeholder="Action"
+        <label class="app-filter-label">{{ 'recentActivities.filter.action' | translate }}</label>
+        <p-select [options]="actionOptions()" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
+          optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="'recentActivities.filter.action' | translate"
           styleClass="recent-activities__filter" appendTo="body" />
       </div>
 
       <div class="app-filter-group">
-        <label class="app-filter-label">Period</label>
-        <p-select [options]="periodOptions" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
-          optionLabel="label" optionValue="value" placeholder="Period"
+        <label class="app-filter-label">{{ 'recentActivities.filter.period' | translate }}</label>
+        <p-select [options]="periodOptions()" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
+          optionLabel="label" optionValue="value" [placeholder]="'recentActivities.filter.period' | translate"
           styleClass="recent-activities__filter" appendTo="body" />
       </div>
 
       @if (period() === 'custom') {
       <div class="app-filter-group">
-        <label class="app-filter-label">Custom Dates</label>
+        <label class="app-filter-label">{{ 'recentActivities.filter.customDates' | translate }}</label>
         <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
-          selectionMode="range" [readonlyInput]="true" [showClear]="true" placeholder="Select dates" dateFormat="M d, yy"
+          selectionMode="range" [readonlyInput]="true" [showClear]="true" [placeholder]="'recentActivities.filter.selectDates' | translate" dateFormat="M d, yy"
           appendTo="body" styleClass="recent-activities__filter" />
       </div>
       }
@@ -116,29 +116,29 @@
       styleClass="recent-activities__table">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="timestamp">Timestamp <p-sortIcon field="timestamp" /></th>
-          <th>Action Type</th>
-          <th>Performed by</th>
-          <th>Target Entity</th>
-          <th>Reference ID</th>
-          <th>Status</th>
+          <th pSortableColumn="timestamp">{{ 'recentActivities.column.timestamp' | translate }} <p-sortIcon field="timestamp" /></th>
+          <th>{{ 'recentActivities.column.actionType' | translate }}</th>
+          <th>{{ 'recentActivities.column.performedBy' | translate }}</th>
+          <th>{{ 'recentActivities.column.targetEntity' | translate }}</th>
+          <th>{{ 'recentActivities.column.referenceId' | translate }}</th>
+          <th>{{ 'recentActivities.column.status' | translate }}</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-row>
         <tr>
           <td>{{ row.timestamp }}</td>
-          <td><span class="recent-activities__row-title">{{ row.actionType }}</span></td>
+          <td><span class="recent-activities__row-title">{{ activityKey(row.action) | translate: { type: (entityKey(row.entityType) | translate) } }}</span></td>
           <td>{{ row.performedBy }}</td>
           <td>
-            {{ row.targetEntity }}
+            {{ row.title || (entityKey(row.entityType) | translate) }}
             @if (row.remarks) {
             <i class="pi pi-info-circle recent-activities__remarks-icon" [pTooltip]="row.remarks"
               tooltipPosition="top"></i>
             }
           </td>
           <td>{{ row.referenceId }}</td>
-          <td><span [class]="statusClass(row.status)">{{ row.statusLabel }}</span></td>
+          <td><span [class]="statusClass(row.status)">{{ statusKey(row.status) | translate }}</span></td>
         </tr>
       </ng-template>
 
@@ -159,11 +159,11 @@
         <tr>
           <td colspan="6" class="recent-activities__empty">
             @if (loadFailed()) {
-            Could not load recent activity. Please try again.
+            {{ 'recentActivities.loadFailed' | translate }}
             } @else if (hasActiveFilters()) {
-            No activity matches these filters.
+            {{ 'recentActivities.emptyFiltered' | translate }}
             } @else {
-            No recent activity.
+            {{ 'recentActivities.empty' | translate }}
             }
           </td>
         </tr>

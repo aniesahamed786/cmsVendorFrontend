@@ -1,11 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../../core/services/auth.service';
@@ -45,6 +46,22 @@ export class LoginComponent {
   private readonly theme = inject(ThemeService);
 
   readonly isDark = this.theme.isDarkMode;
+
+  private readonly queryParams = toSignal(inject(ActivatedRoute).queryParamMap);
+  /** Set when a login attempt is refused locally (suspended account). */
+  private readonly loginNotice = signal<string>('');
+
+  /**
+   * One line above the form for the three ways a user lands here without credentials failing:
+   * an expired session, a suspended account, or a refused sign-in.
+   */
+  readonly notice = computed(() => {
+    if (this.loginNotice()) return this.loginNotice();
+    const params = this.queryParams();
+    if (params?.get('account') === 'inactive') return 'login.accountInactive';
+    if (params?.get('session') === 'expired') return 'login.sessionExpired';
+    return '';
+  });
 
   loginForm: FormGroup;
 
@@ -114,8 +131,13 @@ export class LoginComponent {
 
     next: async (response) => {
 
-      console.log('Login Success:', response);
+      // A suspended account still gets a token. Don't open the app with it.
+      if (response.vendorAccount?.accountStatus !== 'ACTIVE') {
+        this.loginNotice.set('login.accountInactive');
+        return;
+      }
 
+      this.loginNotice.set('');
       this.authService.setSession(response.accessToken, response.vendorAccount);
 
       // The account's saved theme was stored but never applied — the settings page
@@ -140,7 +162,7 @@ export class LoginComponent {
 
       console.error('Login Failed:', error);
 
-      alert(this.i18n.t('login.invalidCredentials'));
+      this.loginNotice.set('login.invalidCredentials');
 
     }
 

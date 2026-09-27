@@ -22,6 +22,7 @@ import { MessageService } from 'primeng/api';
 import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-branches-page',
@@ -31,6 +32,9 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
   styleUrl: './branches-page.scss'
 })
 export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
+  readonly auth = inject(AuthService);
+  /** Staff edit their assigned branch; adding a new one is vendor-wide. */
+  readonly canAddBranch = computed(() => this.auth.canManage('locations') && !this.auth.isStaff());
   /** Closes any other row's menu first — see shared/utils/row-menu.ts. */
   readonly openRowMenu = openRowMenu;
   private readonly branchesService = inject(BranchesService);
@@ -149,23 +153,33 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
           if (row) this.router.navigate(['view', row.locationId], { relativeTo: this.route });
         },
       },
-      {
-        label: this.i18n.t('branchActions.action.requestChanges'),
-        icon: 'pi pi-arrows-v',
-        command: () => {
-          if (row) this.router.navigate(['edit', row.locationId], { relativeTo: this.route });
-        },
-      },
-      {
-        label: this.i18n.t('branchActions.action.cancelBranch'),
-        icon: 'pi pi-ban',
-        styleClass: 'p-menuitem-danger',
-        command: () => {
-          if (!row) return;
-          this.cancelRemarks.set('');
-          this.cancelTarget.set(row);
-        },
-      },
+      ...(this.auth.canManage('locations')
+        ? [
+            {
+              label: this.i18n.t('branchActions.action.requestChanges'),
+              icon: 'pi pi-arrows-v',
+              command: () => {
+                if (row) this.router.navigate(['edit', row.locationId], { relativeTo: this.route });
+              },
+            },
+          ]
+        : []),
+      // Cancelling a branch removes it from the vendor, so it stays with the admin even
+      // though staff hold cms_locations:manage for editing their own branch.
+      ...(this.canAddBranch()
+        ? [
+            {
+              label: this.i18n.t('branchActions.action.cancelBranch'),
+              icon: 'pi pi-ban',
+              styleClass: 'p-menuitem-danger',
+              command: () => {
+                if (!row) return;
+                this.cancelRemarks.set('');
+                this.cancelTarget.set(row);
+              },
+            },
+          ]
+        : []),
     ];
   });
 

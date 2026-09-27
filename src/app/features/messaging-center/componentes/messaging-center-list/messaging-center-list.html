@@ -138,9 +138,11 @@
 
   <!-- New ticket button -->
   <div class="mc-list__footer">
-    <button type="button" class="mc-list__new-btn" (click)="onCreateTicket()">
-      <i class="pi pi-plus"></i>
-      <span>{{ 'messaging.newTicket' | translate }}</span>
-    </button>
+    @if (auth.canManage('messaging_center')) {
+      <button type="button" class="mc-list__new-btn" (click)="onCreateTicket()">
+        <i class="pi pi-plus"></i>
+        <span>{{ 'messaging.newTicket' | translate }}</span>
+      </button>
+    }
   </div>
 </div>

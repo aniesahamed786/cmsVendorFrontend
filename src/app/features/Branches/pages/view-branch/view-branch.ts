@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -23,6 +24,7 @@ import { environment } from '../../../../../environments/environment';
   providers: [PendingRequestCheck],
 })
 export class ViewBranch {
+  readonly auth = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly http = inject(HttpClient);
   private readonly messageService = inject(MessageService);

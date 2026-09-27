@@ -146,6 +146,21 @@
   background: var(--app-surface);
   border: 1px solid var(--app-border);
 
+  /* One-line notice above the form: bad credentials, expired session, suspended account. */
+  &__notice {
+    margin: 0 0 1rem;
+    padding: 0.625rem 0.875rem;
+    background: color-mix(in srgb, var(--app-danger) 10%, var(--app-surface));
+    border: 1px solid var(--app-danger);
+    color: var(--app-danger);
+    font-size: 0.875rem;
+
+    /* --app-danger is 2.63:1 on the dark surface (see styles.scss) — lighten for AA. */
+    :host-context(.dark-mode) & {
+      color: color-mix(in srgb, var(--app-danger) 45%, #ffffff);
+    }
+  }
+
   &__form {
     display: flex;
     flex-direction: column;

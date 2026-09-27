@@ -1,33 +1,55 @@
 import { SystemLogEntry, SystemLogListResponse } from './system-log.model';
 
+/** Raw codes only — labels are i18n keys resolved in the template so a live
+ *  language switch re-renders them (rows are mapped once, at load time). */
 export interface ActivityRow {
   timestamp: string;
-  module: string;
-  itemName: string;
-  activity: string;
-  actionType: string;
+  entityType: string;
+  action: string;
+  title: string;
   performedBy: string;
-  targetEntity: string;
   referenceId: string;
   status: string;
-  statusLabel: string;
   remarks: string | null;
 }
 
-const ENTITY_LABELS: Record<string, string> = {
-  OFFER: 'Offer',
-  STORE: 'Branch',
-  BRANCH: 'Branch',
-  PROFILE: 'Profile',
-  HIGHLIGHT: 'Highlight',
-  ACCOUNT: 'Account',
-  BANNER: 'Banner',
-  NOTIFICATION: 'Notification',
+const ENTITY_KEYS: Record<string, string> = {
+  OFFER: 'requestCenter.type.offer',
+  STORE: 'requestCenter.type.store',
+  BRANCH: 'requestCenter.type.store',
+  PROFILE: 'requestCenter.type.profile',
+  HIGHLIGHT: 'requestCenter.type.highlight',
+  ACCOUNT: 'recentActivities.type.account',
+  BANNER: 'recentActivities.type.banner',
+  NOTIFICATION: 'recentActivities.type.notification',
+};
+
+const ACTIVITY_KEYS: Record<string, string> = {
+  SUBMITTED: 'recentActivities.activity.submitted',
+  RECALLED: 'recentActivities.activity.recalled',
+  CANCELLED: 'recentActivities.activity.cancelled',
 };
 
 export function titleCase(value: string | null | undefined): string {
   if (!value) return '';
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}
+
+// ponytail: an unmapped code falls through as its title-cased self — i18n.t()
+// returns unknown keys verbatim, so the cell reads "Xyz", never a raw key path.
+export function entityKey(entityType: string | null | undefined): string {
+  if (!entityType) return '—';
+  return ENTITY_KEYS[entityType] ?? titleCase(entityType);
+}
+
+export function activityKey(action: string | null | undefined): string {
+  if (!action) return '—';
+  return ACTIVITY_KEYS[action] ?? titleCase(action);
+}
+
+export function statusKey(status: string | null | undefined): string {
+  if (!status) return '—';
+  return `requestCenter.value.${status.toLowerCase()}`;
 }
 
 export function formatTimestamp(iso: string | null | undefined): string {
@@ -46,20 +68,14 @@ export function formatTimestamp(iso: string | null | undefined): string {
 }
 
 export function toActivityRow(entry: SystemLogEntry): ActivityRow {
-  const entity = ENTITY_LABELS[entry.entityType] ?? titleCase(entry.entityType);
-  const action = titleCase(entry.action);
-  const activityDesc = [entity, action].filter(Boolean).join(' ') || '—';
   return {
     timestamp: formatTimestamp(entry.createdAt),
-    module: entity || '—',
-    itemName: entry.title || entity || '—',
-    activity: activityDesc,
-    actionType: activityDesc,
+    entityType: entry.entityType ?? '',
+    action: entry.action ?? '',
+    title: entry.title || '',
     performedBy: entry.performedBy || '—',
-    targetEntity: entry.title || entity || '—',
     referenceId: entry.requestId || '—',
     status: entry.status ?? '',
-    statusLabel: titleCase(entry.status) || '—',
     remarks: entry.remarks ?? null,
   };
 }

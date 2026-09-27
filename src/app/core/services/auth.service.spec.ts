@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
-import { AuthService, decodeJwtPayload } from './auth.service';
+import { AuthService, VendorAccountSession, decodeJwtPayload } from './auth.service';
 
 function createMockJwt(payload: Record<string, unknown>): string {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
@@ -74,6 +74,8 @@ describe('AuthService', () => {
       id: 'acc-1',
       vendorId: 'v-1',
       roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_profile:manage'],
       name: 'Vendor Owner',
       email: 'vendor@example.com',
       accountStatus: 'ACTIVE',
@@ -87,10 +89,18 @@ describe('AuthService', () => {
   });
 
   it('should update cached preferences after they are saved', () => {
-    localStorage.setItem(
-      'vendorAccount',
-      JSON.stringify({ id: 'acc-1', vendorId: 'v-1', language: 'ENGLISH', theme: 'LIGHT' }),
-    );
+    service.setSession(createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 }), {
+      id: 'acc-1',
+      vendorId: 'v-1',
+      roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_profile:manage'],
+      name: 'Vendor Owner',
+      email: 'vendor@example.com',
+      accountStatus: 'ACTIVE',
+      language: 'ENGLISH',
+      theme: 'LIGHT',
+    });
 
     service.updateVendorAccountPreferences('ARABIC', 'DARK');
 
@@ -119,6 +129,8 @@ describe('AuthService', () => {
         id: 'acc-1',
         vendorId: 'v-1',
         roleId: 'role-1',
+        roleName: 'VENDOR_ADMIN',
+        permissions: ['cms_profile:manage'],
         name: 'Vendor Owner',
         email: 'vendor@example.com',
         accountStatus: 'ACTIVE',
@@ -130,9 +142,111 @@ describe('AuthService', () => {
       vi.advanceTimersByTime(2100);
 
       expect(localStorage.getItem('accessToken')).toBeNull();
-      expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['/login'], {
+        queryParams: { session: 'expired' },
+      });
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  describe('permissions', () => {
+    const validToken = () => createMockJwt({ sub: 'a1', exp: Math.floor(Date.now() / 1000) + 3600 });
+
+    function signIn(
+      permissions: string[],
+      roleName = 'VENDOR_ADMIN',
+      locationIds?: string[],
+    ): void {
+      const account: VendorAccountSession = {
+        id: 'a1',
+        vendorId: 'v1',
+        roleId: 'r1',
+        roleName,
+        permissions,
+        name: 'Test User',
+        email: 'test@vendor.com',
+        accountStatus: 'ACTIVE',
+        ...(locationIds ? { locationIds } : {}),
+      };
+      service.setSession(validToken(), account);
+    }
+
+    it('canView is true for a read grant', () => {
+      signIn(['cms_offers:read']);
+      expect(service.canView('offers')).toBe(true);
+      expect(service.canManage('offers')).toBe(false);
+    });
+
+    it('manage implies view', () => {
+      // VENDOR_STAFF ships cms_redemptions:manage with no :read — Redemptions must still open.
+      signIn(['cms_redemptions:manage'], 'VENDOR_STAFF');
+      expect(service.canView('redemptions')).toBe(true);
+      expect(service.canManage('redemptions')).toBe(true);
+    });
+
+    it('denies a resource with neither level', () => {
+      signIn(['cms_offers:read']);
+      expect(service.canView('vendor_staff')).toBe(false);
+      expect(service.canManage('vendor_staff')).toBe(false);
+    });
+
+    it('denies everything with no session', () => {
+      expect(service.canView('offers')).toBe(false);
+      expect(service.canManage('offers')).toBe(false);
+    });
+
+    it('reports the role and humanizes it for display', () => {
+      signIn([], 'VENDOR_STAFF');
+      expect(service.isStaff()).toBe(true);
+      expect(service.isAdmin()).toBe(false);
+      expect(service.displayRole()).toBe('Vendor Staff');
+    });
+
+    it('branchScope is null for an admin', () => {
+      signIn(['cms_locations:manage'], 'VENDOR_ADMIN', ['loc-1']);
+      expect(service.branchScope()).toBeNull();
+    });
+
+    it('branchScope is the staff member\'s branches', () => {
+      signIn(['cms_locations:manage'], 'VENDOR_STAFF', ['loc-1']);
+      expect(service.branchScope()).toEqual(['loc-1']);
+    });
+
+    it('branchScope is an empty list when a staff branch is not known yet', () => {
+      signIn(['cms_locations:manage'], 'VENDOR_STAFF');
+      expect(service.branchScope()).toEqual([]);
+    });
+
+    it('flags a suspended account without locking out an unknown one', () => {
+      signIn(['cms_offers:read']);
+      expect(service.isSuspended()).toBe(false);
+
+      service.setSession(validToken(), {
+        ...(service.getVendorAccount() as VendorAccountSession),
+        accountStatus: 'SUSPENDED',
+      });
+      expect(service.isSuspended()).toBe(true);
+
+      service.logout();
+      expect(service.isSuspended()).toBe(false);
+    });
+
+    it('rebuilds the session from the JWT when the stored account is gone', () => {
+      const token = createMockJwt({
+        sub: 'a1',
+        vendorId: 'v1',
+        roleName: 'VENDOR_STAFF',
+        permissions: ['cms_analytics:read'],
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      localStorage.setItem('accessToken', token);
+      localStorage.removeItem('vendorAccount');
+
+      // The injected singleton read localStorage at construction, so build a fresh one.
+      const fresh = TestBed.runInInjectionContext(() => new AuthService());
+      expect(fresh.canView('analytics')).toBe(true);
+      expect(fresh.isStaff()).toBe(true);
+    });
   });
 });

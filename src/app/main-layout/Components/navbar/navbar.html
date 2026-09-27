@@ -33,10 +33,7 @@
             </div>
           }
 
-          @for (section of [
-            { key: 'notifications.messages', icon: 'pi-comments', rows: messages() },
-            { key: 'notifications.title', icon: 'pi-bell', rows: notifications() }
-          ]; track section.key) {
+          @for (section of notificationSections(); track section.key) {
             @if (section.rows.length) {
               <div class="notif-section-label">
                 <i class="pi" [ngClass]="section.icon"></i>
@@ -78,15 +75,17 @@
           <p-avatar [label]="avatarLabel()" shape="circle" size="large" styleClass="profile-menu-avatar" />
           <div class="profile-menu-user">
             <p class="profile-menu-name">{{ userName() }}</p>
-            <p class="profile-menu-role">{{ userRole() | translate }}</p>
+            <p class="profile-menu-role">{{ userRole() }}</p>
           </div>
         </div>
 
         <div class="profile-menu-section">
-          <button type="button" class="profile-menu-item" (click)="onProfile()">
-            <i class="pi pi-id-card"></i>
-            <span>{{ 'navbar.profile' | translate }}</span>
-          </button>
+          @if (canViewProfile()) {
+            <button type="button" class="profile-menu-item" (click)="onProfile()">
+              <i class="pi pi-id-card"></i>
+              <span>{{ 'navbar.profile' | translate }}</span>
+            </button>
+          }
           <button type="button" class="profile-menu-item" (click)="onSettings()">
             <i class="pi pi-cog"></i>
             <span>{{ 'navbar.settings' | translate }}</span>

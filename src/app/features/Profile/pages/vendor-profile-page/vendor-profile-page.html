@@ -116,11 +116,13 @@
   </div>
   } @else if (profile(); as vendor) {
   <app-vendor-hero-card [name]="vendor.vendorName" [nameAr]="vendor.vendorNameAr" [logo]="vendor.vendorLogo">
-    <button hero-action class="vendor-profile-page__edit-btn" [disabled]="pendingRequest.checking()"
-      (click)="onEditProfile()">
-      <i class="pi pi-pencil"></i>
-      {{ 'profile.edit' | translate }}
-    </button>
+    @if (auth.canManage('profile')) {
+      <button hero-action class="vendor-profile-page__edit-btn" [disabled]="pendingRequest.checking()"
+        (click)="onEditProfile()">
+        <i class="pi pi-pencil"></i>
+        {{ 'profile.edit' | translate }}
+      </button>
+    }
   </app-vendor-hero-card>
 
   <div class="vendor-profile-page__layout">

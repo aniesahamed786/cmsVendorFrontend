@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { managePermissionGuard } from '../../shared/guards/auth.guard';
 import { RedemptionBulkUpload } from './pages/redemption-bulk-upload/redemption-bulk-upload';
 import { Redemption } from './pages/redemption/redemption';
 
@@ -11,6 +12,7 @@ export const routes: Route[] = [
   {
     path: 'bulk-upload',
     component: RedemptionBulkUpload,
+    canActivate: [managePermissionGuard('redemptions')],
     data: { title: 'Bulk Upload' },
   },
 ];

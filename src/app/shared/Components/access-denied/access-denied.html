@@ -1,0 +1,25 @@
+<div class="access-denied">
+  <p-card class="access-denied__card">
+    <div class="access-denied__body">
+      <div class="access-denied__icon-circle">
+        <i class="pi pi-lock access-denied__icon"></i>
+      </div>
+      <div class="access-denied__text">
+        <h2 class="access-denied__title">{{ 'accessDenied.title' | translate }}</h2>
+        @if (reason()) {
+          <p class="access-denied__subtitle">
+            {{ 'accessDenied.subtitleWithResource' | translate: { resource: reason() } }}
+          </p>
+        } @else {
+          <p class="access-denied__subtitle">{{ 'accessDenied.subtitle' | translate }}</p>
+        }
+        @if (roleLabel()) {
+          <p class="access-denied__role">
+            {{ 'accessDenied.signedInAs' | translate: { role: roleLabel() } }}
+          </p>
+        }
+      </div>
+      <app-button (click)="goHome()">{{ 'accessDenied.backToDashboard' | translate }}</app-button>
+    </div>
+  </p-card>
+</div>

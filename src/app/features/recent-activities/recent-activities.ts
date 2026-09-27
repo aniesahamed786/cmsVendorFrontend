@@ -7,9 +7,10 @@ import { Subject, debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { PrimeUIModules } from '../../core/prime.import';
 import { AppSearch } from '../../shared/Components/app-search/app-search';
 import { AppBottomSheet } from '../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { I18nService } from '../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../shared/i18n/translate.pipe';
 import { ApiRequestEntityType } from '../request-center/models/request-api.model';
-import { ActivityRow, toActivityPage } from './models/system-log.mapper';
+import { ActivityRow, activityKey, entityKey, statusKey, toActivityPage } from './models/system-log.mapper';
 import { SystemLogAction, SystemLogSortOrder } from './models/system-log.model';
 import { SystemLogService } from './services/system-log.service';
 
@@ -22,31 +23,46 @@ import { SystemLogService } from './services/system-log.service';
 })
 export class RecentActivities implements OnInit {
   private readonly api = inject(SystemLogService);
+  private readonly i18n = inject(I18nService);
+
+  /** Template helpers — labels are i18n keys so a language switch re-renders them. */
+  readonly entityKey = entityKey;
+  readonly activityKey = activityKey;
+  readonly statusKey = statusKey;
 
   showMobileFilters = signal(false);
 
-  readonly entityTypeOptions = [
-    { label: 'All types', value: null },
-    { label: 'Offer', value: 'OFFER' },
-    { label: 'Store', value: 'STORE' },
-    { label: 'Profile', value: 'PROFILE' },
-  ];
+  readonly entityTypeOptions = computed(() => {
+    this.i18n.loadSeq();
+    return [
+      { label: this.i18n.t('recentActivities.filter.allTypes'), value: null },
+      { label: this.i18n.t('requestCenter.type.offer'), value: 'OFFER' },
+      { label: this.i18n.t('requestCenter.type.store'), value: 'STORE' },
+      { label: this.i18n.t('requestCenter.type.profile'), value: 'PROFILE' },
+    ];
+  });
 
-  readonly actionOptions = [
-    { label: 'All actions', value: null },
-    { label: 'Submitted', value: 'SUBMITTED' },
-    { label: 'Recalled', value: 'RECALLED' },
-    { label: 'Cancelled', value: 'CANCELLED' },
-  ];
+  readonly actionOptions = computed(() => {
+    this.i18n.loadSeq();
+    return [
+      { label: this.i18n.t('recentActivities.filter.allActions'), value: null },
+      { label: this.i18n.t('requestCenter.value.submitted'), value: 'SUBMITTED' },
+      { label: this.i18n.t('requestCenter.value.recalled'), value: 'RECALLED' },
+      { label: this.i18n.t('requestCenter.value.cancelled'), value: 'CANCELLED' },
+    ];
+  });
 
-  readonly periodOptions = [
-    { label: 'All time', value: 'all' },
-    { label: 'Last 7 days', value: '7' },
-    { label: 'Last 30 days', value: '30' },
-    { label: 'Last 90 days', value: '90' },
-    { label: 'This year', value: 'year' },
-    { label: 'Custom date', value: 'custom' },
-  ];
+  readonly periodOptions = computed(() => {
+    this.i18n.loadSeq();
+    return [
+      { label: this.i18n.t('recentActivities.period.all'), value: 'all' },
+      { label: this.i18n.t('recentActivities.period.last7'), value: '7' },
+      { label: this.i18n.t('recentActivities.period.last30'), value: '30' },
+      { label: this.i18n.t('recentActivities.period.last90'), value: '90' },
+      { label: this.i18n.t('recentActivities.period.year'), value: 'year' },
+      { label: this.i18n.t('recentActivities.period.custom'), value: 'custom' },
+    ];
+  });
 
   readonly entityType = signal<ApiRequestEntityType | null>(null);
   readonly action = signal<SystemLogAction | null>(null);
@@ -126,31 +142,26 @@ export class RecentActivities implements OnInit {
   }
 
   readonly activeFilterChips = computed(() => {
+    this.i18n.loadSeq();
     const chips: { key: string; label: string }[] = [];
 
-    if (this.entityType()) {
-      const opt = this.entityTypeOptions.find((o) => o.value === this.entityType());
+    const chip = (key: string, value: string, options: { label: string; value: unknown }[]) => {
+      const opt = options.find((o) => o.value === value);
       chips.push({
-        key: 'entityType',
-        label: `Type: ${opt?.label ?? this.entityType()}`,
+        key,
+        label: this.i18n.t(`recentActivities.chip.${key === 'entityType' ? 'type' : key}`, {
+          value: opt?.label ?? value,
+        }),
       });
-    }
+    };
 
-    if (this.action()) {
-      const opt = this.actionOptions.find((o) => o.value === this.action());
-      chips.push({
-        key: 'action',
-        label: `Action: ${opt?.label ?? this.action()}`,
-      });
-    }
+    const entityType = this.entityType();
+    if (entityType) chip('entityType', entityType, this.entityTypeOptions());
 
-    if (this.period() !== 'all') {
-      const opt = this.periodOptions.find((o) => o.value === this.period());
-      chips.push({
-        key: 'period',
-        label: `Period: ${opt?.label ?? this.period()}`,
-      });
-    }
+    const action = this.action();
+    if (action) chip('action', action, this.actionOptions());
+
+    if (this.period() !== 'all') chip('period', this.period(), this.periodOptions());
 
     return chips;
   });

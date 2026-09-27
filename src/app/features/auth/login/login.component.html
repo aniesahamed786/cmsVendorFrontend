@@ -33,6 +33,10 @@
 
     <section class="login-card">
 
+      @if (notice()) {
+        <p class="login-card__notice" role="alert">{{ notice() | translate }}</p>
+      }
+
       <form class="login-card__form" [formGroup]="loginForm" (ngSubmit)="login()">
 
         <div class="login-card__field">

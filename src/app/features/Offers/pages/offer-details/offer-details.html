@@ -13,18 +13,22 @@
   </div>
   } @else {
   <div class="offer-page-header__actions">
+    @if (auth.canManage('messaging_center')) {
     <app-button variant="outline" (click)="raiseTicket()">
       <span class="offer-details-page-svg-icon"
         [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-raise-ticket.svg') + ')'"
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-raise-ticket.svg') + ')'"></span>
       <span>{{ 'offerDetails.raiseTicket' | translate }}</span>
     </app-button>
+    }
+    @if (auth.canManage('offers')) {
     <app-button variant="primary" [disabled]="pendingRequest.checking()" (click)="navigateToEditOffer()">
       <span class="offer-details-page-svg-icon invert-white"
         [style.webkitMaskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"
         [style.maskImage]="'url(' + getOfferDetailIconPath('ic-edit.svg') + ')'"></span>
       <span>{{ 'common.edit' | translate }}</span>
     </app-button>
+    }
   </div>
   }
 </div>

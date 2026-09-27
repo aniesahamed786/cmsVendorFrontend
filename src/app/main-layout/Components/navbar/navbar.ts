@@ -42,8 +42,31 @@ export class Navbar {
   readonly notifications = this.notificationCenter.notifications;
   readonly messages = this.notificationCenter.messages;
   readonly notificationsLoading = this.notificationCenter.loading;
-  readonly unreadCount = this.notificationCenter.unreadCount;
-  readonly hasNotificationItem = this.notificationCenter.hasAnyItem;
+
+  /**
+   * The bell is a second way into a page. A Messages row opens Messaging Center, so an account
+   * without that permission is shown neither the section nor its unread count — a badge for
+   * something you can't open is just a dead end.
+   */
+  private readonly canViewMessaging = computed(() => this.authService.canView('messaging_center'));
+
+  readonly notificationSections = computed(() => [
+    ...(this.canViewMessaging()
+      ? [{ key: 'notifications.messages', icon: 'pi-comments', rows: this.messages() }]
+      : []),
+    { key: 'notifications.title', icon: 'pi-bell', rows: this.notifications() },
+  ]);
+
+  readonly unreadCount = computed(() =>
+    this.notificationSections().reduce(
+      (total, section) => total + section.rows.filter((row) => !row.isRead).length,
+      0,
+    ),
+  );
+
+  readonly hasNotificationItem = computed(() =>
+    this.notificationSections().some((section) => section.rows.length > 0),
+  );
 
   @ViewChild('profileMenu') profileMenu!: Popover;
   @ViewChild('notificationMenu') notificationMenu!: Popover;
@@ -52,10 +75,11 @@ export class Navbar {
   headerData = input<string>('');
   private readonly routeSlug = signal('dashboard');
 
-  readonly userName = computed(() => this.authService.getVendorAccount()?.name || 'Alex Rivera');
-  // ponytail: a key while the user is mocked. Real auth returns a role string —
-  // pipe it through a `roles.*` lookup then, or drop the pipe in the template.
-  readonly userRole = signal('navbar.roleVendor');
+  readonly userName = computed(() => this.authService.displayName() || 'Alex Rivera');
+  /** The last always-visible link to a permission-gated page — hide it like a menu item. */
+  readonly canViewProfile = computed(() => this.authService.canView('profile'));
+  /** Already translated + humanized by the auth service — no pipe in the template. */
+  readonly userRole = computed(() => this.authService.displayRole() || this.i18n.t('navbar.roleVendor'));
   readonly preferenceSaving = signal(false);
 
   readonly resolvedHeader = computed(() => {
@@ -145,7 +169,9 @@ export class Navbar {
     const offerId =
       notification.offerId ||
       (notification.actionType === 'Open Specific Offer' ? notification.actionValue : '');
-    if (offerId) {
+    // An offer notification can reach an account that can't open Offers — don't bounce it
+    // off the permission guard, just leave the row as read.
+    if (offerId && this.authService.canView('offers')) {
       this.router.navigate(['/offers', offerId]);
     } else if (notification.actionType === 'Open External link' && notification.actionValue) {
       window.open(notification.actionValue, '_blank', 'noopener');

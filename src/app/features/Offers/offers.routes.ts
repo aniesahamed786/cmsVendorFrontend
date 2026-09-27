@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { managePermissionGuard } from '../../shared/guards/auth.guard';
 import { Offers } from './pages/offer-list/offers';
 import { CreateOffer } from './pages/create-offer/create-offer';
 import { EditOffer } from './pages/edit-offer/edit-offer';
@@ -13,11 +14,13 @@ export const routes: Route[] = [
   {
     path: 'create',
     component: CreateOffer,
+    canActivate: [managePermissionGuard('offers')],
     data: { title: 'Create Offer' },
   },
   {
     path: 'edit/:id',
     component: EditOffer,
+    canActivate: [managePermissionGuard('offers')],
     data: { title: 'Edit Offer' },
   },
   {

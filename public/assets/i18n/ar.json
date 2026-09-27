@@ -84,6 +84,59 @@
       "addBranch": "إضافة فرع"
     }
   },
+  "recentActivities": {
+    "title": "النشاطات الأخيرة",
+    "subtitle": "إدارة ومتابعة جميع نشاطاتك.",
+    "cardTitle": "النشاطات الأخيرة",
+    "searchPlaceholder": "ابحث بالعنوان أو رقم الطلب",
+    "filter": {
+      "type": "النوع",
+      "action": "الإجراء",
+      "period": "الفترة",
+      "customDates": "تواريخ مخصصة",
+      "selectDates": "اختر التواريخ",
+      "allTypes": "جميع الأنواع",
+      "allActions": "جميع الإجراءات"
+    },
+    "period": {
+      "all": "كل الأوقات",
+      "last7": "آخر 7 أيام",
+      "last30": "آخر 30 يوماً",
+      "last90": "آخر 90 يوماً",
+      "year": "هذه السنة",
+      "custom": "تاريخ مخصص"
+    },
+    "chip": {
+      "type": "النوع: {{value}}",
+      "action": "الإجراء: {{value}}",
+      "period": "الفترة: {{value}}"
+    },
+    "column": {
+      "timestamp": "التوقيت",
+      "activityDateTime": "تاريخ ووقت النشاط",
+      "module": "القسم",
+      "itemName": "اسم العنصر",
+      "activity": "النشاط",
+      "actionType": "نوع الإجراء",
+      "performedBy": "بواسطة",
+      "targetEntity": "الجهة المستهدفة",
+      "referenceId": "الرقم المرجعي",
+      "status": "الحالة"
+    },
+    "activity": {
+      "submitted": "تم إرسال {{type}}",
+      "recalled": "تم سحب {{type}}",
+      "cancelled": "تم إلغاء {{type}}"
+    },
+    "type": {
+      "account": "حساب",
+      "banner": "لافتة",
+      "notification": "تنبيه"
+    },
+    "empty": "لا يوجد نشاط حديث.",
+    "emptyFiltered": "لا توجد نشاطات مطابقة لهذه الفلاتر.",
+    "loadFailed": "تعذر تحميل النشاطات الأخيرة. يرجى المحاولة مرة أخرى."
+  },
   "navbar": {
     "toolbarActions": "إجراءات شريط الأدوات",
     "profileMenu": "قائمة الملف الشخصي",
@@ -1680,7 +1733,9 @@
     "privacyPolicy": "سياسة الخصوصية",
     "termsOfService": "شروط الخدمة",
     "copyright": "© 2024 Corporate Systems Inc. جميع الحقوق محفوظة.",
-    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+    "accountInactive": "حسابك غير مفعّل. يرجى التواصل مع مسؤول حساب البائع.",
+    "sessionExpired": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى."
   },
   "accountManagement": {
     "title": "إدارة الحسابات",
@@ -1814,5 +1869,25 @@
     "empty": "لا توجد تنبيهات بعد",
     "messages": "الرسائل",
     "loading": "جارٍ التحميل…"
+  },
+  "roles": {
+    "VENDOR_ADMIN": "مسؤول البائع",
+    "VENDOR_STAFF": "موظف البائع"
+  },
+  "accessDenied": {
+    "title": "لا تملك صلاحية الوصول",
+    "subtitle": "ليست لديك الصلاحية لفتح هذه الصفحة.",
+    "subtitleWithResource": "ليست لديك الصلاحية لفتح {{resource}}.",
+    "signedInAs": "مسجّل الدخول باسم {{role}}.",
+    "backToDashboard": "العودة إلى لوحة التحكم",
+    "resource": {
+      "profile": "ملف البائع",
+      "offers": "العروض",
+      "locations": "الفروع",
+      "vendor_staff": "إدارة الحسابات",
+      "redemptions": "الاسترداد",
+      "analytics": "التحليلات",
+      "messaging_center": "مركز الرسائل"
+    }
   }
 }

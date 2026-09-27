@@ -4,7 +4,9 @@
       <h1 class="offers__title">{{ 'offers.title' | translate }}</h1>
       <p class="offers__subtitle">{{ 'offers.subtitle' | translate }}</p>
     </div>
-    <app-button variant="primary" routerLink="create" icon="pi pi-plus">{{ 'offers.addNew' | translate }}</app-button>
+    @if (auth.canManage('offers')) {
+      <app-button variant="primary" routerLink="create" icon="pi pi-plus">{{ 'offers.addNew' | translate }}</app-button>
+    }
   </header>
 
   <section class="offers__stats">

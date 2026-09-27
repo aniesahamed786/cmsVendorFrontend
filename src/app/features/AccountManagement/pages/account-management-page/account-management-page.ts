@@ -16,6 +16,7 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 import { AccountStatus, AccountType, VendorAccount } from '../../models/account.model';
 import { AccountsService } from '../../services/accounts.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 type RowAction = 'suspend' | 'activate' | 'delete';
 
@@ -77,11 +78,13 @@ export class AccountManagementPage implements OnInit {
   private readonly skeletonRowCount = computed(() => Math.min(this.pageSize(), 5));
 
   readonly selectedRow = signal<VendorAccount | null>(null);
+  readonly auth = inject(AuthService);
 
   readonly rowActions = computed<MenuItem[]>(() => {
     this.i18n.loadSeq();
     const row = this.selectedRow();
-    if (!row) return [];
+    // Edit / suspend / delete are all writes — a read-only user gets no row menu at all.
+    if (!row || !this.auth.canManage('vendor_staff')) return [];
 
     const suspended = row.accountStatus !== 'ACTIVE';
     return [

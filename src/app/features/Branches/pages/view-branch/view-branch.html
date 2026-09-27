@@ -8,9 +8,11 @@
 
     @if (branch()) {
     <div class="branch-view__topbar-actions">
+      @if (auth.canManage('locations')) {
       <app-button variant="primary" icon="pi pi-pencil" [disabled]="pendingRequest.checking()" (click)="navigateToEditBranch()">
         {{ 'common.edit' | translate }}
       </app-button>
+      }
     </div>
     }
   </div>

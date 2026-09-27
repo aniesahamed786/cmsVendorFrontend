@@ -38,6 +38,8 @@ import { createCountUp } from '../../../../shared/animation/count-up';
 
 import { OffersService, OfferStats } from '../../services/offers.service';
 import { finalize } from 'rxjs';
+import { MenuItem } from 'primeng/api';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-offers',
@@ -47,6 +49,7 @@ import { finalize } from 'rxjs';
   styleUrl: './offers.scss',
 })
 export class Offers implements OnInit {
+  readonly auth = inject(AuthService);
   /** Closes any other row's menu first — see shared/utils/row-menu.ts. */
   readonly openRowMenu = openRowMenu;
   private router = inject(Router);
@@ -230,13 +233,18 @@ export class Offers implements OnInit {
 
   readonly rowActions = computed(() => {
     this.i18n.loadSeq();
-    return [
+    const items: MenuItem[] = [
       { label: this.i18n.t('offers.action.viewOffer'), icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
-      { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
-      { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync' },
-      // { label: this.i18n.t('offers.action.createTicket'), icon: 'pi pi-comment' },
-      { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
     ];
+    // A read-only user gets the view row only — no edit, renew or deactivate.
+    if (this.auth.canManage('offers')) {
+      items.push(
+        { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
+        { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync' },
+        { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
+      );
+    }
+    return items;
   });
 
   // While loading, feed the table 5 falsy rows. PrimeNG's TableBody renders

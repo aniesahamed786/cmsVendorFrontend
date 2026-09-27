@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ViewChild, computed, inject, signal } from '@angular/core';
 import {
@@ -53,6 +54,7 @@ interface SelectOption {
   styleUrl: './redemption.scss',
 })
 export class Redemption {
+  readonly auth = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(RedemptionService);
   private readonly messageService = inject(MessageService);

@@ -84,6 +84,59 @@
       "addBranch": "Add Branch"
     }
   },
+  "recentActivities": {
+    "title": "Recent Activity",
+    "subtitle": "Manage and monitor all your activities.",
+    "cardTitle": "Recent Activity",
+    "searchPlaceholder": "Search title or request ID",
+    "filter": {
+      "type": "Type",
+      "action": "Action",
+      "period": "Period",
+      "customDates": "Custom Dates",
+      "selectDates": "Select dates",
+      "allTypes": "All types",
+      "allActions": "All actions"
+    },
+    "period": {
+      "all": "All time",
+      "last7": "Last 7 days",
+      "last30": "Last 30 days",
+      "last90": "Last 90 days",
+      "year": "This year",
+      "custom": "Custom date"
+    },
+    "chip": {
+      "type": "Type: {{value}}",
+      "action": "Action: {{value}}",
+      "period": "Period: {{value}}"
+    },
+    "column": {
+      "timestamp": "Timestamp",
+      "activityDateTime": "Activity Date & Time",
+      "module": "Module",
+      "itemName": "Item Name",
+      "activity": "Activity",
+      "actionType": "Action Type",
+      "performedBy": "Performed by",
+      "targetEntity": "Target Entity",
+      "referenceId": "Reference ID",
+      "status": "Status"
+    },
+    "activity": {
+      "submitted": "{{type}} Submitted",
+      "recalled": "{{type}} Recalled",
+      "cancelled": "{{type}} Cancelled"
+    },
+    "type": {
+      "account": "Account",
+      "banner": "Banner",
+      "notification": "Notification"
+    },
+    "empty": "No recent activity.",
+    "emptyFiltered": "No activity matches these filters.",
+    "loadFailed": "Could not load recent activity. Please try again."
+  },
   "navbar": {
     "toolbarActions": "Toolbar actions",
     "profileMenu": "Profile menu",
@@ -1678,7 +1731,9 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
-    "invalidCredentials": "Invalid email or password."
+    "invalidCredentials": "Invalid email or password.",
+    "accountInactive": "Your account is not active. Contact your vendor administrator.",
+    "sessionExpired": "Your session expired. Please sign in again."
   },
   "accountManagement": {
     "title": "Account Management",
@@ -1812,5 +1867,25 @@
     "empty": "No notifications yet",
     "messages": "Messages",
     "loading": "Loading…"
+  },
+  "roles": {
+    "VENDOR_ADMIN": "Vendor Admin",
+    "VENDOR_STAFF": "Vendor Staff"
+  },
+  "accessDenied": {
+    "title": "Access denied",
+    "subtitle": "You don't have permission to open this page.",
+    "subtitleWithResource": "You don't have permission to open {{resource}}.",
+    "signedInAs": "Signed in as {{role}}.",
+    "backToDashboard": "Back to Dashboard",
+    "resource": {
+      "profile": "Vendor Profile",
+      "offers": "Offers",
+      "locations": "Branches",
+      "vendor_staff": "Account Management",
+      "redemptions": "Redemption",
+      "analytics": "Analytics",
+      "messaging_center": "Messaging Center"
+    }
   }
 }

@@ -1,10 +1,12 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
+  const router = inject(Router);
 
   // Skip login API and static assets
   if (req.url.includes('/cmsVendor/login') || req.url.includes('assets/')) {
@@ -15,7 +17,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   // If token is already expired locally, trigger logout immediately and reject
   if (token && authService.isTokenExpired()) {
-    authService.logout();
+    authService.logout({ session: 'expired' });
     return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Unauthorized - Token expired' }));
   }
 
@@ -30,9 +32,18 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(outgoing).pipe(
     catchError((error: HttpErrorResponse) => {
+      // ponytail: no refresh-token endpoint exists in this API, so 401 is terminal.
       if (error.status === 401) {
         console.warn('HTTP 401 Unauthorized received. Logging out automatically.');
-        authService.logout();
+        authService.logout({ session: 'expired' });
+      }
+
+      // A 403 is refused *data*, not a refused page: pages you are allowed to open still call
+      // endpoints the backend may narrow per account, and ejecting the whole app because one
+      // widget's request failed hides a page the route guard correctly allowed. Page-level
+      // access is permissionGuard's job — let the caller surface this one.
+      if (error.status === 403) {
+        console.warn('HTTP 403 Forbidden:', req.method, req.url);
       }
       return throwError(() => error);
     })

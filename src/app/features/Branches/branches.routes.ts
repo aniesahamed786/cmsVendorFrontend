@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { managePermissionGuard, vendorAdminGuard } from '../../shared/guards/auth.guard';
 import { BranchesPage } from './pages/branches-page/branches-page';
 import { CreateBranch } from './pages/create-branch/create-branch';
 import { EditBranch } from './pages/edit-branch/edit-branch';
@@ -13,11 +14,14 @@ export const routes: Route[] = [
   {
     path: 'create',
     component: CreateBranch,
+    // Staff edit their own branch; only an admin adds a new one.
+    canActivate: [managePermissionGuard('locations'), vendorAdminGuard],
     data: { title: 'Create Branch' },
   },
   {
       path: 'edit/:id',
       component: EditBranch,
+      canActivate: [managePermissionGuard('locations')],
       data: { title: 'Edit Branch' },
     },
      {

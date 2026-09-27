@@ -76,6 +76,30 @@ describe('httpInterceptor', () => {
 
     expect(errorResponse).toBeTruthy();
     expect(localStorage.getItem('accessToken')).toBeNull();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login'], {
+      queryParams: { session: 'expired' },
+    });
+  });
+
+  it('should let a 403 through to the caller without logging out or navigating', () => {
+    const validToken = createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 });
+    localStorage.setItem('accessToken', validToken);
+
+    let errorResponse: any;
+    httpClient.get('/cmsVendor/accounts').subscribe({
+      next: () => {},
+      error: (err) => {
+        errorResponse = err;
+      },
+    });
+
+    httpMock
+      .expectOne('/cmsVendor/accounts')
+      .flush('Forbidden', { status: 403, statusText: 'Forbidden' });
+
+    // A refused endpoint must not eject the user from a page the route guard allowed.
+    expect(errorResponse?.status).toBe(403);
+    expect(localStorage.getItem('accessToken')).toBe(validToken);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
   });
 });

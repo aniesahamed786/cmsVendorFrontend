@@ -523,17 +523,9 @@ export class OfferForm {
 
     const isEdit = this.actionType() === "edit";
 
-    // If user navigated from vendor list action menu:
-    // /offers/create?vendorId=<id>
-    // preselect that vendor automatically on create page.
-    if (!isEdit) {
-      const vendorIdFromQuery =
-        this.route.snapshot.queryParamMap.get("vendorId");
-      const vendorControl = this.offerForm.get("selectedVendor");
-      if (vendorIdFromQuery && vendorControl && !vendorControl.value) {
-        vendorControl.setValue(vendorIdFromQuery);
-      }
-    }
+    // `?vendorId=` used to preselect a vendor here, back when an admin CMS shared this form.
+    // The vendor CMS pins selectedVendor to the session's own vendorId in the constructor, so
+    // honouring a URL-supplied id would only ever let a caller aim at another vendor.
 
     // Mandatory-only for create — and for anything that opted into create-level validation.
     if (this.requiresFullValidation()) {

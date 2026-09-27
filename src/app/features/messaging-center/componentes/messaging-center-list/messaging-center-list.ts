@@ -21,6 +21,7 @@ import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-messaging-center-list',
@@ -31,6 +32,7 @@ import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/a
 })
 export class MessagingCenterList {
   readonly store = inject(MessagingCenterStore);
+  readonly auth = inject(AuthService);
   private readonly i18n = inject(I18nService);
   createTicket = output<void>();
 

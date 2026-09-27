@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { TableModule } from 'primeng/table';
@@ -9,7 +10,7 @@ import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorQuickActions } from '../../components/vendor-quick-actions/vendor-quick-actions';
 import { DashboardService } from '../../services/dashboard.service';
-import { ActivityRow, toActivityPage } from '../../../recent-activities/models/system-log.mapper';
+import { ActivityRow, activityKey, entityKey, toActivityPage } from '../../../recent-activities/models/system-log.mapper';
 import { SystemLogService } from '../../../recent-activities/services/system-log.service';
 import { createCountUp } from '../../../../shared/animation/count-up';
 import { environment } from '../../../../../environments/environment';
@@ -93,6 +94,10 @@ export class DashboardPage implements OnInit {
     return { labelKey: 'offers.value.online', icon: 'pi pi-globe' };
   });
 
+  /** Template helpers — labels are i18n keys so a language switch re-renders them. */
+  readonly entityKey = entityKey;
+  readonly activityKey = activityKey;
+
   recentActivities = signal<ActivityRow[]>([]);
   activityLoading = signal(true);
   readonly tableRows = computed(() =>
@@ -103,6 +108,8 @@ export class DashboardPage implements OnInit {
   private readonly systemLogs = inject(SystemLogService);
   private readonly vendorProfileService = inject(VendorProfileService);
   private readonly i18n = inject(I18nService);
+  /** Quick actions are all create/edit shortcuts, so sub-accounts don't get the section. */
+  readonly auth = inject(AuthService);
 
   constructor(private readonly router: Router) {}
 

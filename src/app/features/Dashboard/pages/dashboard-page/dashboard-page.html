@@ -46,8 +46,10 @@
     }
   </div>
 
-  <app-vendor-quick-actions (createOffer)="goToCreateOffer()" (editProfile)="goToEditProfile()"
-    (addBranch)="goToAddBranch()" />
+  @if (!auth.isStaff()) {
+    <app-vendor-quick-actions (createOffer)="goToCreateOffer()" (editProfile)="goToEditProfile()"
+      (addBranch)="goToAddBranch()" />
+  }
 
   <div class="dashboard-page__columns">
     <section class="dashboard-page__panel">
@@ -61,26 +63,26 @@
       <p-table [value]="tableRows()" styleClass="dashboard-page__table">
         <ng-template pTemplate="header">
           <tr>
-            <th>Activity Date & Time</th>
-            <th>Module</th>
-            <th>Item Name</th>
-            <th>Activity</th>
-            <th>Performed By</th>
+            <th>{{ 'recentActivities.column.activityDateTime' | translate }}</th>
+            <th>{{ 'recentActivities.column.module' | translate }}</th>
+            <th>{{ 'recentActivities.column.itemName' | translate }}</th>
+            <th>{{ 'recentActivities.column.activity' | translate }}</th>
+            <th>{{ 'recentActivities.column.performedBy' | translate }}</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-row>
           <tr>
             <td>{{ row.timestamp }}</td>
-            <td>{{ row.module }}</td>
+            <td>{{ entityKey(row.entityType) | translate }}</td>
             <td>
-              {{ row.itemName }}
+              {{ row.title || (entityKey(row.entityType) | translate) }}
               @if (row.remarks) {
               <i class="pi pi-info-circle dashboard-page__remarks-icon" [pTooltip]="row.remarks"
                 tooltipPosition="top"></i>
               }
             </td>
-            <td><span class="dashboard-page__row-title">{{ row.activity }}</span></td>
+            <td><span class="dashboard-page__row-title">{{ activityKey(row.action) | translate: { type: (entityKey(row.entityType) | translate) } }}</span></td>
             <td>{{ row.performedBy }}</td>
           </tr>
         </ng-template>
