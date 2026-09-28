@@ -101,12 +101,13 @@ export class OfferDetailsPage {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = params.get('id') ?? '';
+      if (!id || id === this.offerId()) return;
       this.offerId.set(id);
+      this.OfferBasicData.set({});
+      this.vendor.set({});
+      this.offerLocations.set([]);
+      this.loadOfferDetail(id);
     });
-
-    if(this.offerId()){
-      this.loadOfferDetail()
-    }
   }
 
   getOfferStatus(offer: any): 'Active' | 'Scheduled' | 'Expired' | 'Inactive' {
@@ -238,13 +239,14 @@ export class OfferDetailsPage {
     return type === 'other' || type === 'others';
   }
 
-  private loadOfferDetail() {
+  private loadOfferDetail(offerId = this.offerId()) {
     this.isLoading.set(true);
     this.permissionDenied.set(false);
     this.offerDetailService
-      .getOfferDetail(this.offerId())
+      .getOfferDetail(offerId)
       .subscribe({
         next: (res: any) => {
+          if (this.offerId() !== offerId) return;
           console.log("Offer Detail", res)
           const av = (res.availability || []).map((a: string) => a.toLowerCase());
           const hasOnline = av.includes('online') || av.includes('digital');
@@ -339,6 +341,7 @@ export class OfferDetailsPage {
           } else if (locationIds.length > 0) {
             this.branchesService.getBranches().subscribe({
               next: (response) => {
+                if (this.offerId() !== offerId) return;
                 const idSet = new Set(locationIds.map((id) => String(id)));
                 const matched = (response.locations ?? [])
                   .filter((b) => idSet.has(String(b.locationId)))
@@ -356,6 +359,7 @@ export class OfferDetailsPage {
                 this.offerLocations.set(matched);
               },
               error: (err) => {
+                if (this.offerId() !== offerId) return;
                 console.error('Failed to load branches for offer locations', err);
                 this.offerLocations.set([]);
               }
@@ -367,6 +371,7 @@ export class OfferDetailsPage {
           this.isLoading.set(false);
         },
         error: (error: HttpErrorResponse) => {
+          if (this.offerId() !== offerId) return;
           this.permissionDenied.set(error.status === 403);
           this.isLoading.set(false);
         }

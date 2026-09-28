@@ -12,6 +12,8 @@ interface NavItem {
   navLink: string;
   /** The `cms_<resource>` this page needs, without the prefix or level. */
   permissionKey?: PermissionResource;
+  /** Pages without a token permission that belong only to the main vendor account. */
+  adminOnly?: boolean;
 }
 
 @Component({
@@ -26,7 +28,7 @@ export class Sidenav {
   private readonly allNavItems = signal<NavItem[]>([
     { icon: 'assets/svg/Navbar/ic-dashboard.svg', labelKey: 'nav.dashboard.label', titleKey: 'nav.dashboard.title', navLink: '/dashboard' },
     { icon: 'assets/svg/Navbar/ic-vendor.svg', labelKey: 'nav.profile.label', titleKey: 'nav.profile.title', navLink: '/profile', permissionKey: 'profile' },
-    { icon: 'assets/svg/Navbar/ic-requests.svg', labelKey: 'nav.request-center.label', titleKey: 'nav.request-center.title', navLink: '/request-center' },
+    { icon: 'assets/svg/Navbar/ic-requests.svg', labelKey: 'nav.request-center.label', titleKey: 'nav.request-center.title', navLink: '/request-center', adminOnly: true },
     { icon: 'assets/svg/Navbar/ic-offer.svg', labelKey: 'nav.offers.label', titleKey: 'nav.offers.title', navLink: '/offers', permissionKey: 'offers' },
     { icon: 'pi pi-shop', labelKey: 'nav.branches.label', titleKey: 'nav.branches.title', navLink: '/branches', permissionKey: 'locations' },
     { icon: 'assets/svg/Navbar/ic-offer.svg', labelKey: 'nav.redemption.label', titleKey: 'nav.redemption.title', navLink: '/redemption', permissionKey: 'redemptions' },
@@ -39,12 +41,15 @@ export class Sidenav {
   private readonly auth = inject(AuthService);
 
   /**
-   * Never paint a link the user can't open. Items with no `permissionKey` (Dashboard,
-   * Request Center, Recent Activities) are not part of the permission scheme yet and stay
-   * visible for both roles.
+   * Never paint a link the user can't open. Request Center has no token permission and is
+   * vendor-admin-only. Other items without a permission key remain visible for both roles.
    */
   readonly navItems = computed(() =>
-    this.allNavItems().filter((item) => !item.permissionKey || this.auth.canView(item.permissionKey)),
+    this.allNavItems().filter(
+      (item) =>
+        (!item.adminOnly || this.auth.canViewRequestCenter()) &&
+        (!item.permissionKey || this.auth.canView(item.permissionKey)),
+    ),
   );
   @Output() sendNavBarHeader = new EventEmitter<string>();
 

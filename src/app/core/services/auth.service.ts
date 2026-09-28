@@ -228,6 +228,11 @@ export class AuthService {
     return this.roleName() === 'VENDOR_ADMIN';
   }
 
+  /** Request Center is a vendor-admin workflow; the backend exposes no permission for it. */
+  canViewRequestCenter(): boolean {
+    return this.isAdmin();
+  }
+
   /**
    * The branches a staff member is limited to, or `null` for an admin (= all branches).
    *

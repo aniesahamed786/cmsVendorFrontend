@@ -39,7 +39,7 @@ export class Navbar {
 
   readonly isArabic = this.i18n.isRtl;
 
-  readonly notifications = this.notificationCenter.notifications;
+  private readonly allNotifications = this.notificationCenter.notifications;
   readonly messages = this.notificationCenter.messages;
   readonly notificationsLoading = this.notificationCenter.loading;
 
@@ -49,6 +49,17 @@ export class Navbar {
    * something you can't open is just a dead end.
    */
   private readonly canViewMessaging = computed(() => this.authService.canView('messaging_center'));
+  private readonly canViewRequestCenter = computed(() =>
+    this.authService.canViewRequestCenter(),
+  );
+
+  readonly notifications = computed(() =>
+    this.allNotifications().filter(
+      (notification) =>
+        this.canViewRequestCenter() ||
+        !this.notificationCenter.isRequestNotification(notification),
+    ),
+  );
 
   readonly notificationSections = computed(() => [
     ...(this.canViewMessaging()

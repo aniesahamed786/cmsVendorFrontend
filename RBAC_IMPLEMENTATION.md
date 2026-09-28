@@ -35,7 +35,9 @@ JWT payload. `logout()` clears both.
 | `analytics` | `/analytics` | yes |
 | `messaging_center` | `/messaging-center` | yes |
 
-No permission has a missing page. Four pages have no permission — see Open items.
+No permission has a missing page. Request Center has no dedicated permission and is restricted
+to `VENDOR_ADMIN`; its route, navigation item, dashboard tile, and notifications are hidden from
+`VENDOR_STAFF`.
 
 ## Hidden vs. access-denied
 

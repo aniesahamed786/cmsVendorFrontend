@@ -6,6 +6,7 @@ import {
   managePermissionGuard,
   permissionGuard,
   vendorAdminGuard,
+  vendorAdminOnlyGuard,
 } from './auth.guard';
 import { AuthService, VendorAccountSession } from '../../core/services/auth.service';
 import { provideHttpClient } from '@angular/common/http';
@@ -138,6 +139,16 @@ describe('AuthGuards', () => {
 
       signIn(['cms_locations:manage'], 'VENDOR_ADMIN');
       expect(run(vendorAdminGuard as ReturnType<typeof permissionGuard>)).toBe(true);
+    });
+
+    it('vendorAdminOnlyGuard hides Request Center from staff', () => {
+      signIn(['cms_offers:read'], 'VENDOR_STAFF');
+      const staffResult = run(vendorAdminOnlyGuard('request_center'));
+      expect(staffResult instanceof UrlTree).toBe(true);
+      expect(staffResult.toString()).toBe('/access-denied?reason=request_center');
+
+      signIn([], 'VENDOR_ADMIN');
+      expect(run(vendorAdminOnlyGuard('request_center'))).toBe(true);
     });
 
     it('authGuard sends a suspended account back to login', () => {

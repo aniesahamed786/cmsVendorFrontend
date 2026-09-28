@@ -81,3 +81,15 @@ export const vendorAdminGuard: CanActivateFn = () => {
 
   return router.createUrlTree(['/access-denied'], { queryParams: { reason: 'locations' } });
 };
+
+/** Gate vendor-admin-only pages that have no `cms_<resource>` permission in the token. */
+export const vendorAdminOnlyGuard = (reason: string): CanActivateFn => () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.canViewRequestCenter()) {
+    return true;
+  }
+
+  return router.createUrlTree(['/access-denied'], { queryParams: { reason } });
+};

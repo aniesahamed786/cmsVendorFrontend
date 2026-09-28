@@ -34,7 +34,7 @@
       <div class="request-detail__meta">
         <!-- On a deep link the summary row isn't in the session store; the id from the URL still
              identifies the request, and the changes below load regardless. -->
-        <span class="request-detail__meta-id">{{ requestIdParam }}</span>
+        <span class="request-detail__meta-id">{{ requestIdParam() }}</span>
         @if (status(); as currentStatus) {
         <span [class]="statusClass(currentStatus)">{{ statusKey(currentStatus) | translate }}</span>
         }
@@ -459,7 +459,7 @@
             <span class="request-detail__summary-label">{{ 'requestCenter.detail.summary.requestId' | translate
               }}</span>
             <span class="request-detail__summary-value request-detail__summary-value--bold">
-              {{ requestIdParam || details()?.requestId || row()?.id }}
+              {{ requestIdParam() || details()?.requestId || row()?.id }}
             </span>
           </div>
 

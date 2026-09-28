@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
-import { catchError, finalize, forkJoin, map, of } from 'rxjs';
+import { catchError, distinctUntilChanged, finalize, forkJoin, map, of } from 'rxjs';
 import { OfferDetailService } from '../../../Offers/services/offer-detail.service';
 
 interface AffectedOffer {
@@ -244,15 +245,18 @@ export class RequestDetail {
   private readonly vendorProfileService = inject(VendorProfileService);
   private readonly offerDetailService = inject(OfferDetailService);
 
-  private readonly rowKey = this.route.snapshot.paramMap.get('id') ?? '';
-  readonly row = this.requestCenterService.getRow(this.rowKey);
+  private readonly rowKey = signal('');
+  private readonly requestRows = this.requestCenterService.getRows();
+  readonly row = computed(
+    () => this.requestRows().find((row) => row.rowKey === this.rowKey()) ?? null,
+  );
 
   /**
    * The requestId from the URL. The summary row lives only in the session store, so on a
    * deep link/refresh `row()` is null — but the changes below still load, since the changes
    * endpoint keys on this id alone.
    */
-  readonly requestIdParam = this.rowKey;
+  readonly requestIdParam = computed(() => this.rowKey());
 
   // ---- Request details (GET /cmsVendor/requests/{id}) -----------------------
   /** The request plus its live entity and diff — everything this page renders. */
@@ -427,15 +431,23 @@ export class RequestDetail {
   }
 
   private loadChanges(): void {
-    if (!this.rowKey) return;
+    const requestId = this.rowKey();
+    if (!requestId) return;
     this.changesRequested = true;
     this.changesTabLoading.set(true);
     this.api
-      .getChanges(this.rowKey)
-      .pipe(finalize(() => this.changesTabLoading.set(false)))
+      .getChanges(requestId)
+      .pipe(
+        finalize(() => {
+          if (this.rowKey() === requestId) this.changesTabLoading.set(false);
+        }),
+      )
       .subscribe({
-        next: (rows) => this.changeRowsRaw.set(rows ?? []),
+        next: (rows) => {
+          if (this.rowKey() === requestId) this.changeRowsRaw.set(rows ?? []);
+        },
         error: (err) => {
+          if (this.rowKey() !== requestId) return;
           console.error('Failed to load request changes', err);
           this.changeRowsRaw.set([]);
           // Allow a retry the next time the tab is opened.
@@ -581,8 +593,31 @@ export class RequestDetail {
   readonly summaryRequestType = this.summaryActionType;
 
   constructor() {
-    this.loadDetails();
-    this.loadHistory();
+    this.route.paramMap
+      .pipe(
+        map((params) => params.get('id') ?? ''),
+        distinctUntilChanged(),
+        takeUntilDestroyed(),
+      )
+      .subscribe((requestId) => {
+        this.rowKey.set(requestId);
+        this.resetRequestState();
+        this.loadDetails(requestId);
+        this.loadHistory(requestId);
+      });
+  }
+
+  private resetRequestState(): void {
+    this.details.set(null);
+    this.changesError.set(null);
+    this.permissionDenied.set(false);
+    this.history.set([]);
+    this.changeRowsRaw.set([]);
+    this.affectedOffers.set([]);
+    this.activeTab.set('details');
+    this.changesTabLoading.set(false);
+    this.changesRequested = false;
+    this.closeImagePreview();
   }
 
   /**
@@ -590,19 +625,26 @@ export class RequestDetail {
    * and the timeline falls back to the status-derived one — losing the audit trail should not
    * cost the vendor the whole sidebar.
    */
-  private loadHistory(): void {
-    if (!this.rowKey) {
+  private loadHistory(requestId = this.rowKey()): void {
+    if (!requestId) {
       this.historyLoading.set(false);
       return;
     }
 
     this.historyLoading.set(true);
     this.api
-      .getHistory(this.rowKey)
-      .pipe(finalize(() => this.historyLoading.set(false)))
+      .getHistory(requestId)
+      .pipe(
+        finalize(() => {
+          if (this.rowKey() === requestId) this.historyLoading.set(false);
+        }),
+      )
       .subscribe({
-        next: (entries) => this.history.set(entries ?? []),
+        next: (entries) => {
+          if (this.rowKey() === requestId) this.history.set(entries ?? []);
+        },
         error: (err) => {
+          if (this.rowKey() !== requestId) return;
           console.error('Failed to load request history', err);
           this.history.set([]);
         },
@@ -613,7 +655,10 @@ export class RequestDetail {
   readonly affectedOffers = signal<AffectedOffer[]>([]);
 
   /** Fetches each impacted offer for its image/discount; a failed fetch keeps the title from the impact list. */
-  private loadAffectedOffers(impact: { offerId: string; title: string }[]): void {
+  private loadAffectedOffers(
+    impact: { offerId: string; title: string }[],
+    requestId = this.rowKey(),
+  ): void {
     if (!impact.length) return;
     this.affectedOffers.set(impact.map((o) => ({ offerId: o.offerId, title: o.title, subtitle: '', image: '' })));
     forkJoin(
@@ -638,16 +683,18 @@ export class RequestDetail {
           catchError(() => of<AffectedOffer>({ offerId: o.offerId, title: o.title, subtitle: '', image: '' })),
         ),
       ),
-    ).subscribe((offers) => this.affectedOffers.set(offers));
+    ).subscribe((offers) => {
+      if (this.rowKey() === requestId) this.affectedOffers.set(offers);
+    });
   }
 
   openOffer(offerId: string): void {
     this.router.navigate(['/offers', offerId]);
   }
 
-  private loadDetails(): void {
+  private loadDetails(requestId = this.rowKey()): void {
     // The route param is the requestId every workflow endpoint keys on.
-    if (!this.rowKey) {
+    if (!requestId) {
       this.changesLoading.set(false);
       return;
     }
@@ -656,10 +703,15 @@ export class RequestDetail {
     this.changesError.set(null);
     this.permissionDenied.set(false);
     this.api
-      .getDetails(this.rowKey)
-      .pipe(finalize(() => this.changesLoading.set(false)))
+      .getDetails(requestId)
+      .pipe(
+        finalize(() => {
+          if (this.rowKey() === requestId) this.changesLoading.set(false);
+        }),
+      )
       .subscribe({
         next: (details) => {
+          if (this.rowKey() !== requestId) return;
           this.details.set(details);
           // Only offers reference branches or render the vendor hero; every other entity
           // type would waste both calls.
@@ -670,6 +722,7 @@ export class RequestDetail {
           this.loadAffectedOffers(details?.cancellationImpact?.offersDeactivated ?? []);
         },
         error: (err: HttpErrorResponse) => {
+          if (this.rowKey() !== requestId) return;
           console.error('Failed to load request details', err);
           this.details.set(null);
           this.permissionDenied.set(err.status === 403);
@@ -825,7 +878,7 @@ export class RequestDetail {
   });
 
   goToEdit(): void {
-    this.router.navigate(['/request-center', this.requestIdParam, 'edit']);
+    this.router.navigate(['/request-center', this.requestIdParam(), 'edit']);
   }
 
   readonly timeline = computed<RequestTimelineStep[]>(() => {
@@ -1016,7 +1069,7 @@ export class RequestDetail {
   /** The persisted requestId every workflow endpoint keys on. */
   private get requestId(): string {
     // The route param is itself the requestId, so recall/cancel work on a deep link too.
-    return this.details()?.requestId ?? this.row()?.id ?? this.rowKey;
+    return this.details()?.requestId ?? this.row()?.id ?? this.rowKey();
   }
 
   // The confirm button spins while its endpoint is in flight.
@@ -1065,7 +1118,7 @@ export class RequestDetail {
   }
 
   private afterSubmit(res?: any): void {
-    this.requestCenterService.updateStatus(this.rowKey, 'SUBMITTED');
+    this.requestCenterService.updateStatus(this.rowKey(), 'SUBMITTED');
     this.details.update((details) => (details ? {
       ...details,
       status: 'SUBMITTED',
@@ -1108,7 +1161,7 @@ export class RequestDetail {
   }
 
   private afterRecall(): void {
-    this.requestCenterService.recall(this.rowKey);
+    this.requestCenterService.recall(this.rowKey());
     this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
     this.showRecallConfirm = false;
   }
@@ -1154,7 +1207,7 @@ export class RequestDetail {
       return;
     }
 
-    this.requestCenterService.remove(this.rowKey);
+    this.requestCenterService.remove(this.rowKey());
     this.goBack();
   }
 
@@ -1190,7 +1243,7 @@ export class RequestDetail {
   }
 
   private afterCancel(): void {
-    this.requestCenterService.remove(this.rowKey);
+    this.requestCenterService.remove(this.rowKey());
     this.showCancelConfirm = false;
     this.goBack();
   }

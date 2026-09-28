@@ -35,10 +35,12 @@
       [subtitle]="'dashboard.stats.activeOffers.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-active-offers.svg" iconColor="var(--app-primary)"
       iconContainerBg="var(--app-primary-soft)" [trendUp]="true" (tileClick)="goToOffers()" />
-    <app-offer-tile [title]="'dashboard.stats.pendingRequests.title' | translate" [value]="animatedCount('pendingRequests')"
-      [subtitle]="'dashboard.stats.pendingRequests.subtitle' | translate"
-      icon="assets/svg/Dashboard/ic-pending-requests.svg" iconColor="var(--app-primary)"
-      iconContainerBg="var(--app-primary-soft)" (tileClick)="goToRequestCenter()" />
+    @if (auth.canViewRequestCenter()) {
+      <app-offer-tile [title]="'dashboard.stats.pendingRequests.title' | translate" [value]="animatedCount('pendingRequests')"
+        [subtitle]="'dashboard.stats.pendingRequests.subtitle' | translate"
+        icon="assets/svg/Dashboard/ic-pending-requests.svg" iconColor="var(--app-primary)"
+        iconContainerBg="var(--app-primary-soft)" (tileClick)="goToRequestCenter()" />
+    }
     <app-offer-tile [title]="'dashboard.stats.expiringSoon.title' | translate" [value]="animatedCount('expiringSoonOffers')"
       [subtitle]="'dashboard.stats.expiringSoon.subtitle' | translate"
       icon="assets/svg/Dashboard/ic-expiring-soon-offer.svg" iconColor="#dc2626"

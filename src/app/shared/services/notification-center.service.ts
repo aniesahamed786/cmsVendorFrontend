@@ -99,6 +99,14 @@ export class NotificationCenterService {
       .subscribe();
   }
 
+  isRequestNotification(notification: VendorNotification): boolean {
+    return (
+      !!notification.requestId ||
+      notification.actionType.toLowerCase().includes('request') ||
+      (notification.type === 'SYSTEM' && !notification.actionType && !!notification.actionValue)
+    );
+  }
+
   open(notification: VendorNotification): void {
     if (!notification.isRead) {
       this.markAsRead(notification.id);
@@ -117,7 +125,7 @@ export class NotificationCenterService {
       return;
     }
 
-    const isRequestAction = notification.actionType.toLowerCase().includes('request');
+    const isRequestAction = this.isRequestNotification(notification);
     const requestId =
       notification.requestId ||
       (isRequestAction || (notification.type === 'SYSTEM' && !notification.actionType)
