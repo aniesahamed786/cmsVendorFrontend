@@ -3,7 +3,6 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthService } from '../../core/services/auth.service';
 
 /**
  * One row from the vendor notification API. `type` splits the bell into its two
@@ -32,7 +31,6 @@ export interface VendorNotification {
 export class NotificationCenterService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
   private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   private readonly all = signal<VendorNotification[]>([]);
@@ -140,7 +138,7 @@ export class NotificationCenterService {
       notification.offerId ||
       (notification.actionType === 'Open Specific Offer' ? notification.actionValue : '');
 
-    if (offerId && this.authService.canView('offers')) {
+    if (offerId) {
       void this.router.navigate(['/offers', offerId]);
     } else if (notification.actionType === 'Open External link' && notification.actionValue) {
       window.open(notification.actionValue, '_blank', 'noopener');

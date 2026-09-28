@@ -51,6 +51,7 @@ import { RequestOfferDetail } from '../../components/request-offer-detail/reques
 import { RequestProfileDetail } from '../../components/request-profile-detail/request-profile-detail';
 import { RequestBranchDetail } from '../../components/request-branch-detail/request-branch-detail';
 import { HotelRoomsListComponent } from '../../../Offers/Components/hotel-room-card/hotel-room-card';
+import { AccessDenied } from '../../../../shared/Components/access-denied/access-denied';
 
 /**
  * Location ids as stored on an offer, which vary by source: plain strings in a request
@@ -227,6 +228,7 @@ function prettyRole(role: string | null | undefined): string {
     RequestProfileDetail,
     RequestBranchDetail,
     HotelRoomsListComponent,
+    AccessDenied,
   ],
   templateUrl: './request-detail.html',
   styleUrl: './request-detail.scss',
@@ -257,6 +259,7 @@ export class RequestDetail {
   readonly details = signal<RequestDetailsResponse | null>(null);
   readonly changesLoading = signal(true);
   readonly changesError = signal<string | null>(null);
+  readonly permissionDenied = signal(false);
 
   // ---- Audit trail (GET /cmsVendor/requests/getHistory/{id}) -----------------
   /**
@@ -651,6 +654,7 @@ export class RequestDetail {
 
     this.changesLoading.set(true);
     this.changesError.set(null);
+    this.permissionDenied.set(false);
     this.api
       .getDetails(this.rowKey)
       .pipe(finalize(() => this.changesLoading.set(false)))
@@ -665,9 +669,11 @@ export class RequestDetail {
           }
           this.loadAffectedOffers(details?.cancellationImpact?.offersDeactivated ?? []);
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           console.error('Failed to load request details', err);
           this.details.set(null);
+          this.permissionDenied.set(err.status === 403);
+          if (err.status === 403) return;
           this.changesError.set(
             extractApiErrorMessage(err) ?? this.i18n.t('requestCenter.detail.changesFailed'),
           );

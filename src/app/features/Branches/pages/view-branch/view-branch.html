@@ -1,3 +1,6 @@
+@if (permissionDenied()) {
+<app-access-denied resourceKey="locations" backRoute="/branches" [embedded]="true" />
+} @else {
 @if (!loading()) {
 <div class="branch-view">
   <div class="branch-view__topbar">
@@ -134,3 +137,4 @@
   [cancelLabel]="'common.cancel' | translate"
   (confirm)="pendingRequest.viewBlockingRequest()"
   (cancel)="pendingRequest.dismiss()" />
+}

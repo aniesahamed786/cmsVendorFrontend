@@ -1,11 +1,14 @@
-<div class="access-denied">
+<section class="access-denied" [class.access-denied--embedded]="embedded()" role="alert"
+  aria-labelledby="access-denied-title">
   <p-card class="access-denied__card">
     <div class="access-denied__body">
-      <div class="access-denied__icon-circle">
+      <div class="access-denied__icon-circle" aria-hidden="true">
         <i class="pi pi-lock access-denied__icon"></i>
       </div>
       <div class="access-denied__text">
-        <h2 class="access-denied__title">{{ 'accessDenied.title' | translate }}</h2>
+        <h2 id="access-denied-title" class="access-denied__title">
+          {{ 'accessDenied.title' | translate }}
+        </h2>
         @if (reason()) {
           <p class="access-denied__subtitle">
             {{ 'accessDenied.subtitleWithResource' | translate: { resource: reason() } }}
@@ -19,7 +22,13 @@
           </p>
         }
       </div>
-      <app-button (click)="goHome()">{{ 'accessDenied.backToDashboard' | translate }}</app-button>
+      <app-button (click)="goBack()">
+        @if (returnsToResource()) {
+          {{ 'accessDenied.backToResource' | translate: { resource: reason() } }}
+        } @else {
+          {{ 'accessDenied.backToDashboard' | translate }}
+        }
+      </app-button>
     </div>
   </p-card>
-</div>
+</section>

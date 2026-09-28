@@ -1880,6 +1880,7 @@
     "subtitleWithResource": "ليست لديك الصلاحية لفتح {{resource}}.",
     "signedInAs": "مسجّل الدخول باسم {{role}}.",
     "backToDashboard": "العودة إلى لوحة التحكم",
+    "backToResource": "العودة إلى {{resource}}",
     "resource": {
       "profile": "ملف البائع",
       "offers": "العروض",
@@ -1887,7 +1888,8 @@
       "vendor_staff": "إدارة الحسابات",
       "redemptions": "الاسترداد",
       "analytics": "التحليلات",
-      "messaging_center": "مركز الرسائل"
+      "messaging_center": "مركز الرسائل",
+      "request_center": "مركز الطلبات"
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PrimeUIModules } from '../../../core/prime.import';
@@ -11,7 +11,7 @@ import { I18nService } from '../../i18n/i18n.service';
   selector: 'app-access-denied',
   imports: [PrimeUIModules, TranslatePipe, Button],
   templateUrl: './access-denied.html',
-  styleUrl: './access-denied.css',
+  styleUrl: './access-denied.scss',
 })
 export class AccessDenied {
   private readonly router = inject(Router);
@@ -20,10 +20,15 @@ export class AccessDenied {
 
   private readonly params = toSignal(inject(ActivatedRoute).queryParamMap);
 
+  /** Inputs make the same state reusable inside entity detail pages after an API-level 403. */
+  readonly resourceKey = input('');
+  readonly backRoute = input('/dashboard');
+  readonly embedded = input(false);
+
   /** `?reason=vendor_staff` → "Vendor Staff", so the user knows which page was refused. */
   readonly reason = computed(() => {
     this.i18n.lang();
-    const raw = this.params()?.get('reason') ?? '';
+    const raw = this.resourceKey() || this.params()?.get('reason') || '';
     if (!raw) return '';
     const key = `accessDenied.resource.${raw}`;
     // t() echoes the key back when it's missing — fall back to the prettified slug.
@@ -33,7 +38,11 @@ export class AccessDenied {
 
   readonly roleLabel = this.auth.displayRole;
 
-  goHome(): void {
-    void this.router.navigateByUrl('/dashboard');
+  readonly returnsToResource = computed(
+    () => this.backRoute() !== '/dashboard' && !!this.reason(),
+  );
+
+  goBack(): void {
+    void this.router.navigateByUrl(this.backRoute());
   }
 }

@@ -1,4 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Component, inject, linkedSignal, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,12 +16,23 @@ import { OfferHeroCard, OfferHeroVendor } from '../../Components/offer-hero-card
 import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
 import { BranchesService } from '../../../Branches/services/branches.service';
 import { mapOfferModeToFormMode } from '../../models/createOffer';
+import { AccessDenied } from '../../../../shared/Components/access-denied/access-denied';
 
 type RedemptionTab = 'in-store' | 'online';
 
 @Component({
   selector: 'app-offer-details-page',
-  imports: [PrimeUIModules, CommonModule, PreviewOfferDetails, OfferDetails, Button, TranslatePipe, ConfirmationPopUp, OfferHeroCard],
+  imports: [
+    PrimeUIModules,
+    CommonModule,
+    PreviewOfferDetails,
+    OfferDetails,
+    Button,
+    TranslatePipe,
+    ConfirmationPopUp,
+    OfferHeroCard,
+    AccessDenied,
+  ],
   templateUrl: './offer-details.html',
   styleUrl: './offer-details.scss',
   // Component-scoped so this page's "already pending" state is its own.
@@ -73,6 +85,7 @@ export class OfferDetailsPage {
   offerLocations = signal<any[]>([]);
 
   isLoading = signal(false);
+  readonly permissionDenied = signal(false);
   offerId = signal('');
   vendorLogoFailed = signal(false);
   selectedRedemptionTab = signal<RedemptionTab>('in-store');
@@ -227,6 +240,7 @@ export class OfferDetailsPage {
 
   private loadOfferDetail() {
     this.isLoading.set(true);
+    this.permissionDenied.set(false);
     this.offerDetailService
       .getOfferDetail(this.offerId())
       .subscribe({
@@ -352,7 +366,8 @@ export class OfferDetailsPage {
 
           this.isLoading.set(false);
         },
-        error: () => {
+        error: (error: HttpErrorResponse) => {
+          this.permissionDenied.set(error.status === 403);
           this.isLoading.set(false);
         }
       });

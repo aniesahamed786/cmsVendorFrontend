@@ -1,3 +1,6 @@
+@if (permissionDenied()) {
+<app-access-denied resourceKey="request_center" backRoute="/request-center" [embedded]="true" />
+} @else {
 <div class="request-detail">
   <div class="request-detail__layout">
     <div class="request-detail__main">
@@ -557,3 +560,4 @@
   confirmVariant="danger" [loading]="actionLoading()" (confirm)="onCancelConfirmed()"
   (cancel)="showCancelConfirm = false">
 </app-confirmation-pop-up>
+}

@@ -1878,6 +1878,7 @@
     "subtitleWithResource": "You don't have permission to open {{resource}}.",
     "signedInAs": "Signed in as {{role}}.",
     "backToDashboard": "Back to Dashboard",
+    "backToResource": "Back to {{resource}}",
     "resource": {
       "profile": "Vendor Profile",
       "offers": "Offers",
@@ -1885,7 +1886,8 @@
       "vendor_staff": "Account Management",
       "redemptions": "Redemption",
       "analytics": "Analytics",
-      "messaging_center": "Messaging Center"
+      "messaging_center": "Messaging Center",
+      "request_center": "Request Center"
     }
   }
 }

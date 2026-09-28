@@ -1,0 +1,85 @@
+:host {
+  display: block;
+}
+
+.access-denied {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 1.5rem 1rem;
+
+  &--embedded {
+    min-height: 52vh;
+  }
+
+  &__card {
+    width: min(100%, 32rem);
+    text-align: center;
+    border: 1px solid var(--app-border);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2.5rem 1.5rem;
+  }
+
+  &__icon-circle {
+    display: grid;
+    width: 4.5rem;
+    height: 4.5rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--app-primary-soft);
+  }
+
+  &__icon {
+    font-size: 2.25rem;
+    color: var(--app-primary);
+  }
+
+  &__text {
+    max-width: 28rem;
+
+    > * + * {
+      margin-top: 0.5rem;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  &__subtitle,
+  &__role {
+    margin-bottom: 0;
+    color: var(--app-muted);
+    overflow-wrap: anywhere;
+  }
+
+  &__subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  &__role {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .access-denied {
+    min-height: 50vh;
+    padding-inline: 0;
+
+    &__body {
+      padding: 2rem 1rem;
+    }
+  }
+}

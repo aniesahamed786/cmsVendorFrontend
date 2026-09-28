@@ -1,3 +1,6 @@
+@if (permissionDenied()) {
+<app-access-denied resourceKey="offers" backRoute="/offers" [embedded]="true" />
+} @else {
 <div class="offer-page-header">
   <button type="button" class="offer-page-header__back-btn" (click)="back()">
     <span class="offer-details-page-svg-icon"
@@ -74,3 +77,4 @@
   [cancelLabel]="'common.cancel' | translate"
   (confirm)="pendingRequest.viewBlockingRequest()"
   (cancel)="pendingRequest.dismiss()" />
+}

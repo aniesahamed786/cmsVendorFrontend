@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { PrimeUIModules } from '../../../../core/prime.import';
@@ -14,11 +14,20 @@ import { Button } from '../../../../shared/Components/button/button';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
 import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
 import { environment } from '../../../../../environments/environment';
+import { AccessDenied } from '../../../../shared/Components/access-denied/access-denied';
 
 @Component({
   selector: 'app-view-branch',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, RouterLink, TranslatePipe, Button, ConfirmationPopUp],
+  imports: [
+    CommonModule,
+    PrimeUIModules,
+    RouterLink,
+    TranslatePipe,
+    Button,
+    ConfirmationPopUp,
+    AccessDenied,
+  ],
   templateUrl: './view-branch.html',
   styleUrl: './view-branch.scss',
   providers: [PendingRequestCheck],
@@ -39,6 +48,7 @@ export class ViewBranch {
 
   readonly branch = signal<BranchApiPayload | null>(null);
   readonly loading = signal(true);
+  readonly permissionDenied = signal(false);
 
   readonly hasCoordinates = computed(() => {
     const coords = this.branch()?.geoPoint?.coordinates;
@@ -55,6 +65,7 @@ export class ViewBranch {
 
   private loadBranch(requestId: string): void {
     this.loading.set(true);
+    this.permissionDenied.set(false);
     this.http
       .get<any>(`${this.requestsBaseUrl}/${requestId}`)
       .subscribe({
@@ -79,16 +90,19 @@ export class ViewBranch {
           this.branch.set(toEditableBranchData(formattedRequest));
           this.loading.set(false);
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           console.error('Failed to load branch for viewing', err);
+          this.permissionDenied.set(err.status === 403);
           this.loading.set(false);
-          this.messageService.add({
-            severity: 'error',
-            summary: this.i18n.t('branchForm.toast.loadFailed'),
-            detail: this.i18n.t('branchForm.toast.loadFailedDetail'),
-            life: 5000,
-            closable: true,
-          });
+          if (err.status !== 403) {
+            this.messageService.add({
+              severity: 'error',
+              summary: this.i18n.t('branchForm.toast.loadFailed'),
+              detail: this.i18n.t('branchForm.toast.loadFailedDetail'),
+              life: 5000,
+              closable: true,
+            });
+          }
         },
       });
   }
