@@ -147,6 +147,26 @@ export class MessagingCenterStore {
     this.loadTicketMessages(ticket.reference);
   }
 
+  selectTicketByReference(reference: string): boolean {
+    const ticket = this.ticketsSignal().find(
+      (item) => item.reference === reference || item.id === reference,
+    );
+    if (!ticket) return false;
+
+    if (ticket.id !== this.selectedTicketId()) {
+      this.selectTicket(ticket.id);
+    }
+    return true;
+  }
+
+  clearSelectedTicket(): void {
+    const selected = this.selectedTicket();
+    if (selected) {
+      this.socketService.leaveTicketRoom(selected.reference);
+    }
+    this.selectedTicketId.set(null);
+  }
+
   /** Drops everything the root-scoped store is holding so a page entry starts empty. */
   reset(): void {
     this.ticketsSignal.set([]);
@@ -160,8 +180,8 @@ export class MessagingCenterStore {
     this.activeTab.set('all');
   }
 
-  refreshTickets(): void {
-    this.loadTickets(true);
+  refreshTickets(ticketReference?: string): void {
+    this.loadTickets(true, ticketReference);
   }
 
   refreshMessages(ticketId: string): void {
@@ -290,7 +310,7 @@ export class MessagingCenterStore {
 
   // --- Fetching & Pagination -------------------------------------------------
 
-  loadTickets(showSkeleton: boolean = true): void {
+  loadTickets(showSkeleton: boolean = true, ticketReference?: string): void {
     if (showSkeleton) {
       this.isLoadingTickets.set(true);
     }
@@ -307,6 +327,9 @@ export class MessagingCenterStore {
 
           this.ticketsSignal.set(tickets);
           this.nextPageToken.set(this.extractNextPageToken(response));
+          if (ticketReference) {
+            this.selectTicketByReference(ticketReference);
+          }
         },
         error: (error) => {
           console.error('Failed to load tickets', error);
@@ -588,4 +611,3 @@ export class MessagingCenterStore {
     this.socketService.disconnect();
   }
 }
-

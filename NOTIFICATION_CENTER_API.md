@@ -20,6 +20,7 @@ computed status `SENT`, newest first, each carrying that vendor's `isRead`.
   "isRead": false,
   "createdAt": "2026-09-09T10:00:00.000Z",
   "ticketId": "…",         // MESSAGE rows only — deep-links the ticket
+  "requestId": "…",        // request workflow rows — deep-links the request
   "actionType": "Open Specific Offer",   // optional
   "actionValue": "…",                    // optional
   "offerId": "…"                         // optional
@@ -30,8 +31,8 @@ computed status `SENT`, newest first, each carrying that vendor's `isRead`.
 
 | `type` | Section | Icon | Click |
 |---|---|---|---|
-| `MESSAGE` | MESSAGES | `pi-comments` | → `/messaging-center` |
-| `SYSTEM` | NOTIFICATIONS | `pi-cog` | offer / external link if set |
+| `MESSAGE` | MESSAGES | `pi-comments` | → `/messaging-center/:ticketId` |
+| `SYSTEM` | NOTIFICATIONS | `pi-cog` | request / offer / external link if set |
 | `ADMIN` | NOTIFICATIONS | `pi-bell` | offer / external link if set |
 
 Unknown/missing `type` falls back to `ADMIN`.
@@ -66,7 +67,8 @@ behind `UserGuard`. Adding `'cmsVendor/notification'` to that array is **not** e
 
    Nothing else writes SYSTEM rows: no direct DB edits, no ad-hoc service calls. If a new
    vendor-visible change appears, it goes through a request or a ticket first, and the
-   notification follows from that.
+   notification follows from that. Request notifications should carry `requestId` (preferred),
+   or an `actionType` containing `Request` with the request id in `actionValue`.
 3. **Messages** — insert `type: "MESSAGE"` rows when an admin replies on a vendor's ticket
    (with `ticketId`), and mark them read when that ticket is read. This is what keeps the
    frontend off the messaging endpoints.

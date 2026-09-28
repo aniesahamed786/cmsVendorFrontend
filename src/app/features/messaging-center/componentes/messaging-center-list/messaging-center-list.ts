@@ -22,6 +22,7 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
 import { AuthService } from '../../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-messaging-center-list',
@@ -33,6 +34,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class MessagingCenterList {
   readonly store = inject(MessagingCenterStore);
   readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly i18n = inject(I18nService);
   createTicket = output<void>();
 
@@ -112,7 +114,7 @@ export class MessagingCenterList {
   }
 
   onSelectTicket(ticket: Ticket): void {
-    this.store.selectTicket(ticket.id);
+    void this.router.navigate(['/messaging-center', ticket.reference || ticket.id]);
   }
 
   onCreateTicket(): void {

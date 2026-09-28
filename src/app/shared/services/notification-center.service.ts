@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/services/auth.service';
 
 /**
  * One row from the vendor notification API. `type` splits the bell into its two
@@ -20,6 +22,8 @@ export interface VendorNotification {
   actionType: string;
   actionValue: string;
   offerId: string;
+  /** Request reference on request workflow notifications. */
+  requestId: string;
   /** Ticket reference on MESSAGE rows, so the bell can deep-link the ticket. */
   ticketId: string;
 }
@@ -27,6 +31,8 @@ export interface VendorNotification {
 @Injectable({ providedIn: 'root' })
 export class NotificationCenterService {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
   private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   private readonly all = signal<VendorNotification[]>([]);
@@ -74,6 +80,7 @@ export class NotificationCenterService {
       actionType: n.actionType ?? '',
       actionValue: n.actionValue ?? '',
       offerId: n.offerId ?? '',
+      requestId: n.requestId ?? '',
       ticketId: n.ticketId ?? '',
     };
   }
@@ -92,5 +99,51 @@ export class NotificationCenterService {
       .put(`${this.baseUrl}/notification/read-all`, {})
       .pipe(catchError(() => of(null)))
       .subscribe();
+  }
+
+  open(notification: VendorNotification): void {
+    if (!notification.isRead) {
+      this.markAsRead(notification.id);
+    }
+
+    const ticketId =
+      notification.ticketId ||
+      (notification.type === 'MESSAGE' ? notification.actionValue : '');
+    if (ticketId) {
+      void this.router.navigate(['/messaging-center', ticketId]);
+      return;
+    }
+
+    if (notification.type === 'MESSAGE') {
+      void this.router.navigate(['/messaging-center']);
+      return;
+    }
+
+    const isRequestAction = notification.actionType.toLowerCase().includes('request');
+    const requestId =
+      notification.requestId ||
+      (isRequestAction || (notification.type === 'SYSTEM' && !notification.actionType)
+        ? notification.actionValue
+        : '');
+
+    if (requestId) {
+      void this.router.navigate(['/request-center', requestId]);
+      return;
+    }
+
+    if (isRequestAction) {
+      void this.router.navigate(['/request-center']);
+      return;
+    }
+
+    const offerId =
+      notification.offerId ||
+      (notification.actionType === 'Open Specific Offer' ? notification.actionValue : '');
+
+    if (offerId && this.authService.canView('offers')) {
+      void this.router.navigate(['/offers', offerId]);
+    } else if (notification.actionType === 'Open External link' && notification.actionValue) {
+      window.open(notification.actionValue, '_blank', 'noopener');
+    }
   }
 }

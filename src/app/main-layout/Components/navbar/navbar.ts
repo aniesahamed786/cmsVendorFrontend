@@ -156,26 +156,8 @@ export class Navbar {
   }
 
   onNotificationClick(notification: VendorNotification): void {
-    if (!notification.isRead) {
-      this.notificationCenter.markAsRead(notification.id);
-    }
     this.notificationMenu?.hide();
-
-    if (notification.type === 'MESSAGE') {
-      this.router.navigate(['/messaging-center']);
-      return;
-    }
-
-    const offerId =
-      notification.offerId ||
-      (notification.actionType === 'Open Specific Offer' ? notification.actionValue : '');
-    // An offer notification can reach an account that can't open Offers — don't bounce it
-    // off the permission guard, just leave the row as read.
-    if (offerId && this.authService.canView('offers')) {
-      this.router.navigate(['/offers', offerId]);
-    } else if (notification.actionType === 'Open External link' && notification.actionValue) {
-      window.open(notification.actionValue, '_blank', 'noopener');
-    }
+    this.notificationCenter.open(notification);
   }
 
   notificationIcon(notification: VendorNotification): string {

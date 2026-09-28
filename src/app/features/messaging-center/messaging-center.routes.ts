@@ -15,4 +15,9 @@ export const routes: Route[] = [
     canActivate: [managePermissionGuard('messaging_center')],
     data: { title: 'Create Ticket' },
   },
+  {
+    path: ':ticketId',
+    component: MessagingCenterPage,
+    data: { title: 'Messaging Center' },
+  },
 ];
