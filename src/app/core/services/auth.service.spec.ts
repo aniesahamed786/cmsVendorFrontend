@@ -185,6 +185,17 @@ describe('AuthService', () => {
       expect(service.canManage('redemptions')).toBe(true);
     });
 
+    it('uses Request Center permissions for staff access', () => {
+      signIn(['cms_request_center:read'], 'VENDOR_STAFF');
+      expect(service.canViewRequestCenter()).toBe(true);
+
+      signIn(['cms_request_center:manage'], 'VENDOR_STAFF');
+      expect(service.canViewRequestCenter()).toBe(true);
+
+      signIn(['cms_offers:read'], 'VENDOR_STAFF');
+      expect(service.canViewRequestCenter()).toBe(false);
+    });
+
     it('denies a resource with neither level', () => {
       signIn(['cms_offers:read']);
       expect(service.canView('vendor_staff')).toBe(false);

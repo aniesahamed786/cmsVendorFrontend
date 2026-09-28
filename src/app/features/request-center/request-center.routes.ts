@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { RequestCenterList } from './pages/request-center-list/request-center-list';
 import { RequestDetail } from './pages/request-detail/request-detail';
 import { RequestEdit } from './pages/request-edit/request-edit';
+import { managePermissionGuard } from '../../shared/guards/auth.guard';
 
 export const routes: Route[] = [
   {
@@ -13,6 +14,7 @@ export const routes: Route[] = [
   {
     path: ':id/edit',
     component: RequestEdit,
+    canActivate: [managePermissionGuard('request_center')],
     data: { title: 'Edit Request' },
   },
   {

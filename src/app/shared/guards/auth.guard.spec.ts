@@ -6,7 +6,6 @@ import {
   managePermissionGuard,
   permissionGuard,
   vendorAdminGuard,
-  vendorAdminOnlyGuard,
 } from './auth.guard';
 import { AuthService, VendorAccountSession } from '../../core/services/auth.service';
 import { provideHttpClient } from '@angular/common/http';
@@ -141,14 +140,24 @@ describe('AuthGuards', () => {
       expect(run(vendorAdminGuard as ReturnType<typeof permissionGuard>)).toBe(true);
     });
 
-    it('vendorAdminOnlyGuard hides Request Center from staff', () => {
+    it('allows Request Center for staff with its read or manage permission', () => {
+      signIn(['cms_request_center:read'], 'VENDOR_STAFF');
+      expect(run(permissionGuard('request_center'))).toBe(true);
+
+      signIn(['cms_request_center:manage'], 'VENDOR_STAFF');
+      expect(run(permissionGuard('request_center'))).toBe(true);
+    });
+
+    it('denies Request Center when its permission is missing, regardless of role', () => {
       signIn(['cms_offers:read'], 'VENDOR_STAFF');
-      const staffResult = run(vendorAdminOnlyGuard('request_center'));
+      const staffResult = run(permissionGuard('request_center'));
       expect(staffResult instanceof UrlTree).toBe(true);
       expect(staffResult.toString()).toBe('/access-denied?reason=request_center');
 
       signIn([], 'VENDOR_ADMIN');
-      expect(run(vendorAdminOnlyGuard('request_center'))).toBe(true);
+      expect(run(permissionGuard('request_center')).toString()).toBe(
+        '/access-denied?reason=request_center',
+      );
     });
 
     it('authGuard sends a suspended account back to login', () => {

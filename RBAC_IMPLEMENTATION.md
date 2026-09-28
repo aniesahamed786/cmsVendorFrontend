@@ -17,7 +17,7 @@ Driven entirely by the vendor login response. Two roles: `VENDOR_ADMIN` (whole v
 | `displayName()` / `displayRole()` | header/sidenav; role translated, else humanized |
 
 `resource` is the permission name with no `cms_` prefix and no level: `profile`, `offers`,
-`locations`, `vendor_staff`, `redemptions`, `analytics`, `messaging_center`.
+`locations`, `vendor_staff`, `redemptions`, `analytics`, `messaging_center`, `request_center`.
 
 Session lives in a signal (`session`), mirrored to `localStorage`. On app start it rehydrates
 from the stored account; if that key is gone but the token still decodes, it rebuilds from the
@@ -34,10 +34,10 @@ JWT payload. `logout()` clears both.
 | `redemptions` | `/redemption` | yes |
 | `analytics` | `/analytics` | yes |
 | `messaging_center` | `/messaging-center` | yes |
+| `request_center` | `/request-center` | yes |
 
-No permission has a missing page. Request Center has no dedicated permission and is restricted
-to `VENDOR_ADMIN`; its route, navigation item, dashboard tile, and notifications are hidden from
-`VENDOR_STAFF`.
+Request Center uses `cms_request_center:read` / `cms_request_center:manage`. Its route,
+navigation item, dashboard tile, and notifications are hidden from accounts without either grant.
 
 ## Hidden vs. access-denied
 
@@ -72,7 +72,7 @@ creation does not.
 
 - `authGuard` / `authChildGuard` — valid JWT `exp`, else `/login`. A suspended account is sent to
   `/login?account=inactive`.
-- `permissionGuard('<resource>')` — on all 7 top-level routes. Denied → `/access-denied?reason=<resource>`.
+- `permissionGuard('<resource>')` — on all 8 permission-gated top-level routes. Denied → `/access-denied?reason=<resource>`.
 - `managePermissionGuard('<resource>')` — on every create/edit sub-route, so a read-only user who
   types the URL lands on access-denied instead of a form that can't submit.
 - `vendorAdminGuard` — vendor-wide actions staff must not reach even holding `:manage`
@@ -107,6 +107,7 @@ guard; **without** one it came from something else.
 | Redemption | view + edit | view + edit |
 | Analytics | view only | view only |
 | Messaging Center | view + edit | view + edit |
+| Request Center | according to `request_center` grants | according to `request_center` grants |
 | Dashboard | full | quick-actions section hidden |
 
 Write controls gated inside pages, beyond the route guards: offers "Add New" + row menu +

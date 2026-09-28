@@ -24,7 +24,8 @@ export type PermissionResource =
   | 'vendor_staff'
   | 'redemptions'
   | 'analytics'
-  | 'messaging_center';
+  | 'messaging_center'
+  | 'request_center';
 
 export interface VendorAccountSession {
   id: string;
@@ -228,9 +229,9 @@ export class AuthService {
     return this.roleName() === 'VENDOR_ADMIN';
   }
 
-  /** Request Center is a vendor-admin workflow; the backend exposes no permission for it. */
+  /** Request Center follows the same read/manage permission model as other CMS resources. */
   canViewRequestCenter(): boolean {
-    return this.isAdmin();
+    return this.canView('request_center');
   }
 
   /**

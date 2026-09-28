@@ -3,7 +3,7 @@ import { MainLayout } from './mainLayout';
 import { DashboardPage } from '../features/Dashboard/pages/dashboard-page/dashboard-page';
 import { Inprogress } from '../shared/Components/inprogress/inprogress';
 import { AccessDenied } from '../shared/Components/access-denied/access-denied';
-import { permissionGuard, vendorAdminOnlyGuard } from '../shared/guards/auth.guard';
+import { permissionGuard } from '../shared/guards/auth.guard';
 
 export const routes: Route[] = [
   {
@@ -48,7 +48,7 @@ export const routes: Route[] = [
       },
       {
         path: 'request-center',
-        canActivate: [vendorAdminOnlyGuard('request_center')],
+        canActivate: [permissionGuard('request_center')],
         loadChildren: () =>
           import('../features/request-center/request-center.routes').then((m) => m.routes),
         data: { title: 'Request Center' },

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { catchError, distinctUntilChanged, finalize, forkJoin, map, of } from 'rxjs';
 import { OfferDetailService } from '../../../Offers/services/offer-detail.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 interface AffectedOffer {
   offerId: string;
@@ -244,6 +245,7 @@ export class RequestDetail {
   private readonly branchesService = inject(BranchesService);
   private readonly vendorProfileService = inject(VendorProfileService);
   private readonly offerDetailService = inject(OfferDetailService);
+  private readonly auth = inject(AuthService);
 
   private readonly rowKey = signal('');
   private readonly requestRows = this.requestCenterService.getRows();
@@ -810,13 +812,23 @@ export class RequestDetail {
 
   // Mirrors the backend's ALLOWED_TRANSITIONS: submit from DRAFT, recall only from SUBMITTED.
   // A drafted RETURNED request submits straight away; editing it moves to the action menu.
-  readonly canSubmit = computed(() => this.status() === 'DRAFT' || this.isDrafted());
-  readonly canDiscardDraft = computed(() => this.status() === 'DRAFT' || this.isDrafted());
-  readonly canRecall = computed(() => this.status() === 'SUBMITTED');
-  readonly canEditAndResubmit = computed(
-    () => (this.status() === 'RETURNED' && !this.isDrafted()) || this.status() === 'SUBMITTED',
+  readonly canSubmit = computed(
+    () => this.auth.canManage('request_center') && (this.status() === 'DRAFT' || this.isDrafted()),
   );
-  readonly canCancel = computed(() => this.status() === 'RETURNED');
+  readonly canDiscardDraft = computed(
+    () => this.auth.canManage('request_center') && (this.status() === 'DRAFT' || this.isDrafted()),
+  );
+  readonly canRecall = computed(
+    () => this.auth.canManage('request_center') && this.status() === 'SUBMITTED',
+  );
+  readonly canEditAndResubmit = computed(
+    () =>
+      this.auth.canManage('request_center') &&
+      ((this.status() === 'RETURNED' && !this.isDrafted()) || this.status() === 'SUBMITTED'),
+  );
+  readonly canCancel = computed(
+    () => this.auth.canManage('request_center') && this.status() === 'RETURNED',
+  );
 
   /**
    * A request can be edited until an admin decision sticks — mirrors the backend's
@@ -824,6 +836,7 @@ export class RequestDetail {
    * is hidden rather than shown-and-rejected.
    */
   readonly canEdit = computed(() => {
+    if (!this.auth.canManage('request_center')) return false;
     const status = this.status();
     return status === 'DRAFT' || status === 'SUBMITTED' || status === 'RETURNED';
   });
