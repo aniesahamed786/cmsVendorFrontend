@@ -88,9 +88,7 @@ export class LoginComponent {
           Validators.required,
           Validators.minLength(6)
         ]
-      ],
-
-      remember: [false]
+      ]
     });
 
   }

@@ -195,22 +195,6 @@
     }
   }
 
-  &__remember {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    margin-block: 0.25rem 1.625rem;
-    font-size: 0.875rem;
-    color: var(--app-text);
-    cursor: pointer;
-
-    input {
-      width: 1.125rem;
-      height: 1.125rem;
-      accent-color: var(--app-primary);
-    }
-  }
-
   /* Full width is layout, not a look — no new button variant needed. */
   &__submit {
     display: block;
