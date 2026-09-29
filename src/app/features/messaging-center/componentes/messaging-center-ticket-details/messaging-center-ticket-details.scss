@@ -322,6 +322,83 @@
     border-color: rgba(234, 179, 8, 0.4);
   }
 
+  // ----- Forward card (mirrors the admin CMS forward card) -----
+  &__message--forward {
+    width: 100%;
+  }
+
+  &__forward {
+    flex: 1;
+    min-width: 0;
+    background: var(--app-primary-soft);
+    border: 1px solid var(--app-primary-subtle);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--app-text);
+  }
+
+  &__forward-head {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.875rem 1.25rem;
+    background: var(--app-primary-subtle);
+    color: var(--app-primary);
+
+    strong {
+      font-weight: 700;
+    }
+  }
+
+  &__forward-time {
+    margin-inline-start: auto;
+    color: var(--app-muted);
+  }
+
+  &__forward-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 1rem 1.25rem 1.25rem;
+  }
+
+  &__forward-muted {
+    color: var(--app-muted);
+  }
+
+  &__forward-quote {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 2px solid var(--app-border);
+  }
+
+  &__forward-note {
+    margin-bottom: 0.75rem;
+  }
+
+  // one block per forwarded message, split by a hairline
+  &__forward-message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.875rem 0;
+
+    & + & {
+      border-top: 1px solid var(--app-border);
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  &__forward-text {
+    margin-top: 0.5rem;
+    font-weight: 700;
+  }
+
   // ----- Message attachments -----
   &__attachments {
     margin-top: 0.6rem;

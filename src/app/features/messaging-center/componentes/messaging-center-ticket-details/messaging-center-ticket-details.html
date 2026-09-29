@@ -74,7 +74,52 @@
     }
     } @else {
 
-    @for (msg of messages(); track msg.id) {
+    @for (msg of threadMessages(); track msg.id) {
+    @if (msg.id === openingNote()?.id) {
+    <!-- Forward card: the admin's forward note with the original user conversation quoted inside -->
+    <div class="mc-details__message mc-details__message--incoming mc-details__message--forward">
+      <div class="mc-details__avatar">
+        <i class="pi pi-user"></i>
+      </div>
+      <div class="mc-details__forward">
+        <div class="mc-details__forward-head">
+          <i class="pi pi-send" aria-hidden="true"></i>
+          <span>{{ 'messaging.details.forwardedBy' | translate }} <strong>{{ t.createdBy.name }}</strong></span>
+          <span class="mc-details__forward-time">{{ msg.createdAt | date: 'shortTime' }}</span>
+        </div>
+        <div class="mc-details__forward-body">
+          <span class="mc-details__forward-muted">{{ 'messaging.details.forwardTo' | translate: { name: t.target } }}</span>
+          <div class="mc-details__forward-quote">
+            @if (showForwardNote()) {
+            <p class="mc-details__bubble-text mc-details__forward-note">{{ msg.body }}</p>
+            }
+            @if (forwardedMessages().length) {
+            <span class="mc-details__forward-muted">---------- {{ 'messaging.details.forwardedConversation' | translate }} ----------</span>
+            @for (orig of forwardedMessages(); track orig.id) {
+            <div class="mc-details__forward-message">
+              <span>{{ 'messaging.details.forwardFrom' | translate: { name: orig.authorName } }}</span>
+              <span>{{ 'messaging.details.forwardSent' | translate: { date: orig.timestamp } }}</span>
+              @if (orig.body) {
+              <p class="mc-details__bubble-text mc-details__forward-text">{{ orig.body }}</p>
+              }
+              @if (orig.attachments?.length) {
+              <div class="mc-details__attachments">
+                @for (file of orig.attachments; track file.name) {
+                <a class="mc-details__file-chip" (click)="openPreview(file.url)">
+                  <i class="pi pi-paperclip"></i>
+                  <span>{{ file.name }}</span>
+                </a>
+                }
+              </div>
+              }
+            </div>
+            }
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else {
     <div class="mc-details__message" [class.mc-details__message--outgoing]="msg.outgoing"
       [class.mc-details__message--incoming]="!msg.outgoing" [class.mc-details__message--note]="msg.isInternalNote"
       [class.mc-details__message--pending]="msg.pending">
@@ -133,6 +178,7 @@
       </div>
       }
     </div>
+    }
     }
     }
   </div>

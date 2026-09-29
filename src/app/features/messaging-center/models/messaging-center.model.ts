@@ -57,8 +57,12 @@ export interface TicketMessage {
   /** When true the bubble is right-aligned (the support agent / current user). */
   outgoing: boolean;
   timestamp: string;
+  /** Raw ISO date from the API; matched against `Ticket.forwardedAt` to find the forward note. */
+  createdAt?: string;
   body: string;
   isInternalNote: boolean;
+  /** Carried in from the original user ticket by a forward — rendered inside the forward card. */
+  isForwarded?: boolean;
   linkedItem?: TicketLinkedItem;
   attachments?: MessageAttachment[];
   /** True while the optimistic bubble is still waiting on the POST/upload. */
@@ -89,6 +93,8 @@ export interface Ticket {
   unreadCount: number;
   /** Monotonic sequence used for newest/oldest sorting. */
   order: number;
+  /** Set only on tickets an admin forwarded from a user ticket. */
+  forwardedAt?: string | null;
 }
 
 export interface SelectOption {

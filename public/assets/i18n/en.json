@@ -1400,6 +1400,11 @@
       "filePreview": "File Preview",
       "you": "You",
       "sending": "Sending…",
+      "forwardedBy": "Forwarded by",
+      "forwardTo": "To: {{name}}",
+      "forwardedConversation": "Forwarded conversation",
+      "forwardFrom": "From: {{name}}",
+      "forwardSent": "Sent: {{date}}",
       "ticketClosedNotice": "This ticket is closed. No further replies or changes can be made."
     },
     "create": {

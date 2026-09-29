@@ -1402,6 +1402,11 @@
       "filePreview": "معاينة الملف",
       "you": "أنت",
       "sending": "جارٍ الإرسال...",
+      "forwardedBy": "أُعيد توجيهها بواسطة",
+      "forwardTo": "إلى: {{name}}",
+      "forwardedConversation": "المحادثة المُعاد توجيهها",
+      "forwardFrom": "من: {{name}}",
+      "forwardSent": "أُرسلت: {{date}}",
       "ticketClosedNotice": "تم إغلاق هذه التذكرة. لا يمكن إجراء أي تعديلات أو إضافة ردود جديدة."
     },
     "create": {

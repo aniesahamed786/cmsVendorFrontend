@@ -206,12 +206,14 @@ export class MessagingCenterStore {
     });
 
     const pendingId = `pending-${Date.now()}`;
+    const now = new Date().toISOString();
     const pending: TicketMessage = {
       id: pendingId,
       authorName: this.i18n.t('messaging.details.you'),
       senderRole: 'Vendor',
       outgoing: true,
-      timestamp: this.formatMessageDate(new Date().toISOString()),
+      timestamp: this.formatMessageDate(now),
+      createdAt: now,
       body: content,
       isInternalNote,
       attachments: attachments.map((file) => ({
@@ -496,6 +498,7 @@ export class MessagingCenterStore {
       unread,
       unreadCount,
       order: index + 1,
+      forwardedAt: ticket.forwardedAt ?? null,
     };
   }
 
@@ -581,11 +584,14 @@ export class MessagingCenterStore {
       senderRole: message.senderType,
       outgoing: message.senderType !== 'admin',
       timestamp: this.formatMessageDate(message.createdAt),
+      createdAt: message.createdAt,
       body: message.text,
       isInternalNote: message.isInternalNote,
+      isForwarded: message.isForwarded,
       attachments: message.fileUrls?.map((url: string) => ({
         name: url.split('/').pop() ?? '',
-        url: `${this.baseUrl}${url}`,
+        // fileUrls already carry the API path; only the host is missing.
+        url: /^https?:/i.test(url) ? url : `${environment.backendUrl}${url}`,
       })),
     };
   }

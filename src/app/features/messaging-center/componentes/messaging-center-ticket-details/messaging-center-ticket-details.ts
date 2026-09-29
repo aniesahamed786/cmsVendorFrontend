@@ -38,6 +38,28 @@ export class MessagingCenterTicketDetails {
   readonly ticket = this.store.selectedTicket;
   readonly messages = this.store.selectedMessages;
 
+  /**
+   * A forwarded ticket's opening message is the admin's forward note, written at `forwardedAt`.
+   * It renders as the forward card, with the carried-in (`isForwarded`) history quoted inside.
+   * Same rule as the admin CMS.
+   */
+  readonly openingNote = computed(() => {
+    const at = this.ticket()?.forwardedAt;
+    return at ? this.messages().find((m) => !m.isForwarded && m.createdAt === at) ?? null : null;
+  });
+  // Without a card (note not loaded yet) the carried-in history stays in the thread instead of vanishing.
+  readonly threadMessages = computed(() =>
+    this.openingNote() ? this.messages().filter((m) => !m.isForwarded) : this.messages(),
+  );
+  readonly forwardedMessages = computed(() =>
+    this.openingNote() ? this.messages().filter((m) => m.isForwarded) : [],
+  );
+  // With no note the backend reuses the original description, which the quoted conversation already shows.
+  readonly showForwardNote = computed(() => {
+    const note = this.openingNote()?.body;
+    return !!note && !this.forwardedMessages().some((m) => m.body === note);
+  });
+
   readonly isClosed = computed(() => this.ticket()?.status === 'Closed');
 
   readonly draft = signal<string>('');
