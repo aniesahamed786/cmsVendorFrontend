@@ -129,19 +129,19 @@
         </div>
       </section>
 
-      <button type="button" class="settings-link-card" (click)="openTerms()">
+      <button type="button" class="settings-link-card" routerLink="/legal/terms">
         <h2 class="settings-link-card__title">{{ 'settingsPage.legal.terms' | translate }}</h2>
-        <i class="pi pi-external-link"></i>
+        <i class="pi" [class.pi-angle-right]="!isArabic()" [class.pi-angle-left]="isArabic()"></i>
       </button>
 
-      <button type="button" class="settings-link-card" (click)="openPrivacyPolicy()">
+      <button type="button" class="settings-link-card" routerLink="/legal/privacy">
         <h2 class="settings-link-card__title">{{ 'settingsPage.legal.privacy' | translate }}</h2>
-        <i class="pi pi-external-link"></i>
+        <i class="pi" [class.pi-angle-right]="!isArabic()" [class.pi-angle-left]="isArabic()"></i>
       </button>
 
-      <button type="button" class="settings-link-card" (click)="openDisclaimer()">
+      <button type="button" class="settings-link-card" routerLink="/legal/disclaimer">
         <h2 class="settings-link-card__title">{{ 'settingsPage.legal.disclaimer' | translate }}</h2>
-        <i class="pi pi-external-link"></i>
+        <i class="pi" [class.pi-angle-right]="!isArabic()" [class.pi-angle-left]="isArabic()"></i>
       </button>
     </div>
   </div>

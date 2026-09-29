@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -66,7 +67,7 @@ function passwordGroupValidator(): ValidatorFn {
 @Component({
   selector: 'app-profile-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PrimeUIModules, Button, TranslatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, PrimeUIModules, Button, TranslatePipe],
   templateUrl: './profile-settings.html',
   styleUrl: './profile-settings.scss',
 })
@@ -306,17 +307,5 @@ export class ProfileSettings {
     }
     const text = this.i18n.t(key);
     return text === key ? fallbackLabel : text;
-  }
-
-  openTerms(): void {
-    window.open('/legal/terms', '_blank', 'noopener');
-  }
-
-  openPrivacyPolicy(): void {
-    window.open('/legal/privacy', '_blank', 'noopener');
-  }
-
-  openDisclaimer(): void {
-    window.open('/legal/disclaimer', '_blank', 'noopener');
   }
 }

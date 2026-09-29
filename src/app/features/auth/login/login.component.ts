@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -32,6 +32,7 @@ const API_TO_THEME: Record<string, AppearanceMode> = {
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     InputTextModule,
     PasswordModule,
     Button,

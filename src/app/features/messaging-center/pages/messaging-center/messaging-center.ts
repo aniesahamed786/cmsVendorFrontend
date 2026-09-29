@@ -20,6 +20,15 @@ export class MessagingCenterPage implements OnInit {
   // empty and refetches — no ticket from the last visit stays on screen.
   ngOnInit(): void {
     this.store.reset();
+
+    // A browser reload opens on the empty state, not the ticket left in the URL.
+    // Links from notifications (in-app navigation) still open their ticket.
+    const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    if (!this.router.navigated && nav?.type === 'reload' && this.route.snapshot.paramMap.has('ticketId')) {
+      void this.router.navigate(['/messaging-center'], { replaceUrl: true });
+      return;
+    }
+
     this.route.paramMap.subscribe((params) => {
       const ticketId = params.get('ticketId');
 

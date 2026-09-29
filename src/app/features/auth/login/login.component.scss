@@ -199,19 +199,6 @@
   &__submit {
     display: block;
   }
-
-  &__divider {
-    margin: 1.875rem 0 1.25rem;
-    border: none;
-    border-block-start: 1px solid var(--app-border);
-  }
-
-  &__support {
-    margin: 0;
-    text-align: center;
-    font-size: 0.875rem;
-    color: var(--app-muted);
-  }
 }
 
 :host ::ng-deep {

@@ -1,0 +1,33 @@
+<div class="legal-page">
+  <app-back-button (click)="goBack()" />
+
+  <section class="legal-page__panel">
+    <h1 class="legal-page__title">{{ 'settingsPage.legal.' + topic() | translate }}</h1>
+
+    @if (loading()) {
+      <div class="legal-page__skeleton" role="status" [attr.aria-label]="'legalPages.loading' | translate">
+        @for (w of skeletonLines; track $index) {
+          <span class="app-skeleton legal-page__skeleton-line" [class.legal-page__skeleton-line--heading]="w === 0"
+            [style.width.%]="w || 40"></span>
+        }
+      </div>
+    } @else if (error()) {
+      <p class="legal-page__state">
+        <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+        {{ 'legalPages.error' | translate }}
+      </p>
+    } @else if (!hasContent()) {
+      <p class="legal-page__state">
+        <i class="pi pi-info-circle" aria-hidden="true"></i>
+        {{ 'legalPages.empty' | translate }}
+      </p>
+    } @else if (page()?.type === 'pdf') {
+      <iframe class="legal-page__pdf" [src]="pdfSrc()" [title]="'settingsPage.legal.' + topic() | translate"></iframe>
+      <a class="legal-page__link" [href]="pdfHref()" target="_blank" rel="noopener">
+        {{ 'legalPages.openPdf' | translate }}
+      </a>
+    } @else {
+      <div class="legal-page__text" [innerHTML]="trustedHtml()"></div>
+    }
+  </section>
+</div>

@@ -92,6 +92,7 @@ html[lang="ar"] {
 
 :root {
   --font-family: "Ghawar", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-manifa: "Manifa Pro 2", var(--font-family);
 
   /* Surface / chrome tokens (flip per appearance mode) */
   --app-bg: #F6F6F8;
@@ -191,6 +192,11 @@ html,
 body,
 .p-component {
   font-family: var(--font-family);
+}
+
+/* Page titles use the Manifa variable face while body copy stays in Ghawar. */
+h1 {
+  font-family: var(--font-family-manifa);
 }
 
 body {
@@ -375,7 +381,7 @@ p-tag.app-status-tag .p-tag-label {
    ever reappears there on these selectors it will silently win — grep before
    adding one. */
 .offer-tile__value {
-  font-family: "Manifa Pro 2", var(--font-family);
+  font-family: var(--font-family-manifa);
   font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 700;

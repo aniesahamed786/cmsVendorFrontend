@@ -17,10 +17,6 @@
         <i class="pi" [class.pi-sun]="isDark()" [class.pi-moon]="!isDark()"></i>
         {{ (isDark() ? 'settingsPage.theme.light' : 'settingsPage.theme.dark') | translate }}
       </button>
-      <a class="login-page__header-link" href="#">
-        <i class="pi pi-headphones"></i>
-        {{ 'login.support' | translate }}
-      </a>
     </nav>
   </header>
 
@@ -74,13 +70,6 @@
 
       </form>
 
-      <hr class="login-card__divider" />
-
-      <p class="login-card__support">
-        {{ 'login.troubleLoggingIn' | translate }}
-        <a class="login-card__link" href="#">{{ 'login.contactSupport' | translate }}</a>
-      </p>
-
     </section>
 
     <div class="login-page__security">
@@ -104,8 +93,7 @@
     </div>
 
     <nav class="login-page__footer-links">
-      <a class="login-page__footer-link" href="#">{{ 'login.privacyPolicy' | translate }}</a>
-      <a class="login-page__footer-link" href="#">{{ 'login.termsOfService' | translate }}</a>
+      <a class="login-page__footer-link" routerLink="/legal/privacy">{{ 'login.privacyPolicy' | translate }}</a>
     </nav>
 
     <small class="login-page__copyright">{{ 'login.copyright' | translate }}</small>

@@ -1,0 +1,83 @@
+.legal-page {
+  min-height: 100vh;
+  padding: 1.5rem 2rem 2.5rem;
+  background: var(--app-bg);
+  color: var(--app-text);
+
+  &__panel {
+    max-width: 60rem;
+    margin: 1rem auto 0;
+    padding: 2rem;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+  }
+
+  &__title {
+    margin: 0 0 1.5rem;
+    font-family: "Manifa Pro 2", var(--font-family);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+  }
+
+  &__state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 1rem;
+    margin: 0;
+    color: var(--app-muted);
+  }
+
+  /* .app-skeleton (styles.scss) owns the fill and the pulse. */
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__skeleton-line {
+    height: 0.95rem;
+
+    &--heading {
+      height: 1.4rem;
+      margin-top: 0.75rem;
+    }
+  }
+
+  &__text {
+    line-height: 1.7;
+    word-break: break-word;
+  }
+
+  &__pdf {
+    display: block;
+    width: 100%;
+    height: 75vh;
+    border: 1px solid var(--app-border);
+  }
+
+  &__link {
+    display: inline-block;
+    margin-top: 0.75rem;
+    color: var(--app-primary);
+  }
+}
+
+/* innerHTML content is outside the component's style scope. */
+:host ::ng-deep .legal-page__text {
+  :is(h1, h2, h3, h4) { margin: 1.5rem 0 0.75rem; line-height: 1.3; }
+  p { margin: 0 0 1rem; }
+  :is(ul, ol) { margin: 0 0 1rem; padding-inline-start: 1.5rem; }
+  ul { list-style: disc outside; }
+  ol { list-style: decimal outside; }
+  a { color: var(--app-primary); }
+}
+
+@media (max-width: 768px) {
+  .legal-page {
+    padding: 1rem;
+
+    &__panel { padding: 1.25rem; }
+  }
+}

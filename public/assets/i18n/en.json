@@ -1717,9 +1717,14 @@
       "offersDeactivated": "{{count}} offer(s) will be deactivated: {{titles}}"
     }
   },
+  "legalPages": {
+    "loading": "Loading…",
+    "error": "This page couldn't be loaded. Please try again later.",
+    "empty": "This page hasn't been published yet.",
+    "openPdf": "Open PDF in a new window"
+  },
   "login": {
     "language": "العربية",
-    "support": "Support",
     "title": "Vendor Portal",
     "subtitle": "Enter your credentials to access the secure portal.",
     "email": "Business Email",
@@ -1729,13 +1734,10 @@
     "rememberMe": "Keep me signed in for 30 days",
     "signIn": "Sign In",
     "signingIn": "Signing In...",
-    "troubleLoggingIn": "Trouble logging in?",
-    "contactSupport": "Contact Support",
     "securityEnterprise": "Enterprise Grade Security",
     "securitySsl": "SSL Encrypted",
     "privacyPolicy": "Privacy Policy",
-    "termsOfService": "Terms of Service",
-    "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
+        "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
     "invalidCredentials": "Invalid email or password.",
     "accountInactive": "Your account is not active. Contact your vendor administrator.",
     "sessionExpired": "Your session expired. Please sign in again."

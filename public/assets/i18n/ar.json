@@ -1719,9 +1719,14 @@
       "offersDeactivated": "سيتم إيقاف {{count}} من العروض: {{titles}}"
     }
   },
+  "legalPages": {
+    "loading": "جارٍ التحميل…",
+    "error": "تعذّر تحميل هذه الصفحة. يُرجى المحاولة لاحقًا.",
+    "empty": "لم يتم نشر هذه الصفحة بعد.",
+    "openPdf": "فتح ملف PDF في نافذة جديدة"
+  },
   "login": {
     "language": "English",
-    "support": "الدعم",
     "title": "بوابة البائعين",
     "subtitle": "أدخل بيانات الدخول للوصول إلى البوابة الآمنة.",
     "email": "البريد الإلكتروني للنشاط التجاري",
@@ -1731,13 +1736,10 @@
     "rememberMe": "أبقني مسجّلاً لمدة 30 يوماً",
     "signIn": "تسجيل الدخول",
     "signingIn": "جاري تسجيل الدخول...",
-    "troubleLoggingIn": "تواجه مشكلة في تسجيل الدخول؟",
-    "contactSupport": "التواصل مع الدعم",
     "securityEnterprise": "أمان بمستوى المؤسسات",
     "securitySsl": "تشفير SSL",
     "privacyPolicy": "سياسة الخصوصية",
-    "termsOfService": "شروط الخدمة",
-    "copyright": "© 2024 Corporate Systems Inc. جميع الحقوق محفوظة.",
+        "copyright": "© 2024 Corporate Systems Inc. جميع الحقوق محفوظة.",
     "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
     "accountInactive": "حسابك غير مفعّل. يرجى التواصل مع مسؤول حساب البائع.",
     "sessionExpired": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى."
