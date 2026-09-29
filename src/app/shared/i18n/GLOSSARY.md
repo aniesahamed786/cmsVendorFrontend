@@ -58,6 +58,8 @@ instead, say so — it was left alone as channel vocabulary.
 | English | Arabic |
 |---|---|
 | Offer | عرض |
+| View in … (notification link) | عرض في … |
+| Open link | فتح الرابط |
 | Discount | خصم |
 | Discount code | رمز الخصم |
 | Start date | تاريخ البدء |

@@ -1739,7 +1739,7 @@
     "securityEnterprise": "أمان بمستوى المؤسسات",
     "securitySsl": "تشفير SSL",
     "privacyPolicy": "سياسة الخصوصية",
-        "copyright": "© 2024 Corporate Systems Inc. جميع الحقوق محفوظة.",
+    "copyright": "© 2024 Corporate Systems Inc. جميع الحقوق محفوظة.",
     "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
     "accountInactive": "حسابك غير مفعّل. يرجى التواصل مع مسؤول حساب البائع.",
     "sessionExpired": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى."
@@ -1875,7 +1875,13 @@
     "markAllAsRead": "تحديد الكل كمقروء",
     "empty": "لا توجد تنبيهات بعد",
     "messages": "الرسائل",
-    "loading": "جارٍ التحميل…"
+    "loading": "جارٍ التحميل…",
+    "goTo": {
+      "messagingCenter": "عرض في مركز الرسائل",
+      "requestCenter": "عرض في مركز الطلبات",
+      "offer": "عرض العرض",
+      "externalLink": "فتح الرابط"
+    }
   },
   "roles": {
     "VENDOR_ADMIN": "مسؤول البائع",

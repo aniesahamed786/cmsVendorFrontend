@@ -126,19 +126,6 @@
   overflow-y: auto;
 }
 
-.notif-section-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.125rem;
-  background: color-mix(in srgb, var(--app-surface) 86%, var(--app-border) 14%);
-  color: var(--app-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 .notif-item {
   position: relative;
   display: flex;
@@ -212,6 +199,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.notif-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--app-primary);
+}
+
+.notif-link .pi {
+  font-size: 0.625rem;
+}
+
+:host-context(html[lang='ar']) .notif-link .pi {
+  transform: scaleX(-1);
+}
+
+/* --app-primary has no dark override and is too dark on the dark surface — lighten for AA. */
+:host-context(.dark-mode) .notif-link {
+  color: color-mix(in srgb, var(--app-primary) 45%, #ffffff);
 }
 
 .notif-time {

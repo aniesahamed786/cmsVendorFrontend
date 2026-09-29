@@ -33,31 +33,29 @@
             </div>
           }
 
-          @for (section of notificationSections(); track section.key) {
-            @if (section.rows.length) {
-              <div class="notif-section-label">
-                <i class="pi" [ngClass]="section.icon"></i>
-                <span>{{ section.key | translate }}</span>
-              </div>
-              @for (notification of section.rows; track notification.id) {
-                <button type="button" class="notif-item" [class.notif-item--unread]="!notification.isRead"
-                  (click)="onNotificationClick(notification)">
-                  <span class="notif-dot"></span>
-                  <span class="notif-icon">
-                    @if (notification.image) {
-                      <img [src]="notification.image" alt="" />
-                    } @else {
-                      <i class="pi" [ngClass]="notificationIcon(notification)"></i>
-                    }
+          @for (notification of notificationRows(); track notification.id) {
+            <button type="button" class="notif-item" [class.notif-item--unread]="!notification.isRead"
+              (click)="onNotificationClick(notification)">
+              <span class="notif-dot"></span>
+              <span class="notif-icon">
+                @if (notification.image) {
+                  <img [src]="notification.image" alt="" />
+                } @else {
+                  <i class="pi" [ngClass]="notificationIcon(notification)"></i>
+                }
+              </span>
+              <span class="notif-content">
+                <span class="notif-title" [title]="notificationTitle(notification)">{{ notificationTitle(notification) }}</span>
+                <span class="notif-desc" [title]="notificationDescription(notification)">{{ notificationDescription(notification) }}</span>
+                @if (notificationTarget(notification); as target) {
+                  <span class="notif-link">
+                    {{ target.labelKey | translate }}
+                    <i class="pi pi-arrow-up-right" aria-hidden="true"></i>
                   </span>
-                  <span class="notif-content">
-                    <span class="notif-title" [title]="notificationTitle(notification)">{{ notificationTitle(notification) }}</span>
-                    <span class="notif-desc" [title]="notificationDescription(notification)">{{ notificationDescription(notification) }}</span>
-                  </span>
-                  <span class="notif-time">{{ timeAgo(notification.createdAt) }}</span>
-                </button>
-              }
-            }
+                }
+              </span>
+              <span class="notif-time">{{ timeAgo(notification.createdAt) }}</span>
+            </button>
           }
         </div>
       </div>

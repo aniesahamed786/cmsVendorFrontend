@@ -40,12 +40,12 @@ export class Navbar {
   readonly isArabic = this.i18n.isRtl;
 
   private readonly allNotifications = this.notificationCenter.notifications;
-  readonly messages = this.notificationCenter.messages;
+  private readonly messages = this.notificationCenter.messages;
   readonly notificationsLoading = this.notificationCenter.loading;
 
   /**
    * The bell is a second way into a page. A Messages row opens Messaging Center, so an account
-   * without that permission is shown neither the section nor its unread count — a badge for
+   * without that permission is shown neither the row nor its unread count — a badge for
    * something you can't open is just a dead end.
    */
   private readonly canViewMessaging = computed(() => this.authService.canView('messaging_center'));
@@ -53,7 +53,7 @@ export class Navbar {
     this.authService.canViewRequestCenter(),
   );
 
-  readonly notifications = computed(() =>
+  private readonly notifications = computed(() =>
     this.allNotifications().filter(
       (notification) =>
         this.canViewRequestCenter() ||
@@ -61,23 +61,16 @@ export class Navbar {
     ),
   );
 
-  readonly notificationSections = computed(() => [
-    ...(this.canViewMessaging()
-      ? [{ key: 'notifications.messages', icon: 'pi-comments', rows: this.messages() }]
-      : []),
-    { key: 'notifications.title', icon: 'pi-bell', rows: this.notifications() },
-  ]);
-
-  readonly unreadCount = computed(() =>
-    this.notificationSections().reduce(
-      (total, section) => total + section.rows.filter((row) => !row.isRead).length,
-      0,
+  /** One list, newest first — the row icon already tells a message from a notification. */
+  readonly notificationRows = computed(() =>
+    [...(this.canViewMessaging() ? this.messages() : []), ...this.notifications()].sort(
+      (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
     ),
   );
 
-  readonly hasNotificationItem = computed(() =>
-    this.notificationSections().some((section) => section.rows.length > 0),
-  );
+  readonly unreadCount = computed(() => this.notificationRows().filter((row) => !row.isRead).length);
+
+  readonly hasNotificationItem = computed(() => this.notificationRows().length > 0);
 
   @ViewChild('profileMenu') profileMenu!: Popover;
   @ViewChild('notificationMenu') notificationMenu!: Popover;
@@ -174,6 +167,10 @@ export class Navbar {
   notificationIcon(notification: VendorNotification): string {
     if (notification.type === 'MESSAGE') return 'pi-comments';
     return notification.type === 'SYSTEM' ? 'pi-cog' : 'pi-bell';
+  }
+
+  notificationTarget(notification: VendorNotification) {
+    return this.notificationCenter.target(notification);
   }
 
   notificationTitle(notification: VendorNotification): string {

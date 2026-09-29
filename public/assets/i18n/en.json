@@ -1737,7 +1737,7 @@
     "securityEnterprise": "Enterprise Grade Security",
     "securitySsl": "SSL Encrypted",
     "privacyPolicy": "Privacy Policy",
-        "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
+    "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
     "invalidCredentials": "Invalid email or password.",
     "accountInactive": "Your account is not active. Contact your vendor administrator.",
     "sessionExpired": "Your session expired. Please sign in again."
@@ -1873,7 +1873,13 @@
     "markAllAsRead": "Mark all as read",
     "empty": "No notifications yet",
     "messages": "Messages",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "goTo": {
+      "messagingCenter": "View in Messaging Center",
+      "requestCenter": "View in Request Center",
+      "offer": "View offer",
+      "externalLink": "Open link"
+    }
   },
   "roles": {
     "VENDOR_ADMIN": "Vendor Admin",

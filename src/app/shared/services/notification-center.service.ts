@@ -112,17 +112,30 @@ export class NotificationCenterService {
       this.markAsRead(notification.id);
     }
 
+    const target = this.target(notification);
+    if (target?.route) {
+      void this.router.navigate(target.route);
+    } else if (target?.url) {
+      window.open(target.url, '_blank', 'noopener');
+    }
+  }
+
+  /**
+   * Where a row leads, and the `notifications.goTo.*` key naming it. `open()` and the row's
+   * "View in …" hint both read this, so the label can't promise a page the click doesn't open.
+   */
+  target(
+    notification: VendorNotification,
+  ): { labelKey: string; route?: string[]; url?: string } | null {
     const ticketId =
       notification.ticketId ||
       (notification.type === 'MESSAGE' ? notification.actionValue : '');
     if (ticketId) {
-      void this.router.navigate(['/messaging-center', ticketId]);
-      return;
+      return { labelKey: 'notifications.goTo.messagingCenter', route: ['/messaging-center', ticketId] };
     }
 
     if (notification.type === 'MESSAGE') {
-      void this.router.navigate(['/messaging-center']);
-      return;
+      return { labelKey: 'notifications.goTo.messagingCenter', route: ['/messaging-center'] };
     }
 
     const isRequestAction = this.isRequestNotification(notification);
@@ -133,13 +146,11 @@ export class NotificationCenterService {
         : '');
 
     if (requestId) {
-      void this.router.navigate(['/request-center', requestId]);
-      return;
+      return { labelKey: 'notifications.goTo.requestCenter', route: ['/request-center', requestId] };
     }
 
     if (isRequestAction) {
-      void this.router.navigate(['/request-center']);
-      return;
+      return { labelKey: 'notifications.goTo.requestCenter', route: ['/request-center'] };
     }
 
     const offerId =
@@ -147,13 +158,17 @@ export class NotificationCenterService {
       (notification.actionType === 'Open Specific Offer' ? notification.actionValue : '');
 
     if (offerId) {
-      void this.router.navigate(['/offers', offerId]);
-    } else if (notification.actionType === 'Open External link' && notification.actionValue) {
+      return { labelKey: 'notifications.goTo.offer', route: ['/offers', offerId] };
+    }
+
+    if (notification.actionType === 'Open External link' && notification.actionValue) {
       const externalUrl = this.normalizeExternalUrl(notification.actionValue);
       if (externalUrl) {
-        window.open(externalUrl, '_blank', 'noopener');
+        return { labelKey: 'notifications.goTo.externalLink', url: externalUrl };
       }
     }
+
+    return null;
   }
 
   private normalizeExternalUrl(value: string): string | null {
