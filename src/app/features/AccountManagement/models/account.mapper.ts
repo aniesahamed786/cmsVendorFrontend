@@ -19,7 +19,6 @@ export function buildAccountPayload(value: AccountFormValue): CreateAccountPaylo
     name: (value.name ?? '').trim(),
     email: (value.email ?? '').trim().toLowerCase(),
     phone: (value.phone ?? '').trim(),
-    accountType: 'SUB_ACCOUNT',
     permissions: [...(value.permissions ?? [])],
     locationIds: [...(value.locationIds ?? [])],
     categoryIds: [...(value.categoryIds ?? [])],

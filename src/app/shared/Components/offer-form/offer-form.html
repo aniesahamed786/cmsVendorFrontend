@@ -633,7 +633,14 @@
             [disabled]="isBranchSelectionDisabled()">
             <ng-template pTemplate="item" let-option>
               <div class="offer-form__col">
-                <span class="offer-form__option-label">{{ option.label }}</span>
+                <span class="offer-form__option-label">{{ option.label }}
+                  @if (option.isPwdAvailable) {
+                  <span class="app-svg-icon offer-form__pwd-icon" [style.webkitMaskImage]="pwdIconMask()"
+                    [style.maskImage]="pwdIconMask()" role="img"
+                    [attr.aria-label]="'offerForm.label.pwdFriendly' | translate"
+                    [attr.title]="'offerForm.label.pwdFriendly' | translate"></span>
+                  }
+                </span>
                 @if (option.city || option.address) {
                 <span class="offer-form__option-meta">
                   {{ option.city }} @if (option.city && option.address) {

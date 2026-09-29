@@ -162,7 +162,18 @@
             display="chip" [placeholder]="'accountManagement.form.placeholder.branches' | translate"
             [emptyMessage]="'accountManagement.form.empty.branches' | translate"
             styleClass="account-form__select" panelStyleClass="account-form__overlay-panel"
-            appendTo="body" />
+            appendTo="body">
+            <ng-template pTemplate="item" let-option>
+              <span>{{ option.label }}</span>
+              @if (option.isPwdAvailable) {
+              <span class="app-svg-icon account-form__pwd-icon"
+                [style.webkitMaskImage]="'url(assets/svg/PWD/PWD.svg)'"
+                [style.maskImage]="'url(assets/svg/PWD/PWD.svg)'" role="img"
+                [attr.aria-label]="'branchForm.label.pwdFriendly' | translate"
+                [attr.title]="'branchForm.label.pwdFriendly' | translate"></span>
+              }
+            </ng-template>
+          </p-multiSelect>
           @if (showError('locationIds', 'required')) {
           <p class="account-form__error">{{ 'accountManagement.form.error.branchesRequired' | translate }}</p>
           }

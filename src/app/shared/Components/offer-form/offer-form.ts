@@ -363,7 +363,7 @@ export class OfferForm {
   });
   categories = signal<Category[]>([]);
   vendorLocations = signal<
-    Array<{ id: string; label: string; address?: string; city?: string }>
+    Array<{ id: string; label: string; address?: string; city?: string; isPwdAvailable?: boolean }>
   >([]);
   locationsLoading = signal(false);
   readonly vendorsLoading = signal(false);
@@ -993,6 +993,7 @@ export class OfferForm {
               googleMapLink: loc?.googleMapLink || "",
               latitude: loc?.latitude,
               longitude: loc?.longitude,
+              isPwdAvailable: !!loc?.isPwdAvailable,
             }))
             .filter((opt: any) => !!opt.id);
 

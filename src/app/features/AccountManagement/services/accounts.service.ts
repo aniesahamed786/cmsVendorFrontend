@@ -79,7 +79,11 @@ export class AccountsService {
       map((res) => {
         const rows: VendorLocation[] = Array.isArray(res) ? res : res?.locations ?? [];
         return (rows ?? [])
-          .map((row) => ({ label: this.branchLabel(row), value: row.locationId }))
+          .map((row) => ({
+            label: this.branchLabel(row),
+            value: row.locationId,
+            isPwdAvailable: row.isPwdAvailable === true || row.isPwdAvailable === 'true',
+          }))
           .filter((o) => !!o.value);
       }),
       catchError((err) => {

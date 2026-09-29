@@ -26,7 +26,6 @@ export interface CreateSubAccountPayload {
   name: string;
   email: string;
   phone: string;
-  accountType: 'SUB_ACCOUNT';
   permissions: string[];
   locationIds: string[];
   categoryIds: string[];
@@ -51,6 +50,7 @@ export interface VendorLocation {
   totalOffers: number;
   representativeName: string;
   representativeNameAr: string;
+  isPwdAvailable?: boolean | string;
 }
 
 export interface VendorCategory {
@@ -74,6 +74,7 @@ export interface PaginatedResponse<T> {
 export interface SelectOption {
   label: string;
   value: string;
+  isPwdAvailable?: boolean;
 }
 
 export type AccountStatus = 'ACTIVE' | 'SUSPENDED';

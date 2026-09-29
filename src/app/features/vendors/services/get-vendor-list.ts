@@ -211,6 +211,7 @@ export class GetVendorList {
              representativeName: loc?.representativeName ?? '',
              representativeNameAr: loc?.representativeNameAr ?? '',
              totalOffers: loc?.totalOffers,
+             isPwdAvailable: loc?.isPwdAvailable === true || loc?.isPwdAvailable === 'true',
              vendorLogo: res?.vendorLogo,
            }));
          }),
