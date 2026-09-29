@@ -70,8 +70,8 @@ export class NotificationCenterService {
       titleAr: n.title_ar ?? '',
       description: n.description ?? '',
       descriptionAr: n.description_ar ?? '',
-      // Relative paths come back from the media service; make them absolute.
-      image: image && !/^https?:/i.test(image) ? `${this.baseUrl}${image}` : image,
+      // The image proxy already adds the CMS vendor API path.
+      image: image && !/^https?:/i.test(image) ? `${environment.backendUrl}${image}` : image,
       isRead: n.isRead ?? false,
       createdAt: createdAt ?? new Date().toISOString(),
       type,
@@ -149,7 +149,31 @@ export class NotificationCenterService {
     if (offerId) {
       void this.router.navigate(['/offers', offerId]);
     } else if (notification.actionType === 'Open External link' && notification.actionValue) {
-      window.open(notification.actionValue, '_blank', 'noopener');
+      const externalUrl = this.normalizeExternalUrl(notification.actionValue);
+      if (externalUrl) {
+        window.open(externalUrl, '_blank', 'noopener');
+      }
+    }
+  }
+
+  private normalizeExternalUrl(value: string): string | null {
+    const trimmedValue = value.trim();
+    if (!trimmedValue) return null;
+
+    // Also tolerate a Markdown-formatted link if one is returned by the API.
+    const markdownLink = trimmedValue.match(/^\[[^\]]*\]\((https?:\/\/[^)]+)\)$/i);
+    const link = markdownLink?.[1] ?? trimmedValue;
+    const absoluteLink = /^https?:\/\//i.test(link)
+      ? link
+      : link.startsWith('//')
+        ? `https:${link}`
+        : `https://${link}`;
+
+    try {
+      const url = new URL(absoluteLink);
+      return url.protocol === 'http:' || url.protocol === 'https:' ? url.toString() : null;
+    } catch {
+      return null;
     }
   }
 }
