@@ -291,9 +291,10 @@ export class Offers implements OnInit {
   });
 
   openRenew(offer: Offer): void {
-    this.renewPeriod.set(12);
-    this.renewCustomDate.set(null);
     this.renewTarget.set(offer);
+    this.renewPeriod.set(12);
+    // Pre-filled so picking "Custom" never leaves the confirm button doing nothing.
+    this.renewCustomDate.set(this.renewMinDate());
   }
 
   submitRenew(): void {
