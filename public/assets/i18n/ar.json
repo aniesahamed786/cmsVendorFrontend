@@ -290,10 +290,10 @@
     "value": {
       "percentage": "نسبة مئوية",
       "fixedAmount": "مبلغ ثابت",
-      "online": "عبر الإنترنت",
+      "digital": "رقمي",
       "inStore": "في المتجر",
       "hybrid": "مختلط",
-      "hybridLong": "في المتجر وعبر الإنترنت",
+      "hybridLong": "في المتجر ورقمي",
       "active": "نشط",
       "scheduled": "مجدول",
       "expired": "منتهي",
@@ -311,6 +311,7 @@
     "title": "مركز الطلبات",
     "subtitle": "إدارة ومتابعة جميع طلباتك.",
     "cardTitle": "قائمة الطلبات",
+    "searchPlaceholder": "ابحث في الطلبات...",
     "rowActionsAria": "إجراءات الصف",
     "empty": "لا توجد طلبات.",
     "stats": {

@@ -290,10 +290,10 @@
     "value": {
       "percentage": "Percentage",
       "fixedAmount": "Fixed Amount",
-      "online": "Online",
+      "digital": "Digital",
       "inStore": "In-Store",
-      "hybrid": "Online and In-Store",
-      "hybridLong": "In-Store & Online",
+      "hybrid": "Digital and In-Store",
+      "hybridLong": "In-Store & Digital",
       "active": "Active",
       "scheduled": "Scheduled",
       "expired": "Expired",
@@ -311,6 +311,7 @@
     "title": "Request Center",
     "subtitle": "Manage and monitor all your request.",
     "cardTitle": "Request List",
+    "searchPlaceholder": "Search requests...",
     "rowActionsAria": "Row actions",
     "empty": "No requests found.",
     "stats": {

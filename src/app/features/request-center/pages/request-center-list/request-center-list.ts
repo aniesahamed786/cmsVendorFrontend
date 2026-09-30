@@ -2,13 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { RequestCenterService } from '../../services/request-center.service';
 import { RequestCenterApiService } from '../../services/request-center-api.service';
@@ -28,7 +30,7 @@ type TabKey = 'all' | 'completed' | 'incomplete';
 @Component({
   selector: 'app-request-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp, AppBottomSheet, OfferTile],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp, AppBottomSheet, AppSearch, OfferTile],
   templateUrl: './request-center-list.html',
   styleUrl: './request-center-list.scss',
 })
@@ -72,8 +74,23 @@ export class RequestCenterList {
   readonly pageSize = signal(10);
   readonly totalRecords = signal(0);
 
+  // Server-side search (backend matches request id, title, category and action).
+  readonly search = signal('');
+  private readonly searchInput = new Subject<string>();
+
   constructor() {
     this.loadMetrics();
+    this.searchInput
+      .pipe(debounceTime(350), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe((value) => {
+        this.search.set(value);
+        this.first.set(0);
+        this.loadRequests();
+      });
+  }
+
+  onSearchInput(value: string): void {
+    this.searchInput.next(value);
   }
 
   /**
@@ -128,6 +145,7 @@ export class RequestCenterList {
         sortBy: this.sortBy(),
         sortOrder: this.sortOrder(),
         status: statusQuery,
+        search: this.search().trim() || undefined,
       })
       .pipe(finalize(() => this.tableLoading.set(false)))
       .subscribe({
@@ -136,8 +154,8 @@ export class RequestCenterList {
           this.requestCenterService.setRows(mapped);
           this.totalRecords.set(res.total);
 
-          // If no sub-filter is applied, synchronize active tab count
-          if (!filter) {
+          // If no sub-filter or search is applied, synchronize active tab count
+          if (!filter && !this.search().trim()) {
             this.tabCounts.update((counts) => {
               if (tab === 'incomplete') return { ...counts, incomplete: res.total };
               if (tab === 'completed') return { ...counts, completed: res.total };

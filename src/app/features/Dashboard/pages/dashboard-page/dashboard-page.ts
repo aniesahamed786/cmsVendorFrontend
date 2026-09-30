@@ -77,7 +77,7 @@ export class DashboardPage implements OnInit {
 
   readonly offerModeInfo = computed(() => {
     const offer = this.topOffer();
-    if (!offer) return { labelKey: 'offers.value.online', icon: 'pi pi-globe' };
+    if (!offer) return { labelKey: 'offers.value.digital', icon: 'pi pi-globe' };
     const raw = Array.isArray(offer.offerMode)
       ? offer.offerMode.join(' ').toLowerCase()
       : String(offer.offerMode ?? '').toLowerCase();
@@ -91,7 +91,7 @@ export class DashboardPage implements OnInit {
     if (hasStore) {
       return { labelKey: 'offers.value.inStore', icon: 'pi pi-shop' };
     }
-    return { labelKey: 'offers.value.online', icon: 'pi pi-globe' };
+    return { labelKey: 'offers.value.digital', icon: 'pi pi-globe' };
   });
 
   /** Template helpers — labels are i18n keys so a language switch re-renders them. */

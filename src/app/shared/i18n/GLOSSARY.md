@@ -32,7 +32,7 @@ place. Two things deliberately still say "store" and **must not be renamed**:
 
 | Keep | Why |
 |---|---|
-| `In-Store`, `in store`, `in-store` | A redemption *channel*, the opposite of Online/Digital — not a place. `'in store'` is also the literal API payload value in `OfferModePayload`. |
+| `In-Store`, `in store`, `in-store` | A redemption *channel*, the opposite of Digital — not a place. `'in store'` is also the literal API payload value in `OfferModePayload`. |
 | `MessagingCenterStore`, `messaging-center-store.ts`, `inject(...)` as `store` | A state container. Nothing to do with shops. |
 
 `offer-form.ts:1904` pairs the channel label as `["in-store", "في المتجر"]`.

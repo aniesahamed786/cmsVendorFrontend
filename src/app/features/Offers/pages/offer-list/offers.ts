@@ -7,7 +7,7 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { OnInit } from '@angular/core';
 
-type Availability = 'Online' | 'In-Store' | 'Hybrid';
+type Availability = 'Digital' | 'In-Store' | 'Hybrid';
 type OfferStatus = 'Active' | 'Scheduled' | 'Expired' | 'Inactive';
 
 interface Offer {
@@ -151,7 +151,7 @@ export class Offers implements OnInit {
 
   readonly availabilityOptions = this.options<Availability | null>([
     ['offers.filter.allAvailability', null],
-    ['offers.value.online', 'Online'],
+    ['offers.value.digital', 'Digital'],
     ['offers.value.inStore', 'In-Store'],
     ['offers.value.hybrid', 'Hybrid'],
   ]);
@@ -272,7 +272,7 @@ export class Offers implements OnInit {
 
   availabilityIcons(availability: Availability): string[] {
     switch (availability) {
-      case 'Online':
+      case 'Digital':
         return ['assets/svg/Offers/offer-details/online.svg'];
       case 'In-Store':
         return ['assets/svg/Offers/offer-details/in-store.svg'];
@@ -288,11 +288,11 @@ export class Offers implements OnInit {
 
   // private buildRows(): Offer[] {
   //   const seed: Omit<Offer, 'id' | 'startDate' | 'expirationDate'>[] = [
-  //     { title: 'Summer Sale 2026', discount: '50% Off', discountType: 'Percentage', availability: 'Online', branch: 'Main Branch', status: 'Active' },
+  //     { title: 'Summer Sale 2026', discount: '50% Off', discountType: 'Percentage', availability: 'Digital', branch: 'Main Branch', status: 'Active' },
   //     { title: 'Black Friday Deal', discount: '$25 Fixed', discountType: 'Fixed Amount', availability: 'In-Store', branch: 'Downtown', status: 'Scheduled' },
   //     { title: 'Weekend Special', discount: '30% Off', discountType: 'Percentage', availability: 'Hybrid', branch: 'Mall', status: 'Active' },
   //     { title: 'Student Discount', discount: '15% Off', discountType: 'Percentage', availability: 'In-Store', branch: 'Downtown', status: 'Active' },
-  //     { title: 'Holiday Bundle', discount: '$100 Tiered', discountType: 'Fixed Amount', availability: 'Online', branch: 'Mall', status: 'Scheduled' },
+  //     { title: 'Holiday Bundle', discount: '$100 Tiered', discountType: 'Fixed Amount', availability: 'Digital', branch: 'Mall', status: 'Scheduled' },
   //   ];
   //   return seed.map((o, i) => {
   //     const start = new Date(2026, i, 10 + i);
@@ -313,7 +313,7 @@ export class Offers implements OnInit {
         search: this.search().trim() || undefined,
         discountType: this.discountType() === 'Percentage' ? 'percentage' : this.discountType() ? 'fixed' : undefined,
         status: this.status() ?? undefined,
-        availability: this.availability() === 'Online' ? 'digital' : this.availability() === 'In-Store' ? 'in-store' : this.availability() ? 'hybrid' : undefined,
+        availability: this.availability() === 'Digital' ? 'digital' : this.availability() === 'In-Store' ? 'in-store' : this.availability() ? 'hybrid' : undefined,
         sortBy: sortBy === 'title' || sortBy === 'discount' || sortBy === 'startDate' || sortBy === 'expiryDate' ? sortBy : undefined,
         sortOrder: this.sortOrder() === -1 ? 'desc' : 'asc',
       })
@@ -333,14 +333,14 @@ export class Offers implements OnInit {
 
   private mapOffer = (offer: OfferApi): Offer => {
     const av = (offer.availability || []).map((a) => a.toLowerCase());
-    const hasOnline = av.includes('online') || av.includes('digital');
+    const hasDigital = av.includes('online') || av.includes('digital');
     const hasInStore = av.includes('in-store') || av.includes('instore');
 
     let availability: Availability = 'In-Store';
-    if (hasOnline && hasInStore) {
+    if (hasDigital && hasInStore) {
       availability = 'Hybrid';
-    } else if (hasOnline) {
-      availability = 'Online';
+    } else if (hasDigital) {
+      availability = 'Digital';
     }
 
     return {
@@ -372,7 +372,7 @@ export class Offers implements OnInit {
 const VALUE_KEYS: Record<string, string> = {
   Percentage: 'offers.value.percentage',
   'Fixed Amount': 'offers.value.fixedAmount',
-  Online: 'offers.value.online',
+  Digital: 'offers.value.digital',
   'In-Store': 'offers.value.inStore',
   Hybrid: 'offers.value.hybrid',
   Active: 'offers.value.active',
@@ -380,5 +380,4 @@ const VALUE_KEYS: Record<string, string> = {
   Expired: 'offers.value.expired',
   Inactive: 'offers.value.inactive',
 };
-
 

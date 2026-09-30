@@ -51,6 +51,20 @@
     color: var(--app-text);
   }
 
+  &__toolbar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
   &__toolbar-row {
     display: flex;
     align-items: flex-end;
