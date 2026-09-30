@@ -173,27 +173,7 @@
     margin-block-end: 1.375rem;
   }
 
-  /* Not named __label-* on purpose: the global [class*="__label"] rule would turn
-     this row into a block. */
-  &__field-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
   /* Colour/size/weight/gap of __label come from styles.scss — nothing to add here. */
-
-  &__link {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--app-primary);
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 
   /* Full width is layout, not a look — no new button variant needed. */
   &__submit {
