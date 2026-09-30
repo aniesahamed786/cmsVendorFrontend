@@ -119,4 +119,5 @@ export interface AccountListQuery {
   page: number;
   pageSize: number;
   accountType?: AccountType;
+  search?: string;
 }

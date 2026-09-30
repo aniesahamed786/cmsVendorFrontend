@@ -12,9 +12,11 @@ import {
 import { RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
-import { Observable, finalize, merge, of, switchMap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, Subject, debounceTime, distinctUntilChanged, finalize, merge, of, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { Button } from '../../../../shared/Components/button/button';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -49,7 +51,7 @@ interface SelectOption {
 @Component({
   selector: 'app-redemption',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, PrimeUIModules, Button, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, PrimeUIModules, AppSearch, Button, TranslatePipe],
   templateUrl: './redemption.html',
   styleUrl: './redemption.scss',
 })
@@ -106,6 +108,14 @@ export class Redemption {
   /** Which transaction type the list is filtered to. */
   readonly listType = signal<RedemptionTransactionType>('SINGLE');
   @ViewChild(Table) private listTable!: Table;
+
+  // Server-side search: offer title (EN/AR), badge, mobile, membershipId. API caps it at 120 chars.
+  readonly search = signal('');
+  private readonly searchInput = new Subject<string>();
+
+  onSearchInput(value: string): void {
+    this.searchInput.next(value.trim().slice(0, 120));
+  }
 
   /** One skeleton-width modifier per column, so the loading row can't drift out of
    *  step with the header. COLLECTIVE drops membership ID and splits the date column. */
@@ -205,6 +215,14 @@ export class Redemption {
     )
       .pipe(switchMap(() => this.offersForDates()))
       .subscribe((offers) => this.activeOffers.set(asOfferArray(offers)));
+
+    this.searchInput
+      .pipe(debounceTime(350), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe((value) => {
+        this.search.set(value);
+        // reset() sends the paginator back to page 1 and re-emits onLazyLoad.
+        this.listTable.reset();
+      });
   }
 
   /** Re-reads the form, so one stream covers both SINGLE and COLLECTIVE. */
@@ -341,7 +359,7 @@ export class Redemption {
   private loadRedemptions(page: number, pageSize: number): void {
     this.listLoading.set(true);
     this.api
-      .getRedemptions(page, pageSize, this.listType())
+      .getRedemptions(page, pageSize, this.listType(), this.search() || undefined)
       .pipe(finalize(() => this.listLoading.set(false)))
       .subscribe({
         next: (res) => {

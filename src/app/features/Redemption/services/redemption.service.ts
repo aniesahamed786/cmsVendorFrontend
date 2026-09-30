@@ -41,9 +41,10 @@ export class RedemptionService {
     page: number,
     pageSize: number,
     transactionType: RedemptionTransactionType,
+    search?: string,
   ): Observable<RedemptionListResponse> {
     return this.http.get<RedemptionListResponse>(`${this.baseUrl}/getRedemptions`, {
-      params: { page, pageSize, transactionType },
+      params: { page, pageSize, transactionType, ...(search ? { search } : {}) },
     });
   }
 }

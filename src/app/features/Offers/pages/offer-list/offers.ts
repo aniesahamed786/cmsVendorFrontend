@@ -38,13 +38,20 @@ import { createCountUp } from '../../../../shared/animation/count-up';
 
 import { OffersService, OfferStats } from '../../services/offers.service';
 import { finalize } from 'rxjs';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { AuthService } from '../../../../core/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { RequestCenterApiService } from '../../../request-center/services/request-center-api.service';
+import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
+
+/** Renew pop-up choices: a month count added to the base date, or 'custom' for the date picker. */
+type RenewPeriod = 12 | 6 | 3 | 'custom';
 
 @Component({
   selector: 'app-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch, AppBottomSheet, TranslatePipe, OfferTile],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, Button, AppSearch, AppBottomSheet, TranslatePipe, OfferTile, ConfirmationPopUp],
   templateUrl: './offers.html',
   styleUrl: './offers.scss',
 })
@@ -57,6 +64,8 @@ export class Offers implements OnInit {
   private readonly i18n = inject(I18nService);
   private readonly offersService = inject(OffersService);
   private readonly offerListService = inject(OfferListService);
+  private readonly requestApi = inject(RequestCenterApiService);
+  private readonly messageService = inject(MessageService);
 
   readonly showMobileFilters = signal(false);
 
@@ -240,12 +249,92 @@ export class Offers implements OnInit {
     if (this.auth.canManage('offers')) {
       items.push(
         { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
-        { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync' },
+        { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync', command: () => { if (this.activeOffer) this.openRenew(this.activeOffer); } },
         { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
       );
     }
     return items;
   });
+
+  // ---- Renew request --------------------------------------------------------
+  // Renewing only moves the expiry date, so it raises the same OFFER/UPDATE request the edit
+  // page does, with `expiryDate` as the whole diff.
+  readonly renewTarget = signal<Offer | null>(null);
+  readonly renewPeriod = signal<RenewPeriod>(12);
+  readonly renewCustomDate = signal<Date | null>(null);
+  readonly renewSaving = signal(false);
+  readonly renewPeriods: { value: RenewPeriod; key: string }[] = [
+    { value: 12, key: 'offers.renew.oneYear' },
+    { value: 6, key: 'offers.renew.sixMonths' },
+    { value: 3, key: 'offers.renew.threeMonths' },
+    { value: 'custom', key: 'offers.renew.custom' },
+  ];
+
+  /** Extend from the current expiry, or from today when the offer has already expired. */
+  readonly renewBase = computed(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const expiry = this.renewTarget()?.expirationDate;
+    return expiry && expiry > today ? expiry : today;
+  });
+
+  /** Earliest pickable custom date: the day after the base. */
+  readonly renewMinDate = computed(() => {
+    const d = new Date(this.renewBase());
+    d.setDate(d.getDate() + 1);
+    return d;
+  });
+
+  readonly renewNewExpiry = computed<Date | null>(() => {
+    const period = this.renewPeriod();
+    return period === 'custom' ? this.renewCustomDate() : addMonths(this.renewBase(), period);
+  });
+
+  openRenew(offer: Offer): void {
+    this.renewPeriod.set(12);
+    this.renewCustomDate.set(null);
+    this.renewTarget.set(offer);
+  }
+
+  submitRenew(): void {
+    const offer = this.renewTarget();
+    const expiryDate = this.renewNewExpiry();
+    if (!offer || !expiryDate || this.renewSaving()) return;
+
+    this.renewSaving.set(true);
+    this.requestApi
+      .create({
+        entityType: 'OFFER',
+        entityId: offer.id,
+        requestType: 'UPDATE',
+        title: offer.title,
+        requestData: { expiryDate },
+        actionType: 'SUBMIT',
+      })
+      .pipe(finalize(() => this.renewSaving.set(false)))
+      .subscribe({
+        next: () => {
+          this.renewTarget.set(null);
+          this.messageService.add({
+            severity: 'success',
+            summary: this.i18n.t('offerForm.toast.requestSubmittedSummary'),
+            detail: this.i18n.t('offerForm.toast.requestSubmittedDetail'),
+            life: 3000,
+          });
+        },
+        // 409 = a request for this offer is already open; the backend message names it.
+        error: (err: HttpErrorResponse) => {
+          const isConflict = err?.status === 409;
+          this.messageService.add({
+            severity: isConflict ? 'warn' : 'error',
+            summary: this.i18n.t(isConflict ? 'offerForm.toast.requestConflictSummary' : 'offerForm.toast.requestFailedSummary'),
+            detail: extractApiErrorMessage(err) ?? this.i18n.t(isConflict ? 'offerForm.toast.requestConflictDetail' : 'offerForm.toast.requestFailedDetail'),
+            life: isConflict ? 10000 : 5000,
+            closable: true,
+          });
+        },
+      });
+  }
 
   // While loading, feed the table 5 falsy rows. PrimeNG's TableBody renders
   // `rowData ? bodyTemplate : loadingBodyTemplate` per row, so each null draws
@@ -367,6 +456,16 @@ export class Offers implements OnInit {
     if (!path) return '';
     return this.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
+}
+
+/** Adds months, clamping to the month's last day (Aug 31 + 6 → Feb 28, not Mar 3). */
+function addMonths(date: Date, months: number): Date {
+  const d = new Date(date);
+  const day = d.getDate();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + months);
+  d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
+  return d;
 }
 
 const VALUE_KEYS: Record<string, string> = {

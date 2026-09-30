@@ -49,6 +49,7 @@
     outline: none;
     color: var(--field-text);
     font-size: 0.95rem;
+    font-weight: 400;
     font-family: inherit;
     cursor: text;
 
@@ -198,6 +199,7 @@
       outline: none;
       color: var(--field-text);
       font-size: 0.95rem;
+      font-weight: 400;
       font-family: inherit;
 
       &::placeholder {

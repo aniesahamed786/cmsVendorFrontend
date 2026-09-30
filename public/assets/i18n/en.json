@@ -305,6 +305,16 @@
       "requestRenew": "Renew Offer (Request)",
       "createTicket": "Create Ticket",
       "deactivate": "Cancel Offer (Request)"
+    },
+    "renew": {
+      "title": "Renew Offer",
+      "message": "Choose how long to extend the offer. The new expiration date will be sent to the admin for review.",
+      "oneYear": "1 Year",
+      "sixMonths": "6 Months",
+      "threeMonths": "3 Months",
+      "custom": "Custom date",
+      "pickDate": "Select expiration date",
+      "confirm": "Submit Request"
     }
   },
   "requestCenter": {
@@ -1245,7 +1255,8 @@
     },
     "submit": "Redeem Offer",
     "list": {
-      "title": "Redemption List"
+      "title": "Redemption List",
+      "searchPlaceholder": "Search by offer, badge, mobile or membership ID"
     },
     "filter": {
       "single": "Single",

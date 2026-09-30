@@ -15,12 +15,12 @@
   <section class="account-management__card">
     <div class="account-management__toolbar">
       <h2 class="account-management__card-title">{{ 'accountManagement.list.title' | translate }}</h2>
-      <app-search [value]="searchQuery()" (valueChange)="searchQuery.set($event)"
+      <app-search [value]="searchQuery()" (valueChange)="onSearchInput($event)"
         [placeholder]="'accountManagement.searchPlaceholder' | translate" />
     </div>
 
     <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
-      [totalRecords]="totalRecords()" [loading]="loading()" [showLoader]="false"
+      [totalRecords]="totalRecords()" [first]="first()" [loading]="loading()" [showLoader]="false"
       [paginator]="!loading()" [rows]="pageSize()"
       [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
       styleClass="account-management__table">

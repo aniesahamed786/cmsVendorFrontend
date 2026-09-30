@@ -28,6 +28,8 @@ export class AccountsService {
   list(query: AccountListQuery): Observable<PaginatedResponse<VendorAccount>> {
     let params = new HttpParams().set('page', query.page).set('pageSize', query.pageSize);
     if (query.accountType) params = params.set('accountType', query.accountType);
+    // Backend matches name, email or phone, case-insensitive; caps the term at 120 chars.
+    if (query.search) params = params.set('search', query.search.slice(0, 120));
 
     return this.http
       .get<PaginatedResponse<VendorAccount>>(`${this.baseUrl}/accounts`, { params })

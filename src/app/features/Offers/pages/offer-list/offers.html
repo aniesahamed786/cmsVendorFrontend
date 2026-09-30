@@ -220,3 +220,31 @@
     </p-table>
   </section>
 </div>
+
+<app-confirmation-pop-up [visible]="!!renewTarget()" [title]="'offers.renew.title' | translate"
+  [message]="'offers.renew.message' | translate" [confirmLabel]="'offers.renew.confirm' | translate"
+  [cancelLabel]="'common.cancel' | translate" [loading]="renewSaving()" (confirm)="submitRenew()"
+  (cancel)="renewTarget.set(null)">
+  <div class="offers__renew">
+    <div class="offers__renew-options" role="radiogroup">
+      @for (p of renewPeriods; track p.value) {
+      <label class="offers__renew-option">
+        <p-radiobutton name="renewPeriod" [value]="p.value" [ngModel]="renewPeriod()"
+          (ngModelChange)="renewPeriod.set($event)" />
+        <span>{{ p.key | translate }}</span>
+      </label>
+      }
+    </div>
+    @if (renewPeriod() === 'custom') {
+    <p-datepicker [ngModel]="renewCustomDate()" (ngModelChange)="renewCustomDate.set($event)"
+      [minDate]="renewMinDate()" dateFormat="M d, yy" [showIcon]="true" appendTo="body"
+      [placeholder]="'offers.renew.pickDate' | translate" [fluid]="true" />
+    }
+    <p class="offers__renew-summary">
+      {{ 'offers.column.expirationDate' | translate }}:
+      <span>{{ renewTarget()?.expirationDate | date: 'MMM d, y' }}</span>
+      <i class="pi pi-arrow-right" aria-hidden="true"></i>
+      <strong>{{ (renewNewExpiry() | date: 'MMM d, y') ?? '—' }}</strong>
+    </p>
+  </div>
+</app-confirmation-pop-up>

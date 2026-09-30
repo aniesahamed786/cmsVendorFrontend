@@ -74,6 +74,13 @@ section.redemption-card {
   }
 }
 
+.redemption-card__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
 .redemption-card__title {
   margin: 0;
   font-size: 1.25rem;

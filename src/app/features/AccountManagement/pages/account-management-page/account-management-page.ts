@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { TableLazyLoadEvent } from 'primeng/table';
-import { Observable, finalize } from 'rxjs';
+import { Observable, Subject, debounceTime, distinctUntilChanged, finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { Button } from '../../../../shared/Components/button/button';
@@ -59,20 +60,27 @@ export class AccountManagementPage implements OnInit {
   readonly totalRecords = signal(0);
   readonly pageSize = signal(10);
   private readonly currentPage = signal(1);
+  readonly first = computed(() => (this.currentPage() - 1) * this.pageSize());
+
+  // Server-side search (backend matches account name, email and phone).
   readonly searchQuery = signal('');
+  private readonly searchInput = new Subject<string>();
 
+  constructor() {
+    this.searchInput
+      .pipe(debounceTime(350), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe((value) => {
+        this.searchQuery.set(value);
+        this.load(1);
+      });
+  }
 
-
-  readonly filteredRows = computed(() => {
-    const term = this.searchQuery().trim().toLowerCase();
-    if (!term) return this.rows();
-    return this.rows().filter(
-      (r) => r.name.toLowerCase().includes(term) || r.email.toLowerCase().includes(term),
-    );
-  });
+  onSearchInput(value: string): void {
+    this.searchInput.next(value);
+  }
 
   readonly tableRows = computed<(VendorAccount | null)[]>(() =>
-    this.loading() ? new Array(this.skeletonRowCount()).fill(null) : this.filteredRows(),
+    this.loading() ? new Array(this.skeletonRowCount()).fill(null) : this.rows(),
   );
 
   private readonly skeletonRowCount = computed(() => Math.min(this.pageSize(), 5));
@@ -155,7 +163,12 @@ export class AccountManagementPage implements OnInit {
     this.loadFailed.set(false);
 
     this.api
-      .list({ page, pageSize: this.pageSize(), accountType: AccountManagementPage.ACCOUNT_TYPE })
+      .list({
+        page,
+        pageSize: this.pageSize(),
+        accountType: AccountManagementPage.ACCOUNT_TYPE,
+        search: this.searchQuery().trim() || undefined,
+      })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (res) => {
