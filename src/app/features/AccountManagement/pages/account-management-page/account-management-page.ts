@@ -15,13 +15,14 @@ import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-po
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
-import { AccountStatus, AccountType, VendorAccount } from '../../models/account.model';
+import { AccountStatus, AccountType, ResetPasswordResponse, VendorAccount } from '../../models/account.model';
 import { AccountsService } from '../../services/accounts.service';
 import { AuthService } from '../../../../core/services/auth.service';
 
-type RowAction = 'suspend' | 'activate' | 'unlock' | 'delete' | 'forceLogout';
+type RowAction = 'suspend' | 'activate' | 'unlock' | 'delete' | 'forceLogout' | 'resetPassword';
 
-const ACTION_PAST_TENSE: Record<RowAction, string> = {
+// resetPassword has no toast: its result opens the temporary-password pop-up instead.
+const ACTION_PAST_TENSE: Record<Exclude<RowAction, 'resetPassword'>, string> = {
   suspend: 'suspended',
   activate: 'activated',
   unlock: 'unlocked',
@@ -128,6 +129,11 @@ export class AccountManagementPage implements OnInit {
             },
           ]),
       {
+        label: this.i18n.t('accountManagement.action.resetPassword'),
+        icon: 'pi pi-key',
+        command: () => this.askConfirm('resetPassword', row),
+      },
+      {
         label: this.i18n.t('accountManagement.action.delete'),
         icon: 'pi pi-trash',
         command: () => this.askConfirm('delete', row),
@@ -140,6 +146,31 @@ export class AccountManagementPage implements OnInit {
   private readonly pendingRow = signal<VendorAccount | null>(null);
 
   private readonly pendingAction = signal<RowAction | null>(null);
+
+  // Temporary password from a reset: the backend returns it once, so it lives only in this pop-up.
+  readonly tempPassword = signal<ResetPasswordResponse | null>(null);
+  readonly tempPasswordCopied = signal(false);
+
+  readonly tempPasswordMessage = computed(() => {
+    this.i18n.loadSeq();
+    return this.i18n
+      .t('accountManagement.tempPassword.message')
+      .replace('{{name}}', this.tempPassword()?.name ?? '');
+  });
+
+  closeTempPassword(): void {
+    this.tempPassword.set(null);
+    this.tempPasswordCopied.set(false);
+  }
+
+  copyTempPassword(): void {
+    const password = this.tempPassword()?.password;
+    if (!password) return;
+    navigator.clipboard.writeText(password).then(
+      () => this.tempPasswordCopied.set(true),
+      () => {}, // clipboard blocked: the value is still selectable by hand
+    );
+  }
 
   readonly confirmVariant = computed<'primary' | 'danger'>(() =>
     this.pendingAction() === 'delete' ? 'danger' : 'primary',
@@ -234,20 +265,26 @@ export class AccountManagementPage implements OnInit {
         ? this.api.deleteAccount(row.id)
         : action === 'forceLogout'
           ? this.api.forceLogout(row.id)
-          : this.api.updateAccountStatus(row.id, action === 'suspend' ? 'SUSPENDED' : 'ACTIVE');
+          : action === 'resetPassword'
+            ? this.api.resetPassword(row.id)
+            : this.api.updateAccountStatus(row.id, action === 'suspend' ? 'SUSPENDED' : 'ACTIVE');
 
     this.confirmBusy.set(true);
     request.pipe(finalize(() => this.confirmBusy.set(false))).subscribe({
-      next: () => {
+      next: (res) => {
         this.confirmVisible.set(false);
-        this.messageService.add({
-          severity: 'success',
-          summary: this.i18n.t(`accountManagement.toast.${ACTION_PAST_TENSE[action]}Summary`),
-          detail: this.i18n
-            .t(`accountManagement.toast.${ACTION_PAST_TENSE[action]}Detail`)
-            .replace('{{name}}', row.name),
-          life: 4000,
-        });
+        if (action === 'resetPassword') {
+          this.tempPassword.set(res as ResetPasswordResponse);
+        } else {
+          this.messageService.add({
+            severity: 'success',
+            summary: this.i18n.t(`accountManagement.toast.${ACTION_PAST_TENSE[action]}Summary`),
+            detail: this.i18n
+              .t(`accountManagement.toast.${ACTION_PAST_TENSE[action]}Detail`)
+              .replace('{{name}}', row.name),
+            life: 4000,
+          });
+        }
         this.pendingAction.set(null);
         this.pendingRow.set(null);
         this.load(action === 'delete' ? 1 : this.currentPage());

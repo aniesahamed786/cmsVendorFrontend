@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../core/services/auth.service';
 
 export type VendorAccountLanguage = 'ENGLISH' | 'ARABIC';
 export type VendorAccountTheme = 'LIGHT' | 'DARK' | 'SYSTEM';
@@ -18,6 +19,8 @@ export interface UpdateProfileSettingsPayload {
 }
 
 export interface ProfileSettingsResponse {
+  /** Replacement token after a password change; null when the password was not changed. */
+  accessToken?: string | null;
   id: string;
   vendorId: string;
   name: string;
@@ -29,6 +32,7 @@ export interface ProfileSettingsResponse {
 @Injectable({ providedIn: 'root' })
 export class ProfileSettingsService {
   private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
   private readonly baseUrl = environment.backendUrl + environment.apiBaseUrl;
 
   /**
@@ -36,6 +40,13 @@ export class ProfileSettingsService {
    * id is sent — the backend can only ever update the caller's own vendor_accounts row.
    */
   updateSettings(payload: UpdateProfileSettingsPayload): Observable<ProfileSettingsResponse> {
-    return this.http.patch<ProfileSettingsResponse>(`${this.baseUrl}/profile-settings`, payload);
+    return this.http
+      .patch<ProfileSettingsResponse>(`${this.baseUrl}/profile-settings`, payload)
+      .pipe(
+        // A password change ends every session, this one included; keep the replacement token.
+        tap((res) => {
+          if (res.accessToken) this.auth.replaceAccessToken(res.accessToken);
+        }),
+      );
   }
 }

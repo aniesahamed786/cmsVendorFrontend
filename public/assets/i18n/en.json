@@ -1867,7 +1867,8 @@
       "forceLogoutFailed": "Could not log out account",
       "unlockedSummary": "Account unlocked",
       "unlockedDetail": "{{name}} can sign in again.",
-      "unlockFailed": "Could not unlock account"
+      "unlockFailed": "Could not unlock account",
+      "resetPasswordFailed": "Could not reset password"
     },
     "action": {
       "edit": "Edit",
@@ -1875,6 +1876,7 @@
       "activate": "Activate",
       "unlock": "Unlock",
       "forceLogout": "Force logout",
+      "resetPassword": "Reset password",
       "delete": "Delete"
     },
     "edit": {
@@ -1903,7 +1905,17 @@
       "forceLogout": {
         "title": "Force logout",
         "message": "{{name}} will be signed out of every session right away. The account stays active and can sign in again."
+      },
+      "resetPassword": {
+        "title": "Reset password",
+        "message": "{{name}} will get a new temporary password and be signed out of every session. Their current password stops working right away."
       }
+    },
+    "tempPassword": {
+      "title": "Temporary password",
+      "message": "Give this password to {{name}}. It is shown only once; if it is lost, reset the password again.",
+      "copy": "Copy",
+      "copied": "Copied!"
     },
     "add": "Add Subaccount",
     "list": {

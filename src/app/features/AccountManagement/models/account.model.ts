@@ -93,6 +93,11 @@ export interface VendorAccount {
   accountType: AccountType;
 }
 
+/** `password` is the generated one, returned this once and never retrievable again. */
+export type ResetPasswordResponse = Pick<VendorAccount, 'id' | 'name' | 'email' | 'accountStatus'> & {
+  password: string;
+};
+
 export interface VendorAccountDetail {
   id: string;
   vendorId: string;

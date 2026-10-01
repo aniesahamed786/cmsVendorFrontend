@@ -9,6 +9,7 @@ import {
   AccountStatus,
   CreateAccountPayload,
   PaginatedResponse,
+  ResetPasswordResponse,
   SelectOption,
   UpdateAccountPayload,
   UpdateAccountStatusPayload,
@@ -71,6 +72,11 @@ export class AccountsService {
   /** Ends every session the account has open; it stays ACTIVE and can sign back in. */
   forceLogout(id: string): Observable<VendorAccount> {
     return this.http.post<VendorAccount>(`${this.baseUrl}/accounts/${id}/force-logout`, {});
+  }
+
+  /** Replaces the password with a generated one, ends every session and clears a lock. */
+  resetPassword(id: string): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(`${this.baseUrl}/accounts/${id}/reset-password`, {});
   }
 
   deleteAccount(id: string): Observable<unknown> {

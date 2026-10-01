@@ -153,6 +153,17 @@ export class AuthService {
   }
 
   /**
+   * Swap in the token a password change returns. The backend ends every session on that change,
+   * so the token sent with the request is dead from then on.
+   */
+  replaceAccessToken(accessToken: string): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('accessToken', accessToken);
+    }
+    this.initExpirationTimer();
+  }
+
+  /**
    * Rehydrate on app start. The stored account is the richer source; if it is gone but the
    * token still decodes, rebuild what the JWT carries so a cleared key doesn't look like a
    * logout.

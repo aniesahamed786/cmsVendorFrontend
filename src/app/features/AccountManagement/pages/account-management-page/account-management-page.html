@@ -85,3 +85,16 @@
   [confirmVariant]="confirmVariant()"
   [cancelLabel]="'accountManagement.confirm.cancel' | translate" [loading]="confirmBusy()"
   (confirm)="confirmAction()" (cancel)="cancelConfirm()" />
+
+<!-- One-time temporary password after a reset; only Close dismisses it so a stray click can't lose it. -->
+<app-confirmation-pop-up [visible]="!!tempPassword()" [title]="'accountManagement.tempPassword.title' | translate"
+  [message]="tempPasswordMessage()" [showCancel]="false" [dismissableMask]="false"
+  [confirmLabel]="'common.close' | translate" (confirm)="closeTempPassword()" (cancel)="closeTempPassword()">
+  <div class="account-management__temp-password">
+    <code class="account-management__temp-password-value" dir="ltr">{{ tempPassword()?.password }}</code>
+    <button type="button" class="account-management__temp-password-copy" (click)="copyTempPassword()">
+      <i [class]="tempPasswordCopied() ? 'pi pi-check' : 'pi pi-copy'"></i>
+      {{ (tempPasswordCopied() ? 'accountManagement.tempPassword.copied' : 'accountManagement.tempPassword.copy') | translate }}
+    </button>
+  </div>
+</app-confirmation-pop-up>

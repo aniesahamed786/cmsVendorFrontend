@@ -136,3 +136,40 @@
   width: calc(100% + 3rem) !important;
 }
 
+
+.account-management__temp-password {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-start: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--app-border, #e5e7eb);
+  border-radius: 0.5rem;
+  background: var(--app-bg, #f6f6f8);
+  color: var(--app-text, #323232);
+
+  &-value {
+    flex: 1;
+    // <code> defaults to monospace; use the app font like everything else.
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    user-select: all;
+  }
+
+  &-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border: 1px solid var(--app-border, #e5e7eb);
+    border-radius: 0.375rem;
+    background: var(--app-surface, #ffffff);
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+}
