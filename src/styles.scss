@@ -2340,3 +2340,34 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
     }
   }
 }
+
+/* Login → dashboard hand-off (router withViewTransitions in app.config.ts — every other
+   navigation skips it). The login page fades back, the app rises into place. */
+::view-transition-old(root) {
+  animation: app-page-out 0.25s ease-in both;
+}
+
+::view-transition-new(root) {
+  animation: app-page-in 0.4s ease-out 0.1s both;
+}
+
+@keyframes app-page-out {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes app-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

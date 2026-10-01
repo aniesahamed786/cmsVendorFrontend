@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators
@@ -9,7 +10,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { AuthService } from '../../../core/services/auth.service';
+import { InputOtpModule } from 'primeng/inputotp';
+import { AuthService, LoginResponse } from '../../../core/services/auth.service';
 import { Button } from '../../../shared/Components/button/button';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
@@ -27,6 +29,9 @@ const API_TO_THEME: Record<string, AppearanceMode> = {
   SYSTEM: 'system',
 };
 
+// ponytail: fixed code until the backend sends a real OTP — swap verifyOtp() for an API call then.
+const DEV_OTP = '111111';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -35,6 +40,7 @@ const API_TO_THEME: Record<string, AppearanceMode> = {
     RouterLink,
     InputTextModule,
     PasswordModule,
+    InputOtpModule,
     Button,
     TranslatePipe
   ],
@@ -58,6 +64,7 @@ export class LoginComponent {
    */
   readonly notice = computed(() => {
     if (this.loginNotice()) return this.loginNotice();
+    if (this.pendingLogin()) return '';
     const params = this.queryParams();
     if (params?.get('account') === 'inactive') return 'login.accountInactive';
     if (params?.get('session') === 'expired') return 'login.sessionExpired';
@@ -65,6 +72,12 @@ export class LoginComponent {
   });
 
   loginForm: FormGroup;
+
+  /** Credentials accepted, waiting on the OTP. The session isn't stored until the code checks out. */
+  readonly pendingLogin = signal<LoginResponse | null>(null);
+  readonly otpForm = new FormGroup({
+    code: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d{6}$/)] })
+  });
 
   isSubmitting = false;
 
@@ -128,7 +141,7 @@ export class LoginComponent {
 
   this.authService.login(payload).subscribe({
 
-    next: async (response) => {
+    next: (response) => {
 
       // A suspended account still gets a token. Don't open the app with it.
       if (response.vendorAccount?.accountStatus !== 'ACTIVE') {
@@ -137,23 +150,8 @@ export class LoginComponent {
       }
 
       this.loginNotice.set('');
-      this.authService.setSession(response.accessToken, response.vendorAccount);
-
-      // The account's saved theme was stored but never applied — the settings page
-      // writes it, so honour it here or a second device never picks it up.
-      const saved = API_TO_THEME[response.vendorAccount.theme ?? ''];
-      if (saved) {
-        this.theme.setAppearanceMode(saved);
-      }
-
-      const savedLanguage = response.vendorAccount.language
-        ? API_TO_LANGUAGE[response.vendorAccount.language]
-        : undefined;
-      if (savedLanguage) {
-        await this.i18n.setLang(savedLanguage);
-      }
-
-      void this.router.navigate(['/dashboard']);
+      this.otpForm.reset();
+      this.pendingLogin.set(response);
 
     },
 
@@ -168,5 +166,46 @@ export class LoginComponent {
   });
 
 }
+
+  verifyOtp(): void {
+    const response = this.pendingLogin();
+    if (!response) return;
+    if (this.otpForm.invalid) {
+      this.otpForm.markAllAsTouched();
+      return;
+    }
+    if (this.otpForm.getRawValue().code !== DEV_OTP) {
+      this.loginNotice.set('login.otpInvalid');
+      return;
+    }
+    void this.completeLogin(response);
+  }
+
+  /** Back to the credentials form — the pending token is dropped, never stored. */
+  backToLogin(): void {
+    this.pendingLogin.set(null);
+    this.loginNotice.set('');
+  }
+
+  private async completeLogin(response: LoginResponse): Promise<void> {
+    this.loginNotice.set('');
+    this.authService.setSession(response.accessToken, response.vendorAccount);
+
+    // The account's saved theme was stored but never applied — the settings page
+    // writes it, so honour it here or a second device never picks it up.
+    const saved = API_TO_THEME[response.vendorAccount.theme ?? ''];
+    if (saved) {
+      this.theme.setAppearanceMode(saved);
+    }
+
+    const savedLanguage = response.vendorAccount.language
+      ? API_TO_LANGUAGE[response.vendorAccount.language]
+      : undefined;
+    if (savedLanguage) {
+      await this.i18n.setLang(savedLanguage);
+    }
+
+    void this.router.navigate(['/dashboard']);
+  }
 
 }

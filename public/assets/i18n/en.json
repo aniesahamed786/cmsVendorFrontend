@@ -1742,7 +1742,6 @@
     "email": "Business Email",
     "emailPlaceholder": "name@company.com",
     "password": "Password",
-    "forgotPassword": "Forgot password?",
     "rememberMe": "Keep me signed in for 30 days",
     "signIn": "Sign In",
     "signingIn": "Signing In...",
@@ -1752,7 +1751,12 @@
     "copyright": "© 2024 Corporate Systems Inc. All rights reserved.",
     "invalidCredentials": "Invalid email or password.",
     "accountInactive": "Your account is not active. Contact your vendor administrator.",
-    "sessionExpired": "Your session expired. Please sign in again."
+    "sessionExpired": "Your session expired. Please sign in again.",
+    "otpLabel": "Verification Code",
+    "otpHint": "Enter the 6-digit code sent to your email.",
+    "otpVerify": "Verify",
+    "otpBack": "Back to sign in",
+    "otpInvalid": "The verification code is incorrect."
   },
   "accountManagement": {
     "title": "Account Management",

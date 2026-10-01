@@ -4,7 +4,7 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { I18nService } from './shared/i18n/i18n.service';
 import { providePrimeNG } from 'primeng/config';
@@ -64,6 +64,14 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(appRoutes),
+    // Only the sign-in → app hand-off animates; every other navigation stays instant.
+    provideRouter(
+      appRoutes,
+      withViewTransitions({
+        onViewTransitionCreated: ({ transition, from }) => {
+          if (from.firstChild?.routeConfig?.path !== 'login') transition.skipTransition();
+        },
+      }),
+    ),
   ],
 };

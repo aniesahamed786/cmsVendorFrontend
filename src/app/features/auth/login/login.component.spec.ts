@@ -55,26 +55,49 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('applies the vendor saved language and theme after login', async () => {
-    const response: LoginResponse = {
-      accessToken: 'token',
-      vendorAccount: {
-        id: 'account-1',
-        vendorId: 'vendor-1',
-        roleId: 'role-1',
-        roleName: 'VENDOR_ADMIN',
-        permissions: ['cms_profile:manage'],
-        name: 'Vendor',
-        email: 'vendor@example.com',
-        accountStatus: 'ACTIVE',
-        language: 'ARABIC',
-        theme: 'DARK',
-      },
-    };
+  const response: LoginResponse = {
+    accessToken: 'token',
+    vendorAccount: {
+      id: 'account-1',
+      vendorId: 'vendor-1',
+      roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_profile:manage'],
+      name: 'Vendor',
+      email: 'vendor@example.com',
+      accountStatus: 'ACTIVE',
+      language: 'ARABIC',
+      theme: 'DARK',
+    },
+  };
+
+  function signIn(): void {
     auth.login.mockReturnValue(of(response));
     component.loginForm.patchValue({ email: response.vendorAccount.email, password: 'Password1!' });
-
     component.login();
+  }
+
+  it('holds the session until the OTP is entered', () => {
+    signIn();
+
+    expect(component.pendingLogin()).toBe(response);
+    expect(auth.setSession).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('rejects a wrong OTP', () => {
+    signIn();
+    component.otpForm.setValue({ code: '123456' });
+    component.verifyOtp();
+
+    expect(component.notice()).toBe('login.otpInvalid');
+    expect(auth.setSession).not.toHaveBeenCalled();
+  });
+
+  it('applies the vendor saved language and theme after the OTP', async () => {
+    signIn();
+    component.otpForm.setValue({ code: '111111' });
+    component.verifyOtp();
     await fixture.whenStable();
 
     expect(auth.setSession).toHaveBeenCalledWith('token', response.vendorAccount);

@@ -161,9 +161,30 @@
     }
   }
 
+  /* The @if swaps the two forms, so each one plays its keyframes as it's inserted:
+     the OTP step comes in from the reading end, the sign-in form from the start.
+     ponytail: enter-only — the outgoing form just disappears, add a leave animation if it feels abrupt. */
   &__form {
+    --slide-from: -1.5rem;
     display: flex;
     flex-direction: column;
+    animation: login-card-step-in 0.3s ease-out;
+
+    &--otp {
+      --slide-from: 1.5rem;
+    }
+
+    &:dir(rtl) {
+      --slide-from: 1.5rem;
+    }
+
+    &--otp:dir(rtl) {
+      --slide-from: -1.5rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   /* The label owns the gap below it (global --label-gap), so the group adds none. */
@@ -179,6 +200,17 @@
   &__submit {
     display: block;
   }
+
+  &__back {
+    margin-block-start: 0.5rem;
+  }
+}
+
+@keyframes login-card-step-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--slide-from));
+  }
 }
 
 :host ::ng-deep {
@@ -190,6 +222,22 @@
   .login-card__password {
     display: flex;
     width: 100%;
+  }
+
+  /* Six digits share the card width evenly, so the row fits on a phone too. */
+  .login-card__otp {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .login-card__otp-digit {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    /* The global field padding would squeeze a one-character box. */
+    padding-inline: 0 !important;
   }
 
   .login-card__password .p-password-input {

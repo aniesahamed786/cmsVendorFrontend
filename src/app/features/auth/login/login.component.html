@@ -33,39 +33,70 @@
         <p class="login-card__notice" role="alert">{{ notice() | translate }}</p>
       }
 
-      <form class="login-card__form" [formGroup]="loginForm" (ngSubmit)="login()">
+      @if (pendingLogin()) {
+        <form class="login-card__form login-card__form--otp" [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
 
-        <div class="login-card__field">
-          <label class="login-card__label" for="login-email">{{ 'login.email' | translate }}</label>
-          <input
-            pInputText
-            id="login-email"
-            type="email"
-            dir="ltr"
-            [placeholder]="'login.emailPlaceholder' | translate"
-            formControlName="email" />
-        </div>
+          <div class="login-card__field">
+            <!-- Six inputs, no single id to point a <label for> at — the group is named instead. -->
+            <span class="login-card__label" id="login-otp-label">{{ 'login.otpLabel' | translate }}</span>
+            <!-- Digits read left-to-right in both languages. -->
+            <p-inputotp
+              class="login-card__otp"
+              dir="ltr"
+              role="group"
+              aria-labelledby="login-otp-label"
+              styleClass="login-card__otp-digit"
+              formControlName="code"
+              [length]="6"
+              [integerOnly]="true"
+              [autofocus]="true" />
+            <small class="login-card__hint">{{ 'login.otpHint' | translate }}</small>
+          </div>
 
-        <div class="login-card__field">
-          <label class="login-card__label" for="login-password">{{ 'login.password' | translate }}</label>
-          <p-password
-            inputId="login-password"
-            formControlName="password"
-            styleClass="login-card__password"
-            placeholder="••••••••"
-            [toggleMask]="true"
-            [feedback]="false" />
-        </div>
+          <app-button class="login-card__submit" type="submit" icon="pi pi-check">
+            {{ 'login.otpVerify' | translate }}
+          </app-button>
 
-        <app-button
-          class="login-card__submit"
-          type="submit"
-          icon="pi pi-sign-in"
-          [loading]="isSubmitting">
-          {{ (isSubmitting ? 'login.signingIn' : 'login.signIn') | translate }}
-        </app-button>
+          <app-button class="login-card__submit login-card__back" variant="ghost" icon="pi pi-arrow-left" (click)="backToLogin()">
+            {{ 'login.otpBack' | translate }}
+          </app-button>
 
-      </form>
+        </form>
+      } @else {
+        <form class="login-card__form" [formGroup]="loginForm" (ngSubmit)="login()">
+
+          <div class="login-card__field">
+            <label class="login-card__label" for="login-email">{{ 'login.email' | translate }}</label>
+            <input
+              pInputText
+              id="login-email"
+              type="email"
+              dir="ltr"
+              [placeholder]="'login.emailPlaceholder' | translate"
+              formControlName="email" />
+          </div>
+
+          <div class="login-card__field">
+            <label class="login-card__label" for="login-password">{{ 'login.password' | translate }}</label>
+            <p-password
+              inputId="login-password"
+              formControlName="password"
+              styleClass="login-card__password"
+              placeholder="••••••••"
+              [toggleMask]="true"
+              [feedback]="false" />
+          </div>
+
+          <app-button
+            class="login-card__submit"
+            type="submit"
+            icon="pi pi-sign-in"
+            [loading]="isSubmitting">
+            {{ (isSubmitting ? 'login.signingIn' : 'login.signIn') | translate }}
+          </app-button>
+
+        </form>
+      }
 
     </section>
 
