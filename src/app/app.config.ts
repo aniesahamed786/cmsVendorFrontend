@@ -4,7 +4,7 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { provideRouter, withViewTransitions } from '@angular/router';
+import { ActivatedRouteSnapshot, provideRouter, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { I18nService } from './shared/i18n/i18n.service';
 import { providePrimeNG } from 'primeng/config';
@@ -38,6 +38,17 @@ const BluePreset = definePreset(Aura, {
   },
 });
 
+/** The matched URL path of a route tree, without query string or fragment. */
+function pathOf(root: ActivatedRouteSnapshot): string {
+  const segments: string[] = [];
+  for (let r: ActivatedRouteSnapshot | null = root; r; r = r.firstChild) {
+    segments.push(...r.url.map((s) => s.path));
+  }
+  return segments.join('/');
+}
+
+const isLogin = (root: ActivatedRouteSnapshot) => root.firstChild?.routeConfig?.path === 'login';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([httpInterceptor])),
@@ -64,12 +75,22 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideBrowserGlobalErrorListeners(),
-    // Only the sign-in → app hand-off animates; every other navigation stays instant.
     provideRouter(
       appRoutes,
       withViewTransitions({
-        onViewTransitionCreated: ({ transition, from }) => {
-          if (from.firstChild?.routeConfig?.path !== 'login') transition.skipTransition();
+        onViewTransitionCreated: ({ transition, from, to }) => {
+          // Same page, different query string (search, filters, paging) — not a page change.
+          if (pathOf(from) === pathOf(to)) {
+            transition.skipTransition();
+            return;
+          }
+          // In or out of sign-in the whole screen changes, so the whole screen animates;
+          // inside the app only the page area does (see the view-transition rules in styles.scss).
+          if (isLogin(from) || isLogin(to)) {
+            const root = document.documentElement;
+            root.classList.add('vt-full-page');
+            void transition.finished.finally(() => root.classList.remove('vt-full-page'));
+          }
         },
       }),
     ),

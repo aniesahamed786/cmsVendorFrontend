@@ -2341,33 +2341,41 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
   }
 }
 
-/* Login → dashboard hand-off (router withViewTransitions in app.config.ts — every other
-   navigation skips it). The login page fades back, the app rises into place. */
-::view-transition-old(root) {
-  animation: app-page-out 0.25s ease-in both;
+/* Page transitions (router withViewTransitions in app.config.ts).
+   Inside the app only the routed page animates: the outlet is its own snapshot, so the
+   sidenav and navbar hold still. Going in or out of sign-in there is no shared shell,
+   so the whole screen animates instead (.vt-full-page, set for that navigation only). */
+.app-shell__outlet {
+  view-transition-name: app-page;
 }
 
-::view-transition-new(root) {
-  animation: app-page-in 0.4s ease-out 0.1s both;
+::view-transition-old(app-page),
+.vt-full-page::view-transition-old(root) {
+  animation: app-page-out 0.15s ease-in both;
+}
+
+::view-transition-new(app-page),
+.vt-full-page::view-transition-new(root) {
+  animation: app-page-in 0.3s ease-out 0.1s both;
 }
 
 @keyframes app-page-out {
   to {
     opacity: 0;
-    transform: scale(0.98);
   }
 }
 
 @keyframes app-page-in {
   from {
     opacity: 0;
-    transform: translateY(1rem);
+    transform: translateY(0.75rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
