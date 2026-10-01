@@ -30,7 +30,7 @@
     <section class="login-card">
 
       @if (notice()) {
-        <p class="login-card__notice" role="alert">{{ notice() | translate }}</p>
+        <p class="login-card__notice" role="alert">{{ notice() | translate: noticeParams() }}</p>
       }
 
       @if (pendingLogin()) {

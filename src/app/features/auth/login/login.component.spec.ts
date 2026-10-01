@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { of, throwError } from 'rxjs';
 
 import { AuthService, LoginResponse } from '../../../core/services/auth.service';
 import { I18nService } from '../../../shared/i18n/i18n.service';
@@ -83,6 +84,26 @@ describe('LoginComponent', () => {
     expect(component.pendingLogin()).toBe(response);
     expect(auth.setSession).not.toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  function failSignIn(status: number, body: object): void {
+    auth.login.mockReturnValue(throwError(() => new HttpErrorResponse({ status, error: body })));
+    component.loginForm.patchValue({ email: 'vendor@example.com', password: 'WrongPass1!' });
+    component.login();
+  }
+
+  it('shows the attempts left after a wrong password', () => {
+    failSignIn(401, { message: 'Invalid credentials', attemptsRemaining: 4 });
+
+    expect(component.notice()).toBe('login.invalidCredentialsAttempts');
+    expect(component.noticeParams()).toEqual({ count: 4 });
+  });
+
+  it('shows the minutes left when the account is locked', () => {
+    failSignIn(423, { lockedUntil: new Date(Date.now() + 14.5 * 60_000).toISOString(), attemptsRemaining: 0 });
+
+    expect(component.notice()).toBe('login.accountLocked');
+    expect(component.noticeParams()).toEqual({ minutes: 15 });
   });
 
   it('rejects a wrong OTP', () => {

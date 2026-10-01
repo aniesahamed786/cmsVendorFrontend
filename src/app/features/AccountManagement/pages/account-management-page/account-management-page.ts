@@ -19,13 +19,20 @@ import { AccountStatus, AccountType, VendorAccount } from '../../models/account.
 import { AccountsService } from '../../services/accounts.service';
 import { AuthService } from '../../../../core/services/auth.service';
 
-type RowAction = 'suspend' | 'activate' | 'delete' | 'forceLogout';
+type RowAction = 'suspend' | 'activate' | 'unlock' | 'delete' | 'forceLogout';
 
 const ACTION_PAST_TENSE: Record<RowAction, string> = {
   suspend: 'suspended',
   activate: 'activated',
+  unlock: 'unlocked',
   delete: 'deleted',
   forceLogout: 'loggedOut',
+};
+
+const STATUS_ACTION_ICON: Partial<Record<RowAction, string>> = {
+  suspend: 'pi pi-ban',
+  activate: 'pi pi-check-circle',
+  unlock: 'pi pi-lock-open',
 };
 
 @Component({
@@ -96,6 +103,9 @@ export class AccountManagementPage implements OnInit {
     if (!row || !this.auth.canManage('vendor_staff')) return [];
 
     const suspended = row.accountStatus !== 'ACTIVE';
+    // Unlocking and activating are the same call (status -> ACTIVE); only the wording differs.
+    const statusAction: RowAction =
+      row.accountStatus === 'LOCKED' ? 'unlock' : suspended ? 'activate' : 'suspend';
     return [
       {
         label: this.i18n.t('accountManagement.action.edit'),
@@ -103,11 +113,9 @@ export class AccountManagementPage implements OnInit {
         command: () => this.editAccount(row),
       },
       {
-        label: this.i18n.t(
-          suspended ? 'accountManagement.action.activate' : 'accountManagement.action.suspend',
-        ),
-        icon: suspended ? 'pi pi-check-circle' : 'pi pi-ban',
-        command: () => this.askConfirm(suspended ? 'activate' : 'suspend', row),
+        label: this.i18n.t(`accountManagement.action.${statusAction}`),
+        icon: STATUS_ACTION_ICON[statusAction],
+        command: () => this.askConfirm(statusAction, row),
       },
       // Suspending already ends the sessions, so only an active account has any to end.
       ...(suspended

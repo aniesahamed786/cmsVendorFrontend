@@ -77,7 +77,8 @@ export interface SelectOption {
   isPwdAvailable?: boolean;
 }
 
-export type AccountStatus = 'ACTIVE' | 'SUSPENDED';
+// LOCKED is set by the backend after five failed sign-ins; it is released by setting ACTIVE.
+export type AccountStatus = 'ACTIVE' | 'SUSPENDED' | 'LOCKED';
 
 export interface UpdateAccountStatusPayload {
   accountStatus: AccountStatus;

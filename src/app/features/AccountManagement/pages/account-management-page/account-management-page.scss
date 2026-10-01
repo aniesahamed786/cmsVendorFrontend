@@ -122,6 +122,11 @@
       background: var(--app-status-inactive, #f97316);
       color: #ffffff;
     }
+
+    &--locked {
+      background: var(--app-status-expired, #dc2626);
+      color: #ffffff;
+    }
   }
 }
 

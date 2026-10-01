@@ -1762,7 +1762,9 @@
     "otpHint": "Enter the 6-digit code sent to your email.",
     "otpVerify": "Verify",
     "otpBack": "Back to sign in",
-    "otpInvalid": "The verification code is incorrect."
+    "otpInvalid": "The verification code is incorrect.",
+    "invalidCredentialsAttempts": "Invalid email or password. Attempts left before your account is locked: {{count}}.",
+    "accountLocked": "Your account is locked after too many failed sign-in attempts. Try again in {{minutes}} min, or ask your vendor administrator to unlock it."
   },
   "accountManagement": {
     "title": "Account Management",
@@ -1773,7 +1775,8 @@
     "emptyFiltered": "No accounts match your search.",
     "status": {
       "ACTIVE": "Active",
-      "SUSPENDED": "Suspended"
+      "SUSPENDED": "Suspended",
+      "LOCKED": "Locked"
     },
     "permission": {
       "redemptionHistory": "View redemption history",
@@ -1860,12 +1863,16 @@
       "deleteFailed": "Could not delete account",
       "loggedOutSummary": "Account logged out",
       "loggedOutDetail": "{{name}} was signed out of every session.",
-      "forceLogoutFailed": "Could not log out account"
+      "forceLogoutFailed": "Could not log out account",
+      "unlockedSummary": "Account unlocked",
+      "unlockedDetail": "{{name}} can sign in again.",
+      "unlockFailed": "Could not unlock account"
     },
     "action": {
       "edit": "Edit",
       "suspend": "Suspend",
       "activate": "Activate",
+      "unlock": "Unlock",
       "forceLogout": "Force logout",
       "delete": "Delete"
     },
@@ -1887,6 +1894,10 @@
       "delete": {
         "title": "Delete account",
         "message": "{{name}} will be removed permanently. This cannot be undone."
+      },
+      "unlock": {
+        "title": "Unlock account",
+        "message": "{{name}} was locked after too many failed sign-in attempts. Unlocking lets them sign in again right away."
       },
       "forceLogout": {
         "title": "Force logout",

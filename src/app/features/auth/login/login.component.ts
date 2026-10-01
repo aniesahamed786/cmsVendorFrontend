@@ -7,6 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -57,6 +58,8 @@ export class LoginComponent {
   private readonly queryParams = toSignal(inject(ActivatedRoute).queryParamMap);
   /** Set when a login attempt is refused locally (suspended account). */
   private readonly loginNotice = signal<string>('');
+  /** Values for the notice's {{placeholders}} — attempts left, minutes until unlock. */
+  readonly noticeParams = signal<Record<string, number>>({});
 
   /**
    * One line above the form for the three ways a user lands here without credentials failing:
@@ -155,9 +158,32 @@ export class LoginComponent {
 
     },
 
-    error: (error) => {
+    error: (error: HttpErrorResponse) => {
 
       console.error('Login Failed:', error);
+
+      const body = error.error ?? {};
+
+      // 423: locked after too many wrong passwords. The body says when it lifts.
+      if (error.status === 423) {
+        const msLeft = new Date(body.lockedUntil).getTime() - Date.now();
+        this.noticeParams.set({ minutes: Math.max(1, Math.ceil(msLeft / 60_000) || 1) });
+        this.loginNotice.set('login.accountLocked');
+        return;
+      }
+
+      // 403: right password, but the account is suspended.
+      if (error.status === 403) {
+        this.loginNotice.set('login.accountInactive');
+        return;
+      }
+
+      // 401 carries how many tries are left before the lock; older responses don't.
+      if (typeof body.attemptsRemaining === 'number') {
+        this.noticeParams.set({ count: body.attemptsRemaining });
+        this.loginNotice.set('login.invalidCredentialsAttempts');
+        return;
+      }
 
       this.loginNotice.set('login.invalidCredentials');
 
