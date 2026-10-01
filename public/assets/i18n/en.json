@@ -126,7 +126,13 @@
     "activity": {
       "submitted": "{{type}} Submitted",
       "recalled": "{{type}} Recalled",
-      "cancelled": "{{type}} Cancelled"
+      "cancelled": "{{type}} Cancelled",
+      "created": "{{type}} Created",
+      "updated": "{{type}} Updated",
+      "suspended": "{{type}} Suspended",
+      "reinstated": "{{type}} Activated",
+      "logout": "{{type}} Logged Out",
+      "deleted": "{{type}} Deleted"
     },
     "type": {
       "account": "Account",

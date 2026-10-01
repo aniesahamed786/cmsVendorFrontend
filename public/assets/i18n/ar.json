@@ -126,7 +126,13 @@
     "activity": {
       "submitted": "تم إرسال {{type}}",
       "recalled": "تم سحب {{type}}",
-      "cancelled": "تم إلغاء {{type}}"
+      "cancelled": "تم إلغاء {{type}}",
+      "created": "تم إنشاء {{type}}",
+      "updated": "تم تحديث {{type}}",
+      "suspended": "تم إيقاف {{type}}",
+      "reinstated": "تم تفعيل {{type}}",
+      "logout": "تم تسجيل خروج {{type}}",
+      "deleted": "تم حذف {{type}}"
     },
     "type": {
       "account": "حساب",

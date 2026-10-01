@@ -15,7 +15,16 @@ export interface SystemLogEntry {
   createdAt: string;
 }
 
-export type SystemLogAction = 'SUBMITTED' | 'RECALLED' | 'CANCELLED';
+export type SystemLogAction =
+  | 'SUBMITTED'
+  | 'RECALLED'
+  | 'CANCELLED'
+  | 'CREATED'
+  | 'UPDATED'
+  | 'SUSPENDED'
+  | 'REINSTATED'
+  | 'LOGOUT'
+  | 'DELETED';
 
 export interface SystemLogListResponse {
   data: SystemLogEntry[];

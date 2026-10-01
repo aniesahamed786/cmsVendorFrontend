@@ -28,6 +28,13 @@ const ACTIVITY_KEYS: Record<string, string> = {
   SUBMITTED: 'recentActivities.activity.submitted',
   RECALLED: 'recentActivities.activity.recalled',
   CANCELLED: 'recentActivities.activity.cancelled',
+  // ACCOUNT rows — backend VENDOR_ACCOUNT_LOG_ACTIONS
+  CREATED: 'recentActivities.activity.created',
+  UPDATED: 'recentActivities.activity.updated',
+  SUSPENDED: 'recentActivities.activity.suspended',
+  REINSTATED: 'recentActivities.activity.reinstated',
+  LOGOUT: 'recentActivities.activity.logout',
+  DELETED: 'recentActivities.activity.deleted',
 };
 
 export function titleCase(value: string | null | undefined): string {
