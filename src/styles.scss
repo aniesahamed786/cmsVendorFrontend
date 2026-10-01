@@ -2379,3 +2379,42 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
     animation: none !important;
   }
 }
+
+/* Content reveal. A page's sections fade in one after another instead of all at once,
+   and table rows do the same when their data arrives. A CSS animation plays whenever an
+   element is inserted, so content that replaces a skeleton later gets it too.
+   Opacity only — a transform here would re-anchor fixed/sticky children mid-animation.
+   :where() keeps specificity at zero, so anything with its own animation (the skeleton
+   pulse, spinners) keeps it.
+   ponytail: sections are found by depth (outlet > page host > root > section), not by a
+   class. Add an .app-reveal class to the selector if a page nests differently. */
+:where(.app-shell__outlet > * > * > *),
+:where(.p-datatable-tbody > tr) {
+  animation: app-content-in 0.45s ease-out backwards;
+}
+
+@for $i from 2 through 8 {
+  :where(.app-shell__outlet > * > * > *:nth-child(#{$i})),
+  :where(.p-datatable-tbody > tr:nth-child(#{$i})) {
+    animation-delay: #{($i - 1) * 0.06}s;
+  }
+}
+
+/* Everything past the eighth comes in with the eighth rather than queueing ever later. */
+:where(.app-shell__outlet > * > * > *:nth-child(n + 9)),
+:where(.p-datatable-tbody > tr:nth-child(n + 9)) {
+  animation-delay: 0.42s;
+}
+
+@keyframes app-content-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.app-shell__outlet > * > * > *),
+  :where(.p-datatable-tbody > tr) {
+    animation: none;
+  }
+}
