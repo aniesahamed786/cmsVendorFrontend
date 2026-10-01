@@ -32,6 +32,13 @@
   font-size: 1rem;
 }
 
+.vendor-profile-page__hero-note {
+  /* on-primary contrast: white text over the brand hero fill */
+  color: #ffffff;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
 .vendor-profile-page__hero {
   position: relative;
   width: 100%;

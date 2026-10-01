@@ -123,6 +123,9 @@
         {{ 'profile.edit' | translate }}
       </button>
     }
+    @if (vendor.activeOffersCount === 0) {
+      <p hero-note class="vendor-profile-page__hero-note">{{ 'profile.notVisibleNoActiveOffers' | translate }}</p>
+    }
   </app-vendor-hero-card>
 
   <div class="vendor-profile-page__layout">
