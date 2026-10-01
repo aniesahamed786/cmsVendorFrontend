@@ -1851,12 +1851,16 @@
       "deletedDetail": "{{name}} was removed.",
       "suspendFailed": "Could not suspend account",
       "activateFailed": "Could not activate account",
-      "deleteFailed": "Could not delete account"
+      "deleteFailed": "Could not delete account",
+      "loggedOutSummary": "Account logged out",
+      "loggedOutDetail": "{{name}} was signed out of every session.",
+      "forceLogoutFailed": "Could not log out account"
     },
     "action": {
       "edit": "Edit",
       "suspend": "Suspend",
       "activate": "Activate",
+      "forceLogout": "Force logout",
       "delete": "Delete"
     },
     "edit": {
@@ -1877,6 +1881,10 @@
       "delete": {
         "title": "Delete account",
         "message": "{{name}} will be removed permanently. This cannot be undone."
+      },
+      "forceLogout": {
+        "title": "Force logout",
+        "message": "{{name}} will be signed out of every session right away. The account stays active and can sign in again."
       }
     },
     "add": "Add Subaccount",

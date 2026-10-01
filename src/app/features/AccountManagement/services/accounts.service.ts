@@ -68,6 +68,11 @@ export class AccountsService {
     return this.http.patch<VendorAccount>(`${this.baseUrl}/accounts/${id}/status`, payload);
   }
 
+  /** Ends every session the account has open; it stays ACTIVE and can sign back in. */
+  forceLogout(id: string): Observable<VendorAccount> {
+    return this.http.post<VendorAccount>(`${this.baseUrl}/accounts/${id}/force-logout`, {});
+  }
+
   deleteAccount(id: string): Observable<unknown> {
     return this.http.delete(`${this.baseUrl}/accounts/${id}`);
   }

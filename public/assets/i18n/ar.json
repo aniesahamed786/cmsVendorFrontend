@@ -1853,12 +1853,16 @@
       "deletedDetail": "تمت إزالة {{name}}.",
       "suspendFailed": "تعذّر إيقاف الحساب",
       "activateFailed": "تعذّر تفعيل الحساب",
-      "deleteFailed": "تعذّر حذف الحساب"
+      "deleteFailed": "تعذّر حذف الحساب",
+      "loggedOutSummary": "تم تسجيل خروج الحساب",
+      "loggedOutDetail": "تم تسجيل خروج {{name}} من جميع الجلسات.",
+      "forceLogoutFailed": "تعذّر تسجيل خروج الحساب"
     },
     "action": {
       "edit": "تعديل",
       "suspend": "إيقاف",
       "activate": "تفعيل",
+      "forceLogout": "فرض تسجيل الخروج",
       "delete": "حذف"
     },
     "edit": {
@@ -1879,6 +1883,10 @@
       "delete": {
         "title": "حذف الحساب",
         "message": "سيتم حذف {{name}} نهائياً. لا يمكن التراجع عن هذا الإجراء."
+      },
+      "forceLogout": {
+        "title": "فرض تسجيل الخروج",
+        "message": "سيتم تسجيل خروج {{name}} من جميع الجلسات فوراً. يبقى الحساب مفعّلاً ويمكنه تسجيل الدخول مجدداً."
       }
     },
     "add": "إضافة حساب فرعي",

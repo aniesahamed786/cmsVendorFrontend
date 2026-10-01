@@ -19,12 +19,13 @@ import { AccountStatus, AccountType, VendorAccount } from '../../models/account.
 import { AccountsService } from '../../services/accounts.service';
 import { AuthService } from '../../../../core/services/auth.service';
 
-type RowAction = 'suspend' | 'activate' | 'delete';
+type RowAction = 'suspend' | 'activate' | 'delete' | 'forceLogout';
 
 const ACTION_PAST_TENSE: Record<RowAction, string> = {
   suspend: 'suspended',
   activate: 'activated',
   delete: 'deleted',
+  forceLogout: 'loggedOut',
 };
 
 @Component({
@@ -108,6 +109,16 @@ export class AccountManagementPage implements OnInit {
         icon: suspended ? 'pi pi-check-circle' : 'pi pi-ban',
         command: () => this.askConfirm(suspended ? 'activate' : 'suspend', row),
       },
+      // Suspending already ends the sessions, so only an active account has any to end.
+      ...(suspended
+        ? []
+        : [
+            {
+              label: this.i18n.t('accountManagement.action.forceLogout'),
+              icon: 'pi pi-sign-out',
+              command: () => this.askConfirm('forceLogout', row),
+            },
+          ]),
       {
         label: this.i18n.t('accountManagement.action.delete'),
         icon: 'pi pi-trash',
@@ -213,7 +224,9 @@ export class AccountManagementPage implements OnInit {
     const request: Observable<unknown> =
       action === 'delete'
         ? this.api.deleteAccount(row.id)
-        : this.api.updateAccountStatus(row.id, action === 'suspend' ? 'SUSPENDED' : 'ACTIVE');
+        : action === 'forceLogout'
+          ? this.api.forceLogout(row.id)
+          : this.api.updateAccountStatus(row.id, action === 'suspend' ? 'SUSPENDED' : 'ACTIVE');
 
     this.confirmBusy.set(true);
     request.pipe(finalize(() => this.confirmBusy.set(false))).subscribe({
