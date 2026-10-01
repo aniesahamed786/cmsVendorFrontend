@@ -157,6 +157,7 @@
     "statusActive": "نشط",
     "description": "الوصف",
     "representativeInformation": "معلومات الممثل",
+    "representativeNotShown": "هذه المعلومات لا تظهر للعملاء",
     "businessContactDetails": "بيانات التواصل التجارية",
     "socialMedia": "وسائل التواصل الاجتماعي",
     "noSocialLinks": "لا توجد روابط تواصل",

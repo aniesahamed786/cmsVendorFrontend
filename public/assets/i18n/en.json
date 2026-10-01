@@ -157,6 +157,7 @@
     "statusActive": "Active",
     "description": "Description",
     "representativeInformation": "Representative Information",
+    "representativeNotShown": "This information is not shown to customers",
     "businessContactDetails": "Business Contact Details",
     "socialMedia": "Social Media",
     "noSocialLinks": "No social links",

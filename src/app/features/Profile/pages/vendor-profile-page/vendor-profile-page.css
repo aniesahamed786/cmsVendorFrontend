@@ -169,6 +169,13 @@
   flex-shrink: 0;
 }
 
+.vendor-profile-page__card-note {
+  font-size: 0.875rem;
+  color: var(--app-muted);
+  /* pull up under the header, keep the header's gap before the list */
+  margin: -0.5rem 0 1rem;
+}
+
 .vendor-profile-page__description-row {
   display: flex;
   flex-direction: column;

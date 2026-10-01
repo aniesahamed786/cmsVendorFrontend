@@ -40,6 +40,13 @@
     flex: 1;
   }
 
+  &__section-note {
+    font-size: 0.875rem;
+    color: var(--app-muted);
+    /* pull up under the header, keep the header's gap before the list */
+    margin: -0.75rem 0 1.25rem;
+  }
+
   &__descriptions {
     display: grid;
     grid-template-columns: 1fr 1fr;

@@ -24,6 +24,13 @@
   color: var(--app-text);
 }
 
+.profile-form-section__note {
+  font-size: 0.875rem;
+  color: var(--app-muted);
+  /* pull up under the header, keep the header's gap before the fields */
+  margin: -1rem 0 1.5rem;
+}
+
 .profile-form-section__icon {
   width: 2.5rem;
   height: 2.5rem;
