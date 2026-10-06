@@ -54,11 +54,6 @@ export function activityKey(action: string | null | undefined): string {
   return ACTIVITY_KEYS[action] ?? titleCase(action);
 }
 
-export function statusKey(status: string | null | undefined): string {
-  if (!status) return '—';
-  return `requestCenter.value.${status.toLowerCase()}`;
-}
-
 export function formatTimestamp(iso: string | null | undefined): string {
   if (!iso) return '—';
   const date = new Date(iso);

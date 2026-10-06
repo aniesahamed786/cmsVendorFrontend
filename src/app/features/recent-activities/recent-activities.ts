@@ -10,7 +10,7 @@ import { AppBottomSheet } from '../../shared/Components/app-bottom-sheet/app-bot
 import { I18nService } from '../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../shared/i18n/translate.pipe';
 import { ApiRequestEntityType } from '../request-center/models/request-api.model';
-import { ActivityRow, activityKey, entityKey, statusKey, toActivityPage } from './models/system-log.mapper';
+import { ActivityRow, activityKey, entityKey, toActivityPage } from './models/system-log.mapper';
 import { SystemLogAction, SystemLogSortOrder } from './models/system-log.model';
 import { SystemLogService } from './services/system-log.service';
 import { Button } from '../../shared/Components/button/button';
@@ -29,7 +29,6 @@ export class RecentActivities implements OnInit {
   /** Template helpers — labels are i18n keys so a language switch re-renders them. */
   readonly entityKey = entityKey;
   readonly activityKey = activityKey;
-  readonly statusKey = statusKey;
 
   showMobileFilters = signal(false);
 
@@ -231,10 +230,6 @@ export class RecentActivities implements OnInit {
           this.loadFailed.set(true);
         },
       });
-  }
-
-  statusClass(status: string): string {
-    return `recent-activities__status recent-activities__status--${status.toLowerCase()}`;
   }
 }
 

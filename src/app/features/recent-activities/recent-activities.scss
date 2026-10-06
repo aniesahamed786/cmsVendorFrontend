@@ -82,60 +82,6 @@
     cursor: help;
   }
 
-  // ---- Status pills (rounded lozenge — justified: status indicator) ----
-  &__status {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    font-weight: 700;
-    text-transform: capitalize;
-    line-height: 1.25;
-    padding: 0.35rem 1rem;
-    border-radius: 9999px;
-    color: #ffffff;
-    white-space: nowrap;
-
-    &--created,
-    &--approved,
-    &--published,
-    &--active {
-      background: var(--app-status-active, #16a34a);
-      color: #ffffff;
-    }
-
-    &--edited,
-    &--submitted,
-    &--scheduled {
-      background: var(--app-status-scheduled, #0ea5e9);
-      color: #ffffff;
-    }
-
-    &--rejected,
-    &--cancelled,
-    &--expired {
-      background: var(--app-status-expired, #dc2626);
-      color: #ffffff;
-    }
-
-    &--returned {
-      background: var(--app-status-returned, var(--app-status-default, #6b7280));
-      color: #ffffff;
-    }
-
-    &--draft,
-    &--inactive {
-      background: var(--app-status-draft, var(--app-status-inactive, #f97316));
-      color: #ffffff;
-    }
-
-    &--recalled,
-    &--default {
-      background: var(--app-status-default, #6b7280);
-      color: #ffffff;
-    }
-  }
-
   // ---- Table skeleton cells (.app-skeleton owns fill + pulse; these own size) ----
   &__skeleton-cell {
     display: inline-block;
@@ -145,7 +91,6 @@
     &--wide { width: 8rem; }
     &--text { width: 6rem; }
     &--id { width: 6.5rem; }
-    &--pill { width: 4.5rem; }
   }
 }
 

@@ -121,7 +121,6 @@
           <th>{{ 'recentActivities.column.performedBy' | translate }}</th>
           <th>{{ 'recentActivities.column.targetEntity' | translate }}</th>
           <th>{{ 'recentActivities.column.referenceId' | translate }}</th>
-          <th>{{ 'recentActivities.column.status' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -138,7 +137,6 @@
             }
           </td>
           <td>{{ row.referenceId }}</td>
-          <td><span [class]="statusClass(row.status)">{{ statusKey(row.status) | translate }}</span></td>
         </tr>
       </ng-template>
 
@@ -151,13 +149,12 @@
           <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--text"></span></td>
           <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--wide"></span></td>
           <td><span class="app-skeleton recent-activities__skeleton-cell recent-activities__skeleton-cell--id"></span></td>
-          <td><span class="app-skeleton app-skeleton--pill recent-activities__skeleton-cell recent-activities__skeleton-cell--pill"></span></td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr class="app-table-empty">
-          <td colspan="6">
+          <td colspan="5">
             @if (loadFailed()) {
             {{ 'recentActivities.loadFailed' | translate }}
             <app-button variant="outline" icon="pi pi-refresh" (click)="onLazyLoad(dt.createLazyLoadMetadata())">{{ 'common.tryAgain' | translate }}</app-button>
