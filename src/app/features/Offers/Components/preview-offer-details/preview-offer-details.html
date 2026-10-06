@@ -76,7 +76,7 @@
             {{ getActionText() }}
         </button>
         <!-- Action Icons -->
-        <div class="preview-offer-details__actions" [class.preview-offer-details__actions--rtl]="language === 'ar'">
+        <div class="preview-offer-details__actions">
             <div class="preview-offer-details__action">
                 <i class="pi pi-bookmark preview-offer-details__action-icon"></i>
                 <span class="preview-offer-details__action-label">{{ language === 'en' ? 'Save' : 'المفضلة' }}</span>
@@ -151,10 +151,8 @@
             الاسترداد' }}</h3>
         <div class="preview-offer-details__location-list">
             @for (loc of locations | slice:0:2; track $index) {
-            <div class="preview-offer-details__location-row"
-                [class.preview-offer-details__location-row--rtl]="language === 'ar'">
+            <div class="preview-offer-details__location-row">
                 <div class="preview-offer-details__location-content"
-                    [class.preview-offer-details__location-content--rtl]="language === 'ar'"
                     [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
                     <i class="pi pi-home preview-offer-details__location-icon"></i>
                     <div class="preview-offer-details__location-text">
@@ -172,14 +170,12 @@
         </div>
         @if (locations.length > 2) {
         <button class="preview-offer-details__branches-button"
-            [class.preview-offer-details__branches-button--rtl]="language === 'ar'"
             [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'" type="button">
             <i class="pi pi-map preview-offer-details__branches-icon"></i> {{ language === 'en' ? ('View all ' +
             locations.length + ' branches') : ('عرض جميع الفروع (' + locations.length + ')') }}
         </button>
         } @else if (locations.length > 0) {
         <button class="preview-offer-details__branches-button"
-            [class.preview-offer-details__branches-button--rtl]="language === 'ar'"
             [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'" type="button">
             <i class="pi pi-map preview-offer-details__branches-icon"></i> {{ language === 'en' ? 'View all branches' :
             'عرض جميع الفروع' }}
@@ -191,8 +187,7 @@
     <div id="preview-section-tabs" class="preview-offer-details__tabs">
         <div class="preview-offer-details__tab-list">
             <button (click)="setActiveTab('avail')" class="preview-offer-details__tab-button"
-                [class.preview-offer-details__tab-button--active]="activeTab === 'avail'"
-                [class.preview-offer-details__tab-button--rtl-last]="language === 'ar'" type="button">
+                [class.preview-offer-details__tab-button--active]="activeTab === 'avail'" type="button">
                 {{ language === 'en' ? 'How to avail' : 'طريقة الاسترداد' }}
             </button>
             <button (click)="setActiveTab('contact')"
@@ -202,8 +197,7 @@
             </button>
             <button (click)="setActiveTab('feedback')"
                 class="preview-offer-details__tab-button preview-offer-details__tab-button--sm-only"
-                [class.preview-offer-details__tab-button--active]="activeTab === 'feedback'"
-                [class.preview-offer-details__tab-button--rtl-first]="language === 'ar'" type="button">
+                [class.preview-offer-details__tab-button--active]="activeTab === 'feedback'" type="button">
                 {{ language === 'en' ? 'Share feedback' : 'شاركنا رأيك' }}
             </button>
         </div>
@@ -217,22 +211,19 @@
             } @else if (activeTab === 'contact') {
             <div class="preview-offer-details__contact-list" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
                 @if (offer?.mobile) {
-                <div class="preview-offer-details__contact-row"
-                    [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
+                <div class="preview-offer-details__contact-row">
                     <i class="pi pi-phone preview-offer-details__contact-icon"></i><span
                         class="preview-offer-details__text-wrap">{{ offer.mobile }}</span>
                 </div>
                 }
                 @if (offer?.telephone) {
-                <div class="preview-offer-details__contact-row"
-                    [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
+                <div class="preview-offer-details__contact-row">
                     <i class="pi pi-phone preview-offer-details__contact-icon"></i><span
                         class="preview-offer-details__text-wrap">{{ offer.telephone }}</span>
                 </div>
                 }
                 @if (offer?.email) {
-                <div class="preview-offer-details__contact-row"
-                    [class.preview-offer-details__contact-row--rtl]="language === 'ar'">
+                <div class="preview-offer-details__contact-row">
                     <i class="pi pi-envelope preview-offer-details__contact-icon"></i><span
                         class="preview-offer-details__text-wrap">{{ offer.email }}</span>
                 </div>

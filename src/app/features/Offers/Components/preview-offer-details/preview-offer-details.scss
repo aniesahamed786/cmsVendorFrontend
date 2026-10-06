@@ -189,10 +189,6 @@
     justify-content: center;
     gap: 3.5rem;
     color: var(--app-muted);
-
-    &--rtl {
-      flex-direction: row-reverse;
-    }
   }
 
   &__action {
@@ -343,21 +339,12 @@
     padding: 0.75rem;
     background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
     border: 1px solid var(--app-border);
-
-    &--rtl {
-      flex-direction: row-reverse;
-    }
   }
 
   &__location-content {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-
-    &--rtl {
-      flex-direction: row-reverse;
-      text-align: right;
-    }
   }
 
   &__location-icon {
@@ -405,10 +392,6 @@
     &:hover {
       background: color-mix(in srgb, var(--app-surface) 75%, var(--app-border) 25%);
     }
-
-    &--rtl {
-      flex-direction: row-reverse;
-    }
   }
 
   &__branches-icon {
@@ -426,18 +409,6 @@
   &__tab-list {
     display: flex;
     border-bottom: 1px solid var(--app-border);
-
-    &--rtl {
-      .preview-offer-details__tab-button--avail {
-        order: 3;
-      }
-      .preview-offer-details__tab-button--contact {
-        order: 2;
-      }
-      .preview-offer-details__tab-button--feedback {
-        order: 1;
-      }
-    }
   }
 
   &__tab-button {
@@ -491,10 +462,6 @@
     gap: 0.5rem;
     font-size: 0.75rem;
     color: var(--app-muted);
-
-    &--rtl {
-      flex-direction: row-reverse;
-    }
   }
 
   &__contact-icon {
