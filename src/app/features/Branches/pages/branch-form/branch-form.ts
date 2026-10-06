@@ -84,6 +84,19 @@ export interface BranchFormSubmit {
   payload: BranchDraftPayload;
   changedFields: Record<string, unknown>;
 }
+
+const USER_EDITABLE_KEYS: readonly (keyof BranchApiPayload)[] = [
+  'branch_name',
+  'branch_name_ar',
+  'country',
+  'region',
+  'city',
+  'address',
+  'link',
+  'branchRepresentativeName',
+  'branchPhoneNumber',
+  'isPwdAvailable',
+];
  
  
 @Component({
@@ -132,9 +145,6 @@ export class BranchForm {
  
   private readonly resolvingCoordinates = signal(false);
   readonly locationPhoneError = signal(false);
-
-  private readonly hasUnsavedEditChanges = signal(false);
-  private suppressDirtyTracking = false;
 
   private readonly locationSettings = signal<LocationSettingsRow[]>([]);
   private readonly selectedCountry = signal<string>('Saudi Arabia');
@@ -212,14 +222,6 @@ export class BranchForm {
  
     this.setupMapLinkSubscription();
 
-    this.branchForm.valueChanges.subscribe(() => {
-      if (this.suppressDirtyTracking) {
-        return;
-      }
-      this.branchForm.markAsDirty();
-      this.hasUnsavedEditChanges.set(true);
-    });
-
     effect(() => {
       const data = this.editableFormData();
       if (!data) {
@@ -229,8 +231,6 @@ export class BranchForm {
       this.incomingSettingsLocationId = data.settingsLocationId;
       const [longitude, latitude] = data.geoPoint?.coordinates ?? [null, null];
 
-
-      this.suppressDirtyTracking = true;
       this.branchForm.patchValue(
         {
           locationNameEn: data.branch_name,
@@ -248,7 +248,6 @@ export class BranchForm {
         },
         { emitEvent: false },
       );
-      this.suppressDirtyTracking = false;
 
       this.selectedCountry.set(String(data.country ?? '').trim());
       this.selectedRegion.set(String(data.region ?? '').trim());
@@ -273,8 +272,15 @@ export class BranchForm {
     return !!control && control.touched && control.hasError(errorKey);
   }
 
+  /**
+   * Compares only the fields the vendor types in. The rest (`*_ar`, settingsLocationId,
+   * geoPoint) are derived from them and can differ from a baseline that lacks them, which
+   * would raise a request for an untouched form.
+   */
   hasEditChanges(): boolean {
-    return !this.isEditMode || this.hasUnsavedEditChanges();
+    if (!this.isEditMode) return true;
+    const changed = this.diffAgainstBaseline(this.buildApiPayload(null, null));
+    return USER_EDITABLE_KEYS.some((key) => key in changed);
   }
 
   isSubmitDisabled(): boolean {
@@ -379,6 +385,11 @@ export class BranchForm {
       return;
     }
 
+    if (!this.hasEditChanges()) {
+      this.warnNoChanges();
+      return;
+    }
+
     const value = this.branchForm.value;
     let latitude: number | null = value.latitude;
     let longitude: number | null = value.longitude;
@@ -430,12 +441,7 @@ export class BranchForm {
     if (this.isSubmitDisabled()) return;
 
     if (!this.hasAtLeastOneFieldFilled()) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: this.i18n.t('branchForm.toast.noChangesSummary'),
-        detail: this.i18n.t('branchForm.toast.noChangesDetail'),
-        life: 4000,
-      });
+      this.warnNoChanges();
       return;
     }
 
@@ -447,6 +453,15 @@ export class BranchForm {
     this.saveDraftEvent.emit(result);
   }
  
+  private warnNoChanges(): void {
+    this.messageService.add({
+      severity: 'warn',
+      summary: this.i18n.t('branchForm.toast.noChangesSummary'),
+      detail: this.i18n.t('branchForm.toast.noChangesDetail'),
+      life: 4000,
+    });
+  }
+
   private diffAgainstBaseline(payload: BranchDraftPayload): Record<string, unknown> {
     const baseline = this.editableFormData();
     return getChangedFields(
