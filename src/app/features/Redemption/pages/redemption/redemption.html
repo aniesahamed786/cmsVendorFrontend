@@ -36,18 +36,27 @@
           </label>
           <input type="text" inputmode="numeric" pInputText formControlName="membershipId"
             [placeholder]="'redemption.placeholder.membershipId' | translate" class="redemption-form__input--full" />
+          @if (redemptionForm.get('membershipId')?.touched && redemptionForm.get('membershipId')?.hasError('pattern')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.membershipId' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper">
           <label class="redemption-form__label">{{ 'redemption.label.badgeNumber' | translate }}</label>
           <input type="text" inputmode="numeric" maxlength="10" pInputText formControlName="badgeNumber"
             [placeholder]="'redemption.placeholder.badgeNumber' | translate" class="redemption-form__input--full" />
+          @if (redemptionForm.get('badgeNumber')?.touched && redemptionForm.get('badgeNumber')?.hasError('pattern')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.badgeNumber' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper">
           <label class="redemption-form__label">{{ 'redemption.label.mobileNumber' | translate }}</label>
-          <input type="tel" pInputText formControlName="mobileNumber"
+          <input type="tel" inputmode="numeric" pInputText formControlName="mobileNumber"
             [placeholder]="'redemption.placeholder.mobileNumber' | translate" class="redemption-form__input--full" />
+          @if (redemptionForm.get('mobileNumber')?.touched && redemptionForm.get('mobileNumber')?.hasError('pattern')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.mobileNumber' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper">
@@ -112,6 +121,9 @@
               class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalInvoiceAmount"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
+          @if (redemptionForm.get('totalInvoiceAmount')?.touched && redemptionForm.get('totalInvoiceAmount')?.hasError('pattern')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.totalInvoiceAmount' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper">
@@ -119,6 +131,9 @@
               class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalAmountPaid"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
+          @if (redemptionForm.get('totalAmountPaid')?.touched && redemptionForm.get('totalAmountPaid')?.hasError('pattern')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.totalAmountPaid' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper">

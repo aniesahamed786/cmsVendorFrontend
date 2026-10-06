@@ -1286,6 +1286,8 @@
       "listFailed": "Could not load redemption list",
       "invalidSummary": "Missing information",
       "invalidDetail": "Please fill in all required fields before submitting.",
+      "invalidNumberSummary": "Invalid numeric value",
+      "invalidNumberDetail": "Numeric fields must contain digits only. Amount fields may include one decimal point.",
       "genericErrorDetail": "Something went wrong. Please try again.",
       "templateFailed": "Could not download template",
       "uploadFailed": "Could not read the file",

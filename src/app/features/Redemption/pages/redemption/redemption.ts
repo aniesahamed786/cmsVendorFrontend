@@ -175,15 +175,15 @@ export class Redemption {
     this.redemptionForm = this.fb.group({
       transactionType: ['SINGLE', Validators.required],
       membershipId: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      mobileNumber: [''],
-      badgeNumber: [''],
+      mobileNumber: ['', Validators.pattern(/^\d+$/)],
+      badgeNumber: ['', Validators.pattern(/^\d+$/)],
       transactionDate: ['', Validators.required],
       startDate: [''],
       endDate: [''],
       offer: [null, Validators.required],
       branch: [null],
-      totalInvoiceAmount: ['', Validators.required],
-      totalAmountPaid: ['', Validators.required],
+      totalInvoiceAmount: ['', [Validators.required, Validators.pattern(/^\d+(?:\.\d+)?$/)]],
+      totalAmountPaid: ['', [Validators.required, Validators.pattern(/^\d+(?:\.\d+)?$/)]],
       currency: ['SAR', Validators.required],
       // Derived from the two amounts below, never typed in.
       discountAmount: [{ value: '', disabled: true }],
@@ -464,11 +464,24 @@ export class Redemption {
   submit(): void {
     if (this.redemptionForm.invalid || this.isDateRangeInvalid || this.isDiscountNegative) {
       this.redemptionForm.markAllAsTouched();
+      const invalidNumber = [
+        'membershipId',
+        'mobileNumber',
+        'badgeNumber',
+        'totalInvoiceAmount',
+        'totalAmountPaid',
+      ].some((field) =>
+        this.redemptionForm.get(field)?.hasError('pattern'),
+      );
       this.messageService.add({
         severity: 'warn',
-        summary: this.i18n.t('redemption.toast.invalidSummary'),
+        summary: this.i18n.t(
+          invalidNumber ? 'redemption.toast.invalidNumberSummary' : 'redemption.toast.invalidSummary',
+        ),
         detail: this.redemptionForm.invalid
-          ? this.i18n.t('redemption.toast.invalidDetail')
+          ? this.i18n.t(
+              invalidNumber ? 'redemption.toast.invalidNumberDetail' : 'redemption.toast.invalidDetail',
+            )
           : this.isDateRangeInvalid
             ? this.i18n.t('redemption.toast.dateRangeInvalidDetail')
             : this.discountNegativeMessage,
@@ -567,7 +580,7 @@ export class Redemption {
   }
 
   private toNumber(value: unknown): number {
-    const n = Number(String(value ?? '').replace(/[^0-9.-]/g, ''));
+    const n = Number(String(value ?? '').trim());
     return Number.isFinite(n) ? n : 0;
   }
 
