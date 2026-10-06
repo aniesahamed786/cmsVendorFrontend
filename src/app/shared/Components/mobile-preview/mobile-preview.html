@@ -113,7 +113,7 @@
         } @else {
           <button (click)="toggleLanguage()" class="toggle-button" type="button">
             <i class="pi pi-language"></i>
-            {{ language() === 'en' ? 'Switch to Arabic Preview' : 'Switch to English Preview' }}
+            {{ (language() === 'en' ? 'offerDetails.preview.switchToArabic' : 'offerDetails.preview.switchToEnglish') | translate }}
           </button>
         }
       </div>

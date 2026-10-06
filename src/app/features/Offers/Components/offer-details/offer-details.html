@@ -54,7 +54,7 @@
       <h3 class="offer-card__title">{{ 'offerDetails.section.description' | translate }}</h3>
         @if (isEdited('title','title_ar','description','description_ar')) { @if (drafted()) { <span class="offer-card__edited-badge offer-card__drafted-badge">{{ 'requestCenter.detail.draftedBadge' | translate }}</span> }<span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
-    <div class="offer-card__grid-2">
+    <div class="offer-card__grid-2" dir="ltr">
       <p class="offer-detail-text-wrap offer-card__text">{{offer().description}}</p>
       @if (offer().description_ar) {
       <p class="offer-detail-text-wrap offer-card__text offer-card__text--rtl" dir="rtl">
@@ -178,7 +178,7 @@
         @if (isEdited('discountType','Discount_amount','Discount_amount_ar','discountCode','howToAvail','howToAvail_ar')) { @if (drafted()) { <span class="offer-card__edited-badge offer-card__drafted-badge">{{ 'requestCenter.detail.draftedBadge' | translate }}</span> }<span class="offer-card__edited-badge">{{ 'requestCenter.detail.editedBadge' | translate }}</span> }
     </header>
 
-    <div class="offer-discount">
+    <div class="offer-discount" dir="ltr">
       <!-- English Column -->
       <div class="offer-discount__col">
         <div class="offer-discount__field">
@@ -426,7 +426,7 @@
     </header>
     <div class="offer-custom-highlight">
       <div class="offer-custom-highlight__info">
-        <div class="offer-custom-highlight__grid">
+        <div class="offer-custom-highlight__grid" dir="ltr">
           <div class="offer-custom-highlight__field">
             <span class="offer-custom-highlight__label">Title:</span>
             <p class="offer-detail-text-wrap offer-custom-highlight__value">{{getHighlightTitle(offer())}}</p>
@@ -438,7 +438,7 @@
           </div>
           }
         </div>
-        <div class="offer-custom-highlight__grid">
+        <div class="offer-custom-highlight__grid" dir="ltr">
           <div class="offer-custom-highlight__field">
             <span class="offer-custom-highlight__label">Description:</span>
             <p class="offer-detail-text-wrap offer-custom-highlight__value">{{getHighlightDescription(offer())}}</p>

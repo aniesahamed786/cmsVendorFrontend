@@ -1,9 +1,10 @@
 import { Component, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-mobile-preview',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './mobile-preview.html',
   styleUrl: './mobile-preview.scss',
 })

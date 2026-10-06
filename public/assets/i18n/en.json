@@ -1142,6 +1142,8 @@
       "uncategorized": "Uncategorized",
       "unknownLocation": "Unknown Location",
       "regularEmployees": "Regular Employees",
+      "retirees": "Retirees",
+      "dependents": "Dependents",
       "na": "N/A"
     },
     "hotel": {

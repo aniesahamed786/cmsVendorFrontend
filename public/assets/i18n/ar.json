@@ -1141,7 +1141,9 @@
     "value": {
       "uncategorized": "غير مصنّف",
       "unknownLocation": "موقع غير معروف",
-      "regularEmployees": "الموظفون النظاميون",
+      "regularEmployees": "الموظفون",
+      "retirees": "المتقاعدون",
+      "dependents": "المُعالون",
       "na": "غير متاح"
     },
     "hotel": {

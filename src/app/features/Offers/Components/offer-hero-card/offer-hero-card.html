@@ -79,7 +79,7 @@
           <span class="app-svg-icon offer-hero-card__mode-icon"
             [style.webkitMaskImage]="'url(' + badge.icon + ')'"
             [style.maskImage]="'url(' + badge.icon + ')'"></span>
-          <span class="offer-hero-card__mode-label">{{ badge.label }}</span>
+          <span class="offer-hero-card__mode-label">{{ badge.label | translate }}</span>
         </div>
         }
         @if (isPwdFriendly(offer)) {
