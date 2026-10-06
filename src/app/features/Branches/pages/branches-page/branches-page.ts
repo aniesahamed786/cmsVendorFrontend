@@ -108,12 +108,12 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   sortField = signal<keyof BranchRow | null>('locationName');
   sortOrder = signal<1 | -1>(-1); // Newest first by default
 
-  // Options — labels are translated, values stay the English data keys.
+  // Region names come from the data (same values the Region column shows), so only "all" is translated.
   readonly regionOptions = computed(() => [
-    { label: this.i18n.t('branches.region.all'), value: null },
-    ...(['East', 'West', 'South', 'North', 'Central'] as const).map((r) => ({
-      label: this.i18n.t(`branches.region.${r.toLowerCase()}`),
-      value: r as string,
+    { label: this.i18n.t('branches.region.all'), value: null as string | null },
+    ...Array.from(new Set(this.allBranches().map((b) => b.region).filter(Boolean))).map((r) => ({
+      label: r as string,
+      value: r as string | null,
     })),
   ]);
 
@@ -195,7 +195,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     let rows = this.allBranches();
 
     const region = this.selectedRegion();
-    // if (region) rows = rows.filter(r => r.region === region);
+    if (region) rows = rows.filter(r => r.region === region);
 
     const manager = this.selectedManager();
     if (manager) rows = rows.filter(r => r.representativeName === manager);
