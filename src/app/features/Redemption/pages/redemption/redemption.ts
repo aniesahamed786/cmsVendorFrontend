@@ -115,7 +115,7 @@ export class Redemption {
 
   readonly redemptions = signal<RedemptionRow[]>([]);
   readonly totalRecords = signal(0);
-  readonly listLoading = signal(true);
+  readonly listLoading = signal(this.auth.canRead('redemptions'));
   readonly loadFailed = signal(false);
   readonly pageSize = signal(10);
 
@@ -385,6 +385,11 @@ export class Redemption {
   }
 
   private loadRedemptions(page: number, pageSize: number): void {
+    if (!this.auth.canRead('redemptions')) {
+      this.listLoading.set(false);
+      return;
+    }
+
     this.listLoading.set(true);
     this.loadFailed.set(false);
     this.api

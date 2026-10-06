@@ -131,7 +131,9 @@
             <span class="account-form__toggle-label">
               {{ 'accountManagement.permission.' + option.key | translate }}
             </span>
-            <span class="account-form__toggle-value">{{ option.value }}</span>
+            <span class="account-form__toggle-value">
+              {{ 'accountManagement.permissionSubtitle.' + option.key | translate }}
+            </span>
           </div>
           <p-toggleSwitch [ngModel]="isPermissionOn(option.value)" [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="togglePermission(option.value, $event)" />

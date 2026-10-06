@@ -182,7 +182,14 @@ describe('AuthService', () => {
       // VENDOR_STAFF ships cms_redemptions:manage with no :read — Redemptions must still open.
       signIn(['cms_redemptions:manage'], 'VENDOR_STAFF');
       expect(service.canView('redemptions')).toBe(true);
+      expect(service.canRead('redemptions')).toBe(false);
       expect(service.canManage('redemptions')).toBe(true);
+    });
+
+    it('recognizes an explicit read grant separately from manage', () => {
+      signIn(['cms_redemptions:read'], 'VENDOR_STAFF');
+      expect(service.canRead('redemptions')).toBe(true);
+      expect(service.canManage('redemptions')).toBe(false);
     });
 
     it('uses Request Center permissions for staff access', () => {

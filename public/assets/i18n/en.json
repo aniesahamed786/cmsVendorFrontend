@@ -1808,6 +1808,11 @@
       "analytics": "View analytics",
       "manageBranches": "Manage branches"
     },
+    "permissionSubtitle": {
+      "redemptionHistory": "View Redemptions",
+      "analytics": "View Analytics",
+      "manageBranches": "Manage Locations"
+    },
     "column": {
       "name": "Name",
       "email": "Email",

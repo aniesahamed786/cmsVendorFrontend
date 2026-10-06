@@ -189,6 +189,7 @@
   </p-card>
   }
 
+  @if (auth.canRead('redemptions')) {
   <section class="redemption-card">
     <div class="redemption-card__header redemption-card__header--table">
       <h2 class="redemption-card__title">{{ 'redemption.list.title' | translate }}</h2>
@@ -273,4 +274,5 @@
       </ng-template>
     </p-table>
   </section>
+  }
 </div>

@@ -220,7 +220,12 @@ export class AuthService {
 
   /** Can open the page at all. `manage` implies `read` — staff hold manage-only grants. */
   canView(resource: PermissionResource | string): boolean {
-    return this.hasPermission(resource, 'read') || this.hasPermission(resource, 'manage');
+    return this.canRead(resource) || this.hasPermission(resource, 'manage');
+  }
+
+  /** Has the explicit read grant (used when read and manage unlock different page sections). */
+  canRead(resource: PermissionResource | string): boolean {
+    return this.hasPermission(resource, 'read');
   }
 
   /** Can create / edit / delete. */
