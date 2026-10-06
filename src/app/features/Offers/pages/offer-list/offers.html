@@ -255,3 +255,14 @@
     </p>
   </div>
 </app-confirmation-pop-up>
+
+<!-- Cancel offer confirmation -->
+<app-confirmation-pop-up [visible]="!!cancelTarget()" [title]="'offers.cancel.title' | translate"
+  [message]="cancelMessage()" [confirmLabel]="'offers.cancel.confirm' | translate"
+  [cancelLabel]="'common.cancel' | translate" confirmVariant="danger" [loading]="cancelling()"
+  (confirm)="confirmCancelOffer()" (cancel)="!cancelling() && cancelTarget.set(null)">
+  <label class="offers__cancel-label" for="offer-cancel-remarks">{{ 'offers.cancel.remarksLabel' | translate }}</label>
+  <textarea id="offer-cancel-remarks" pInputTextarea rows="3" class="offers__cancel-remarks"
+    [ngModel]="cancelRemarks()" (ngModelChange)="cancelRemarks.set($event)"
+    [placeholder]="'offers.cancel.remarksPlaceholder' | translate"></textarea>
+</app-confirmation-pop-up>

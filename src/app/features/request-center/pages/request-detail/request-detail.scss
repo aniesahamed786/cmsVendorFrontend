@@ -217,7 +217,7 @@
     margin: 0;
   }
 
-  // ---- Branch deletion request: red notice in place of the branch details ----
+  // ---- Deletion (CANCEL) request: red notice above the branch/offer it removes ----
   &__card--deletion {
     background: color-mix(in srgb, var(--app-danger) 10%, var(--app-surface));
     border-color: var(--app-danger);

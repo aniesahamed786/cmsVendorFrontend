@@ -3,6 +3,20 @@
 }
 
 .offers {
+  /* Cancel offer dialog — projected into app-confirmation-pop-up */
+  &__cancel-label {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+
+  &__cancel-remarks {
+    width: 100%;
+    resize: vertical;
+  }
+
   // ---- Renew pop-up (content projected into app-confirmation-pop-up) ----
   &__renew {
     display: flex;

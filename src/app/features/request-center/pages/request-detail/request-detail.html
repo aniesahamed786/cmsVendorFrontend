@@ -262,7 +262,7 @@
       <section class="request-detail__card">
         <p class="request-detail__error">{{ error }}</p>
       </section>
-      } @else if (isBranchDeletion()) {
+      } @else if (isDeletion()) {
       <section class="request-detail__card request-detail__card--deletion" role="alert">
         <div class="request-detail__section-header">
           <span class="request-detail__section-icon request-detail__section-icon--deletion"><i class="pi pi-trash"></i></span>
@@ -270,7 +270,7 @@
             {{ 'requestCenter.detail.section.requestedChanges' | translate }}
           </h3>
         </div>
-        <p class="request-detail__deletion-message">{{ 'requestCenter.detail.branchDeletion' | translate }}</p>
+        <p class="request-detail__deletion-message">{{ (entityType() === 'OFFER' ? 'requestCenter.detail.offerDeletion' : 'requestCenter.detail.branchDeletion') | translate }}</p>
         @if (affectedOffers().length) {
         <h4 class="request-detail__affected-title">{{ 'requestCenter.detail.affectedOffers' | translate }}</h4>
         <div class="request-detail__affected-list">
@@ -292,8 +292,12 @@
         </div>
         }
       </section>
-      <!-- requestData is empty, so branchView() is the live branch from `current`. -->
+      <!-- requestData is empty, so the view is the live entity from `current`. -->
+      @if (entityType() === 'OFFER') {
+      <app-request-offer-detail [offer]="offerView()" [vendor]="heroVendor()" [locations]="offerLocations()" />
+      } @else {
       <app-request-branch-detail [fields]="branchView()" [pwdFriendly]="branchPwdFriendly()" />
+      }
       } @else if (hasNoChanges()) {
       <section class="request-detail__card">
         <div class="request-detail__section-header">

@@ -251,7 +251,7 @@ export class Offers implements OnInit {
       items.push(
         { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
         { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync', command: () => { if (this.activeOffer) this.openRenew(this.activeOffer); } },
-        { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger' },
+        { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger', command: () => { if (this.activeOffer) this.openCancel(this.activeOffer); } },
       );
     }
     return items;
@@ -325,6 +325,62 @@ export class Offers implements OnInit {
           });
         },
         // 409 = a request for this offer is already open; the backend message names it.
+        error: (err: HttpErrorResponse) => {
+          const isConflict = err?.status === 409;
+          this.messageService.add({
+            severity: isConflict ? 'warn' : 'error',
+            summary: this.i18n.t(isConflict ? 'offerForm.toast.requestConflictSummary' : 'offerForm.toast.requestFailedSummary'),
+            detail: extractApiErrorMessage(err) ?? this.i18n.t(isConflict ? 'offerForm.toast.requestConflictDetail' : 'offerForm.toast.requestFailedDetail'),
+            life: isConflict ? 10000 : 5000,
+            closable: true,
+          });
+        },
+      });
+  }
+
+  // ---- Cancel offer: raises a CANCEL request for admin review (same flow as cancel branch) ----
+  readonly cancelTarget = signal<Offer | null>(null);
+  readonly cancelRemarks = signal('');
+  readonly cancelling = signal(false);
+
+  readonly cancelMessage = computed(() => {
+    this.i18n.loadSeq();
+    return this.i18n.t('offers.cancel.message', { name: this.cancelTarget()?.title ?? '' });
+  });
+
+  openCancel(offer: Offer): void {
+    this.cancelRemarks.set('');
+    this.cancelTarget.set(offer);
+  }
+
+  confirmCancelOffer(): void {
+    const offer = this.cancelTarget();
+    if (!offer || this.cancelling()) return;
+
+    this.cancelling.set(true);
+    this.requestApi
+      .create({
+        entityType: 'OFFER',
+        requestType: 'CANCEL',
+        entityId: offer.id,
+        title: offer.title,
+        remarks: this.cancelRemarks().trim() || undefined,
+        // The backend rejects a CANCEL that carries a payload.
+        requestData: {},
+        actionType: 'SUBMIT',
+      })
+      .pipe(finalize(() => this.cancelling.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.cancelTarget.set(null);
+          this.messageService.add({
+            severity: 'success',
+            summary: this.i18n.t('offers.cancel.successSummary'),
+            detail: this.i18n.t('offers.cancel.successDetail', { requestId: res.requestId }),
+            life: 5000,
+            closable: true,
+          });
+        },
         error: (err: HttpErrorResponse) => {
           const isConflict = err?.status === 409;
           this.messageService.add({
