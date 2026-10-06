@@ -68,7 +68,7 @@ export class MessagingCenterTicketDetails {
 
   // readonly attachments = signal<{ name: string; url: string }[]>([]);
   readonly attachments = signal<File[]>([]);
-  /** Set when a picked file was over the 10 MB limit and left out. */
+  /** Set when a picked file wasn't an image or was over 10 MB, and was left out. */
   readonly fileError = signal(false);
 
   displayFilePopup = false;
@@ -196,8 +196,9 @@ export class MessagingCenterTicketDetails {
   onFilesSelected(event: Event): void {
   const input = event.target as HTMLInputElement;
   const all = input.files ? Array.from(input.files) : [];
-  // Oversized files are dropped here so the upload never reaches the API.
-  const files = all.filter(f => f.size <= MAX_FILE_BYTES);
+  // Vendors may only send images up to 10 MB; anything else is dropped before it reaches the API.
+  // `accept` on the input only filters the picker, so the type is checked here too.
+  const files = all.filter(f => f.type.startsWith('image/') && f.size <= MAX_FILE_BYTES);
   this.fileError.set(files.length < all.length);
 
   this.attachments.update(existing => {

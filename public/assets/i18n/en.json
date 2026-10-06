@@ -1444,7 +1444,7 @@
       "forwardFrom": "From: {{name}}",
       "forwardSent": "Sent: {{date}}",
       "ticketClosedNotice": "This ticket is closed. No further replies or changes can be made.",
-      "fileTooLarge": "One or more files were not attached because they exceed the 10 MB limit."
+      "fileInvalid": "Some files were not attached. Only images up to 10 MB are allowed."
     },
     "create": {
       "back": "Back to Message Center",
