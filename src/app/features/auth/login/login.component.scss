@@ -161,6 +161,17 @@
     }
   }
 
+  /* Inline field error under an input, same danger colour as the notice. */
+  &__error {
+    margin-top: 0.375rem;
+    color: var(--app-danger);
+    font-size: 0.8125rem;
+
+    :host-context(.dark-mode) & {
+      color: color-mix(in srgb, var(--app-danger) 45%, #ffffff);
+    }
+  }
+
   /* The @if swaps the two forms, so each one plays its keyframes as it's inserted:
      the OTP step comes in from the reading end, the sign-in form from the start.
      ponytail: enter-only — the outgoing form just disappears, add a leave animation if it feels abrupt. */

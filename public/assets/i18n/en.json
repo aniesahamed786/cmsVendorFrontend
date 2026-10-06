@@ -1757,6 +1757,8 @@
   },
   "login": {
     "language": "العربية",
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Enter a valid email address.",
     "title": "Vendor Portal",
     "subtitle": "Enter your credentials to access the secure portal.",
     "email": "Business Email",
