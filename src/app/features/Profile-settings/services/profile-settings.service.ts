@@ -12,6 +12,7 @@ export type VendorAccountTheme = 'LIGHT' | 'DARK' | 'SYSTEM';
  * `currentPassword` is required by the backend whenever `newPassword` is present.
  */
 export interface UpdateProfileSettingsPayload {
+  name?: string;
   language?: VendorAccountLanguage;
   theme?: VendorAccountTheme;
   currentPassword?: string;

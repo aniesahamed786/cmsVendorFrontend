@@ -5,6 +5,8 @@ import { VendorSocialLink } from '../../vendors/models/createNewVendor';
 /** Shape of GET /cmsVendor/vendorProfile (VendorCmsProfileResponseDto). */
 export interface VendorProfileApi {
   vendorId: string;
+  /** The vendor's MAIN CMS account. Not returned yet — pending a backend change. */
+  mainAccount?: { name: string; email: string; mobile?: string | null } | null;
   vendorName: string;
   vendorNameAr: string;
   description: string;

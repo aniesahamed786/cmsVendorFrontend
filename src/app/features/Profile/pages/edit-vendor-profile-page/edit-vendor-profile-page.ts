@@ -7,7 +7,8 @@ import { finalize } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
-import { VendorProfileEditForm } from '../../components/vendor-profile-edit-form/vendor-profile-edit-form';
+import { VendorProfileAccount, VendorProfileEditForm } from '../../components/vendor-profile-edit-form/vendor-profile-edit-form';
+import { ProfileSettingsService } from '../../../Profile-settings/services/profile-settings.service';
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
 import { Button } from '../../../../shared/Components/button/button';
 import { BackButton } from '../../../../shared/Components/back-button/back-button';
@@ -65,6 +66,15 @@ export class EditVendorProfilePage {
   private readonly profileService = inject(VendorProfileService);
   private readonly requestApi = inject(RequestCenterApiService);
   private readonly auth = inject(AuthService);
+  private readonly profileSettings = inject(ProfileSettingsService);
+
+  /**
+   * The vendor's MAIN account, for the credentials section. Main-account holders only: the name
+   * saves through PATCH /profile-settings, which can only rename the caller's own account, so a
+   * staff member must not be shown the main account's details with a field that renames themselves.
+   */
+  readonly account = signal<VendorProfileAccount | null>(null);
+  readonly savingAccountName = signal(false);
 
   readonly initialData = signal<VendorProfileEditData>(MOCK_VENDOR_PROFILE_EDIT);
   readonly isLoading = signal(false);
@@ -102,7 +112,13 @@ export class EditVendorProfilePage {
       .getVendorProfile()
       .pipe(finalize(() => this.loadingProfile.set(false)))
       .subscribe({
-        next: (profile) => this.initialData.set(toVendorProfileEditData(profile)),
+        next: (profile) => {
+          this.initialData.set(toVendorProfileEditData(profile));
+          // ponytail: the profile response has no `mainAccount` yet (backend change pending), so
+          // fall back to the session — the same account for an admin, minus the mobile number.
+          // Drop the fallback once the field ships.
+          if (this.auth.isAdmin()) this.account.set(profile?.mainAccount ?? this.auth.session());
+        },
         error: (err) => {
           console.error('Failed to load vendor profile', err);
           this.toast('error', 'profile.toast.loadFailedSummary', 'profile.toast.loadFailedDetail');
@@ -112,6 +128,35 @@ export class EditVendorProfilePage {
 
   goBack(): void {
     this.router.navigate(['/profile']);
+  }
+
+  /** Saved directly — the account name is not a vendor field, so it never goes through a request. */
+  onSaveAccountName(name: string): void {
+    if (this.savingAccountName()) return;
+    this.savingAccountName.set(true);
+    this.profileSettings
+      .updateSettings({ name })
+      .pipe(finalize(() => this.savingAccountName.set(false)))
+      .subscribe({
+        next: (res) => {
+          const saved = res.name ?? name;
+          this.account.update((account) => (account ? { ...account, name: saved } : account));
+          // The navbar reads the name off the session, which the token alone won't refresh.
+          const session = this.auth.session();
+          const token = this.auth.getAccessToken();
+          if (session && token) this.auth.setSession(token, { ...session, name: saved });
+          this.toast('success', 'profile.toast.accountNameSavedSummary', 'profile.toast.accountNameSavedDetail');
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Failed to update account name', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.i18n.t('profile.toast.accountNameFailedSummary'),
+            detail: extractApiErrorMessage(err) ?? this.i18n.t('profile.toast.accountNameFailedDetail'),
+            life: 5000,
+          });
+        },
+      });
   }
 
   onSaveDraft(payload: VendorProfileEditData): void {

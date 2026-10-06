@@ -7,6 +7,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   output,
   signal,
 } from '@angular/core';
@@ -43,6 +44,13 @@ export interface VendorProfilePreviewData {
 
 /** Which image slot the crop dialog is currently editing. */
 type CropTarget = 'logo' | 'coverMobile' | 'coverDesktop';
+/** The signed-in account's own login details, shown in the "Vendor Account Credentials" section. */
+export interface VendorProfileAccount {
+  name: string;
+  email: string;
+  mobile?: string | null;
+}
+
 export type SocialLinkType = 'instagram' | 'whatsapp' | 'tiktok' | 'x' | 'snapchat' | 'linkedin' | 'facebook' | 'youtube' | 'other';
 
 @Component({
@@ -66,7 +74,14 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
 
   initialData = input<VendorProfileEditData>(MOCK_VENDOR_PROFILE_EDIT);
   isLoading = input(false);
+  /**
+   * The caller's own account. Null hides the section — the name saves straight to the caller's
+   * account rather than through the PROFILE request, so only the page that owns that save passes it.
+   */
+  account = input<VendorProfileAccount | null>(null);
+  savingAccountName = input(false);
 
+  saveAccountName = output<string>();
   saveDraft = output<VendorProfileEditData>();
   updateChanges = output<VendorProfileEditData>();
   languageFocus = output<'en' | 'ar'>();
@@ -90,6 +105,13 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
    * feed the live preview read-only; nothing in this form writes to it.
    */
   readonly savedLocations = signal<VendorProfileEditLocation[]>([]);
+
+  /** Kept out of `profileForm` so it never counts as a profile change or rides a request. */
+  readonly accountName = linkedSignal(() => this.account()?.name ?? '');
+  readonly accountNameChanged = computed(() => {
+    const name = this.accountName().trim();
+    return !!name && name !== (this.account()?.name ?? '').trim();
+  });
 
   // ── Social Media State ──
   editingLinkIndex = signal<number | null>(null);
@@ -588,6 +610,14 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     this.editingLinkIndex.set(index);
     this.editingLinkValue.set(this.getSocialLinkUrl(value));
     this.editingLinkAccountName.set(this.getSocialLinkAccountName(value));
+  }
+
+  updateAccountName(event: Event): void {
+    this.accountName.set((event.target as HTMLInputElement).value);
+  }
+
+  onSaveAccountName(): void {
+    if (this.accountNameChanged()) this.saveAccountName.emit(this.accountName().trim());
   }
 
   updateEditingLinkValue(event: Event): void {

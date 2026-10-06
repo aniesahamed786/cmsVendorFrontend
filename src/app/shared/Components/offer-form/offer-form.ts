@@ -29,7 +29,7 @@ import {
   mapFormModeToOfferMode,
   mapOfferModeToFormMode,
 } from "../../../features/Offers/models/createOffer";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { GetVendorList } from "../../../features/vendors/services/get-vendor-list";
 import { GetVendorById } from "../../../features/vendors/services/get-vendor-by-id";
 import {
@@ -42,7 +42,7 @@ import { CategoryDropdownComponent } from "../category-dropdown/category-dropdow
 import { TargetAudienceDropdownComponent } from "../target-audience-dropdown/target-audience-dropdown";
 import { PreviewOfferDetails } from "../../../features/Offers/Components/preview-offer-details/preview-offer-details";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { CommonModule, DOCUMENT } from "@angular/common";
+import { CommonModule, DOCUMENT, Location } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   resolveAssetUrl,
@@ -110,7 +110,6 @@ export interface OfferFormSubmit {
     LocationCreationOffer,
     ConfirmationPopUp,
     ImageCropperComponent,
-    RouterLink,
     Button,
     CancelButton,
     TranslatePipe,
@@ -135,6 +134,7 @@ export class OfferForm {
   ] as const;
 
   private readonly document = inject(DOCUMENT);
+  private readonly location = inject(Location);
   private readonly i18n = inject(I18nService);
   private readonly authService = inject(AuthService);
   /** The vendor is always the authenticated caller — no picker, just their own name. */
@@ -1985,7 +1985,12 @@ export class OfferForm {
     }
   }
 
+  /** Return to wherever the user came from (offer details or list); `backNavRouteLink` only on a cold load. */
   backNavigation() {
+    if (this.router.lastSuccessfulNavigation()?.previousNavigation) {
+      this.location.back();
+      return;
+    }
     const route = this.backNavRouteLink();
     if (route) {
       this.router.navigate([route]);

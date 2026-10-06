@@ -95,7 +95,9 @@ export class LoginComponent {
         '',
         [
           Validators.required,
-          Validators.email
+          Validators.email,
+          // Validators.email accepts "a@b"; require a dot-domain so the API isn't hit with a non-address.
+          Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/)
         ]
       ],
 

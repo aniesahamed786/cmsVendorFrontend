@@ -75,6 +75,37 @@
     </div>
   </div>
 
+  @if (account(); as acc) {
+  <div class="profile-form-section">
+    <div class="profile-form-section__header">
+      <div class="profile-form-section__icon"><i class="pi pi-user"></i></div>
+      <h2>{{ 'profile.form.accountCredentials' | translate }}</h2>
+    </div>
+    <p class="profile-form-section__note">{{ 'profile.form.accountCredentialsHint' | translate }}</p>
+    <div class="profile-form-grid profile-form-grid--three">
+      <div>
+        <label for="accountEmail">{{ 'profile.form.accountEmail' | translate }}</label>
+        <input pInputText id="accountEmail" [value]="acc.email" disabled />
+      </div>
+      <div>
+        <label for="accountMobile">{{ 'profile.form.accountMobile' | translate }}</label>
+        <input pInputText id="accountMobile" dir="ltr" [value]="acc.mobile ?? ''" disabled />
+      </div>
+      <div>
+        <label for="accountName">{{ 'profile.form.accountName' | translate }}</label>
+        <input pInputText id="accountName" [value]="accountName()" (input)="updateAccountName($event)"
+          [placeholder]="'profile.form.placeholderRepName' | translate" />
+      </div>
+    </div>
+    <div class="profile-form-actions-row">
+      <app-button variant="outline" [disabled]="!accountNameChanged()" [loading]="savingAccountName()"
+        (click)="onSaveAccountName()">
+        {{ 'profile.form.saveAccountName' | translate }}
+      </app-button>
+    </div>
+  </div>
+  }
+
   <!-- Social Media Accounts -->
   <div class="profile-form-section">
     <div class="profile-form-section__header">

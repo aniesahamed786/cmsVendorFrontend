@@ -158,9 +158,13 @@ export class OfferDetailsPage {
     });
   }
 
+  /** Open the create-ticket form with this offer pre-selected as the linked item. */
   raiseTicket() {
-    // Mock implementation for raising ticket
-    console.log('Navigate to messaging center to raise ticket');
+    const offer = this.OfferBasicData();
+    const title = this.i18n.lang() === 'ar' ? offer?.title_ar || offer?.title : offer?.title;
+    this.router.navigate(['/messaging-center/create'], {
+      queryParams: { offerId: this.offerId(), offerTitle: title || this.offerId() },
+    });
   }
 
   /** Vendor identity for the hero banner — the offer detail response carries it inline. */
