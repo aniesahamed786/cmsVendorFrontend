@@ -140,21 +140,18 @@ export class RequestEdit {
     // An UPDATE request stores the diff and a CREATE request the whole payload — exactly the
     // split create-offer/edit-offer already make when raising one.
     const payload = event.payload as unknown as Record<string, unknown>;
-    const data =
-      this.requestType() === 'CREATE'
-        ? getChangedFields(null, payload)
-        : event.changedFields ?? {};
+    // The form runs in edit mode, so changedFields is the diff against the seeded request.
+    const edits = event.changedFields ?? {};
+    const data = this.requestType() === 'CREATE' ? getChangedFields(null, payload) : edits;
  
-    this.persist(data, String(payload?.['title'] ?? ''), asDraft);
+    this.persist(data, edits, String(payload?.['title'] ?? ''), asDraft);
   }
 
 onBranchSave(event: BranchFormSubmit, asDraft = false): void {
   const full = fromBranchFormSubmit(event);
-  const data =
-    this.requestType() === 'CREATE'
-      ? full
-      : getChangedFields(fromBranchFormModel(this.branchFormData() ?? {}), full);
-  this.persist(data, event.payload.branch_name ?? '', asDraft);
+  const edits = getChangedFields(fromBranchFormModel(this.branchFormData() ?? {}), full);
+  const data = this.requestType() === 'CREATE' ? full : edits;
+  this.persist(data, edits, event.payload.branch_name ?? '', asDraft);
 }
  
   /** The profile form has no footer of its own — the hosting page owns the save button. */
@@ -166,13 +163,11 @@ onBranchSave(event: BranchFormSubmit, asDraft = false): void {
     const full = toVendorSchemaPayload(payload);
     // Newly cropped images stay in as `File`s — the request is posted as multipart, so the
     // API service lifts them out into their own parts.
-    const data =
-      this.requestType() === 'CREATE'
-        ? getChangedFields(null, full)
-        : getChangedFields(toVendorSchemaPayload(this.profileData()), full);
+    const edits = getChangedFields(toVendorSchemaPayload(this.profileData()), full);
+    const data = this.requestType() === 'CREATE' ? getChangedFields(null, full) : edits;
  
     // Same fixed title the profile page sends, so editing a request never renames it.
-    this.persist(data, PROFILE_REQUEST_TITLE, asDraft);
+    this.persist(data, edits, PROFILE_REQUEST_TITLE, asDraft);
   }
 
   /** Only a RETURNED request offers "Save as draft" alongside cancel and resubmit. */
@@ -195,23 +190,32 @@ onBranchSave(event: BranchFormSubmit, asDraft = false): void {
    * entityId and requestType are the request's identity and must not change. If the request
    * was RETURNED or SUBMITTED, actionType: 'SUBMIT' is sent to resubmit it; `asDraft` sends
    * actionType: 'DRAFT' instead.
+   *
+   * `edits` is what the vendor changed on this page. It gates the save: the merged requestData
+   * is never empty (an UPDATE keeps its earlier edits, a CREATE its whole payload), so checking
+   * that would let a RETURNED request be resubmitted untouched.
    */
-  private persist(formData: Record<string, unknown>, title: string, asDraft = false): void {
+  private persist(
+    formData: Record<string, unknown>,
+    edits: Record<string, unknown>,
+    title: string,
+    asDraft = false,
+  ): void {
     if (this.saving()) return;
  
     const details = this.details();
     if (!details) return;
+ 
+    if (Object.keys(edits).length === 0) {
+      this.toast('info', 'requestCenter.edit.noChangesSummary', 'requestCenter.edit.noChangesDetail');
+      return;
+    }
  
     const requestData = mergeRequestData(
       details.requestType,
       details.requestData ?? {},
       formData,
     );
- 
-    if (Object.keys(requestData).length === 0) {
-      this.toast('info', 'requestCenter.edit.noChangesSummary', 'requestCenter.edit.noChangesDetail');
-      return;
-    }
  
     this.saving.set(true);
     const isResubmit = !asDraft && this.isResubmission();
