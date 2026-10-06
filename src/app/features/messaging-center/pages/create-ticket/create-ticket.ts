@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
@@ -70,7 +70,12 @@ export class CreateTicketPage implements OnInit {
 
   // Vendor names and linked-item references are data, not chrome — no catalog.
   readonly vendorOptions = VENDOR_OPTIONS;
-  readonly linkedItemOptions = LINKED_ITEM_OPTIONS;
+  // "Raise ticket" on an offer's details page passes the offer in the query string.
+  private readonly query = inject(ActivatedRoute).snapshot.queryParamMap;
+  readonly linkedOfferId = this.query.get('offerId');
+  readonly linkedItemOptions = this.linkedOfferId
+    ? [{ label: `Offer · ${this.query.get('offerTitle') ?? this.linkedOfferId}`, value: this.linkedOfferId }, ...LINKED_ITEM_OPTIONS]
+    : LINKED_ITEM_OPTIONS;
 
   constructor(private readonly router: Router) {}
 
