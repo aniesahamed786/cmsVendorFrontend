@@ -25,6 +25,8 @@ import { MessagingCenterStore } from '../../services/messaging-center-store';
 import { DialogModule } from 'primeng/dialog';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+
 @Component({
   selector: 'app-messaging-center-ticket-details',
   standalone: true,
@@ -66,6 +68,8 @@ export class MessagingCenterTicketDetails {
 
   // readonly attachments = signal<{ name: string; url: string }[]>([]);
   readonly attachments = signal<File[]>([]);
+  /** Set when a picked file wasn't an image or was over 10 MB, and was left out. */
+  readonly fileError = signal(false);
 
   displayFilePopup = false;
   readonly selectedFileUrl = signal<string | null>(null);
@@ -191,7 +195,11 @@ export class MessagingCenterTicketDetails {
 
   onFilesSelected(event: Event): void {
   const input = event.target as HTMLInputElement;
-  const files = input.files ? Array.from(input.files) : [];
+  const all = input.files ? Array.from(input.files) : [];
+  // Vendors may only send images up to 10 MB; anything else is dropped before it reaches the API.
+  // `accept` on the input only filters the picker, so the type is checked here too.
+  const files = all.filter(f => f.type.startsWith('image/') && f.size <= MAX_FILE_BYTES);
+  this.fileError.set(files.length < all.length);
 
   this.attachments.update(existing => {
     const remaining = 5 - existing.length;
@@ -209,6 +217,7 @@ export class MessagingCenterTicketDetails {
 
  private clearAttachments(): void {
   this.attachments.set([]);
+  this.fileError.set(false);
 }
 
   openPreview(url: string | undefined): void {

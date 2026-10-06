@@ -435,6 +435,17 @@
     display: none;
   }
 
+  // Same danger treatment as the login field error.
+  &__file-error {
+    color: var(--app-danger);
+    font-size: 0.8125rem;
+
+    // --app-danger is 2.63:1 on the dark surface — lighten for AA.
+    :host-context(.dark-mode) & {
+      color: color-mix(in srgb, var(--app-danger) 45%, #ffffff);
+    }
+  }
+
   // ----- Pending (composer) attachments -----
   &__pending-files {
     display: flex;
