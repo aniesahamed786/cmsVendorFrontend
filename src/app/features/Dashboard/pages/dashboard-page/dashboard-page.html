@@ -100,9 +100,14 @@
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="5" class="dashboard-page__empty">
+          <tr class="app-table-empty">
+            <td colspan="5">
+              @if (activityLoadFailed()) {
+              {{ 'common.loadFailed' | translate }}
+              <app-button variant="outline" icon="pi pi-refresh" (click)="loadRecentActivity()">{{ 'common.tryAgain' | translate }}</app-button>
+              } @else {
               {{ 'dashboard.noRecentActivity' | translate }}
+              }
             </td>
           </tr>
         </ng-template>

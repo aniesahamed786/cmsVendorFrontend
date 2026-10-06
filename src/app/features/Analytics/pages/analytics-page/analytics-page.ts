@@ -18,6 +18,7 @@ import {
   VendorAnalyticsService,
 } from '../../services/analytics.service';
 import { InfoTip } from '../../../../shared/Components/info-tip/info-tip';
+import { Button } from '../../../../shared/Components/button/button';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -27,7 +28,7 @@ import { createCountUp } from '../../../../shared/animation/count-up';
 @Component({
   selector: 'app-analytics-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ChartModule, SelectModule, TableModule, TooltipModule, TranslatePipe, AppSearch, InfoTip],
+  imports: [CommonModule, FormsModule, ChartModule, SelectModule, TableModule, TooltipModule, TranslatePipe, AppSearch, InfoTip, Button],
   templateUrl: './analytics-page.html',
   styleUrl: './analytics-page.scss',
 })
@@ -45,6 +46,7 @@ export class AnalyticsPage implements OnInit {
   readonly insightRows = signal<OfferInsightRow[]>([]);
   readonly insightTotal = signal(0);
   readonly insightLoading = signal(false);
+  readonly insightLoadFailed = signal(false);
   readonly redemptionChartMode = signal<'location' | 'day'>('location');
 
   /* ─── Duration filter (per card + table) ─── */
@@ -362,6 +364,7 @@ export class AnalyticsPage implements OnInit {
     const search = typeof event.globalFilter === 'string' ? event.globalFilter : undefined;
 
     this.insightLoading.set(true);
+    this.insightLoadFailed.set(false);
     this.insightRows.set([]); // skeleton rows only — don't leave the previous page on screen
     this.analytics.getOfferInsights(page, rows, sortBy, event.sortOrder === -1 ? 'desc' : 'asc', search, this.tableDays())
       .pipe(finalize(() => this.insightLoading.set(false)))
@@ -370,7 +373,10 @@ export class AnalyticsPage implements OnInit {
           this.insightRows.set((response.data ?? []).map((row) => this.analytics.toOfferInsightRow(row)));
           this.insightTotal.set(response.total ?? 0);
         },
-        error: (error) => console.error('Failed to load offer insights', error),
+        error: (error) => {
+          console.error('Failed to load offer insights', error);
+          this.insightLoadFailed.set(true);
+        },
       });
   }
 

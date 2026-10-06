@@ -116,6 +116,7 @@ export class Redemption {
   readonly redemptions = signal<RedemptionRow[]>([]);
   readonly totalRecords = signal(0);
   readonly listLoading = signal(true);
+  readonly loadFailed = signal(false);
   readonly pageSize = signal(10);
 
   /** Which transaction type the list is filtered to. */
@@ -385,6 +386,7 @@ export class Redemption {
 
   private loadRedemptions(page: number, pageSize: number): void {
     this.listLoading.set(true);
+    this.loadFailed.set(false);
     this.api
       .getRedemptions(page, pageSize, this.listType(), this.search() || undefined)
       .pipe(finalize(() => this.listLoading.set(false)))
@@ -397,7 +399,7 @@ export class Redemption {
           console.error('Failed to load redemptions', err);
           this.redemptions.set([]);
           this.totalRecords.set(0);
-          this.showError('redemption.toast.listFailed', err);
+          this.loadFailed.set(true);
         },
       });
   }

@@ -1792,9 +1792,25 @@ html body [data-pc-name="toggleswitch"],
     }
   }
 
+  /* Shared empty state for every p-table: <tr class="app-table-empty"><td colspan="…">message</td></tr>.
+     PrimeNG adds no class to the emptymessage row, so templates tag it themselves. */
+  .p-datatable-tbody>tr.app-table-empty>td,
+  tbody>tr.app-table-empty>td {
+    padding: 2.5rem 1rem !important;
+    text-align: center !important;
+    color: var(--app-muted);
+    font-size: 0.875rem !important;
+  }
+
+  /* Load-failure variant: message, then a "Try again" button under it. */
+  .app-table-empty app-button {
+    display: block;
+    margin-block-start: 0.75rem;
+  }
+
   /* Row Hover (Desktop only): 4-part effect (Lift + Accent Bar + Subtle Cell Tint + Title Recolor) */
   @media (min-width: 768px) {
-    .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover,
+    .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not(.app-table-empty):not([class*="--skeleton"]):hover,
     tbody>tr:not(.p-datatable-emptymessage):not(.app-table-empty):not([class*="--skeleton"]):hover {
       transform: translateY(-1px);
       box-shadow: inset 3px 0 0 var(--table-row-hover-bar);
@@ -2017,8 +2033,8 @@ html body [data-pc-name="toggleswitch"],
 }
 
 /* RTL Inset Shadow Flip for Arabic */
-html[lang="ar"] .p-datatable .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover,
-html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not([class*="--skeleton"]):hover {
+html[lang="ar"] .p-datatable .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not(.app-table-empty):not([class*="--skeleton"]):hover,
+html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):not(.app-table-empty):not([class*="--skeleton"]):hover {
   box-shadow: inset -3px 0 0 var(--table-row-hover-bar);
 }
 
@@ -2275,7 +2291,8 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
         background: transparent !important;
       }
 
-      &.p-datatable-emptymessage {
+      &.p-datatable-emptymessage,
+      &.app-table-empty {
         padding-inline-end: 1rem !important;
         display: flex !important;
         align-items: center !important;
@@ -2286,6 +2303,8 @@ html[lang="ar"] .app-table .p-datatable-tbody>tr:not(.p-datatable-emptymessage):
 
         > td {
           justify-content: center !important;
+          padding: 0 !important; // the card row already pads it
+          flex-direction: column !important;
           color: var(--app-muted) !important;
         }
       }

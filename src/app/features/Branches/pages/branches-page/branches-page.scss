@@ -338,12 +338,6 @@
     }
   }
 
-  &__empty-message {
-    text-align: center;
-    padding: 2rem 0;
-    color: var(--app-muted);
-  }
-
   // Masked SVG needs explicit dimensions — .app-svg-icon only sets the mask.
   &__pwd-icon {
     width: 1rem;

@@ -13,11 +13,12 @@ import { ApiRequestEntityType } from '../request-center/models/request-api.model
 import { ActivityRow, activityKey, entityKey, statusKey, toActivityPage } from './models/system-log.mapper';
 import { SystemLogAction, SystemLogSortOrder } from './models/system-log.model';
 import { SystemLogService } from './services/system-log.service';
+import { Button } from '../../shared/Components/button/button';
 
 @Component({
   selector: 'app-recent-activities',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, AppSearch, AppBottomSheet, TranslatePipe],
+  imports: [CommonModule, FormsModule, PrimeUIModules, AppSearch, AppBottomSheet, TranslatePipe, Button],
   templateUrl: './recent-activities.html',
   styleUrl: './recent-activities.scss',
 })

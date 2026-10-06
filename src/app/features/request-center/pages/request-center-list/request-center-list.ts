@@ -9,6 +9,7 @@ import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { Button } from '../../../../shared/Components/button/button';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
@@ -30,7 +31,7 @@ type TabKey = 'all' | 'completed' | 'incomplete';
 @Component({
   selector: 'app-request-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp, AppBottomSheet, AppSearch, OfferTile],
+  imports: [CommonModule, FormsModule, RouterLink, PrimeUIModules, TranslatePipe, ConfirmationPopUp, AppBottomSheet, AppSearch, OfferTile, Button],
   templateUrl: './request-center-list.html',
   styleUrl: './request-center-list.scss',
 })
@@ -64,6 +65,7 @@ export class RequestCenterList {
 
   // The table skeletons while the list request is in flight.
   readonly tableLoading = signal(true);
+  readonly loadFailed = signal(false);
 
   // ---- Pagination / Sorting / Filtering state ------------------------------
   readonly activeTab = signal<TabKey>('incomplete');
@@ -121,6 +123,7 @@ export class RequestCenterList {
    */
   loadRequests(): void {
     this.tableLoading.set(true);
+    this.loadFailed.set(false);
 
     const tab = this.activeTab();
     const filter = this.statusFilter();
@@ -168,6 +171,7 @@ export class RequestCenterList {
           console.error('Failed to load requests', err);
           this.requestCenterService.setRows([]);
           this.totalRecords.set(0);
+          this.loadFailed.set(true);
         },
       });
   }

@@ -21,13 +21,14 @@ import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { AppSearch } from '../../../../shared/Components/app-search/app-search';
 import { AppBottomSheet } from '../../../../shared/Components/app-bottom-sheet/app-bottom-sheet';
+import { Button } from '../../../../shared/Components/button/button';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-messaging-center-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe, AppSearch, AppBottomSheet],
+  imports: [CommonModule, FormsModule, PrimeUIModules, TranslatePipe, AppSearch, AppBottomSheet, Button],
   templateUrl: './messaging-center-list.html',
   styleUrl: './messaging-center-list.scss',
 })

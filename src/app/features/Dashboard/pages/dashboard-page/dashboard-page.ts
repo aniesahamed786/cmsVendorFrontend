@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { BackButton } from '../../../../shared/Components/back-button/back-button';
+import { Button } from '../../../../shared/Components/button/button';
 import { OfferTile } from '../../../../shared/Components/offer-tile/offer-tile';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorQuickActions } from '../../components/vendor-quick-actions/vendor-quick-actions';
@@ -29,7 +30,7 @@ interface TopOfferData {
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CommonModule, BackButton, OfferTile, VendorQuickActions, TranslatePipe, TableModule, TooltipModule],
+  imports: [CommonModule, BackButton, OfferTile, VendorQuickActions, TranslatePipe, TableModule, TooltipModule, Button],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
@@ -100,6 +101,7 @@ export class DashboardPage implements OnInit {
 
   recentActivities = signal<ActivityRow[]>([]);
   activityLoading = signal(true);
+  activityLoadFailed = signal(false);
   readonly tableRows = computed(() =>
     this.activityLoading() ? new Array(7).fill(null) : this.recentActivities(),
   );
@@ -134,6 +136,12 @@ export class DashboardPage implements OnInit {
         },
       });
 
+    this.loadRecentActivity();
+  }
+
+  loadRecentActivity(): void {
+    this.activityLoading.set(true);
+    this.activityLoadFailed.set(false);
     this.systemLogs.getSystemLogs({ page: 1, pageSize: 7, sortOrder: 'desc' })
       .pipe(finalize(() => this.activityLoading.set(false)))
       .subscribe({
@@ -141,7 +149,10 @@ export class DashboardPage implements OnInit {
           const { rows } = toActivityPage(res);
           this.recentActivities.set(rows);
         },
-        error: () => this.recentActivities.set([]),
+        error: () => {
+          this.recentActivities.set([]);
+          this.activityLoadFailed.set(true);
+        },
       });
   }
 

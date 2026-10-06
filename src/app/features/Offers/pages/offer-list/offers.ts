@@ -80,6 +80,7 @@ export class Offers implements OnInit {
   readonly backendUrl = environment.backendUrl;
 
   readonly loading = signal(true);
+  readonly loadFailed = signal(false);
   readonly totalRecords = signal(0);
   readonly pageSize = signal(10);
   readonly first = signal(0);
@@ -396,6 +397,7 @@ export class Offers implements OnInit {
     const sortField = this.sortField();
     const sortBy = sortField === 'expirationDate' ? 'expiryDate' : sortField;
     this.loading.set(true);
+    this.loadFailed.set(false);
     this.offerListService
       .getOffers({
         page,
@@ -416,6 +418,7 @@ export class Offers implements OnInit {
         error: () => {
           this.offers.set([]);
           this.totalRecords.set(0);
+          this.loadFailed.set(true);
           this.loading.set(false);
         }
       });

@@ -112,8 +112,13 @@
     </button>
     } @empty {
     <div class="mc-list__empty">
+      @if (store.ticketsLoadFailed()) {
+      <span>{{ 'common.loadFailed' | translate }}</span>
+      <app-button variant="outline" icon="pi pi-refresh" (click)="store.loadTickets()">{{ 'common.tryAgain' | translate }}</app-button>
+      } @else {
       <i class="pi pi-inbox"></i>
       <span>{{ 'messaging.empty' | translate }}</span>
+      }
     </div>
     }
 

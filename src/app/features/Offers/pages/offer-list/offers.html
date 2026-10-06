@@ -130,7 +130,7 @@
       </div>
     </app-bottom-sheet>
 
-    <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
+    <p-table #dt [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
       [first]="first()" [paginator]="!loading()" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]"
       paginatorDropdownAppendTo="body" styleClass="offers__table">
       <ng-template pTemplate="header">
@@ -213,8 +213,15 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="8" class="offers__empty">{{ 'offers.empty' | translate }}</td>
+        <tr class="app-table-empty">
+          <td colspan="8">
+            @if (loadFailed()) {
+            {{ 'common.loadFailed' | translate }}
+            <app-button variant="outline" icon="pi pi-refresh" (click)="onLazyLoad(dt.createLazyLoadMetadata())">{{ 'common.tryAgain' | translate }}</app-button>
+            } @else {
+            {{ 'offers.empty' | translate }}
+            }
+          </td>
         </tr>
       </ng-template>
     </p-table>

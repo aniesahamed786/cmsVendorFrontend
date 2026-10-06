@@ -203,12 +203,6 @@
   cursor: help;
 }
 
-.dashboard-page__empty {
-  text-align: center;
-  color: var(--app-muted);
-  padding: 1.5rem 0;
-}
-
 /* Table skeleton cells (.app-skeleton owns fill + pulse; these own size) */
 .dashboard-page__skeleton-cell {
   display: inline-block;

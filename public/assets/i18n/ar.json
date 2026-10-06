@@ -665,7 +665,9 @@
     "clear": "مسح",
     "reset": "إعادة ضبط",
     "close": "إغلاق",
-    "actions": "الإجراءات"
+    "actions": "الإجراءات",
+    "loadFailed": "تعذر تحميل البيانات.",
+    "tryAgain": "حاول مرة أخرى"
   },
   "offerForm": {
     "backToOffers": "العودة إلى العروض",
@@ -1295,7 +1297,6 @@
       "submitFailed": "تعذّر تسجيل الاسترداد",
       "offersFailed": "تعذّر تحميل العروض",
       "branchesFailed": "تعذّر تحميل الفروع",
-      "listFailed": "تعذّر تحميل قائمة الاستردادات",
       "invalidSummary": "معلومات ناقصة",
       "invalidDetail": "الرجاء تعبئة جميع الحقول المطلوبة قبل الإرسال.",
       "invalidNumberSummary": "قيمة رقمية غير صالحة",

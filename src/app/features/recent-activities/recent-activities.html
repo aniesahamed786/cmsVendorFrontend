@@ -109,7 +109,7 @@
     </app-bottom-sheet>
 
     <!-- Lazy: filtering, sorting and paging all happen server-side. -->
-    <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+    <p-table #dt [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
       [totalRecords]="totalRecords()" [paginator]="true" [rows]="pageSize()"
       [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
       sortField="timestamp" [sortOrder]="-1"
@@ -156,10 +156,11 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="6" class="recent-activities__empty">
+        <tr class="app-table-empty">
+          <td colspan="6">
             @if (loadFailed()) {
             {{ 'recentActivities.loadFailed' | translate }}
+            <app-button variant="outline" icon="pi pi-refresh" (click)="onLazyLoad(dt.createLazyLoadMetadata())">{{ 'common.tryAgain' | translate }}</app-button>
             } @else if (hasActiveFilters()) {
             {{ 'recentActivities.emptyFiltered' | translate }}
             } @else {

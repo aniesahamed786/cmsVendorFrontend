@@ -665,7 +665,9 @@
     "clear": "Clear",
     "reset": "Reset",
     "close": "Close",
-    "actions": "Actions"
+    "actions": "Actions",
+    "loadFailed": "Could not load the data.",
+    "tryAgain": "Try again"
   },
   "offerForm": {
     "backToOffers": "Back to Offers",
@@ -1293,7 +1295,6 @@
       "submitFailed": "Could not record redemption",
       "offersFailed": "Could not load offers",
       "branchesFailed": "Could not load branches",
-      "listFailed": "Could not load redemption list",
       "invalidSummary": "Missing information",
       "invalidDetail": "Please fill in all required fields before submitting.",
       "invalidNumberSummary": "Invalid numeric value",

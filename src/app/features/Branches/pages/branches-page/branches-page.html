@@ -234,16 +234,23 @@
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="7" class="branches-page__empty-message">{{ 'branches.empty' | translate }}</td>
+          <tr class="app-table-empty">
+            <td colspan="7">
+              @if (branchesLoadFailed()) {
+              {{ 'common.loadFailed' | translate }}
+              <app-button variant="outline" icon="pi pi-refresh" (click)="loadBranches()">{{ 'common.tryAgain' | translate }}</app-button>
+              } @else {
+              {{ 'branches.empty' | translate }}
+              }
+            </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
   </section>
 
-  <!-- Empty state: no branches yet -->
-  @if (!branchesLoading() && allBranches().length === 0) {
+  <!-- Empty state: no branches yet (not shown when the list failed to load — the table offers a retry then) -->
+  @if (!branchesLoading() && !branchesLoadFailed() && allBranches().length === 0) {
   <div class="branches-page__empty-overlay">
     <div class="branches-page__empty-overlay-action">
       @if (canAddBranch()) {

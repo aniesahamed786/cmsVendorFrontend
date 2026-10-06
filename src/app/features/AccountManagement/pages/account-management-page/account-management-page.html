@@ -19,7 +19,7 @@
         [placeholder]="'accountManagement.searchPlaceholder' | translate" />
     </div>
 
-    <p-table [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+    <p-table #dt [value]="tableRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
       [totalRecords]="totalRecords()" [first]="first()" [loading]="loading()" [showLoader]="false"
       [paginator]="!loading()" [rows]="pageSize()"
       [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
@@ -64,10 +64,11 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5" class="account-management__empty">
+        <tr class="app-table-empty">
+          <td colspan="5">
             @if (loadFailed()) {
             {{ 'accountManagement.loadFailed' | translate }}
+            <app-button variant="outline" icon="pi pi-refresh" (click)="onLazyLoad(dt.createLazyLoadMetadata())">{{ 'common.tryAgain' | translate }}</app-button>
             } @else if (searchQuery().trim()) {
             {{ 'accountManagement.emptyFiltered' | translate }}
             } @else {

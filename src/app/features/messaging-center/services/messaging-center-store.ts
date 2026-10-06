@@ -44,6 +44,7 @@ export class MessagingCenterStore {
   // Loading signals
   readonly isLoadingTickets = signal(false);
   readonly isLoadingMoreTickets = signal(false);
+  readonly ticketsLoadFailed = signal(false);
   readonly isLoadingMessages = signal(false);
 
   private readonly searchSubject = new Subject<string>();
@@ -316,6 +317,7 @@ export class MessagingCenterStore {
     if (showSkeleton) {
       this.isLoadingTickets.set(true);
     }
+    this.ticketsLoadFailed.set(false);
     this.nextPageToken.set(null);
 
     this.getTickets({ pageSize: 20 })
@@ -337,6 +339,7 @@ export class MessagingCenterStore {
           console.error('Failed to load tickets', error);
           this.ticketsSignal.set([]);
           this.nextPageToken.set(null);
+          this.ticketsLoadFailed.set(true);
         },
       });
   }
@@ -378,6 +381,7 @@ export class MessagingCenterStore {
   private refreshSilently(): void {
     this.getTickets({ pageSize: 20 }).subscribe({
       next: (response) => {
+        this.ticketsLoadFailed.set(false);
         const rawTickets = Array.isArray(response?.data) ? response.data : [];
         const tickets = rawTickets.map((ticket: any, index: number) =>
           this.mapTicket(ticket, index),

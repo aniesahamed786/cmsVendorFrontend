@@ -55,6 +55,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
   // state too, and the table has its own emptymessage template for that.
   performersLoading = signal(true);
   branchesLoading = signal(true);
+  branchesLoadFailed = signal(false);
 
   // Table filters
   selectedRegion = signal<string | null>(null);
@@ -262,26 +263,41 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
       this.animateTo('totalRedemptions', data.totalRedemptions);
       this.animateTo('pendingRequests', data.pendingRequests);
     });
-    this.branchesService.getBranches().subscribe(response => {
-      const branches = response.locations ?? [];
-      this.vendorLogo = toVendorMediaUrl(response.vendorLogo);
-      this.allBranches.set(branches);
-      this.branchesLoading.set(false);
+    this.loadBranches();
+  }
 
-      const performers: TopPerformer[] = [...branches]
-        .sort((a, b) => (b.totalRedemptions ?? 0) - (a.totalRedemptions ?? 0))
-        .slice(0, 4)
-        .map(branch => ({
-          id: branch.locationId,
-          name: branch.locationName,
-          redemptions: branch.totalRedemptions ?? 0,
-        }));
-      this.topPerformers.set(performers);
-      this.performersLoading.set(false);
-      // keyed per performer, so re-fetching animates from each row's current value
-      performers.forEach(p => this.animateTo(`perf-${p.id}`, p.redemptions));
+  loadBranches(): void {
+    this.branchesLoading.set(true);
+    this.performersLoading.set(true);
+    this.branchesLoadFailed.set(false);
+    this.branchesService.getBranches().subscribe({
+      next: response => {
+        const branches = response.locations ?? [];
+        this.vendorLogo = toVendorMediaUrl(response.vendorLogo);
+        this.allBranches.set(branches);
+        this.branchesLoading.set(false);
 
-      this.ensureMapReady();
+        const performers: TopPerformer[] = [...branches]
+          .sort((a, b) => (b.totalRedemptions ?? 0) - (a.totalRedemptions ?? 0))
+          .slice(0, 4)
+          .map(branch => ({
+            id: branch.locationId,
+            name: branch.locationName,
+            redemptions: branch.totalRedemptions ?? 0,
+          }));
+        this.topPerformers.set(performers);
+        this.performersLoading.set(false);
+        // keyed per performer, so re-fetching animates from each row's current value
+        performers.forEach(p => this.animateTo(`perf-${p.id}`, p.redemptions));
+
+        this.ensureMapReady();
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Failed to load branches', err);
+        this.branchesLoading.set(false);
+        this.performersLoading.set(false);
+        this.branchesLoadFailed.set(true);
+      },
     });
   }
 

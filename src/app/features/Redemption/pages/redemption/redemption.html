@@ -208,7 +208,7 @@
       </div>
     </div>
 
-    <p-table [value]="redemptionRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
+    <p-table #dt [value]="redemptionRows()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalRecords()"
       [paginator]="true" [rows]="pageSize()" [rowsPerPageOptions]="[5, 10, 20, 50]" paginatorDropdownAppendTo="body"
       styleClass="redemption-table">
       <ng-template pTemplate="header">
@@ -260,8 +260,15 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <tr>
-          <td [attr.colspan]="columnCount" class="redemption-table__empty">{{ 'redemption.empty' | translate }}</td>
+        <tr class="app-table-empty">
+          <td [attr.colspan]="columnCount">
+            @if (loadFailed()) {
+            {{ 'common.loadFailed' | translate }}
+            <app-button variant="outline" icon="pi pi-refresh" (click)="onLazyLoad(dt.createLazyLoadMetadata())">{{ 'common.tryAgain' | translate }}</app-button>
+            } @else {
+            {{ 'redemption.empty' | translate }}
+            }
+          </td>
         </tr>
       </ng-template>
     </p-table>
