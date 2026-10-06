@@ -277,6 +277,10 @@ export class Redemption {
     return !this.offersPayload();
   }
 
+  get isBranchLocked(): boolean {
+    return !this.redemptionForm.get('offer')?.value;
+  }
+
   warnOfferNeedsDate(): void {
     if (!this.isOfferLocked) return;
     const range = this.isCollectiveTransaction;
@@ -288,6 +292,16 @@ export class Redemption {
       detail: this.i18n.t(
         range ? 'redemption.toast.offerNeedsRangeDetail' : 'redemption.toast.offerNeedsDateDetail',
       ),
+      life: 4000,
+    });
+  }
+
+  warnBranchNeedsOffer(): void {
+    if (!this.isBranchLocked) return;
+    this.messageService.add({
+      severity: 'warn',
+      summary: this.i18n.t('redemption.toast.branchNeedsOfferSummary'),
+      detail: this.i18n.t('redemption.toast.branchNeedsOfferDetail'),
       life: 4000,
     });
   }

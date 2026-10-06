@@ -95,10 +95,11 @@
             panelStyleClass="redemption-form__overlay-panel"></p-select>
         </div>
 
-        <div class="redemption-form__field-wrapper">
+        <div class="redemption-form__field-wrapper" (click)="warnBranchNeedsOffer()"
+          (keydown)="warnBranchNeedsOffer()">
           <label class="redemption-form__label">{{ 'redemption.label.branch' | translate }}</label>
           <p-select formControlName="branch" [options]="branchOptions()" optionLabel="label" optionValue="value"
-            [loading]="branchesLoading()" [showClear]="true" [placeholder]="(redemptionForm.get('offer')?.value
+            [loading]="branchesLoading()" [showClear]="true" [readonly]="isBranchLocked" [placeholder]="(redemptionForm.get('offer')?.value
                 ? 'redemption.placeholder.branch'
                 : 'redemption.placeholder.branchNeedsOffer') | translate"
             [emptyMessage]="'redemption.emptyBranches' | translate"
