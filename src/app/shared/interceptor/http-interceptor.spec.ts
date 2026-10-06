@@ -81,6 +81,35 @@ describe('httpInterceptor', () => {
     });
   });
 
+  it('should pass an incorrect-current-password 401 to the form without logging out', () => {
+    const validToken = createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 });
+    localStorage.setItem('accessToken', validToken);
+
+    let errorResponse: any;
+    httpClient
+      .patch('/cmsVendor/profile-settings', {
+        currentPassword: 'wrong-password',
+        newPassword: 'New-password1!',
+      })
+      .subscribe({
+        next: () => {},
+        error: (err) => {
+          errorResponse = err;
+        },
+      });
+
+    httpMock
+      .expectOne('/cmsVendor/profile-settings')
+      .flush(
+        { message: 'Current password is incorrect' },
+        { status: 401, statusText: 'Unauthorized' },
+      );
+
+    expect(errorResponse?.status).toBe(401);
+    expect(localStorage.getItem('accessToken')).toBe(validToken);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
+
   it('should let a 403 through to the caller without logging out or navigating', () => {
     const validToken = createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 });
     localStorage.setItem('accessToken', validToken);

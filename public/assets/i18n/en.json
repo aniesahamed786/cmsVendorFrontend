@@ -1596,6 +1596,7 @@
     },
     "error": {
       "currentPasswordRequired": "Current password is required.",
+      "currentPasswordIncorrect": "The current password is incorrect.",
       "newPasswordRequired": "New password is required.",
       "confirmPasswordRequired": "Please re-enter your new password.",
       "passwordMismatch": "Passwords do not match."

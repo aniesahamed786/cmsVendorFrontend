@@ -1598,6 +1598,7 @@
     },
     "error": {
       "currentPasswordRequired": "كلمة المرور الحالية مطلوبة.",
+      "currentPasswordIncorrect": "كلمة المرور الحالية غير صحيحة.",
       "newPasswordRequired": "كلمة المرور الجديدة مطلوبة.",
       "confirmPasswordRequired": "يرجى إعادة إدخال كلمة المرور الجديدة.",
       "passwordMismatch": "كلمتا المرور غير متطابقتين."

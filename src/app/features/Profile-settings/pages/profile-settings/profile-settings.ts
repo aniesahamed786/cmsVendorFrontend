@@ -170,6 +170,11 @@ export class ProfileSettings {
     return this.securityForm.hasError('passwordIncomplete');
   }
 
+  hasCurrentPasswordIncorrectError(): boolean {
+    const control = this.securityForm.get('currentPassword');
+    return !!control?.touched && control.hasError('incorrect');
+  }
+
   hasPasswordMismatchError(): boolean {
     const confirmControl = this.securityForm.get('confirmPassword');
     return !!confirmControl?.touched && this.securityForm.hasError('passwordMismatch');
@@ -227,11 +232,19 @@ export class ProfileSettings {
         },
         error: (err: HttpErrorResponse) => {
           console.error('Failed to update profile settings', err);
+          const incorrectCurrentPassword = err.status === 401 && changingPassword;
+          if (incorrectCurrentPassword) {
+            const control = this.securityForm.get('currentPassword');
+            control?.setErrors({ ...control.errors, incorrect: true });
+            control?.markAsTouched();
+          }
           this.messageService.add({
             severity: 'error',
             summary: this.i18n.t('settingsPage.toast.saveFailedSummary'),
             // A 401 here means the current password was wrong — the backend says so precisely.
-            detail: extractApiErrorMessage(err) ?? this.i18n.t('settingsPage.toast.saveFailedDetail'),
+            detail: incorrectCurrentPassword
+              ? this.i18n.t('settingsPage.error.currentPasswordIncorrect')
+              : extractApiErrorMessage(err) ?? this.i18n.t('settingsPage.toast.saveFailedDetail'),
             life: 5000,
           });
         },

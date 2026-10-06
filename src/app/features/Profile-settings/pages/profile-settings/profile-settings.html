@@ -19,6 +19,8 @@
             [placeholder]="'settingsPage.security.currentPasswordPlaceholder' | translate" />
           @if (hasRequiredError('currentPassword')) {
           <p class="settings-field__error">{{ 'settingsPage.error.currentPasswordRequired' | translate }}</p>
+          } @else if (hasCurrentPasswordIncorrectError()) {
+          <p class="settings-field__error">{{ 'settingsPage.error.currentPasswordIncorrect' | translate }}</p>
           }
         </div>
 

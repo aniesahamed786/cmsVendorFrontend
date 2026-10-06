@@ -7,6 +7,14 @@ import { AuthService } from '../../core/services/auth.service';
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const body = req.body as Record<string, unknown> | null;
+  const isPasswordChangeRequest =
+    req.method === 'PATCH' &&
+    req.url.includes('/profile-settings') &&
+    !!body &&
+    typeof body === 'object' &&
+    'currentPassword' in body &&
+    'newPassword' in body;
 
   // Skip login API and static assets
   if (req.url.includes('/cmsVendor/login') || req.url.includes('assets/')) {
@@ -32,8 +40,9 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(outgoing).pipe(
     catchError((error: HttpErrorResponse) => {
-      // ponytail: no refresh-token endpoint exists in this API, so 401 is terminal.
-      if (error.status === 401) {
+      // This endpoint also uses 401 when currentPassword is wrong; that is field
+      // validation, not an expired authenticated session.
+      if (error.status === 401 && !isPasswordChangeRequest) {
         console.warn('HTTP 401 Unauthorized received. Logging out automatically.');
         authService.logout({ session: 'expired' });
       }
