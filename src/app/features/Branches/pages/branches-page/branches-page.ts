@@ -258,6 +258,7 @@ export class BranchesPage implements OnInit, AfterViewInit, OnDestroy {
     this.branchesService.getKPIs().subscribe(data => {
       this.kpis.set(data);
       this.animateTo('totalBranches', data.totalLocations);
+      this.animateTo('activeBranches', data.activeLocations);
       this.animateTo('totalRedemptions', data.totalRedemptions);
       this.animateTo('pendingRequests', data.pendingRequests);
     });

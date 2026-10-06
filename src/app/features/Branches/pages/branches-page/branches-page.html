@@ -24,6 +24,14 @@
         iconContainerBg="var(--app-primary-soft)" />
       <app-offer-tile
         [loading]="!kpis()"
+        [value]="animatedCount('activeBranches')"
+        [title]="'branches.kpi.activeBranches' | translate"
+        [subtitle]="'branches.kpi.activeBranchesSub' | translate"
+        icon="pi pi-check-circle"
+        iconColor="var(--app-primary)"
+        iconContainerBg="var(--app-primary-soft)" />
+      <app-offer-tile
+        [loading]="!kpis()"
         [value]="animatedCount('totalRedemptions')"
         [title]="'branches.kpi.totalRedemptions' | translate"
         [subtitle]="'branches.kpi.totalRedemptionsSub' | translate"
