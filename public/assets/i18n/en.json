@@ -191,7 +191,9 @@
       "requestFailedSummary": "Could not save changes",
       "requestFailedDetail": "Something went wrong while raising the request. Please try again.",
       "requestConflictSummary": "Request already in progress",
-      "requestConflictDetail": "A profile update request is already open. Wait for it to be reviewed before creating a new one."
+      "requestConflictDetail": "A profile update request is already open. Wait for it to be reviewed before creating a new one.",
+      "unsupportedImageSummary": "Unsupported file",
+      "unsupportedImageDetail": "Only JPG and PNG images can be uploaded."
     },
     "form": {
       "basicInformation": "Basic Information",

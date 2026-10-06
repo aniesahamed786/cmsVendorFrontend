@@ -191,7 +191,9 @@
       "requestFailedSummary": "تعذر حفظ التغييرات",
       "requestFailedDetail": "حدث خطأ أثناء إنشاء الطلب. يرجى المحاولة مرة أخرى.",
       "requestConflictSummary": "يوجد طلب قيد المعالجة بالفعل",
-      "requestConflictDetail": "هناك طلب تحديث مفتوح للملف بالفعل. يرجى انتظار مراجعته قبل إنشاء طلب جديد."
+      "requestConflictDetail": "هناك طلب تحديث مفتوح للملف بالفعل. يرجى انتظار مراجعته قبل إنشاء طلب جديد.",
+      "unsupportedImageSummary": "ملف غير مدعوم",
+      "unsupportedImageDetail": "يمكن رفع صور JPG و PNG فقط."
     },
     "form": {
       "basicInformation": "المعلومات الأساسية",

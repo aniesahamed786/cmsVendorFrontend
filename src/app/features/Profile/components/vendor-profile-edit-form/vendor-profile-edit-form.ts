@@ -15,7 +15,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { PrimeUIModules } from '../../../../core/prime.import';
+import { MessageService } from 'primeng/api';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
+import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { Button } from '../../../../shared/Components/button/button';
 import { CancelButton } from '../../../../shared/Components/cancel-button/cancel-button';
 import { MOCK_VENDOR_PROFILE_EDIT } from '../../data/mock-vendor-profile-edit';
@@ -71,6 +73,8 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   private readonly document = inject(DOCUMENT);
+  private readonly messageService = inject(MessageService);
+  private readonly i18n = inject(I18nService);
 
   initialData = input<VendorProfileEditData>(MOCK_VENDOR_PROFILE_EDIT);
   isLoading = input(false);
@@ -723,6 +727,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   }
 
   private startLogoCrop(file: File): void {
+    if (!this.isSupportedImage(file)) return;
     this.revoke(this.logoSource);
     this.logoSource = URL.createObjectURL(file);
     this.logoFileName.set(file.name);
@@ -776,11 +781,23 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   }
 
   private startCoverCrop(file: File): void {
+    if (!this.isSupportedImage(file)) return;
     this.revoke(this.coverSource);
     this.coverSource = URL.createObjectURL(file);
     this.pendingCropName = file.name.replace(/\.[^.]+$/, '') || 'cover';
     this.chainToDesktopCrop = true;
     this.openCropper('coverMobile', this.coverSource);
+  }
+
+  /** Same types as the inputs' `accept`; a drop (or "All files" in the picker) bypasses that. */
+  private isSupportedImage(file: File): boolean {
+    if (file.type === 'image/jpeg' || file.type === 'image/png') return true;
+    this.messageService.add({
+      severity: 'warn',
+      summary: this.i18n.t('profile.toast.unsupportedImageSummary'),
+      detail: this.i18n.t('profile.toast.unsupportedImageDetail'),
+    });
+    return false;
   }
 
   // ── Image cropper dialog ───────────────────────────────────────────────────
