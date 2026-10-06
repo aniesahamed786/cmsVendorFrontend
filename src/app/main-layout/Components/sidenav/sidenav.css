@@ -79,6 +79,11 @@
   line-height: 1.25rem;
 }
 
+:host-context(html[lang="ar"]) .sidenav-item__label,
+:host-context(html[lang="ar"]) .sidenav__label {
+  font-weight: 400;
+}
+
 @media (min-width: 768px) {
   .sidenav-item__label,
   .sidenav__label {
