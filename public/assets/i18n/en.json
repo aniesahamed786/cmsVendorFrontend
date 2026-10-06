@@ -1315,7 +1315,9 @@
       "offerNeedsRangeSummary": "Date range required",
       "offerNeedsRangeDetail": "Select a start and end date first to see the offers available in that period.",
       "branchNeedsOfferSummary": "Offer required",
-      "branchNeedsOfferDetail": "Select an offer first to see its available branches."
+      "branchNeedsOfferDetail": "Select an offer first to see its available branches.",
+      "futureDateSummary": "Invalid transaction date",
+      "futureDateDetail": "The transaction date cannot be in the future."
     },
     "emptyOffers": "No active in-store offers available.",
     "emptyBranches": "No branches available for this offer.",
@@ -1350,6 +1352,7 @@
       "required": "{{field}} is required.",
       "notANumber": "{{field}} must be a number.",
       "invalidDate": "This is not a valid date.",
+      "futureDate": "{{field}} cannot be in the future.",
       "invalidMembershipId": "Membership ID must be a positive number.",
       "negativeAmount": "{{field}} cannot be negative.",
       "startDateRequired": "Start Date is required for collective rows.",
@@ -1358,7 +1361,8 @@
       "outsideOfferWindow": "{{field}} must fall between {{start}} and {{end}} (the offer’s active period)."
     },
     "error": {
-      "endBeforeStart": "End date cannot be before the start date."
+      "endBeforeStart": "End date cannot be before the start date.",
+      "futureTransactionDate": "Transaction date cannot be in the future."
     },
     "preview": {
       "invalidBanner": "Some rows need attention before they can be uploaded",

@@ -1317,7 +1317,9 @@
       "offerNeedsRangeSummary": "نطاق التاريخ مطلوب",
       "offerNeedsRangeDetail": "اختر تاريخ البداية والنهاية أولاً لعرض العروض المتاحة في تلك الفترة.",
       "branchNeedsOfferSummary": "العرض مطلوب",
-      "branchNeedsOfferDetail": "اختر العرض أولاً لعرض الفروع المتاحة له."
+      "branchNeedsOfferDetail": "اختر العرض أولاً لعرض الفروع المتاحة له.",
+      "futureDateSummary": "تاريخ العملية غير صالح",
+      "futureDateDetail": "لا يمكن أن يكون تاريخ العملية في المستقبل."
     },
     "emptyOffers": "لا توجد عروض نشطة في المتجر.",
     "emptyBranches": "لا توجد فروع متاحة لهذا العرض.",
@@ -1352,6 +1354,7 @@
       "required": "{{field}} مطلوب.",
       "notANumber": "يجب أن يكون {{field}} رقماً.",
       "invalidDate": "هذا التاريخ غير صالح.",
+      "futureDate": "لا يمكن أن يكون {{field}} في المستقبل.",
       "invalidMembershipId": "يجب أن يكون رقم العضوية رقماً موجباً.",
       "negativeAmount": "لا يمكن أن يكون {{field}} بالسالب.",
       "startDateRequired": "تاريخ البداية مطلوب للصفوف الجماعية.",
@@ -1360,7 +1363,8 @@
       "outsideOfferWindow": "يجب أن يقع {{field}} بين {{start}} و {{end}} (فترة سريان العرض)."
     },
     "error": {
-      "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية."
+      "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية.",
+      "futureTransactionDate": "لا يمكن أن يكون تاريخ العملية في المستقبل."
     },
     "preview": {
       "invalidBanner": "بعض الصفوف تحتاج إلى تصحيح قبل الرفع",

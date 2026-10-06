@@ -68,11 +68,14 @@
           <label class="redemption-form__label">{{ 'redemption.label.transactionDate' | translate }} <span
               class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="transactionDate" iconDisplay="input" showIcon="true"
+            [maxDate]="maxTransactionDate"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
           @if (redemptionForm.get('transactionDate')?.touched && redemptionForm.get('transactionDate')?.hasError('required')) {
           <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.transactionDate' | translate) } }}</small>
+          } @else if (redemptionForm.get('transactionDate')?.touched && redemptionForm.get('transactionDate')?.hasError('futureDate')) {
+          <small class="redemption-form__error">{{ 'redemption.error.futureTransactionDate' | translate }}</small>
           }
         </div>
         } @else {

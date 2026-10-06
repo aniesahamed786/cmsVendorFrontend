@@ -48,6 +48,18 @@ interface SelectOption {
   value: string;
 }
 
+function endOfToday(): Date {
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  return today;
+}
+
+const notFutureDateValidator: ValidatorFn = (control) => {
+  if (!control.value) return null;
+  const date = control.value instanceof Date ? control.value : new Date(control.value);
+  return !Number.isNaN(date.getTime()) && date > endOfToday() ? { futureDate: true } : null;
+};
+
 @Component({
   selector: 'app-redemption',
   standalone: true,
@@ -75,6 +87,7 @@ export class Redemption {
 
   readonly offersLoading = signal(false);
   readonly branchesLoading = signal(false);
+  readonly maxTransactionDate = endOfToday();
   readonly submitting = signal(false);
   readonly downloadingTemplate = signal(false);
 
@@ -177,7 +190,7 @@ export class Redemption {
       membershipId: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       mobileNumber: ['', Validators.pattern(/^\d+$/)],
       badgeNumber: ['', Validators.pattern(/^\d+$/)],
-      transactionDate: ['', Validators.required],
+      transactionDate: ['', [Validators.required, notFutureDateValidator]],
       startDate: [''],
       endDate: [''],
       offer: [null, Validators.required],
@@ -249,7 +262,7 @@ export class Redemption {
     const { transactionDate, startDate, endDate } = this.redemptionForm.getRawValue();
 
     if (!this.isCollectiveTransaction) {
-      return transactionDate
+      return transactionDate && !this.redemptionForm.get('transactionDate')?.hasError('futureDate')
         ? { transactionType: 'SINGLE', transactionDate: this.toIsoDate(transactionDate) }
         : null;
     }
@@ -311,7 +324,7 @@ export class Redemption {
 
     const rules: Record<string, ValidatorFn[]> = {
       membershipId: collective ? [] : [Validators.required, Validators.pattern(/^\d+$/)],
-      transactionDate: collective ? [] : [Validators.required],
+      transactionDate: collective ? [] : [Validators.required, notFutureDateValidator],
       startDate: collective ? [Validators.required] : [],
       endDate: collective ? [Validators.required] : [],
     };
@@ -473,14 +486,23 @@ export class Redemption {
       ].some((field) =>
         this.redemptionForm.get(field)?.hasError('pattern'),
       );
+      const futureDate = this.redemptionForm.get('transactionDate')?.hasError('futureDate');
       this.messageService.add({
         severity: 'warn',
         summary: this.i18n.t(
-          invalidNumber ? 'redemption.toast.invalidNumberSummary' : 'redemption.toast.invalidSummary',
+          futureDate
+            ? 'redemption.toast.futureDateSummary'
+            : invalidNumber
+              ? 'redemption.toast.invalidNumberSummary'
+              : 'redemption.toast.invalidSummary',
         ),
         detail: this.redemptionForm.invalid
           ? this.i18n.t(
-              invalidNumber ? 'redemption.toast.invalidNumberDetail' : 'redemption.toast.invalidDetail',
+              futureDate
+                ? 'redemption.toast.futureDateDetail'
+                : invalidNumber
+                  ? 'redemption.toast.invalidNumberDetail'
+                  : 'redemption.toast.invalidDetail',
             )
           : this.isDateRangeInvalid
             ? this.i18n.t('redemption.toast.dateRangeInvalidDetail')

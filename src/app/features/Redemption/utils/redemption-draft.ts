@@ -64,6 +64,7 @@ export interface DraftMessages {
   negativeAmount: string;
   invalidMembershipId: string;
   invalidDate: string;
+  futureDate: string;
   startDateRequired: string;
   endDateRequired: string;
   endBeforeStart: string;
@@ -190,6 +191,19 @@ export function validateDraft(
     errors.transactionDate = fill(messages.required, { field: labels.transactionDate });
   } else if (!isValidDate(draft.transactionDate)) {
     errors.transactionDate = messages.invalidDate;
+  }
+
+  const dateChecks: [DraftField, Date | null, string][] = collective
+    ? [
+        ['startDate', draft.startDate, labels.startDate],
+        ['endDate', draft.endDate, labels.endDate],
+      ]
+    : [['transactionDate', draft.transactionDate, labels.transactionDate]];
+
+  for (const [field, value, label] of dateChecks) {
+    if (!errors[field] && isValidDate(value) && startOfDay(value) > startOfDay(new Date())) {
+      errors[field] = fill(messages.futureDate, { field: label });
+    }
   }
 
   const window = draft.offerId ? catalogue.windowsByOffer.get(draft.offerId) : undefined;

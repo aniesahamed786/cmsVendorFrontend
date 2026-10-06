@@ -135,6 +135,7 @@ export class RedemptionBulkUpload {
       negativeAmount: this.i18n.t('redemption.upload.negativeAmount'),
       invalidMembershipId: this.i18n.t('redemption.upload.invalidMembershipId'),
       invalidDate: this.i18n.t('redemption.upload.invalidDate'),
+      futureDate: this.i18n.t('redemption.upload.futureDate'),
       startDateRequired: this.i18n.t('redemption.upload.startDateRequired'),
       endDateRequired: this.i18n.t('redemption.upload.endDateRequired'),
       endBeforeStart: this.i18n.t('redemption.upload.endBeforeStart'),
