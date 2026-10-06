@@ -772,6 +772,7 @@
       "noVendor": "Select a vendor above to view available locations.",
       "noBranches": "This vendor has no branches. In-store or both-mode offers cannot be activated until at least one branch is added.",
       "selectRequired": "Select at least one branch to activate this offer.",
+      "pwdRequired": "None of the selected branches is PwD friendly. Select a PwD-friendly branch to mark this offer as PwD Friendly.",
       "add": "+ Add New Location"
     },
     "upload": {

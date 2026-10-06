@@ -72,6 +72,14 @@
 html[lang="ar"] {
   direction: rtl;
 
+  /* Direction arrows point the other way in Arabic. One global rule, so no page or
+     component needs its own flip. Use .app-rtl-flip for a directional SVG/mask icon. */
+  .pi-arrow-left,
+  .pi-arrow-right,
+  .app-rtl-flip {
+    transform: scaleX(-1);
+  }
+
   /* Ghawar ships no Arabic glyphs (all 7 OTFs are ~46KB, Latin-only), so Arabic
      falls through to a system Arabic face. Drop a Ghawar Arabic cut in front of
      this list when the foundry supplies one. */

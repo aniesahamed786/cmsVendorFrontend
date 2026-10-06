@@ -1242,6 +1242,15 @@ export class OfferForm {
     );
   }
 
+  /** PwD Friendly is ticked, but none of the selected branches is PwD-accessible. */
+  showPwdLocationRequiredMessage(): boolean {
+    if (!this.offerForm.get("pwdFriendly")?.value || !this.requiresBranchSelection() || this.locationsLoading()) {
+      return false;
+    }
+    const ids = new Set<string>(this.offerForm.get("locationIds")?.value || []);
+    return ids.size > 0 && !this.vendorLocations().some((loc) => ids.has(loc.id) && loc.isPwdAvailable);
+  }
+
   hasBranchActivationIssue(): boolean {
     return (
       this.showVendorHasNoBranchesMessage() ||

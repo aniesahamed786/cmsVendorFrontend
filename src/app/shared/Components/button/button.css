@@ -76,10 +76,3 @@
   border-color: var(--app-danger);
   color: var(--app-danger);
 }
-
-/* Directional icons point the other way in RTL. Lives here, not in the caller,
-   because the <i> is in this component's template. */
-:host-context(html[lang="ar"]) .pi-arrow-left,
-:host-context(html[lang="ar"]) .pi-arrow-right {
-  transform: scaleX(-1);
-}

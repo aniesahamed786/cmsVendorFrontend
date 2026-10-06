@@ -655,6 +655,8 @@
           <p class="offer-form__warning-message">{{ 'offerForm.location.noBranches' | translate }}</p>
           } @else if (showBranchSelectionRequiredMessage()) {
           <p class="offer-form__warning-message">{{ 'offerForm.location.selectRequired' | translate }}</p>
+          } @else if (showPwdLocationRequiredMessage()) {
+          <p class="offer-form__warning-message">{{ 'offerForm.location.pwdRequired' | translate }}</p>
           }
         </div>
       </div>

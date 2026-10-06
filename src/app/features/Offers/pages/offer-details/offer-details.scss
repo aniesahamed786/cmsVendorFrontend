@@ -39,11 +39,6 @@
       background: var(--app-primary-hover-soft);
       color: var(--app-primary);
     }
-
-    // "Back" points toward the start side, which is the right in Arabic.
-    :host-context(html[lang="ar"]) & .offer-details-page-svg-icon {
-      transform: scaleX(-1);
-    }
   }
 
   &__actions {

@@ -792,9 +792,3 @@
     }
   }
 }
-
-:host-context(html[lang="ar"]) {
-  .mc-details__back-btn i {
-    transform: scaleX(-1);
-  }
-}
