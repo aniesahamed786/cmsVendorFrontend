@@ -1273,8 +1273,7 @@ export class OfferForm {
     const form = this.offerForm?.value;
     if (!form) return false;
 
-    const stringFields = [
-      form.selectedVendor,
+    const valueFields = [
       form.titleEn,
       form.titleAr,
       form.descriptionEn,
@@ -1301,17 +1300,27 @@ export class OfferForm {
       form.taxValueAr,
     ];
 
-    const hasStringValue = stringFields.some(
-      (val) => typeof val === "string" && val.trim().length > 0,
+    const hasValue = valueFields.some(
+      (value) =>
+        (typeof value === "string" && value.trim().length > 0) ||
+        (typeof value === "number" && Number.isFinite(value)) ||
+        (value instanceof Date && !Number.isNaN(value.getTime())),
     );
-    if (hasStringValue) return true;
+    if (hasValue) return true;
 
     if (Array.isArray(form.hotelAmenities) && form.hotelAmenities.length > 0) return true;
     if (Array.isArray(form.hotelAmenitiesAr) && form.hotelAmenitiesAr.length > 0) return true;
     if (Array.isArray(form.category) && form.category.length > 0) return true;
     if (Array.isArray(form.targetAudience) && form.targetAudience.length > 0) return true;
     if (Array.isArray(form.locationIds) && form.locationIds.length > 0) return true;
-    if (Array.isArray(form.selectedTags) && form.selectedTags.length > 0) return true;
+    if (
+      Array.isArray(form.selectedTags) &&
+      form.selectedTags.some(
+        (tag: string) => !this.autoManagedTagNames.has(normalizeTagName(tag)),
+      )
+    ) {
+      return true;
+    }
     if (this.roomItems().length > 0) return true;
 
     if (
