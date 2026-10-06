@@ -26,6 +26,9 @@
           <p-select formControlName="transactionType" [options]="transactionTypes" optionLabel="label"
             optionValue="value" styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
+          @if (redemptionForm.get('transactionType')?.touched && redemptionForm.get('transactionType')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.transactionType' | translate) } }}</small>
+          }
         </div>
 
         <!-- Membership ID, Mobile Number and Badge Number identify one member, so they are single-transaction only. -->
@@ -36,7 +39,9 @@
           </label>
           <input type="text" inputmode="numeric" pInputText formControlName="membershipId"
             [placeholder]="'redemption.placeholder.membershipId' | translate" class="redemption-form__input--full" />
-          @if (redemptionForm.get('membershipId')?.touched && redemptionForm.get('membershipId')?.hasError('pattern')) {
+          @if (redemptionForm.get('membershipId')?.touched && redemptionForm.get('membershipId')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.membershipId' | translate) } }}</small>
+          } @else if (redemptionForm.get('membershipId')?.touched && redemptionForm.get('membershipId')?.hasError('pattern')) {
           <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.membershipId' | translate) } }}</small>
           }
         </div>
@@ -66,6 +71,9 @@
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
+          @if (redemptionForm.get('transactionDate')?.touched && redemptionForm.get('transactionDate')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.transactionDate' | translate) } }}</small>
+          }
         </div>
         } @else {
         <div class="redemption-form__field-wrapper">
@@ -75,6 +83,9 @@
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
+          @if (redemptionForm.get('startDate')?.touched && redemptionForm.get('startDate')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.startDate' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper">
@@ -84,7 +95,9 @@
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
-          @if (isDateRangeInvalid) {
+          @if (redemptionForm.get('endDate')?.touched && redemptionForm.get('endDate')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.endDate' | translate) } }}</small>
+          } @else if (isDateRangeInvalid) {
           <small class="redemption-form__error">{{ 'redemption.error.endBeforeStart' | translate }}</small>
           }
         </div>
@@ -102,6 +115,9 @@
             [emptyMessage]="'redemption.emptyOffers' | translate"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel"></p-select>
+          @if (redemptionForm.get('offer')?.touched && redemptionForm.get('offer')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.offer' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper" (click)="warnBranchNeedsOffer()"
@@ -121,7 +137,9 @@
               class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalInvoiceAmount"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
-          @if (redemptionForm.get('totalInvoiceAmount')?.touched && redemptionForm.get('totalInvoiceAmount')?.hasError('pattern')) {
+          @if (redemptionForm.get('totalInvoiceAmount')?.touched && redemptionForm.get('totalInvoiceAmount')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.totalInvoiceAmount' | translate) } }}</small>
+          } @else if (redemptionForm.get('totalInvoiceAmount')?.touched && redemptionForm.get('totalInvoiceAmount')?.hasError('pattern')) {
           <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.totalInvoiceAmount' | translate) } }}</small>
           }
         </div>
@@ -131,7 +149,9 @@
               class="redemption-form__required">*</span></label>
           <input type="text" inputmode="decimal" pInputText formControlName="totalAmountPaid"
             [placeholder]="'redemption.placeholder.amount' | translate" class="redemption-form__input--full" />
-          @if (redemptionForm.get('totalAmountPaid')?.touched && redemptionForm.get('totalAmountPaid')?.hasError('pattern')) {
+          @if (redemptionForm.get('totalAmountPaid')?.touched && redemptionForm.get('totalAmountPaid')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.totalAmountPaid' | translate) } }}</small>
+          } @else if (redemptionForm.get('totalAmountPaid')?.touched && redemptionForm.get('totalAmountPaid')?.hasError('pattern')) {
           <small class="redemption-form__error">{{ 'redemption.upload.notANumber' | translate: { field: ('redemption.label.totalAmountPaid' | translate) } }}</small>
           }
         </div>
@@ -141,6 +161,9 @@
               class="redemption-form__required">*</span></label>
           <input type="text" pInputText formControlName="currency"
             [placeholder]="'redemption.placeholder.currency' | translate" class="redemption-form__input--full" />
+          @if (redemptionForm.get('currency')?.touched && redemptionForm.get('currency')?.hasError('required')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.currency' | translate) } }}</small>
+          }
         </div>
 
         <div class="redemption-form__field-wrapper">
