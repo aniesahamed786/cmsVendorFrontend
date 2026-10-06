@@ -141,6 +141,8 @@ html[lang="ar"] {
   --field-border: var(--app-border);
   --field-border-hover: color-mix(in srgb, var(--app-border) 60%, var(--app-text) 40%);
   --field-border-focus: var(--app-primary);
+  --field-invalid: #dc2626;
+  --field-bg-invalid: color-mix(in srgb, var(--field-invalid) 8%, var(--app-surface));
   --field-ring: var(--app-primary-ring);
   --field-text: var(--app-text);
   --field-placeholder: var(--app-muted);
@@ -856,6 +858,28 @@ p-tag.app-status-tag .p-tag-label {
   outline: none !important;
 }
 
+/* Angular marks controls touched after user interaction or markAllAsTouched().
+   Keep pristine forms neutral, then make every invalid field type obvious. */
+:is(.p-inputtext, .p-textarea, select).ng-invalid.ng-touched,
+:is(.p-select, .p-multiselect, .p-dropdown, .p-datepicker, .p-password, .p-inputnumber, .p-autocomplete, .p-listbox).ng-invalid.ng-touched,
+:is(p-select, p-multiselect, p-dropdown, p-datepicker, p-calendar, p-password, p-inputnumber, p-autocomplete, p-listbox).ng-invalid.ng-touched
+  :is(.p-select, .p-multiselect, .p-dropdown, .p-datepicker, .p-password, .p-inputnumber, .p-autocomplete, .p-listbox) {
+  border-color: var(--field-invalid) !important;
+  background: var(--field-bg-invalid) !important;
+}
+
+:is(p-checkbox, p-radiobutton).ng-invalid.ng-touched
+  :is(.p-checkbox-box, .p-radiobutton-box) {
+  border-color: var(--field-invalid) !important;
+  background: var(--field-bg-invalid) !important;
+}
+
+form label:has(.ng-invalid.ng-touched),
+form label:has(~ .ng-invalid.ng-touched),
+form label:has(~ .app-dropzone--invalid) {
+  color: var(--field-invalid);
+}
+
 .p-disabled,
 .p-inputtext:disabled {
   opacity: 0.6;
@@ -1318,6 +1342,13 @@ html body [data-pc-name="toggleswitch"],
 .app-dropzone--dragging {
   border-color: var(--app-primary);
   background: var(--app-primary-soft);
+}
+
+.app-dropzone--invalid,
+.app-dropzone--invalid:hover,
+.app-dropzone--invalid:focus-within {
+  border-color: var(--field-invalid);
+  background: var(--field-bg-invalid);
 }
 
 /* ---------------------------------------------------------------------------

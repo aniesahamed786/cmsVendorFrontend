@@ -1373,8 +1373,7 @@ export class OfferForm {
     }
 
     if (this.hasBranchActivationIssue()) {
-      this.offerForm.get("locationIds")?.markAsTouched();
-      this.offerForm.get("locationIds")?.markAsDirty();
+      this.markFormGroupTouched(this.offerForm);
       this.messageService.add({
         severity: "warn",
         summary: this.i18n.t("offerForm.toast.cannotActivateSummary"),
