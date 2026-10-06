@@ -271,6 +271,12 @@
     </div>
 
   </div>
+  } @else {
+  <!-- Request failed (or came back empty): nothing to show, so offer a retry instead of a blank page. -->
+  <div class="vendor-profile-page__card vendor-profile-page__state">
+    <p class="vendor-profile-page__empty-text">{{ 'common.loadFailed' | translate }}</p>
+    <app-button variant="outline" icon="pi pi-refresh" (click)="loadVendorProfile()">{{ 'common.tryAgain' | translate }}</app-button>
+  </div>
   }
 </div>
 <!-- Editing is blocked while a profile change request is still awaiting review. -->

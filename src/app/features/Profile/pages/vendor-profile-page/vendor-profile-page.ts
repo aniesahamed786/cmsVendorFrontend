@@ -17,13 +17,14 @@ import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../../core/services/auth.service';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { ConfirmationPopUp } from '../../../../shared/Components/confirmation-pop-up/confirmation-pop-up';
+import { Button } from '../../../../shared/Components/button/button';
 import { PendingRequestCheck } from '../../../request-center/services/pending-request-check.service';
 import { resolveAssetUrl, resolveMaskImageStyle } from '../../../../shared/utils/resolve-asset-url';
 
 @Component({
   selector: 'app-vendor-profile-page',
   standalone: true,
-  imports: [CommonModule, PrimeUIModules, VendorPreview, TranslatePipe, ConfirmationPopUp, VendorHeroCard],
+  imports: [CommonModule, PrimeUIModules, VendorPreview, TranslatePipe, ConfirmationPopUp, VendorHeroCard, Button],
   templateUrl: './vendor-profile-page.html',
   styleUrl: './vendor-profile-page.css',
   // Component-scoped so this page's "already pending" state is its own.
@@ -53,7 +54,7 @@ export class VendorProfilePage implements OnInit {
     return this.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
 
-  private loadVendorProfile(): void {
+  loadVendorProfile(): void {
     this.isLoading.set(true);
     this.vendorProfileService
       .getVendorProfile()
