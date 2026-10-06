@@ -58,6 +58,11 @@
   font-size: 1.125rem;
 }
 
+// Back chevron points toward the start side, which is the right in an Arabic preview.
+.mobile-preview__screen[dir="rtl"] .mobile-preview__app-bar-icon {
+  transform: scaleX(-1);
+}
+
 .mobile-preview__app-bar-actions {
   display: flex;
   gap: 1rem;

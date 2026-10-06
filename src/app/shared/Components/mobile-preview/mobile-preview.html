@@ -5,7 +5,7 @@
     <div class="phone-mockup">
       <!-- App Header / Status Bar -->
       @if (showStatusBar()) {
-        <div class="mobile-preview__status-bar">
+        <div class="mobile-preview__status-bar" dir="ltr">
           <span>{{ time() }}</span>
           <div class="mobile-preview__status-icons">
             <i class="pi pi-wifi"></i>
@@ -113,7 +113,7 @@
         } @else {
           <button (click)="toggleLanguage()" class="toggle-button" type="button">
             <i class="pi pi-language"></i>
-            {{ language() === 'en' ? 'Switch to Arabic Preview' : 'Switch to English Preview' }}
+            {{ (language() === 'en' ? 'offerDetails.preview.switchToArabic' : 'offerDetails.preview.switchToEnglish') | translate }}
           </button>
         }
       </div>

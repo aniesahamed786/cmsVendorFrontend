@@ -39,11 +39,6 @@
     strong {
       color: var(--app-text);
     }
-
-    // "old → new" reads right-to-left in Arabic.
-    :host-context(html[lang="ar"]) & .pi-arrow-right {
-      transform: scaleX(-1);
-    }
   }
 
   // padding: 1.5rem;

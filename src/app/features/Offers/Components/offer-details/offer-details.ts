@@ -145,8 +145,9 @@ export class OfferDetails {
     formatAudienceLabel(value: string): string {
         const v = String(value || '').trim();
         if (!v) return '';
-        if (v.toLowerCase() === 'employees') return this.i18n.t('offerDetails.value.regularEmployees');
-        return v;
+        // Stored as singular ("employee") or the dropdown's plural ("Employees").
+        const key = ({ employee: 'regularEmployees', retiree: 'retirees', dependent: 'dependents' } as Record<string, string>)[v.toLowerCase().replace(/s$/, '')];
+        return key ? this.i18n.t(`offerDetails.value.${key}`) : v;
     }
 
     getCategoryIcon(offer: any): string {
