@@ -631,6 +631,7 @@ export class Redemption {
   }
 
   private showError(summaryKey: string, err: HttpErrorResponse): void {
+    if (err.status === 0) return;
     this.messageService.add({
       severity: 'error',
       summary: this.i18n.t(summaryKey),

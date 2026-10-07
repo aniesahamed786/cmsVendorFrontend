@@ -679,6 +679,8 @@
     "close": "Close",
     "actions": "Actions",
     "loadFailed": "Could not load the data.",
+    "serverUnavailableSummary": "Server unavailable",
+    "serverUnavailableDetail": "Unable to connect to the server. Check your connection and try again.",
     "tryAgain": "Try again"
   },
   "offerForm": {

@@ -679,6 +679,8 @@
     "close": "إغلاق",
     "actions": "الإجراءات",
     "loadFailed": "تعذر تحميل البيانات.",
+    "serverUnavailableSummary": "الخادم غير متاح",
+    "serverUnavailableDetail": "تعذّر الاتصال بالخادم. تحقق من اتصالك وحاول مرة أخرى.",
     "tryAgain": "حاول مرة أخرى"
   },
   "offerForm": {

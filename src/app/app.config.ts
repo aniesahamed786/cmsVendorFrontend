@@ -10,6 +10,7 @@ import { I18nService } from './shared/i18n/i18n.service';
 import { providePrimeNG } from 'primeng/config';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+import { MessageService } from 'primeng/api';
 import { appRoutes } from './app.routes';
 import { httpInterceptor } from './shared/interceptor/http-interceptor';
 
@@ -51,6 +52,7 @@ const isLogin = (root: ActivatedRouteSnapshot) => root.firstChild?.routeConfig?.
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    MessageService,
     provideHttpClient(withInterceptors([httpInterceptor])),
     // Blocks bootstrap until the dictionary is in, so no page paints raw keys.
     provideAppInitializer(() => inject(I18nService).init()),

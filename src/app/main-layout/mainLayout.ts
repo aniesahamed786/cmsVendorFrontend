@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { PrimeUIModules } from '../core/prime.import';
@@ -25,7 +25,7 @@ import { Sidenav } from './Components/sidenav/sidenav';
   ],
   templateUrl: './mainLayout.html',
   styleUrl: './mainLayout.css',
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService],
 })
 export class MainLayout {
   // The one spot the CSS-only RTL rule can't cover: PrimeNG's drawer position is

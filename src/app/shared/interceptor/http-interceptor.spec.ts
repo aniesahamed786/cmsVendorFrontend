@@ -4,6 +4,8 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Router } from '@angular/router';
 import { httpInterceptor } from './http-interceptor';
 import { AuthService } from '../../core/services/auth.service';
+import { MessageService } from 'primeng/api';
+import { I18nService } from '../i18n/i18n.service';
 
 function createMockJwt(payload: Record<string, unknown>): string {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
@@ -16,10 +18,12 @@ describe('httpInterceptor', () => {
   let httpMock: HttpTestingController;
   let authService: AuthService;
   let routerSpy: { navigate: ReturnType<typeof vi.fn>; url: string };
+  let messageService: { add: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     localStorage.clear();
     routerSpy = { navigate: vi.fn(), url: '/dashboard' };
+    messageService = { add: vi.fn() };
 
     TestBed.configureTestingModule({
       providers: [
@@ -27,6 +31,8 @@ describe('httpInterceptor', () => {
         provideHttpClient(withInterceptors([httpInterceptor])),
         provideHttpClientTesting(),
         { provide: Router, useValue: routerSpy },
+        { provide: MessageService, useValue: messageService },
+        { provide: I18nService, useValue: { t: (key: string) => key } },
       ],
     });
 
@@ -57,6 +63,20 @@ describe('httpInterceptor', () => {
     const req = httpMock.expectOne('/cmsVendor/requests');
     expect(req.request.headers.get('Authorization')).toBe(`Bearer ${validToken}`);
     req.flush({});
+  });
+
+  it('shows a global toast when the server cannot be reached', () => {
+    httpClient.get('/cmsVendor/requests').subscribe({ error: () => {} });
+
+    httpMock.expectOne('/cmsVendor/requests').error(new ProgressEvent('error'));
+
+    expect(messageService.add).toHaveBeenCalledWith(
+      expect.objectContaining({
+        severity: 'error',
+        summary: 'common.serverUnavailableSummary',
+        detail: 'common.serverUnavailableDetail',
+      }),
+    );
   });
 
   it('should logout and redirect to login when receiving a 401 response', () => {
