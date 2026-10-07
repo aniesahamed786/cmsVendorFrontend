@@ -268,7 +268,13 @@ export class Redemption {
         : null;
     }
 
-    if (!startDate || !endDate || this.isDateRangeInvalid) return null;
+    if (
+      !startDate ||
+      !endDate ||
+      this.isDateRangeInvalid ||
+      this.redemptionForm.get('startDate')?.hasError('futureDate') ||
+      this.redemptionForm.get('endDate')?.hasError('futureDate')
+    ) return null;
     return {
       transactionType: 'COLLECTIVE',
       startDate: this.toIsoDate(startDate),
@@ -326,8 +332,8 @@ export class Redemption {
     const rules: Record<string, ValidatorFn[]> = {
       membershipId: collective ? [] : [Validators.required, Validators.pattern(/^\d+$/)],
       transactionDate: collective ? [] : [Validators.required, notFutureDateValidator],
-      startDate: collective ? [Validators.required] : [],
-      endDate: collective ? [Validators.required] : [],
+      startDate: collective ? [Validators.required, notFutureDateValidator] : [],
+      endDate: collective ? [Validators.required, notFutureDateValidator] : [],
     };
 
     for (const [field, validators] of Object.entries(rules)) {
@@ -493,7 +499,9 @@ export class Redemption {
       ].some((field) =>
         this.redemptionForm.get(field)?.hasError('pattern'),
       );
-      const futureDate = this.redemptionForm.get('transactionDate')?.hasError('futureDate');
+      const futureDate = ['transactionDate', 'startDate', 'endDate'].some((field) =>
+        this.redemptionForm.get(field)?.hasError('futureDate'),
+      );
       this.messageService.add({
         severity: 'warn',
         summary: this.i18n.t(

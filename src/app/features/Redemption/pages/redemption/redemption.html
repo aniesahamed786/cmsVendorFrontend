@@ -83,11 +83,14 @@
           <label class="redemption-form__label">{{ 'redemption.label.startDate' | translate }} <span
               class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="startDate" iconDisplay="input" showIcon="true"
+            [maxDate]="maxTransactionDate"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
           @if (redemptionForm.get('startDate')?.touched && redemptionForm.get('startDate')?.hasError('required')) {
           <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.startDate' | translate) } }}</small>
+          } @else if (redemptionForm.get('startDate')?.touched && redemptionForm.get('startDate')?.hasError('futureDate')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.futureDate' | translate: { field: ('redemption.label.startDate' | translate) } }}</small>
           }
         </div>
 
@@ -95,11 +98,14 @@
           <label class="redemption-form__label">{{ 'redemption.label.endDate' | translate }} <span
               class="redemption-form__required">*</span></label>
           <p-datepicker formControlName="endDate" iconDisplay="input" showIcon="true"
+            [maxDate]="maxTransactionDate"
             styleClass="redemption-form__field--full redemption-form__field"
             panelStyleClass="redemption-form__overlay-panel redemption-form__datepicker-panel"
             [placeholder]="'redemption.placeholder.date' | translate" variant="filled" />
           @if (redemptionForm.get('endDate')?.touched && redemptionForm.get('endDate')?.hasError('required')) {
           <small class="redemption-form__error">{{ 'redemption.upload.required' | translate: { field: ('redemption.label.endDate' | translate) } }}</small>
+          } @else if (redemptionForm.get('endDate')?.touched && redemptionForm.get('endDate')?.hasError('futureDate')) {
+          <small class="redemption-form__error">{{ 'redemption.upload.futureDate' | translate: { field: ('redemption.label.endDate' | translate) } }}</small>
           } @else if (isDateRangeInvalid) {
           <small class="redemption-form__error">{{ 'redemption.error.endBeforeStart' | translate }}</small>
           }
