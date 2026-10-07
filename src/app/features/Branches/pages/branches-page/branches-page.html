@@ -253,6 +253,12 @@
   @if (!branchesLoading() && !branchesLoadFailed() && allBranches().length === 0) {
   <div class="branches-page__empty-overlay">
     <div class="branches-page__empty-overlay-action">
+      <div class="branches-page__empty-overlay-badge" aria-hidden="true">
+        <span class="branches-page__empty-overlay-icon"></span>
+        <span class="branches-page__empty-overlay-plus"><i class="pi pi-plus"></i></span>
+      </div>
+      <h2 class="branches-page__empty-overlay-title">{{ 'branches.emptyState.title' | translate }}</h2>
+      <p class="branches-page__empty-overlay-text">{{ 'branches.emptyState.message' | translate }}</p>
       @if (canAddBranch()) {
       <app-button variant="primary" icon="pi pi-plus" [routerLink]="'/branches/create'">{{ 'branches.addBranch' | translate }}</app-button>
     }

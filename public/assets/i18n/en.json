@@ -1246,6 +1246,10 @@
       "action": "Action"
     },
     "empty": "No branches found.",
+    "emptyState": {
+      "title": "No branches listed yet",
+      "message": "Add your first branch to start managing your locations, offers and redemptions."
+    },
     "tooltip": {
       "branchLocations": "Displays registered branch locations and their redemption activity on the map.",
       "topPerformers": "Ranks branches based on the selected performance metric.",

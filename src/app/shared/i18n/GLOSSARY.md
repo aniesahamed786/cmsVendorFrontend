@@ -120,6 +120,7 @@ instead, say so — it was left alone as channel vocabulary.
 | Dark theme | الوضع الداكن |
 | User ID | معرّف المستخدم |
 | Ticket | تذكرة |
+| No branches listed yet | لا توجد فروع مضافة بعد |
 
 ## Key naming
 
