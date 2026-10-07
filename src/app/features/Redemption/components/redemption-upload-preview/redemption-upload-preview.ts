@@ -42,6 +42,7 @@ export class RedemptionUploadPreview {
   readonly serverErrors = input<Map<string, string>>(new Map());
   readonly branchesLoading = input<ReadonlySet<string>>(new Set<string>());
   readonly submitting = input<boolean>(false);
+  readonly maxDate = new Date();
 
   readonly patch = output<DraftPatch>();
   readonly removeRow = output<string>();

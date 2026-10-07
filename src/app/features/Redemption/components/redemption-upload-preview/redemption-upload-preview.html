@@ -173,7 +173,7 @@
           <td>
             @if (draft.transactionType === 'COLLECTIVE') {
             <p-datepicker [ngModel]="draft.startDate" (ngModelChange)="onEdit(draft, 'startDate', $event)"
-              appendTo="body" styleClass="upload-preview__control"
+              [maxDate]="maxDate" appendTo="body" styleClass="upload-preview__control"
               [class.upload-preview__control--invalid]="errorFor(draft, 'startDate')"
               panelStyleClass="upload-preview__panel" />
             @if (errorFor(draft, 'startDate'); as msg) {
@@ -187,7 +187,7 @@
           <td>
             @if (draft.transactionType === 'COLLECTIVE') {
             <p-datepicker [ngModel]="draft.endDate" (ngModelChange)="onEdit(draft, 'endDate', $event)" appendTo="body"
-              styleClass="upload-preview__control"
+              [maxDate]="maxDate" styleClass="upload-preview__control"
               [class.upload-preview__control--invalid]="errorFor(draft, 'endDate')"
               panelStyleClass="upload-preview__panel" />
             @if (errorFor(draft, 'endDate'); as msg) {

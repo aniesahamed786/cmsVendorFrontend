@@ -416,9 +416,9 @@ export async function buildRedemptionTemplate(
       ? [
           // G: SINGLE only; H/I: COLLECTIVE only — all within the row's offer period.
           dateRule(`G2:G${last}`, offerStart, offerEnd, labels.transactionDate, labels.transactionDatePrompt, labels),
-          dateRule(`H2:H${last}`, offerStart, offerEnd, labels.startDate, labels.startDatePrompt, labels),
+          dateRule(`H2:H${last}`, offerStart, `MIN(${offerEnd},TODAY())`, labels.startDate, labels.startDatePrompt, labels),
           // End date also may not precede the row's start date.
-          dateRule(`I2:I${last}`, `MAX(${offerStart},N($H2))`, offerEnd, labels.endDate, labels.endDatePrompt, labels),
+          dateRule(`I2:I${last}`, `MAX(${offerStart},N($H2))`, `MIN(${offerEnd},TODAY())`, labels.endDate, labels.endDatePrompt, labels),
         ]
       : []),
   ];
