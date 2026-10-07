@@ -291,9 +291,11 @@ export class RequestDetail {
     const rowType = this.row()?.type?.toUpperCase();
     return rowType ?? null;
   });
-  /** STORE + CANCEL: a cancellation notice, followed by the live branch it will remove. */
-  readonly isBranchDeletion = computed(
-    () => this.entityType() === 'STORE' && this.details()?.requestType === 'CANCEL',
+  /** STORE/OFFER + CANCEL: a cancellation notice, followed by the live entity it will remove. */
+  readonly isDeletion = computed(
+    () =>
+      (this.entityType() === 'STORE' || this.entityType() === 'OFFER') &&
+      this.details()?.requestType === 'CANCEL',
   );
   readonly offerView = computed(() => toOfferDetailsView(this.proposedEntity()));
 

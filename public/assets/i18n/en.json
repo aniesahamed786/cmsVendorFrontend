@@ -326,6 +326,15 @@
       "createTicket": "Create Ticket",
       "deactivate": "Cancel Offer (Request)"
     },
+    "cancel": {
+      "title": "Cancel Offer",
+      "message": "A request to cancel {{name}} will be sent for admin review. The offer stays active until the request is approved.",
+      "confirm": "Submit Request",
+      "remarksLabel": "Remarks",
+      "remarksPlaceholder": "Reason for cancelling this offer (optional)",
+      "successSummary": "Cancel offer request submitted",
+      "successDetail": "Request {{requestId}} was sent for admin review."
+    },
     "renew": {
       "title": "Renew Offer",
       "message": "Choose how long to extend the offer. The new expiration date will be sent to the admin for review.",
@@ -508,6 +517,7 @@
       "draftedBadge": "Drafted",
       "noChanges": "This request has no field-level changes recorded.",
       "branchDeletion": "This branch request is for cancellation.",
+      "offerDeletion": "This is a request to cancel the offer below. Once approved, the offer will be deactivated and will no longer be available to the users.",
       "affectedOffers": "Offers to be deactivated",
       "timelineUnavailable": "Timeline unavailable for this request.",
       "changesFailed": "Could not load the requested changes. Please try again.",
