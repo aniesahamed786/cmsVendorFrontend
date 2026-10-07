@@ -183,10 +183,10 @@
           <td>
             <button #btn type="button" class="offers__row-action"
               [attr.aria-label]="'offers.rowActionsAria' | translate"
-              (click)="activeOffer = row; openRowMenu(menu, $event); $event.stopPropagation()">
+              (click)="openRowMenu(menu, $event); $event.stopPropagation()">
               <i class="pi pi-ellipsis-v"></i>
             </button>
-            <p-menu #menu [model]="rowActions()" [popup]="true" appendTo="body"></p-menu>
+            <p-menu #menu [model]="rowActions(row)" [popup]="true" appendTo="body"></p-menu>
           </td>
         </tr>
       </ng-template>

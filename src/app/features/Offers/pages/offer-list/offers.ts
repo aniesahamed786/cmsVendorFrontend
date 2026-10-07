@@ -239,23 +239,23 @@ export class Offers implements OnInit {
     this.searchTimer = setTimeout(() => this.applyFilters(), 300);
   }
 
-  activeOffer: Offer | null = null;
-
-  readonly rowActions = computed(() => {
+  rowActions(offer: Offer): MenuItem[] {
     this.i18n.loadSeq();
     const items: MenuItem[] = [
-      { label: this.i18n.t('offers.action.viewOffer'), icon: 'pi pi-eye', command: () => { if (this.activeOffer) this.router.navigate([this.activeOffer.id], { relativeTo: this.route }); } },
+      { label: this.i18n.t('offers.action.viewOffer'), icon: 'pi pi-eye', command: () => this.router.navigate([offer.id], { relativeTo: this.route }) },
     ];
     // A read-only user gets the view row only — no edit, renew or deactivate.
     if (this.auth.canManage('offers')) {
-      items.push(
-        { label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => { if (this.activeOffer) this.router.navigate(['edit', this.activeOffer.id], { relativeTo: this.route }); } },
-        { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync', command: () => { if (this.activeOffer) this.openRenew(this.activeOffer); } },
-        { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger', command: () => { if (this.activeOffer) this.openCancel(this.activeOffer); } },
-      );
+      items.push({ label: this.i18n.t('offers.action.requestChanges'), icon: 'pi pi-pencil', command: () => this.router.navigate(['edit', offer.id], { relativeTo: this.route }) });
+      if (offer.status !== 'Inactive') {
+        items.push(
+          { label: this.i18n.t('offers.action.requestRenew'), icon: 'pi pi-sync', command: () => this.openRenew(offer) },
+          { label: this.i18n.t('offers.action.deactivate'), icon: 'pi pi-ban', styleClass: 'p-menuitem-danger', command: () => this.openCancel(offer) },
+        );
+      }
     }
     return items;
-  });
+  }
 
   // ---- Renew request --------------------------------------------------------
   // Renewing only moves the expiry date, so it raises the same OFFER/UPDATE request the edit
