@@ -32,9 +32,63 @@
   // sticky keeps the button mid-screen however tall the page is
   &__empty-overlay-action {
     position: sticky;
-    top: calc(50vh - 1.5rem);
+    top: calc(50vh - 11rem);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  // Text sits on the dark backdrop in every theme, so it stays white
+  &__empty-overlay-badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 10rem;
+    height: 10rem;
+    margin-bottom: 1.5rem;
+    border-radius: 50%; // a circle is the design here
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 0.75rem rgba(255, 255, 255, 0.15), 0 0 3rem rgba(255, 255, 255, 0.35);
+  }
+
+  &__empty-overlay-icon {
+    width: 4.5rem;
+    height: 4rem;
+    background: var(--app-primary);
+    -webkit-mask: url('/assets/svg/Navbar/ic-vendor.svg') center / contain no-repeat;
+    mask: url('/assets/svg/Navbar/ic-vendor.svg') center / contain no-repeat;
+  }
+
+  &__empty-overlay-plus {
+    position: absolute;
+    inset-inline-end: 1.75rem;
+    bottom: 1.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    background: var(--app-primary);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  &__empty-overlay-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  &__empty-overlay-text {
+    max-width: 26rem;
+    margin: 0 0 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
   }
 
   /* Header */
