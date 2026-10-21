@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { I18nService } from '../../shared/i18n/i18n.service';
 
@@ -44,11 +44,32 @@ export interface VendorAccountSession {
   /** Saved UI preferences (vendor_accounts.language / .theme). Absent on older tokens. */
   language?: 'ENGLISH' | 'ARABIC';
   theme?: 'LIGHT' | 'DARK' | 'SYSTEM';
+  /** Set from the login response, refreshed by refreshOnboarding(). Absent = onboarded. */
+  onboarding?: VendorOnboardingState;
+}
+
+/**
+ * Where a vendor created from a landing-page registration is in its onboarding
+ * (GET /cmsVendor/onboarding). Every other vendor is `stage: COMPLETED`.
+ */
+export type VendorOnboardingStage = 'CHANGE_PASSWORD' | 'COMPLETE_PROFILE' | 'PROFILE_UNDER_REVIEW' | 'COMPLETED';
+
+export interface VendorOnboardingState {
+  isNewVendor: boolean;
+  stage: VendorOnboardingStage;
+  passwordChangeRequired: boolean;
+  profileApprovalRequired: boolean;
+  /** The vendor's latest PROFILE request (its requestId), when it has raised one. */
+  profileRequestId: string | null;
+  profileRequestStatus: string | null;
+  /** The admin's reason when the latest PROFILE request was returned or rejected. */
+  profileReviewReason: string | null;
 }
 
 export interface LoginResponse {
   accessToken: string;
   vendorAccount: VendorAccountSession;
+  onboarding?: VendorOnboardingState;
 }
 
 export interface JwtPayload {
@@ -105,6 +126,13 @@ export class AuthService {
 
   private expirationTimer: ReturnType<typeof setTimeout> | null = null;
 
+  /**
+   * The password typed at sign-in, kept only while the account must replace it: the change
+   * needs it as `currentPassword` and the first-login form does not ask for it again. Memory
+   * only, never stored — a reload drops it and the vendor signs in again.
+   */
+  private loginPassword: string | null = null;
+
   /** Reactive session — templates and computed menus read this, not localStorage. */
   private readonly sessionState = signal<VendorAccountSession | null>(null);
   readonly session = this.sessionState.asReadonly();
@@ -130,6 +158,14 @@ export class AuthService {
     const status = this.sessionState()?.accountStatus;
     return !!status && status !== 'ACTIVE';
   });
+  readonly onboarding = computed(() => this.sessionState()?.onboarding ?? null);
+  readonly onboardingStage = computed<VendorOnboardingStage>(() => this.onboarding()?.stage ?? 'COMPLETED');
+  /** Not onboarded yet — the main layout covers most pages until it is. */
+  readonly isOnboarding = computed(() => this.onboardingStage() !== 'COMPLETED');
+  /** The first two steps run as a focused flow: no sidenav, one task on screen. */
+  readonly isOnboardingSetup = computed(
+    () => this.onboardingStage() === 'CHANGE_PASSWORD' || this.onboardingStage() === 'COMPLETE_PROFILE',
+  );
 
   constructor() {
     this.sessionState.set(this.restoreSession());
@@ -278,6 +314,7 @@ export class AuthService {
 
   logout(queryParams?: Record<string, string>): void {
     this.clearTimer();
+    this.loginPassword = null;
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('vendorAccount');
@@ -331,15 +368,43 @@ export class AuthService {
     language?: VendorAccountSession['language'],
     theme?: VendorAccountSession['theme'],
   ): void {
+    this.patchSession({
+      ...(language ? { language } : {}),
+      ...(theme ? { theme } : {}),
+    });
+  }
+
+  /**
+   * Re-read the onboarding stage after a step that may move it (password change, PROFILE submit,
+   * admin approval) without a re-login. COMPLETED never goes back, so it stops calling then.
+   * Fires on its own; subscribe only to act once the new stage is in.
+   */
+  refreshOnboarding(): Observable<unknown> {
+    if (!this.isOnboarding()) return of(null);
+    const request = this.http
+      .get<VendorOnboardingState>(`${environment.backendUrl}${environment.apiBaseUrl}/onboarding`)
+      .pipe(
+        tap((onboarding) => this.patchSession({ onboarding })),
+        catchError(() => of(null)),
+        shareReplay(1),
+      );
+    request.subscribe();
+    return request;
+  }
+
+  holdLoginPassword(password: string | null): void {
+    this.loginPassword = password;
+  }
+
+  heldLoginPassword(): string | null {
+    return this.loginPassword;
+  }
+
+  private patchSession(changes: Partial<VendorAccountSession>): void {
     const account = this.getVendorAccount();
     if (!account) return;
 
-    const next: VendorAccountSession = {
-      ...account,
-      ...(language ? { language } : {}),
-      ...(theme ? { theme } : {}),
-    };
-
+    const next: VendorAccountSession = { ...account, ...changes };
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('vendorAccount', JSON.stringify(next));
     }

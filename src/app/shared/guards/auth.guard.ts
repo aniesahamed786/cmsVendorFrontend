@@ -81,3 +81,29 @@ export const vendorAdminGuard: CanActivateFn = () => {
 
   return router.createUrlTree(['/access-denied'], { queryParams: { reason: 'locations' } });
 };
+
+/** A vendor still on its handed-out password replaces it before the app shell opens. */
+export const passwordChangedGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  return authService.onboardingStage() === 'CHANGE_PASSWORD' ? router.createUrlTree(['/first-login']) : true;
+};
+
+/**
+ * /first-login is only for that step. Without the sign-in password in memory (the page was
+ * reloaded) the change cannot be made, so the vendor signs in again.
+ */
+export const firstLoginGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.onboardingStage() !== 'CHANGE_PASSWORD') {
+    return router.createUrlTree(['/dashboard']);
+  }
+  if (!authService.heldLoginPassword()) {
+    authService.logout({ password: 'required' });
+    return router.createUrlTree(['/login'], { queryParams: { password: 'required' } });
+  }
+  return true;
+};

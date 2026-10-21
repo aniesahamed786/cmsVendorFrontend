@@ -10,6 +10,24 @@
   gap: 1rem;
 }
 
+/* Onboarding: why this form stands between the vendor and the rest of the portal */
+.edit-profile-onboarding-note {
+  display: flex;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0.875rem 1rem;
+  background: var(--app-primary-soft);
+  border-inline-start: 3px solid var(--app-primary);
+  color: var(--app-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.edit-profile-onboarding-note i {
+  margin-top: 0.2rem;
+  color: var(--app-primary);
+}
+
 @media (min-width: 1024px) {
   .edit-profile-toolbar {
     flex-direction: row;

@@ -250,7 +250,8 @@
   </section>
 
   <!-- Empty state: no branches yet (not shown when the list failed to load — the table offers a retry then) -->
-  @if (!branchesLoading() && !branchesLoadFailed() && allBranches().length === 0) {
+  <!-- The main layout's onboarding overlay already covers this page while the profile awaits approval -->
+  @if (!auth.isOnboarding() && !branchesLoading() && !branchesLoadFailed() && allBranches().length === 0) {
   <div class="branches-page__empty-overlay">
     <div class="branches-page__empty-overlay-action">
       <div class="branches-page__empty-overlay-badge" aria-hidden="true">

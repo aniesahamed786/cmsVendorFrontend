@@ -121,6 +121,9 @@ instead, say so — it was left alone as channel vocabulary.
 | User ID | معرّف المستخدم |
 | Ticket | تذكرة |
 | No branches listed yet | لا توجد فروع مضافة بعد |
+| Complete your vendor profile | أكمل ملف البائع |
+| Your profile is under review | ملفك قيد المراجعة |
+| Offer app (the consumer app) | تطبيق العروض |
 
 ## Key naming
 

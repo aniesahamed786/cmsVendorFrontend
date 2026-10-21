@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
-import { authChildGuard, authGuard, guestGuard } from './shared/guards/auth.guard';
+import { authChildGuard, authGuard, firstLoginGuard, guestGuard, passwordChangedGuard } from './shared/guards/auth.guard';
 
 export const appRoutes: Routes = [
   {
@@ -22,10 +22,18 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./features/legal/legal-page').then((m) => m.LegalPage),
   },
 
+  // First sign-in on a handed-out password: replace it, outside the app shell.
+  {
+    path: 'first-login',
+    canActivate: [authGuard, firstLoginGuard],
+    loadComponent: () =>
+      import('./features/auth/first-login/first-login.component').then((m) => m.FirstLoginComponent),
+  },
+
   {
     path: '',
     canActivate: [authGuard],
-    canActivateChild: [authChildGuard],
+    canActivateChild: [authChildGuard, passwordChangedGuard],
     loadChildren: () =>
       import('./main-layout/mainLayout.routes').then((m) => m.routes),
   },

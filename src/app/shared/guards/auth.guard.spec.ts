@@ -2,12 +2,14 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import {
   authGuard,
+  firstLoginGuard,
   guestGuard,
+  passwordChangedGuard,
   managePermissionGuard,
   permissionGuard,
   vendorAdminGuard,
 } from './auth.guard';
-import { AuthService, VendorAccountSession } from '../../core/services/auth.service';
+import { AuthService, VendorAccountSession, VendorOnboardingStage } from '../../core/services/auth.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
@@ -173,6 +175,51 @@ describe('AuthGuards', () => {
 
       expect(result instanceof UrlTree).toBe(true);
       expect((result as UrlTree).toString()).toBe('/login?account=inactive');
+    });
+  });
+
+  describe('first-login guards', () => {
+    function signIn(stage: VendorOnboardingStage): void {
+      const token = createMockJwt({ sub: 'a1', exp: Math.floor(Date.now() / 1000) + 3600 });
+      authService.setSession(token, {
+        id: 'a1', vendorId: 'v1', roleId: 'r1', roleName: 'VENDOR_ADMIN', permissions: [],
+        name: 'Test User', email: 'test@vendor.com', accountStatus: 'ACTIVE',
+        onboarding: {
+          isNewVendor: stage !== 'COMPLETED', stage, passwordChangeRequired: stage === 'CHANGE_PASSWORD',
+          profileApprovalRequired: stage !== 'COMPLETED', profileRequestId: null,
+          profileRequestStatus: null, profileReviewReason: null,
+        },
+      });
+    }
+
+    const run = (guard: typeof firstLoginGuard) =>
+      TestBed.runInInjectionContext(() => guard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
+
+    it('keeps a vendor on a handed-out password out of the app shell', () => {
+      signIn('CHANGE_PASSWORD');
+      expect((run(passwordChangedGuard) as UrlTree).toString()).toBe('/first-login');
+    });
+
+    it('lets everyone else into the app shell', () => {
+      signIn('COMPLETE_PROFILE');
+      expect(run(passwordChangedGuard)).toBe(true);
+    });
+
+    it('opens /first-login while the sign-in password is held', () => {
+      signIn('CHANGE_PASSWORD');
+      authService.holdLoginPassword('Vendor@123');
+      expect(run(firstLoginGuard)).toBe(true);
+    });
+
+    it('sends the vendor back to sign in when the password is gone (reload)', () => {
+      signIn('CHANGE_PASSWORD');
+      expect((run(firstLoginGuard) as UrlTree).toString()).toBe('/login?password=required');
+    });
+
+    it('closes /first-login once the password is changed', () => {
+      signIn('COMPLETE_PROFILE');
+      authService.holdLoginPassword('Vendor@123');
+      expect((run(firstLoginGuard) as UrlTree).toString()).toBe('/dashboard');
     });
   });
 });

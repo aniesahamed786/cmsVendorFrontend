@@ -1,0 +1,52 @@
+/* Layout and card come from the login stylesheet; only the note and checklist are new.
+   The checklist matches the settings page's password card. */
+.first-login__note {
+  display: flex;
+  gap: 0.625rem;
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 0.875rem;
+  background: var(--app-primary-soft);
+  border-inline-start: 3px solid var(--app-primary);
+  color: var(--app-text);
+  font-size: 0.875rem;
+  line-height: 1.5;
+
+  i {
+    margin-top: 0.15rem;
+    color: var(--app-primary);
+  }
+}
+
+.first-login__requirements {
+  margin-block-end: 1.5rem;
+}
+
+.password-requirements {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.password-requirements__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--app-muted);
+}
+
+.password-requirements__item i {
+  font-size: 1rem;
+  color: var(--app-border);
+}
+
+.password-requirements__item--met {
+  color: var(--app-text);
+}
+
+.password-requirements__item--met i {
+  color: #16a34a; /* same green as the settings checklist */
+}

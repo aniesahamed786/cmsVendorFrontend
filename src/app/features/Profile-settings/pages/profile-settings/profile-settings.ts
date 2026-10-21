@@ -12,6 +12,7 @@ import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { I18nService, AppLang } from '../../../../shared/i18n/i18n.service';
 import { ThemeService, AppearanceMode } from '../../../../shared/services/theme.service';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
+import { passwordChecks, passwordsMatchValidator } from '../../../../shared/utils/form-validators';
 import { AuthService } from '../../../../core/services/auth.service';
 import {
   ProfileSettingsService,
@@ -27,24 +28,6 @@ const THEME_TO_API: Record<AppearanceMode, VendorAccountTheme> = {
   dark: 'DARK',
   system: 'SYSTEM',
 };
-
-interface PasswordChecks {
-  length: boolean;
-  case: boolean;
-  number: boolean;
-  special: boolean;
-}
-
-function passwordsMatchValidator(): ValidatorFn {
-  return (group): ValidationErrors | null => {
-    const newPassword = group.get('newPassword')?.value ?? '';
-    const confirmPassword = group.get('confirmPassword')?.value ?? '';
-    if (!confirmPassword) {
-      return null;
-    }
-    return newPassword === confirmPassword ? null : { passwordMismatch: true };
-  };
-}
 
 /**
  * The password fields are optional as a set: leaving all three blank saves only the language
@@ -108,15 +91,7 @@ export class ProfileSettings {
     initialValue: '',
   });
 
-  readonly passwordChecks = computed<PasswordChecks>(() => {
-    const value = this.newPasswordValue() ?? '';
-    return {
-      length: value.length >= 8,
-      case: /[a-z]/.test(value) && /[A-Z]/.test(value),
-      number: /\d/.test(value),
-      special: /[^A-Za-z0-9]/.test(value),
-    };
-  });
+  readonly passwordChecks = computed(() => passwordChecks(this.newPasswordValue() ?? ''));
 
   readonly allPasswordChecksPass = computed(() => {
     const checks = this.passwordChecks();

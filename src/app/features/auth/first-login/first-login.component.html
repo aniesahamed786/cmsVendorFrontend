@@ -1,0 +1,110 @@
+<div class="login-page">
+
+  <header class="login-page__header">
+    <!-- Brand lockup: a name, not copy — same in both languages. -->
+    <div class="login-page__brand">
+      <span class="login-page__brand-word">Offer</span>
+      <span class="login-page__brand-word">|</span>
+      <span class="login-page__brand-word">أوفر</span>
+    </div>
+
+    <nav class="login-page__header-actions">
+      <button type="button" class="login-page__header-link" (click)="toggleLanguage()">
+        <i class="pi pi-globe"></i>
+        {{ 'login.language' | translate }}
+      </button>
+      <button type="button" class="login-page__header-link" (click)="toggleTheme()">
+        <i class="pi" [class.pi-sun]="isDark()" [class.pi-moon]="!isDark()"></i>
+        {{ (isDark() ? 'settingsPage.theme.light' : 'settingsPage.theme.dark') | translate }}
+      </button>
+      <button type="button" class="login-page__header-link" (click)="signOut()">
+        <i class="pi pi-sign-out"></i>
+        {{ 'navbar.logout' | translate }}
+      </button>
+    </nav>
+  </header>
+
+  <main class="login-page__main">
+
+    <div class="login-page__intro">
+      <h1 class="login-page__title">{{ 'firstLogin.title' | translate }}</h1>
+      <p class="login-page__subtitle">{{ 'firstLogin.subtitle' | translate }}</p>
+    </div>
+
+    <section class="login-card">
+
+      @if (error()) {
+        <p class="login-card__notice" role="alert">{{ error() }}</p>
+      }
+
+      <p class="first-login__note">
+        <i class="pi pi-info-circle" aria-hidden="true"></i>
+        <span>{{ 'firstLogin.accessNote' | translate }}</span>
+      </p>
+
+      <form class="login-card__form" [formGroup]="form" (ngSubmit)="submit()">
+
+        <div class="login-card__field">
+          <label class="login-card__label" for="first-login-new">{{ 'settingsPage.security.newPassword' | translate }}</label>
+          <p-password
+            inputId="first-login-new"
+            formControlName="newPassword"
+            styleClass="login-card__password"
+            placeholder="••••••••"
+            autocomplete="new-password"
+            [toggleMask]="true"
+            [feedback]="false" />
+          @if (showError('newPassword')) {
+            <small class="login-card__error">{{ 'settingsPage.error.newPasswordRequired' | translate }}</small>
+          }
+        </div>
+
+        <div class="login-card__field">
+          <label class="login-card__label" for="first-login-confirm">{{ 'settingsPage.security.confirmPassword' | translate }}</label>
+          <p-password
+            inputId="first-login-confirm"
+            formControlName="confirmPassword"
+            styleClass="login-card__password"
+            placeholder="••••••••"
+            autocomplete="new-password"
+            [toggleMask]="true"
+            [feedback]="false" />
+          @if (showError('confirmPassword')) {
+            <small class="login-card__error">{{ 'settingsPage.error.confirmPasswordRequired' | translate }}</small>
+          } @else if (mismatch) {
+            <small class="login-card__error">{{ 'settingsPage.error.passwordMismatch' | translate }}</small>
+          }
+        </div>
+
+        <div class="first-login__requirements">
+          <span class="login-card__label">{{ 'settingsPage.security.passwordRequirements' | translate }}</span>
+          <ul class="password-requirements">
+            <li class="password-requirements__item" [class.password-requirements__item--met]="checks().length">
+              <i class="pi" [class.pi-check-circle]="checks().length" [class.pi-circle]="!checks().length"></i>
+              <span>{{ 'settingsPage.security.reqLength' | translate }}</span>
+            </li>
+            <li class="password-requirements__item" [class.password-requirements__item--met]="checks().case">
+              <i class="pi" [class.pi-check-circle]="checks().case" [class.pi-circle]="!checks().case"></i>
+              <span>{{ 'settingsPage.security.reqCase' | translate }}</span>
+            </li>
+            <li class="password-requirements__item" [class.password-requirements__item--met]="checks().number">
+              <i class="pi" [class.pi-check-circle]="checks().number" [class.pi-circle]="!checks().number"></i>
+              <span>{{ 'settingsPage.security.reqNumber' | translate }}</span>
+            </li>
+            <li class="password-requirements__item" [class.password-requirements__item--met]="checks().special">
+              <i class="pi" [class.pi-check-circle]="checks().special" [class.pi-circle]="!checks().special"></i>
+              <span>{{ 'settingsPage.security.reqSpecial' | translate }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <app-button class="login-card__submit" type="submit" icon="pi pi-check" [loading]="saving()">
+          {{ 'firstLogin.submit' | translate }}
+        </app-button>
+
+      </form>
+    </section>
+
+  </main>
+
+</div>

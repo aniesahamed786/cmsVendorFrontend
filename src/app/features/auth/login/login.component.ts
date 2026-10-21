@@ -12,7 +12,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { InputOtpModule } from 'primeng/inputotp';
-import { AuthService, LoginResponse } from '../../../core/services/auth.service';
+import { AuthService, LoginResponse, VendorOnboardingStage } from '../../../core/services/auth.service';
 import { Button } from '../../../shared/Components/button/button';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
@@ -32,6 +32,12 @@ const API_TO_THEME: Record<string, AppearanceMode> = {
 
 // ponytail: fixed code until the backend sends a real OTP — swap verifyOtp() for an API call then.
 const DEV_OTP = '111111';
+
+/** The page each onboarding stage lands on after sign-in; anything else goes to the dashboard. */
+const ONBOARDING_START: Partial<Record<VendorOnboardingStage, string>> = {
+  CHANGE_PASSWORD: '/first-login',
+  COMPLETE_PROFILE: '/profile/edit',
+};
 
 @Component({
   selector: 'app-login',
@@ -71,6 +77,7 @@ export class LoginComponent {
     const params = this.queryParams();
     if (params?.get('account') === 'inactive') return 'login.accountInactive';
     if (params?.get('session') === 'expired') return 'login.sessionExpired';
+    if (params?.get('password') === 'required') return 'login.setPasswordAgain';
     return '';
   });
 
@@ -217,7 +224,11 @@ export class LoginComponent {
 
   private async completeLogin(response: LoginResponse): Promise<void> {
     this.loginNotice.set('');
-    this.authService.setSession(response.accessToken, response.vendorAccount);
+    this.authService.setSession(response.accessToken, { ...response.vendorAccount, onboarding: response.onboarding });
+    // The first-login form sends this back as `currentPassword` instead of asking for it again.
+    if (response.onboarding?.stage === 'CHANGE_PASSWORD') {
+      this.authService.holdLoginPassword(this.loginForm.getRawValue().password);
+    }
 
     // The account's saved theme was stored but never applied — the settings page
     // writes it, so honour it here or a second device never picks it up.
@@ -233,7 +244,8 @@ export class LoginComponent {
       await this.i18n.setLang(savedLanguage);
     }
 
-    void this.router.navigate(['/dashboard']);
+    // A vendor still onboarding starts on the step it has to do next.
+    void this.router.navigate([ONBOARDING_START[this.authService.onboardingStage()] ?? '/dashboard']);
   }
 
 }

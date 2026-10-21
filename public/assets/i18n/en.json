@@ -1804,6 +1804,7 @@
     "invalidCredentials": "Invalid email or password.",
     "accountInactive": "Your account is not active. Contact your vendor administrator.",
     "sessionExpired": "Your session expired. Please sign in again.",
+    "setPasswordAgain": "Sign in again to set your new password.",
     "otpLabel": "Verification Code",
     "otpHint": "Enter the 6-digit code sent to your email.",
     "otpVerify": "Verify",
@@ -2006,5 +2007,26 @@
       "messaging_center": "Messaging Center",
       "request_center": "Request Center"
     }
+  },
+  "onboarding": {
+    "completeProfile": {
+      "title": "Complete your vendor profile",
+      "message": "Fill in your business profile and submit it for review to unlock offers, branches and redemptions.",
+      "reviewReason": "Admin note: {{reason}}",
+      "action": "Complete Profile",
+      "formNote": "Step 2 of 2 to activate your vendor account. Complete your business profile and submit it for review. Once it is approved, you get full access to the portal and your business goes live in the Offer app."
+    },
+    "underReview": {
+      "title": "Your profile is under review",
+      "message": "We've received your profile. Offers, branches and redemptions unlock as soon as it is approved.",
+      "action": "View Request"
+    }
+  },
+  "firstLogin": {
+    "title": "Set your new password",
+    "subtitle": "You signed in with a temporary password. Choose your own to continue.",
+    "submit": "Save Password",
+    "failed": "Your password could not be changed. Please try again.",
+    "accessNote": "Step 1 of 2 to activate your vendor account. After you set your password and your business profile is approved, you get full access to the portal and your business goes live in the Offer app."
   }
 }

@@ -1,9 +1,11 @@
 <main class="app-shell app-shell-bg">
-  <div class="app-shell__grid">
+  <div class="app-shell__grid" [class.app-shell__grid--bare]="hideNav()">
+    @if (!hideNav()) {
     <app-sidenav
       class="sidenav-desktop app-shell__sidenav"
       (sendNavBarHeader)="handledata($event)"
     ></app-sidenav>
+    }
 
     <div class="app-shell__content app-shell-bg">
       <div class="mobile-topbar">
@@ -12,6 +14,7 @@
              leave the inner <button> with no accessible name. The phase that
              next touches shared/Components/button/ should add that input and
              finish this swap. -->
+        @if (!hideNav()) {
         <button
           pButton
           type="button"
@@ -20,6 +23,7 @@
           [attr.aria-label]="'nav.openMenu' | translate"
           (click)="openMobileSidebar()"
         ></button>
+        }
         <span class="mobile-topbar__title">
           {{ (receivedHeaderData() || 'nav.dashboard.title') | translate }}
         </span>
@@ -31,8 +35,36 @@
         [headerData]="receivedHeaderData()"
       ></app-navbar>
 
-      <div #scrollContainer class="main-layout app-shell__outlet">
-        <router-outlet (activate)="scrollContainer.scrollTo(0, 0)" />
+      <div class="app-shell__outlet-wrap">
+        <div #scrollContainer class="main-layout app-shell__outlet">
+          <router-outlet (activate)="scrollContainer.scrollTo(0, 0)" />
+        </div>
+
+        @if (onboardingLock(); as stage) {
+        <div class="onboarding-overlay">
+          <div class="onboarding-overlay__action">
+            <div class="onboarding-overlay__badge" aria-hidden="true">
+              <span class="onboarding-overlay__icon"></span>
+              <span class="onboarding-overlay__mark"><i [class]="ONBOARDING_ICONS[stage]"></i></span>
+            </div>
+            @switch (stage) {
+            @case ('COMPLETE_PROFILE') {
+            <h2 class="onboarding-overlay__title">{{ 'onboarding.completeProfile.title' | translate }}</h2>
+            <p class="onboarding-overlay__text">{{ 'onboarding.completeProfile.message' | translate }}</p>
+            @if (onboarding()?.profileReviewReason; as reason) {
+            <p class="onboarding-overlay__text">{{ 'onboarding.completeProfile.reviewReason' | translate : { reason: reason } }}</p>
+            }
+            <app-button variant="primary" icon="pi pi-pencil" [routerLink]="'/profile/edit'">{{ 'onboarding.completeProfile.action' | translate }}</app-button>
+            }
+            @default {
+            <h2 class="onboarding-overlay__title">{{ 'onboarding.underReview.title' | translate }}</h2>
+            <p class="onboarding-overlay__text">{{ 'onboarding.underReview.message' | translate }}</p>
+            <app-button variant="primary" icon="pi pi-list" [routerLink]="['/request-center', onboarding()?.profileRequestId ?? '']">{{ 'onboarding.underReview.action' | translate }}</app-button>
+            }
+            }
+          </div>
+        </div>
+        }
       </div>
     </div>
   </div>

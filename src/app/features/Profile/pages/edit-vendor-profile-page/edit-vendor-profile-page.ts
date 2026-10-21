@@ -67,6 +67,8 @@ export class EditVendorProfilePage {
   private readonly requestApi = inject(RequestCenterApiService);
   private readonly auth = inject(AuthService);
   private readonly profileSettings = inject(ProfileSettingsService);
+  /** Onboarding: this form is the vendor's whole screen, so there is no profile to go back to. */
+  readonly onboardingSetup = this.auth.isOnboardingSetup;
 
   /**
    * The vendor's MAIN account, for the credentials section. Main-account holders only: the name
@@ -220,6 +222,7 @@ export class EditVendorProfilePage {
         next: () => {
           this.showUpdateConfirm.set(false);
           this.pendingUpdate = null;
+          if (actionType === 'SUBMIT') this.auth.refreshOnboarding();
           this.toast(
             'success',
             actionType === 'SUBMIT' ? 'profile.toast.requestSubmittedSummary' : 'profile.toast.requestDraftedSummary',

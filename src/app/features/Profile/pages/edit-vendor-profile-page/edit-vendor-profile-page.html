@@ -1,7 +1,14 @@
 <div class="edit-vendor-profile-page">
   <div class="edit-profile-toolbar">
     <div class="edit-profile-toolbar__left">
-      <app-back-button label="profile.backToProfile" (click)="goBack()" />
+      @if (!onboardingSetup()) {
+        <app-back-button label="profile.backToProfile" (click)="goBack()" />
+      } @else {
+      <p class="edit-profile-onboarding-note">
+        <i class="pi pi-info-circle" aria-hidden="true"></i>
+        <span>{{ 'onboarding.completeProfile.formNote' | translate }}</span>
+      </p>
+      }
     </div>
   </div>
 

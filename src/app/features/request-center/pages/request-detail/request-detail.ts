@@ -1106,6 +1106,7 @@ export class RequestDetail {
       .subscribe({
         next: (res) => {
           this.toast('success', 'requestCenter.detail.submitSuccessSummary', 'requestCenter.detail.submitSuccessDetail');
+          if (this.entityType() === 'PROFILE') this.auth.refreshOnboarding();
           this.afterSubmit(res);
         },
         error: (err: HttpErrorResponse) => {

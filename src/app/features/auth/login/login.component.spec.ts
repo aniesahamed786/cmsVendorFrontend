@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 
-import { AuthService, LoginResponse } from '../../../core/services/auth.service';
+import { AuthService, LoginResponse, VendorOnboardingStage } from '../../../core/services/auth.service';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { LoginComponent } from './login.component';
@@ -12,7 +12,11 @@ import { LoginComponent } from './login.component';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let auth: { login: ReturnType<typeof vi.fn>; setSession: ReturnType<typeof vi.fn> };
+  let auth: {
+    login: ReturnType<typeof vi.fn>;
+    setSession: ReturnType<typeof vi.fn>;
+    onboardingStage: ReturnType<typeof signal<VendorOnboardingStage>>;
+  };
   let i18n: {
     lang: ReturnType<typeof signal<'en' | 'ar'>>;
     loadSeq: ReturnType<typeof signal<number>>;
@@ -24,7 +28,7 @@ describe('LoginComponent', () => {
   let router: { navigate: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    auth = { login: vi.fn(), setSession: vi.fn() };
+    auth = { login: vi.fn(), setSession: vi.fn(), onboardingStage: signal<VendorOnboardingStage>('COMPLETED') };
     i18n = {
       lang: signal<'en' | 'ar'>('en'),
       loadSeq: signal(0),
@@ -121,9 +125,23 @@ describe('LoginComponent', () => {
     component.verifyOtp();
     await fixture.whenStable();
 
-    expect(auth.setSession).toHaveBeenCalledWith('token', response.vendorAccount);
+    expect(auth.setSession).toHaveBeenCalledWith('token', { ...response.vendorAccount, onboarding: undefined });
     expect(theme.setAppearanceMode).toHaveBeenCalledWith('dark');
     expect(i18n.setLang).toHaveBeenCalledWith('ar');
     expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+  });
+
+  it.each([
+    ['CHANGE_PASSWORD', '/first-login'],
+    ['COMPLETE_PROFILE', '/profile/edit'],
+    ['PROFILE_UNDER_REVIEW', '/dashboard'],
+  ] as const)('lands a vendor at onboarding stage %s on %s', async (stage, url) => {
+    auth.onboardingStage.set(stage);
+    signIn();
+    component.otpForm.setValue({ code: '111111' });
+    component.verifyOtp();
+    await fixture.whenStable();
+
+    expect(router.navigate).toHaveBeenCalledWith([url]);
   });
 });
