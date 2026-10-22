@@ -164,6 +164,7 @@ export function toProfileEditData(proposed: Record<string, unknown>): VendorProf
     repPhone: asText(proposed['smePhone']),
     repEmail: asText(proposed['smeEmail']),
     socialLinks,
+    classification: asText(proposed['classification']),
     // Branches are their own STORE entity, never part of a PROFILE request.
     locations: [],
     // The profile form renders these straight into <img src>, so they are resolved here.

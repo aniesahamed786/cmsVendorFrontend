@@ -59,6 +59,7 @@
     <app-vendor-profile-edit-form
       #profileFormRef
       [initialData]="profileData()"
+      [classificationOptions]="classificationOptions()"
       [isLoading]="saving()"
       (saveDraft)="onProfileSave($event, true)"
       (updateChanges)="onProfileSave($event)"

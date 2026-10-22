@@ -20,6 +20,16 @@
         <p class="field-hint">{{ 'profile.form.crNumberHint' | translate }}</p>
       </div>
       <div class="profile-form-grid__full">
+        <label for="classification">{{ 'profile.form.classification' | translate }} <span class="required">*</span></label>
+        <p-select inputId="classification" formControlName="classification" [options]="classificationSelectOptions()"
+          optionLabel="label" optionValue="value" [placeholder]="'profile.form.placeholderClassification' | translate"
+          [emptyMessage]="'profile.form.noClassifications' | translate"
+          styleClass="vendor-profile-edit-form__select" appendTo="body" />
+        @if (!classificationSelectOptions().length) {
+        <p class="field-hint">{{ 'profile.form.noClassifications' | translate }}</p>
+        }
+      </div>
+      <div class="profile-form-grid__full">
         <label>{{ 'profile.form.descriptionEn' | translate }} <span class="required">*</span></label>
         <textarea pInputTextarea formControlName="descriptionEn" rows="4"
           [placeholder]="'profile.form.placeholderDescriptionEn' | translate" (focus)="onFocusLanguage('en')"></textarea>

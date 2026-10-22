@@ -3,7 +3,7 @@ import { Component, computed, effect, inject, signal, untracked, viewChild } fro
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { I18nService } from '../../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -18,6 +18,7 @@ import { VendorProfileEditData } from '../../models/vendor-profile-edit.model';
 import {
   hasPendingImageUpload,
   toVendorProfileEditData,
+  VendorClassificationOption,
   toVendorSchemaPayload,
 } from '../../models/vendor-profile-request.mapper';
 import { VendorProfileService } from '../vendor-profile.service';
@@ -79,6 +80,7 @@ export class EditVendorProfilePage {
   readonly savingAccountName = signal(false);
 
   readonly initialData = signal<VendorProfileEditData>(MOCK_VENDOR_PROFILE_EDIT);
+  readonly classificationOptions = signal<VendorClassificationOption[]>([]);
   readonly isLoading = signal(false);
   readonly loadingProfile = signal(true);
   readonly showUpdateConfirm = signal(false);
@@ -110,12 +112,23 @@ export class EditVendorProfilePage {
 
   private loadProfile(): void {
     this.loadingProfile.set(true);
-    this.profileService
-      .getVendorProfile()
+    forkJoin({
+      profile: this.profileService.getVendorProfile(),
+      // The list is optional: if it fails the profile still loads, with an empty picker.
+      classifications: this.profileService.getClassifications().pipe(catchError(() => of(null))),
+    })
       .pipe(finalize(() => this.loadingProfile.set(false)))
       .subscribe({
-        next: (profile) => {
-          this.initialData.set(toVendorProfileEditData(profile));
+        next: ({ profile, classifications }) => {
+          this.classificationOptions.set(classifications?.classifications ?? []);
+          // The profile only carries the classification's names; the id the form saves comes from here.
+          this.initialData.set({
+            ...toVendorProfileEditData(profile),
+            classification:
+              classifications?.currentClassificationId ??
+              classifications?.classifications.find((option) => option.selected)?._id ??
+              '',
+          });
           // ponytail: the profile response has no `mainAccount` yet (backend change pending), so
           // fall back to the session — the same account for an admin, minus the mobile number.
           // Drop the fallback once the field ships.

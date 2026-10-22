@@ -26,6 +26,8 @@ export interface VendorProfileEditData {
   repPhone: string;
   repEmail: string;
   socialLinks: VendorSocialLink[];
+  /** Category id from GET /cmsVendor/classifications. Empty when unknown or unset. */
+  classification?: string;
   locations: VendorProfileEditLocation[];
   logo?: string | File | null;
   coverMobile?: string | File | null;

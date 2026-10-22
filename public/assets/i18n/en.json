@@ -217,6 +217,9 @@
       "placeholderDescriptionEn": "Briefly describe the vendor and their services",
       "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
       "placeholderRepName": "e.g. John Doe",
+      "classification": "Classification",
+      "placeholderClassification": "Select a classification",
+      "noClassifications": "No classifications are available for your account yet. Contact your admin.",
       "accountCredentials": "Vendor Account Credentials",
       "accountCredentialsHint": "The account you use to sign in to this portal. The email and mobile number can't be changed here.",
       "accountEmail": "Account Email",
@@ -248,6 +251,10 @@
     "cardTitle": "Offers",
     "rowActionsAria": "Row actions",
     "empty": "No offers found.",
+    "emptyState": {
+      "title": "No offers listed yet",
+      "message": "Add your first offer to start reaching customers and tracking redemptions."
+    },
     "stats": {
       "pendingRequests": {
         "label": "Pending Requests",
@@ -587,6 +594,7 @@
         "vendorName": "Vendor Name (English)",
         "vendorNameAr": "Vendor Name (Arabic)",
         "crNumber": "Commercial Registration Number",
+        "classification": "Classification",
         "repName": "Representative Full Name",
         "repPhone": "Representative Phone Number",
         "repEmail": "Representative Email",
@@ -1641,6 +1649,11 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System"
+    },
+    "classification": {
+      "title": "Classification",
+      "subtitle": "The category your business is listed under.",
+      "none": "Not set"
     },
     "legal": {
       "terms": "Terms & Conditions",

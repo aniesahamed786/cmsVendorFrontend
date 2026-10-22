@@ -226,6 +226,25 @@
       </ng-template>
     </p-table>
   </section>
+
+  <!-- Empty state: no offers yet — mirrors the branches page overlay. Skipped while a
+       search/filter is active (the list is server-filtered) or when the list failed to load. -->
+  <!-- The main layout's onboarding overlay already covers this page while the profile awaits approval -->
+  @if (!auth.isOnboarding() && !loading() && !loadFailed() && totalRecords() === 0 && !search() && activeFilterCount() === 0) {
+  <div class="offers__empty-overlay">
+    <div class="offers__empty-overlay-action">
+      <div class="offers__empty-overlay-badge" aria-hidden="true">
+        <span class="offers__empty-overlay-icon"></span>
+        <span class="offers__empty-overlay-plus"><i class="pi pi-plus"></i></span>
+      </div>
+      <h2 class="offers__empty-overlay-title">{{ 'offers.emptyState.title' | translate }}</h2>
+      <p class="offers__empty-overlay-text">{{ 'offers.emptyState.message' | translate }}</p>
+      @if (auth.canManage('offers')) {
+      <app-button variant="primary" icon="pi pi-plus" routerLink="create">{{ 'offers.addNew' | translate }}</app-button>
+      }
+    </div>
+  </div>
+  }
 </div>
 
 <app-confirmation-pop-up [visible]="!!renewTarget()" [title]="'offers.renew.title' | translate"

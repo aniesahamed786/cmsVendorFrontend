@@ -84,6 +84,21 @@
             </div>
           </div>
         </div>
+
+        <div class="vendor-profile-page__card">
+          <div class="vendor-profile-page__card-header">
+            <div class="vendor-profile-page__card-icon">
+              <span class="app-skeleton vendor-profile-page__skeleton-icon"></span>
+            </div>
+            <span class="app-skeleton vendor-profile-page__skeleton-title"></span>
+          </div>
+          <div class="vendor-profile-page__contact-list">
+            <div class="vendor-profile-page__contact-item">
+              <span class="app-skeleton vendor-profile-page__skeleton-contact-icon"></span>
+              <span class="app-skeleton vendor-profile-page__skeleton-contact-text"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="vendor-profile-page__card vendor-profile-page__images-section">
@@ -211,6 +226,27 @@
             <p class="vendor-profile-page__empty-text">
               {{ 'profile.noSocialLinks' | translate }}
             </p>
+            }
+          </div>
+        </div>
+
+        <div class="vendor-profile-page__card">
+          <div class="vendor-profile-page__card-header">
+            <div class="vendor-profile-page__card-icon"><i class="pi pi-tag"></i></div> {{ 'profile.form.classification' | translate }}
+          </div>
+          <div class="vendor-profile-page__contact-list">
+            @if (classificationLoading()) {
+            <div class="vendor-profile-page__contact-item">
+              <span class="app-skeleton vendor-profile-page__skeleton-contact-icon"></span>
+              <span class="app-skeleton vendor-profile-page__skeleton-contact-text"></span>
+            </div>
+            } @else if (classificationName()) {
+            <div class="vendor-profile-page__contact-item">
+              <i class="pi pi-tag"></i>
+              <span>{{ classificationName() }}</span>
+            </div>
+            } @else {
+            <p class="vendor-profile-page__empty-text">{{ 'settingsPage.classification.none' | translate }}</p>
             }
           </div>
         </div>

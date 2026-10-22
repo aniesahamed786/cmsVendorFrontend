@@ -24,7 +24,8 @@ import { BranchForm, BranchFormModel, BranchFormSubmit } from '../../../Branches
 import { VendorProfileEditForm } from '../../../Profile/components/vendor-profile-edit-form/vendor-profile-edit-form';
 import { VendorProfileEditData } from '../../../Profile/models/vendor-profile-edit.model';
 import { PROFILE_REQUEST_TITLE } from '../../../Profile/pages/edit-vendor-profile-page/edit-vendor-profile-page';
-import { toVendorSchemaPayload } from '../../../Profile/models/vendor-profile-request.mapper';
+import { toVendorSchemaPayload, VendorClassificationOption } from '../../../Profile/models/vendor-profile-request.mapper';
+import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
  
@@ -61,6 +62,7 @@ export class RequestEdit {
   private readonly api = inject(RequestCenterApiService);
   private readonly i18n = inject(I18nService);
   private readonly messageService = inject(MessageService);
+  private readonly vendorProfile = inject(VendorProfileService);
  
   readonly requestId = this.route.snapshot.paramMap.get('id') ?? '';
  
@@ -82,6 +84,7 @@ export class RequestEdit {
   readonly offerFormData = computed(() => (this.details() ? this.proposed() : null));
   readonly branchFormData = computed(() => (this.details() ? toBranchFormModel(this.proposed()) : null));
   readonly profileData = computed(() => toProfileEditData(this.proposed()));
+  readonly classificationOptions = signal<VendorClassificationOption[]>([]);
  
   constructor() {
     this.loadRequest();
@@ -100,6 +103,14 @@ export class RequestEdit {
     });
   }
  
+  /** Optional: without the list the picker is empty and the request's classification is kept as-is. */
+  private loadClassifications(): void {
+    this.vendorProfile.getClassifications().subscribe({
+      next: (res) => this.classificationOptions.set(res?.classifications ?? []),
+      error: (err) => console.error('Failed to load vendor classifications', err),
+    });
+  }
+
   private loadRequest(): void {
     if (!this.requestId) {
       this.loading.set(false);
@@ -120,6 +131,7 @@ export class RequestEdit {
             return;
           }
           this.details.set(details);
+          if (details.entityType === 'PROFILE') this.loadClassifications();
         },
         error: (err) => {
           console.error('Failed to load request for editing', err);

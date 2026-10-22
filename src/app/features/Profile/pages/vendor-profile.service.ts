@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { VendorProfileApi } from '../models/vendor-profile-request.mapper';
+import { VendorClassificationOptionsApi, VendorProfileApi } from '../models/vendor-profile-request.mapper';
 
 @Injectable({
   providedIn: 'root',
@@ -20,5 +20,10 @@ export class VendorProfileService {
    */
   getVendorProfile(): Observable<VendorProfileApi> {
     return this.http.get<VendorProfileApi>(`${this.baseUrl}/vendorProfile`);
+  }
+
+  /** GET /cmsVendor/classifications — what this vendor may pick as `classification`, current one marked. */
+  getClassifications(): Observable<VendorClassificationOptionsApi> {
+    return this.http.get<VendorClassificationOptionsApi>(`${this.baseUrl}/classifications`);
   }
 }

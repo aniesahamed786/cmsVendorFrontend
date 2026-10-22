@@ -41,6 +41,7 @@ import {
 import { OfferHeroVendor } from '../../../Offers/Components/offer-hero-card/offer-hero-card';
 import { BranchesService } from '../../../Branches/services/branches.service';
 import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
+import { VendorClassificationOption } from '../../../Profile/models/vendor-profile-request.mapper';
 import {
   RequestAdminAction,
   RequestChangeResponse,
@@ -332,6 +333,7 @@ export class RequestDetail {
           fieldName === 'hotelamenities_ar';
         const isRoomDetailsField = fieldName === 'roomdetails' || fieldName === 'room_details';
         const isLocationField = fieldName === 'locationids' || fieldName === 'locations';
+        const isClassificationField = fieldName === 'classification';
 
         const oldRooms = isRoomDetailsField ? parseRoomDetails(change.oldValue) : [];
         const newRooms = isRoomDetailsField ? parseRoomDetails(change.newValue) : [];
@@ -360,12 +362,16 @@ export class RequestDetail {
             ? ''
             : isLocationField
               ? this.locationNames(change.oldValue)
-              : formatChangeValue(change.oldValue, change.field),
+              : isClassificationField
+                ? this.classificationName(change.oldValue)
+                : formatChangeValue(change.oldValue, change.field),
           newValue: isRoomDetails || isAmenities
             ? ''
             : isLocationField
               ? this.locationNames(change.newValue)
-              : formatChangeValue(change.newValue, change.field),
+              : isClassificationField
+                ? this.classificationName(change.newValue)
+                : formatChangeValue(change.newValue, change.field),
         };
       });
   });
@@ -472,6 +478,8 @@ export class RequestDetail {
   // An offer payload stores `locationIds` only, so the branch names have to be resolved
   // against the vendor's own locations (GET /cmsVendor/locations) before they can be shown.
   readonly vendorLocations = signal<Record<string, unknown>[]>([]);
+  /** The vendor's role categories, so a PROFILE request's classification id reads as a name. */
+  readonly classificationOptions = signal<VendorClassificationOption[]>([]);
 
   /** The vendor's branches this offer is available at, in the order the payload lists them. */
   readonly offerLocations = computed(() => {
@@ -507,7 +515,20 @@ export class RequestDetail {
       .join(', ');
   }
 
+  /**
+   * Category name for a classification id. Falls back to the raw value when the list hasn't
+   * loaded or the category is outside the vendor's role — same as locationNames.
+   */
+  private classificationName(value: unknown): string {
+    const id = formatChangeValue(value);
+    if (!id) return '';
+    const match = this.classificationOptions().find((option) => option._id === id);
+    if (!match) return id;
+    return (this.i18n.lang() === 'ar' && match.name_ar) || match.name;
+  }
+
   readonly profileView = computed(() => toProfileRequestView(this.proposedEntity()));
+  readonly profileClassification = computed(() => this.classificationName(this.proposedEntity()['classification']));
   readonly branchView = computed(() => toBranchView(this.proposedEntity()));
   readonly branchPwdFriendly = computed(() => isPwdAvailable(this.proposedEntity()));
 
@@ -722,6 +743,8 @@ export class RequestDetail {
           if (details?.entityType === 'OFFER') {
             this.loadVendorLocations();
             this.loadHeroVendor();
+          } else if (details?.entityType === 'PROFILE') {
+            this.loadClassifications();
           }
           this.loadAffectedOffers(details?.cancellationImpact?.offersDeactivated ?? []);
         },
@@ -756,6 +779,14 @@ export class RequestDetail {
           logo: profile?.vendorLogo ?? '',
         }),
       error: (err) => console.error('Failed to load vendor for request hero', err),
+    });
+  }
+
+  /** Only costs the readable name — on failure the id is shown instead. */
+  private loadClassifications(): void {
+    this.vendorProfileService.getClassifications().subscribe({
+      next: (res) => this.classificationOptions.set(res?.classifications ?? []),
+      error: (err) => console.error('Failed to load vendor classifications', err),
     });
   }
 

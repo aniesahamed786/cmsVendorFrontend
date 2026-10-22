@@ -104,6 +104,11 @@ label {
   text-align: right;
 }
 
+/* p-select sizes to its content by default; the text inputs beside it fill the column. */
+:host ::ng-deep .vendor-profile-edit-form__select {
+  width: 100%;
+}
+
 .profile-form-actions-row {
   display: flex;
   justify-content: flex-end;

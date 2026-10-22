@@ -132,6 +132,18 @@
       <p class="request-profile-detail__empty">{{ 'profile.noSocialLinks' | translate }}</p>
       }
     </section>
+
+    @if (!loading() && classification()) {
+    <section class="request-profile-detail__card">
+      <div class="request-profile-detail__section-header">
+        <span class="request-profile-detail__section-icon"><i class="pi pi-tag"></i></span>
+        <h3 class="request-profile-detail__section-title">{{ 'profile.form.classification' | translate }}</h3>
+      </div>
+      <div class="request-profile-detail__list">
+        <div class="request-profile-detail__item"><i class="pi pi-tag"></i><span>{{ classification() }}</span></div>
+      </div>
+    </section>
+    }
   </div>
 
   <section class="request-profile-detail__card">

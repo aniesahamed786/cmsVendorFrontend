@@ -21,6 +21,22 @@ export interface VendorProfileApi {
   socialLinks?: { platform?: string; accountName?: string; url: string }[];
 }
 
+/** One option of GET /cmsVendor/classifications (VendorClassificationOptionDto). */
+export interface VendorClassificationOption {
+  _id: string;
+  name: string;
+  name_ar: string;
+  icon: string;
+  order: number;
+  selected: boolean;
+}
+
+/** Shape of GET /cmsVendor/classifications — the vendor's role categories, current one marked. */
+export interface VendorClassificationOptionsApi {
+  currentClassificationId: string | null;
+  classifications: VendorClassificationOption[];
+}
+
 const first = (values: string[] | undefined | null): string => values?.[0] ?? '';
 
 /**
@@ -97,6 +113,9 @@ export function toVendorSchemaPayload(data: VendorProfileEditData): Record<strin
   // so an untouched blank never overwrites a real stored value.
   if (data.crNumber) payload['crn_no'] = data.crNumber;
   if (data.businessWebsite) payload['website'] = [data.businessWebsite];
+  // The backend drops anything that is not a category id and cannot clear a classification,
+  // so a blank is simply left out.
+  if (data.classification) payload['classification'] = data.classification;
 
   // Images arrive as either a stored URL (unchanged) or a File (freshly cropped). Both are
   // kept: the request is posted as multipart/form-data, so a File is lifted out of

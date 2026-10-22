@@ -26,7 +26,7 @@ import {
   VendorProfileEditLocation,
 } from '../../models/vendor-profile-edit.model';
 import { VendorSocialLink } from '../../../vendors/models/createNewVendor';
-import { toVendorSchemaPayload } from '../../models/vendor-profile-request.mapper';
+import { toVendorSchemaPayload, VendorClassificationOption } from '../../models/vendor-profile-request.mapper';
 import { getChangedFields } from '../../../../shared/utils/object-diff';
 import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
 import { resolveAssetUrl, resolveMaskImageStyle } from '../../../../shared/utils/resolve-asset-url';
@@ -84,6 +84,15 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
    */
   account = input<VendorProfileAccount | null>(null);
   savingAccountName = input(false);
+  /** The vendor's role categories. Empty when the vendor has no role yet (or the list failed to load). */
+  classificationOptions = input<VendorClassificationOption[]>([]);
+  readonly classificationSelectOptions = computed(() => {
+    const ar = this.i18n.lang() === 'ar';
+    return this.classificationOptions().map((option) => ({
+      label: (ar && option.name_ar) || option.name,
+      value: option._id,
+    }));
+  });
 
   saveAccountName = output<string>();
   saveDraft = output<VendorProfileEditData>();
@@ -182,6 +191,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     repFullName: ['', Validators.required],
     repPhone: ['', Validators.required],
     repEmail: ['', [Validators.required, Validators.email]],
+    classification: [''],
     accountNameInput: [''],
     linkinput: ['', Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})[\/\w \.@?&=%_+!~*\'()#,:;-]*\/?$/)],
     socialLinks: this.fb.array<FormControl<VendorSocialLink | null>>([]),
@@ -219,6 +229,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       repPhone: value.repPhone ?? '',
       repEmail: value.repEmail ?? '',
       socialLinks: this.getRawSocialLinks(),
+      classification: value.classification ?? '',
       locations: this.savedLocations(),
       logo: value.logo ?? null,
       coverMobile: value.coverMobile ?? null,
@@ -286,6 +297,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
       repFullName: data.repFullName,
       repPhone: data.repPhone,
       repEmail: data.repEmail,
+      classification: data.classification ?? '',
       accountNameInput: '',
       linkinput: '',
       logo: data.logo ?? null,

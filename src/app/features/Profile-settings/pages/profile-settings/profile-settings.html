@@ -97,6 +97,18 @@
 
     <div class="settings-page__side">
       <section class="settings-card">
+        <h2 class="settings-card__title">{{ 'settingsPage.classification.title' | translate }}</h2>
+        <p class="settings-card__subtitle">{{ 'settingsPage.classification.subtitle' | translate }}</p>
+
+        <div class="classification-value">
+          @if (classificationIcon(); as icon) {
+          <img class="classification-value__icon" [src]="icon" alt="" />
+          }
+          <span>{{ classificationName() || ('settingsPage.classification.none' | translate) }}</span>
+        </div>
+      </section>
+
+      <section class="settings-card">
         <h2 class="settings-card__title">{{ 'settingsPage.language.title' | translate }}</h2>
         <p class="settings-card__subtitle">{{ 'settingsPage.language.subtitle' | translate }}</p>
 

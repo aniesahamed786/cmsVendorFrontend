@@ -18,6 +18,8 @@ export class RequestProfileDetail {
 
   readonly profile = input<ProfileRequestView | null>(null);
   readonly loading = input<boolean>(false);
+  /** Display name of the proposed classification; '' hides the card. */
+  readonly classification = input<string>('');
 
   /** Same media-path rewrite the vendor profile page uses. */
   imageUrl(path?: string): string {

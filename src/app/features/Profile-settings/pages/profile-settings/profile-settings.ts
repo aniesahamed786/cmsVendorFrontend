@@ -5,7 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
+import { catchError, finalize, map, of } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { Button } from '../../../../shared/Components/button/button';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
@@ -14,6 +14,8 @@ import { ThemeService, AppearanceMode } from '../../../../shared/services/theme.
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 import { passwordChecks, passwordsMatchValidator } from '../../../../shared/utils/form-validators';
 import { AuthService } from '../../../../core/services/auth.service';
+import { VendorProfileService } from '../../../Profile/pages/vendor-profile.service';
+import { toVendorMediaUrl } from '../../../../shared/utils/media-url';
 import {
   ProfileSettingsService,
   UpdateProfileSettingsPayload,
@@ -61,6 +63,22 @@ export class ProfileSettings {
   private readonly settingsService = inject(ProfileSettingsService);
   private readonly messageService = inject(MessageService);
   private readonly auth = inject(AuthService);
+  private readonly vendorProfile = inject(VendorProfileService);
+
+  /** The vendor's current classification; null while loading, when unset, or if the call fails. */
+  readonly classification = toSignal(
+    this.vendorProfile.getClassifications().pipe(
+      map((res) => res.classifications.find((option) => option.selected) ?? null),
+      catchError(() => of(null)),
+    ),
+    { initialValue: null },
+  );
+  readonly classificationName = computed(() => {
+    const current = this.classification();
+    if (!current) return '';
+    return (this.isArabic() && current.name_ar) || current.name;
+  });
+  readonly classificationIcon = computed(() => toVendorMediaUrl(this.classification()?.icon));
 
   readonly isArabic = this.i18n.isRtl;
   readonly currentLang = this.i18n.lang;

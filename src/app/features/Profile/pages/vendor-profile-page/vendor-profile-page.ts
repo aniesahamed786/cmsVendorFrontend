@@ -1,7 +1,8 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { catchError, finalize, map, of } from 'rxjs';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { TranslatePipe } from '../../../../shared/i18n/translate.pipe';
 import { VendorPreview } from '../../components/vendor-preview/vendor-preview';
@@ -38,10 +39,25 @@ export class VendorProfilePage implements OnInit {
   readonly auth = inject(AuthService);
   private readonly i18n = inject(I18nService);
   private readonly document = inject(DOCUMENT);
+  private readonly vendorProfileService = inject(VendorProfileService);
+
+  /** Current classification — same lookup as profile settings. undefined while loading, null when unset or the call fails. */
+  private readonly classification = toSignal(
+    this.vendorProfileService.getClassifications().pipe(
+      map((res) => res.classifications.find((option) => option.selected) ?? null),
+      catchError(() => of(null)),
+    ),
+    { initialValue: undefined },
+  );
+  readonly classificationLoading = computed(() => this.classification() === undefined);
+  readonly classificationName = computed(() => {
+    const current = this.classification();
+    if (!current) return '';
+    return (this.i18n.isRtl() && current.name_ar) || current.name;
+  });
 
   constructor(
     private readonly router: Router,
-    private readonly vendorProfileService: VendorProfileService,
     private readonly authService: AuthService
   ) {}
 

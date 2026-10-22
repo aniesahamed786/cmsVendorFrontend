@@ -53,6 +53,23 @@
   color: var(--app-muted);
 }
 
+.classification-value {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--app-primary-soft);
+  color: var(--app-text);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.classification-value__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+}
+
 .settings-card__actions {
   display: flex;
   justify-content: flex-end;

@@ -318,7 +318,7 @@
       }
       @case ('PROFILE') {
       @if (profileView(); as profile) {
-      <app-request-profile-detail [profile]="profile" />
+      <app-request-profile-detail [profile]="profile" [classification]="profileClassification()" />
       }
       }
       @case ('STORE') {

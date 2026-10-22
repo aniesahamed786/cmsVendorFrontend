@@ -142,6 +142,7 @@ const PROFILE_SECTIONS: SectionDef[] = [
       { key: 'name', labelKey: L + 'vendorName' },
       { key: 'name_ar', labelKey: L + 'vendorNameAr', rtl: true },
       { key: 'crn_no', labelKey: L + 'crNumber' },
+      { key: 'classification', labelKey: L + 'classification' },
       { key: 'description', labelKey: L + 'descriptionEn', multiline: true },
       { key: 'description_ar', labelKey: L + 'descriptionAr', rtl: true, multiline: true },
     ],

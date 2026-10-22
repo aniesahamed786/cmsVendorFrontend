@@ -217,6 +217,9 @@
       "placeholderDescriptionEn": "وصف مختصر للبائع وخدماته بالإنجليزية",
       "placeholderDescriptionAr": "وصف مختصر للبائع وخدماته",
       "placeholderRepName": "مثال: محمد أحمد",
+      "classification": "التصنيف",
+      "placeholderClassification": "اختر التصنيف",
+      "noClassifications": "لا توجد تصنيفات متاحة لحسابك حالياً. تواصل مع المسؤول.",
       "accountCredentials": "بيانات حساب البائع",
       "accountCredentialsHint": "الحساب الذي تستخدمه لتسجيل الدخول إلى هذه البوابة. لا يمكن تغيير البريد الإلكتروني ورقم الجوال من هنا.",
       "accountEmail": "البريد الإلكتروني للحساب",
@@ -248,6 +251,10 @@
     "cardTitle": "العروض",
     "rowActionsAria": "إجراءات الصف",
     "empty": "لا توجد عروض.",
+    "emptyState": {
+      "title": "لا توجد عروض مضافة بعد",
+      "message": "أضف عرضك الأول لبدء الوصول إلى العملاء وتتبع عمليات الاستبدال."
+    },
     "stats": {
       "pendingRequests": {
         "label": "الطلبات المعلقة",
@@ -587,6 +594,7 @@
         "vendorName": "اسم البائع (بالإنجليزية)",
         "vendorNameAr": "اسم البائع (بالعربية)",
         "crNumber": "رقم السجل التجاري",
+        "classification": "التصنيف",
         "repName": "اسم الممثل بالكامل",
         "repPhone": "رقم هاتف الممثل",
         "repEmail": "البريد الإلكتروني للممثل",
@@ -1643,6 +1651,11 @@
       "light": "فاتح",
       "dark": "داكن",
       "system": "نظام"
+    },
+    "classification": {
+      "title": "التصنيف",
+      "subtitle": "الفئة التي يُدرج تحتها نشاطك التجاري.",
+      "none": "غير محدد"
     },
     "legal": {
       "terms": "الشروط والأحكام",
