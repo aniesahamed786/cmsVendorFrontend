@@ -9,7 +9,40 @@
       <div class="recent-activities__toolbar-header">
         <h2 class="recent-activities__card-title">{{ 'recentActivities.cardTitle' | translate }}</h2>
         <div class="recent-activities__controls">
-          <app-search [value]="search()" (valueChange)="onSearchInput($event)"
+          <div class="app-filters-row app-desktop-filters recent-activities__filters">
+            <div class="app-filter-group">
+              <label class="app-filter-label">{{ 'recentActivities.filter.type' | translate }}</label>
+              <p-select [options]="entityTypeOptions()" [ngModel]="entityType()"
+                (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
+                [placeholder]="'recentActivities.filter.type' | translate" styleClass="recent-activities__filter" />
+            </div>
+
+            <div class="app-filter-group">
+              <label class="app-filter-label">{{ 'recentActivities.filter.action' | translate }}</label>
+              <p-select [options]="actionOptions()" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
+                optionLabel="label" optionValue="value" [placeholder]="'recentActivities.filter.action' | translate"
+                styleClass="recent-activities__filter" />
+            </div>
+
+            <div class="app-filter-group">
+              <label class="app-filter-label">{{ 'recentActivities.filter.period' | translate }}</label>
+              <p-select [options]="periodOptions()" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
+                optionLabel="label" optionValue="value" [placeholder]="'recentActivities.filter.period' | translate"
+                styleClass="recent-activities__filter" />
+            </div>
+
+            @if (period() === 'custom') {
+            <div class="app-filter-group">
+              <label class="app-filter-label">{{ 'recentActivities.filter.customDates' | translate }}</label>
+              <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
+                selectionMode="range" [readonlyInput]="true"
+                [placeholder]="'recentActivities.filter.selectDates' | translate" dateFormat="M d, yy"
+                appendTo="body" styleClass="recent-activities__filter" />
+            </div>
+            }
+          </div>
+
+          <app-search class="recent-activities__search" [value]="search()" (valueChange)="onSearchInput($event)"
             [placeholder]="'recentActivities.searchPlaceholder' | translate" />
           <button type="button" class="app-filter-trigger-btn" [class.has-active]="activeFilterCount() > 0"
             (click)="showMobileFilters.set(true)">
@@ -20,38 +53,6 @@
             }
           </button>
         </div>
-      </div>
-
-      <div class="app-filters-row app-desktop-filters">
-        <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'recentActivities.filter.type' | translate }}</label>
-          <p-select [options]="entityTypeOptions()" [ngModel]="entityType()"
-            (ngModelChange)="onEntityTypeChange($event)" optionLabel="label" optionValue="value"
-            [placeholder]="'recentActivities.filter.type' | translate" styleClass="recent-activities__filter" />
-        </div>
-
-        <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'recentActivities.filter.action' | translate }}</label>
-          <p-select [options]="actionOptions()" [ngModel]="action()" (ngModelChange)="onActionChange($event)"
-            optionLabel="label" optionValue="value" [placeholder]="'recentActivities.filter.action' | translate"
-            styleClass="recent-activities__filter" />
-        </div>
-
-        <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'recentActivities.filter.period' | translate }}</label>
-          <p-select [options]="periodOptions()" [ngModel]="period()" (ngModelChange)="onPeriodChange($event)"
-            optionLabel="label" optionValue="value" [placeholder]="'recentActivities.filter.period' | translate"
-            styleClass="recent-activities__filter" />
-        </div>
-
-        @if (period() === 'custom') {
-        <div class="app-filter-group">
-          <label class="app-filter-label">{{ 'recentActivities.filter.customDates' | translate }}</label>
-          <p-datepicker [ngModel]="customRange()" (ngModelChange)="onCustomRangeChange($event)"
-            selectionMode="range" [readonlyInput]="true" [placeholder]="'recentActivities.filter.selectDates' | translate" dateFormat="M d, yy"
-            appendTo="body" styleClass="recent-activities__filter" />
-        </div>
-        }
       </div>
 
       @if (activeFilterChips().length > 0) {

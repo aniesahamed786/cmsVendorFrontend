@@ -45,7 +45,7 @@
 
   &__toolbar-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
@@ -53,8 +53,20 @@
 
   &__controls {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    justify-content: flex-end;
     gap: 0.75rem;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  &__filters {
+    width: auto;
+    gap: 0.75rem;
+  }
+
+  &__search {
+    --app-search-width: 18rem;
   }
 
   /* No local __filter rule — styles.scss owns every .p-select / .p-datepicker. */
@@ -91,6 +103,36 @@
     &--wide { width: 8rem; }
     &--text { width: 6rem; }
     &--id { width: 6.5rem; }
+  }
+}
+
+@media (max-width: 1199px) {
+  .recent-activities {
+    &__toolbar-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    &__controls {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .recent-activities {
+    &__toolbar {
+      gap: 0.75rem;
+    }
+
+    &__toolbar-header {
+      gap: 0.75rem;
+    }
+
+    &__controls {
+      justify-content: flex-end;
+    }
   }
 }
 
