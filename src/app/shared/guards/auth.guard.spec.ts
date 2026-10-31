@@ -142,11 +142,20 @@ describe('AuthGuards', () => {
       expect(run(vendorAdminGuard as ReturnType<typeof permissionGuard>)).toBe(true);
     });
 
-    it('allows Request Center for staff with its read or manage permission', () => {
+    it('denies Request Center to staff even when their session contains its permission', () => {
       signIn(['cms_request_center:read'], 'VENDOR_STAFF');
-      expect(run(permissionGuard('request_center'))).toBe(true);
+      expect(run(permissionGuard('request_center')).toString()).toBe(
+        '/access-denied?reason=request_center',
+      );
 
       signIn(['cms_request_center:manage'], 'VENDOR_STAFF');
+      expect(run(permissionGuard('request_center')).toString()).toBe(
+        '/access-denied?reason=request_center',
+      );
+    });
+
+    it('allows Request Center to a vendor admin with its permission', () => {
+      signIn(['cms_request_center:read'], 'VENDOR_ADMIN');
       expect(run(permissionGuard('request_center'))).toBe(true);
     });
 

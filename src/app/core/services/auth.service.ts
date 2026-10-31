@@ -276,6 +276,9 @@ export class AuthService {
   }
 
   private hasPermission(resource: string, level: 'read' | 'manage'): boolean {
+    // Request Center is a vendor-admin workflow. Never let a stale or overly broad
+    // permission in a non-admin login session expose it to a subaccount.
+    if (resource === 'request_center' && !this.isAdmin()) return false;
     return this.permissions().includes(`cms_${resource}:${level}`);
   }
 

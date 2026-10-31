@@ -213,15 +213,15 @@ describe('AuthService', () => {
       expect(service.canManage('redemptions')).toBe(false);
     });
 
-    it('uses Request Center permissions for staff access', () => {
+    it('keeps Request Center restricted to vendor admins even when staff receive a stale grant', () => {
       signIn(['cms_request_center:read'], 'VENDOR_STAFF');
-      expect(service.canViewRequestCenter()).toBe(true);
+      expect(service.canViewRequestCenter()).toBe(false);
 
       signIn(['cms_request_center:manage'], 'VENDOR_STAFF');
-      expect(service.canViewRequestCenter()).toBe(true);
-
-      signIn(['cms_offers:read'], 'VENDOR_STAFF');
       expect(service.canViewRequestCenter()).toBe(false);
+
+      signIn(['cms_request_center:read'], 'VENDOR_ADMIN');
+      expect(service.canViewRequestCenter()).toBe(true);
     });
 
     it('denies a resource with neither level', () => {
