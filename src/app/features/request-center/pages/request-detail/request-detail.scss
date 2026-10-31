@@ -1274,7 +1274,7 @@
 }
 
 // ---- Status pills inside request details ----
-.request-center__status {
+.request-detail__status {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1317,5 +1317,10 @@
   &--new {
     background: var(--app-status-new, var(--app-primary, #0033A0));
     color: #ffffff;
+  }
+
+  &--admin_edited {
+    background: var(--app-primary-soft);
+    color: var(--app-primary);
   }
 }

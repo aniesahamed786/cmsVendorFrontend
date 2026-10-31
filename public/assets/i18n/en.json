@@ -405,6 +405,7 @@
       "draft": "Draft",
       "draft_saved": "Draft",
       "draft_discarded": "Draft Discarded",
+      "admin_edited": "Edited by Admin",
       "submitted": "Submitted",
       "returned": "Returned",
       "approved": "Approved",
