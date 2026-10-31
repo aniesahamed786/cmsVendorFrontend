@@ -59,7 +59,7 @@ export const MOCK_HIGHLIGHT_OFFERS: HighlightOffer[] = [
   {
     id: 'favourited',
     icon: 'pi pi-bookmark',
-    label: 'Most Favourited Offer',
+    label: 'Most Saved Offer',
     offerTitle: 'Summer Staycation Deluxe',
     metricValue: '14.2k Likes',
     trendPercent: 12,

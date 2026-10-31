@@ -1719,7 +1719,7 @@
     "topOffers": {
       "title": "Top Offers",
       "subtitle": "Offers with the strongest engagement",
-      "mostFavorited": "Most favorited offer",
+      "mostFavorited": "Most Saved Offer",
       "mostViewed": "Most viewed offer",
       "mostShared": "Most shared offer"
     },
@@ -1753,7 +1753,7 @@
       "shares": "Shares",
       "redemptions": "Redemptions",
       "uniqueClicks": "Unique Clicks",
-      "favorites": "Favorites"
+      "favorites": "Saves"
     },
     "tooltip": {
       "status": {
@@ -1763,7 +1763,7 @@
         "inactive": "Total number of expired, disabled, or unpublished offers."
       },
       "highlight": {
-        "favourited": "The offer added to customers' favorites the highest number of times.",
+        "favourited": "The offer saved by customers the highest number of times.",
         "viewed": "The offer that received the highest number of views during the selected period.",
         "shared": "The offer shared by customers the highest number of times."
       },

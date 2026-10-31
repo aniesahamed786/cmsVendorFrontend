@@ -388,7 +388,7 @@ export class AnalyticsPage implements OnInit {
     table.filter(days, 'days', 'equals');
   }
 
-  /** One card per metric: most favorited, most viewed, most shared. */
+  /** One card per metric: most saved, most viewed, most shared. */
   get topOfferCards(): Array<{
     offer: OfferInsightRow;
     icon: string;
