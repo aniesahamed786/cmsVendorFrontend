@@ -16,19 +16,37 @@ export interface CatalogueEntry {
   title: string;
   raw: unknown;
   locations: { id: string; name: string; city: string; raw: unknown }[];
-  /** Only filled when loaded with dates (the Excel template). UTC midnight, see offerDayUtc. */
+  /** Only filled when loaded with dates (the Excel template). See offerDayUtc. */
   startDate?: Date | null;
   endDate?: Date | null;
 }
 
-/** The offer's calendar day as UTC midnight. exceljs serialises a Date from its UTC
- *  time, so a local-midnight date would land on the previous day east of UTC. */
-function offerDayUtc(value: { $date: string } | string | undefined): Date | null {
+const RIYADH_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Riyadh',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+/**
+ * Converts the offer timestamp to its Riyadh calendar day, represented at UTC midnight for
+ * ExcelJS. An offer starting at Riyadh midnight may arrive as 21:00Z on the previous UTC day;
+ * using UTC getters directly would therefore put the previous date in the downloaded sheet.
+ */
+export function offerDayUtc(value: { $date: string } | string | undefined): Date | null {
   const iso = typeof value === 'string' ? value : value?.$date;
   if (!iso) return null;
   const parsed = new Date(iso);
   if (Number.isNaN(parsed.getTime())) return null;
-  return new Date(Date.UTC(parsed.getUTCFullYear(), parsed.getUTCMonth(), parsed.getUTCDate()));
+
+  const dateParts = Object.fromEntries(
+    RIYADH_DATE_FORMATTER
+      .formatToParts(parsed)
+      .filter((part) => part.type === 'year' || part.type === 'month' || part.type === 'day')
+      .map((part) => [part.type, Number(part.value)]),
+  ) as Record<'year' | 'month' | 'day', number>;
+
+  return new Date(Date.UTC(dateParts.year, dateParts.month - 1, dateParts.day));
 }
 
 function unwrapArray<T>(response: unknown, keys: string[]): T[] {
