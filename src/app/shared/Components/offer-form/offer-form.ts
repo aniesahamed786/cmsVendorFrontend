@@ -1812,7 +1812,10 @@ export class OfferForm {
 
     const patch: Record<string, unknown> = {
       selectedVendor:
-        offerdetails.vendor?._id?.$oid ?? offerdetails.vendorId ?? "",
+        offerdetails.vendor?._id?.$oid ??
+        offerdetails.vendorId ??
+        this.authService.getVendorId() ??
+        "",
 
       titleEn: offerdetails.title ?? "",
       titleAr: offerdetails.title_ar ?? "",

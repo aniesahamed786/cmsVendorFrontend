@@ -22,7 +22,14 @@ export class OfferTile {
   trendLabel = input<string>('');
   trendUp = input<boolean>(true);
   badgeLabel = input<string>('');
+  clickable = input<boolean>(false);
   tileClick = output<void>();
+
+  activate(): void {
+    if (!this.loading() && this.clickable()) {
+      this.tileClick.emit();
+    }
+  }
 
   isSvgIcon(icon: string | null | undefined): boolean {
     return typeof icon === 'string' && icon.trim().toLowerCase().includes('.svg');

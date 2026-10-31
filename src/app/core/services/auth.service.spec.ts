@@ -88,6 +88,27 @@ describe('AuthService', () => {
     expect(service.getVendorId()).toBe('v-1');
   });
 
+  it('should fall back to the JWT vendorId when the cached account does not have one', () => {
+    const validToken = createMockJwt({
+      sub: '123',
+      vendorId: 'vendor-from-token',
+      exp: Math.floor(Date.now() / 1000) + 3600,
+    });
+
+    service.setSession(validToken, {
+      id: 'acc-1',
+      vendorId: '',
+      roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_offers:manage'],
+      name: 'Vendor Owner',
+      email: 'vendor@example.com',
+      accountStatus: 'ACTIVE',
+    });
+
+    expect(service.getVendorId()).toBe('vendor-from-token');
+  });
+
   it('should update cached preferences after they are saved', () => {
     service.setSession(createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 }), {
       id: 'acc-1',

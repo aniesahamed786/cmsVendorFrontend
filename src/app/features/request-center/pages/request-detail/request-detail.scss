@@ -1323,4 +1323,9 @@
     background: var(--app-primary-soft);
     color: var(--app-primary);
   }
+
+  &--draft_discarded {
+    background: color-mix(in srgb, var(--app-surface) 84%, var(--app-border) 16%);
+    color: var(--app-text);
+  }
 }

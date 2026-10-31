@@ -237,7 +237,13 @@ export class AuthService {
   }
 
   getVendorId(): string | null {
-    return this.sessionState()?.vendorId ?? null;
+    const sessionVendorId = this.sessionState()?.vendorId?.trim();
+    if (sessionVendorId) return sessionVendorId;
+
+    // Older cached vendorAccount objects may not contain vendorId even though the JWT does.
+    // Hidden vendor-owned form controls still need that identity after a page refresh.
+    const tokenVendorId = this.getAccessTokenPayload()?.vendorId?.trim();
+    return tokenVendorId || null;
   }
 
   getAccessToken(): string | null {

@@ -2,15 +2,15 @@
   <div class="upload-preview__stats">
     <app-offer-tile [title]="'redemption.preview.totalRows' | translate" [value]="drafts().length"
       icon="pi pi-file" iconColor="var(--app-primary)" iconContainerBg="var(--app-primary-soft)"
-      (tileClick)="setRowFilter('all')" />
+      [clickable]="true" (tileClick)="setRowFilter('all')" />
     <app-offer-tile [title]="'redemption.preview.validRows' | translate" [value]="validCount()"
       icon="pi pi-check-circle" iconColor="var(--app-status-active)"
       iconContainerBg="color-mix(in srgb, var(--app-status-active) 16%, transparent)"
-      (tileClick)="setRowFilter('valid')" />
+      [clickable]="true" (tileClick)="setRowFilter('valid')" />
     <app-offer-tile [title]="'redemption.preview.errorRows' | translate" [value]="invalidCount()"
       icon="pi pi-exclamation-circle" iconColor="var(--app-status-expired)"
       iconContainerBg="color-mix(in srgb, var(--app-status-expired) 16%, transparent)"
-      (tileClick)="setRowFilter('errors')" />
+      [clickable]="true" (tileClick)="setRowFilter('errors')" />
   </div>
 
   <div class="upload-preview__body">

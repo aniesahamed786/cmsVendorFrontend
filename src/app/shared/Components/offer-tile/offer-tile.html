@@ -1,4 +1,11 @@
-<div class="offer-tile" [class.offer-tile--clickable]="!loading()" (click)="!loading() && tileClick.emit()">
+<div
+  class="offer-tile"
+  [class.offer-tile--clickable]="clickable() && !loading()"
+  [attr.role]="clickable() && !loading() ? 'button' : null"
+  [attr.tabindex]="clickable() && !loading() ? 0 : null"
+  (click)="activate()"
+  (keydown.enter)="activate()"
+  (keydown.space)="activate(); $event.preventDefault()">
   @if (loading()) {
   <div class="offer-tile__main offer-tile__main--skeleton">
     <span class="app-skeleton offer-tile__skeleton-icon"></span>

@@ -217,6 +217,10 @@ export class DashboardPage implements OnInit {
     this.router.navigate(['/offers']);
   }
 
+  goToRedemptions(): void {
+    this.router.navigate(['/redemption']);
+  }
+
   goToRequestCenter(): void {
     this.router.navigate(['/request-center']);
   }
