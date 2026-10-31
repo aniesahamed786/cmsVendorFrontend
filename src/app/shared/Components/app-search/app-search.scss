@@ -1,6 +1,7 @@
 :host {
   display: inline-flex;
   vertical-align: middle;
+  width: min(100%, var(--app-search-width, 16rem));
 }
 
 /* ==========================================================================
@@ -10,7 +11,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  width: 16rem;
+  width: 100%;
   height: var(--field-height);
   min-height: var(--field-height);
   padding: 0 var(--field-padding-x);
@@ -257,6 +258,10 @@
    Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 767px) {
+  :host {
+    width: auto;
+  }
+
   .app-search--desktop {
     display: none !important;
   }

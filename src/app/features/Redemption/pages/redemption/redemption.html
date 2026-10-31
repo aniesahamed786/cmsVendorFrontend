@@ -210,7 +210,7 @@
             {{ 'redemption.filter.collective' | translate }}
           </button>
         </div>
-        <app-search [value]="search()" (valueChange)="onSearchInput($event)"
+        <app-search class="redemption-card__search" [value]="search()" (valueChange)="onSearchInput($event)"
           [placeholder]="'redemption.list.searchPlaceholder' | translate" />
       </div>
     </div>
