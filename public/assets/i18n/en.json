@@ -1834,6 +1834,10 @@
     "searchPlaceholder": "Search name, email or phone",
     "empty": "No accounts yet. Add one to get started.",
     "emptyFiltered": "No accounts match your search.",
+    "emptyState": {
+      "title": "No subaccounts listed yet",
+      "message": "Add your first subaccount to give your team secure access with the permissions they need."
+    },
     "status": {
       "ACTIVE": "Active",
       "SUSPENDED": "Suspended",

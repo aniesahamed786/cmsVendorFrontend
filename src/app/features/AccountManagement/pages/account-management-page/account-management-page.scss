@@ -4,6 +4,76 @@
 
 .account-management {
   color: var(--app-text);
+  min-height: 100vh;
+  position: relative;
+
+  /* Empty-state overlay matches the Branches page onboarding treatment. */
+  &__empty-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  &__empty-overlay-action {
+    position: sticky;
+    top: calc(50vh - 11rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  &__empty-overlay-badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 10rem;
+    height: 10rem;
+    margin-bottom: 1.5rem;
+    border-radius: 50%; // circular illustration badge
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 0.75rem rgba(255, 255, 255, 0.15), 0 0 3rem rgba(255, 255, 255, 0.35);
+  }
+
+  &__empty-overlay-icon {
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--app-primary);
+  }
+
+  &__empty-overlay-plus {
+    position: absolute;
+    inset-inline-end: 1.75rem;
+    bottom: 1.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 3px solid #fff;
+    border-radius: 50%; // circular add badge
+    background: var(--app-primary);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  &__empty-overlay-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  &__empty-overlay-text {
+    max-width: 28rem;
+    margin: 0 0 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+  }
 
   &__header {
     display: flex;

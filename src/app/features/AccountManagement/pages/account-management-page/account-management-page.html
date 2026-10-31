@@ -79,6 +79,26 @@
       </ng-template>
     </p-table>
   </section>
+
+  <!-- Empty state: mirrors the branches onboarding overlay, but remains out of the way
+       for load failures and search results so those states can be handled in the table. -->
+  @if (!loading() && !loadFailed() && !searchQuery().trim() && rows().length === 0) {
+  <div class="account-management__empty-overlay">
+    <div class="account-management__empty-overlay-action">
+      <div class="account-management__empty-overlay-badge" aria-hidden="true">
+        <i class="pi pi-users account-management__empty-overlay-icon"></i>
+        <span class="account-management__empty-overlay-plus"><i class="pi pi-plus"></i></span>
+      </div>
+      <h2 class="account-management__empty-overlay-title">{{ 'accountManagement.emptyState.title' | translate }}</h2>
+      <p class="account-management__empty-overlay-text">{{ 'accountManagement.emptyState.message' | translate }}</p>
+      @if (auth.canManage('vendor_staff')) {
+      <app-button variant="primary" icon="pi pi-plus" (click)="addAccount()">
+        {{ 'accountManagement.add' | translate }}
+      </app-button>
+      }
+    </div>
+  </div>
+  }
 </div>
 
 <app-confirmation-pop-up [visible]="confirmVisible()" [title]="confirmTitle()"
