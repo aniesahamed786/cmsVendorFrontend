@@ -39,7 +39,6 @@ import {
 } from "../../../features/vendors/models/vendordetails";
 import { InfoTip } from "../info-tip/info-tip";
 import { CategoryDropdownComponent } from "../category-dropdown/category-dropdown";
-import { TargetAudienceDropdownComponent } from "../target-audience-dropdown/target-audience-dropdown";
 import { PreviewOfferDetails } from "../../../features/Offers/Components/preview-offer-details/preview-offer-details";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CommonModule, DOCUMENT, Location } from "@angular/common";
@@ -103,7 +102,6 @@ export interface OfferFormSubmit {
     FormsModule,
     PrimeUIModules,
     CategoryDropdownComponent,
-    TargetAudienceDropdownComponent,
     PreviewOfferDetails,
     CommonModule,
     RoomCreationOffer,
@@ -272,7 +270,6 @@ export class OfferForm {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      targetAudience: this.fb.control<string[]>([], { nonNullable: true }),
       tagInput: [""],
       selectedTags: this.fb.control<string[]>([], { nonNullable: true }),
       instructionsEn: ["", [Validators.required, noWhitespaceValidator()]],
@@ -1320,7 +1317,6 @@ export class OfferForm {
     if (Array.isArray(form.hotelAmenities) && form.hotelAmenities.length > 0) return true;
     if (Array.isArray(form.hotelAmenitiesAr) && form.hotelAmenitiesAr.length > 0) return true;
     if (Array.isArray(form.category) && form.category.length > 0) return true;
-    if (Array.isArray(form.targetAudience) && form.targetAudience.length > 0) return true;
     if (Array.isArray(form.locationIds) && form.locationIds.length > 0) return true;
     if (
       Array.isArray(form.selectedTags) &&
@@ -1845,12 +1841,6 @@ export class OfferForm {
 
       category: this.normalizeCategoryIds(offerdetails),
 
-      targetAudience: Array.isArray(offerdetails?.targetAudience)
-        ? offerdetails.targetAudience.filter(
-          (v: unknown) => typeof v === "string" && v.trim() !== "",
-        )
-        : [],
-
       tagInput: "",
 
       instructionsEn: offerdetails.howToAvail ?? "",
@@ -2305,9 +2295,6 @@ export class OfferForm {
     return this.offerForm.get("category") as FormControl;
   }
 
-  get targetAudience() {
-    return this.offerForm.get("targetAudience") as FormControl<string[]>;
-  }
   back() {
     this.router.navigate(["/offers"]);
   }
@@ -2979,12 +2966,8 @@ export class OfferForm {
       description: form.descriptionEn,
       description_ar: form.descriptionAr,
 
-      targetAudience: Array.isArray(form.targetAudience)
-        ? form.targetAudience.filter(
-          (v: unknown): v is string =>
-            typeof v === "string" && v.trim() !== "",
-        )
-        : [],
+      // Offer requests are available to every audience; this is not user-configurable.
+      targetAudience: ["all"],
 
       // New highlight payload fields
       highlight_title: form.highlightTitleEn || "",

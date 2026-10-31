@@ -228,6 +228,10 @@ onBranchSave(event: BranchFormSubmit, asDraft = false): void {
       details.requestData ?? {},
       formData,
     );
+
+    if (details.entityType === 'OFFER') {
+      requestData['targetAudience'] = ['all'];
+    }
  
     this.saving.set(true);
     const isResubmit = !asDraft && this.isResubmission();

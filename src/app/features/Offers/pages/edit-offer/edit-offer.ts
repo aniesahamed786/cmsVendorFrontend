@@ -84,13 +84,18 @@ export class EditOffer {
       return;
     }
 
+    const requestData = {
+      ...changedFields,
+      targetAudience: ['all'],
+    };
+
     const payload: CreateRequestPayload = {
       entityType: 'OFFER',
       entityId: this.id,
       requestType: 'UPDATE',
       title: this.offerTitle || (event.payload?.title ?? ''),
-      // Only the edited fields — the backend stores requestData as the diff.
-      requestData: changedFields,
+      // Keep the edited-field diff, plus the fixed audience required for every offer request.
+      requestData,
       actionType,
     };
 
