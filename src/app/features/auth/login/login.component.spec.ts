@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 import { AuthService, LoginResponse, VendorOnboardingStage } from '../../../core/services/auth.service';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { ThemeService } from '../../../shared/services/theme.service';
-import { LoginComponent } from './login.component';
+import { LoginComponent, onboardingStartRoute } from './login.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -143,5 +143,41 @@ describe('LoginComponent', () => {
     await fixture.whenStable();
 
     expect(router.navigate).toHaveBeenCalledWith([url]);
+  });
+
+  it('lands a returned profile request on the request list', () => {
+    expect(onboardingStartRoute({
+      isNewVendor: true,
+      stage: 'COMPLETE_PROFILE',
+      passwordChangeRequired: false,
+      profileApprovalRequired: true,
+      profileRequestId: 'request-1',
+      profileRequestStatus: 'RETURNED',
+      profileReviewReason: 'Update the registration document',
+    })).toBe('/request-center');
+  });
+
+  it('lands a rejected profile request on a fresh profile form', () => {
+    expect(onboardingStartRoute({
+      isNewVendor: true,
+      stage: 'COMPLETE_PROFILE',
+      passwordChangeRequired: false,
+      profileApprovalRequired: true,
+      profileRequestId: 'rejected-request-1',
+      profileRequestStatus: 'REJECTED',
+      profileReviewReason: 'The registration document is invalid',
+    })).toBe('/profile/edit');
+  });
+
+  it('lands an existing profile draft on that request instead of the new-profile form', () => {
+    expect(onboardingStartRoute({
+      isNewVendor: true,
+      stage: 'COMPLETE_PROFILE',
+      passwordChangeRequired: false,
+      profileApprovalRequired: true,
+      profileRequestId: 'draft-request-1',
+      profileRequestStatus: 'DRAFT',
+      profileReviewReason: null,
+    })).toBe('/request-center/draft-request-1');
   });
 });

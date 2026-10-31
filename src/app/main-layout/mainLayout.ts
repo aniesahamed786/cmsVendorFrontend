@@ -61,6 +61,7 @@ export class MainLayout {
     return ONBOARDING_OPEN_ROUTES.some((route) => path === route || path.startsWith(route + '/')) ? null : stage;
   });
   readonly onboarding = this.auth.onboarding;
+  readonly isProfileRequestDraft = this.auth.isProfileRequestDraft;
   /** Password change and the first profile form run without the sidenav. */
   readonly hideNav = this.auth.isOnboardingSetup;
   readonly ONBOARDING_ICONS: Record<string, string> = {
@@ -73,6 +74,37 @@ export class MainLayout {
     effect(() => {
       this.url();
       untracked(() => this.auth.refreshOnboarding());
+    });
+
+    // COMPLETE_PROFILE also represents a previously submitted profile that an admin returned.
+    // When that is discovered on a locked page, resume the existing Request Center workflow.
+    effect(() => {
+      if (!this.auth.isProfileRequestReturned()) return;
+
+      const path = this.url().split(/[?#]/)[0];
+      const isOpenRoute = ONBOARDING_OPEN_ROUTES.some(
+        (route) => path === route || path.startsWith(route + '/'),
+      );
+      if (!isOpenRoute) {
+        untracked(() => void this.router.navigate(['/request-center']));
+      }
+    });
+
+    // A rejected request cannot be edited or resubmitted. Open the profile form so the vendor
+    // can create a fresh PROFILE request. The exact Request Center list route must redirect too:
+    // it defaults to the empty "Incomplete" tab shown after a rejection. A request detail route
+    // remains reachable for reviewing the rejected request and the administrator's reason.
+    effect(() => {
+      if (!this.auth.isProfileRequestRejected()) return;
+
+      const path = this.url().split(/[?#]/)[0];
+      const isOpenRoute = ONBOARDING_OPEN_ROUTES.some(
+        (route) => path === route || path.startsWith(route + '/'),
+      );
+      const isRequestCenterList = path === '/request-center' || path === '/request-center/';
+      if (!isOpenRoute || isRequestCenterList) {
+        untracked(() => void this.router.navigate(['/profile/edit']));
+      }
     });
   }
 

@@ -878,13 +878,17 @@ export class RequestDetail {
     this.i18n.loadSeq();
     const items: MenuItem[] = [];
 
-    items.push({
-      label: this.i18n.t(this.relatedListLabelKey()),
-      icon: 'pi pi-external-link',
-      command: () => {
-        this.router.navigate([this.relatedListRoute()]);
-      },
-    });
+    // An onboarding PROFILE draft is only a proposal, not an approved live profile. Do not
+    // offer a link to the locked profile page until approval completes.
+    if (this.entityKind() !== 'Profile' || !this.auth.isOnboarding()) {
+      items.push({
+        label: this.i18n.t(this.relatedListLabelKey()),
+        icon: 'pi pi-external-link',
+        command: () => {
+          this.router.navigate([this.relatedListRoute()]);
+        },
+      });
+    }
 
     if (this.canEdit()) {
       items.push({
@@ -1254,7 +1258,23 @@ export class RequestDetail {
       return;
     }
 
+    // Capture this before remove(): on a list-sourced navigation, removing the row can make
+    // entityType() lose its fallback immediately and turn the PROFILE request into null.
+    const wasOnboardingProfileDraft =
+      this.entityType() === 'PROFILE' && this.auth.isOnboarding();
     this.requestCenterService.remove(this.rowKey());
+
+    // An initial PROFILE draft was the onboarding session's active request. Clear the stale
+    // request id/status before routing, reopen the form immediately, then refresh in the
+    // background. Waiting for the refresh leaves the user stranded if that read is delayed.
+    // Without this, the profile route guard keeps redirecting to the draft that was just deleted.
+    if (wasOnboardingProfileDraft) {
+      this.auth.clearProfileRequest();
+      this.router.navigate(['/profile/edit']);
+      this.auth.refreshOnboarding();
+      return;
+    }
+
     this.goBack();
   }
 

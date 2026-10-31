@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { managePermissionGuard } from '../../shared/guards/auth.guard';
+import { managePermissionGuard, noActiveProfileRequestGuard } from '../../shared/guards/auth.guard';
 import { EditVendorProfilePage } from './pages/edit-vendor-profile-page/edit-vendor-profile-page';
 import { VendorProfilePage } from './pages/vendor-profile-page/vendor-profile-page';
 
@@ -12,7 +12,7 @@ export const routes: Route[] = [
   {
     path: 'edit',
     component: EditVendorProfilePage,
-    canActivate: [managePermissionGuard('profile')],
+    canActivate: [managePermissionGuard('profile'), noActiveProfileRequestGuard],
     data: { title: 'Edit Vendor Profile' },
   },
 ];

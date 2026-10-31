@@ -49,12 +49,18 @@
             </div>
             @switch (stage) {
             @case ('COMPLETE_PROFILE') {
+            @if (isProfileRequestDraft()) {
+            <h2 class="onboarding-overlay__title">{{ 'onboarding.profileDraft.title' | translate }}</h2>
+            <p class="onboarding-overlay__text">{{ 'onboarding.profileDraft.message' | translate }}</p>
+            <app-button variant="primary" icon="pi pi-list" [routerLink]="['/request-center', onboarding()?.profileRequestId ?? '']">{{ 'onboarding.profileDraft.action' | translate }}</app-button>
+            } @else {
             <h2 class="onboarding-overlay__title">{{ 'onboarding.completeProfile.title' | translate }}</h2>
             <p class="onboarding-overlay__text">{{ 'onboarding.completeProfile.message' | translate }}</p>
             @if (onboarding()?.profileReviewReason; as reason) {
             <p class="onboarding-overlay__text">{{ 'onboarding.completeProfile.reviewReason' | translate : { reason: reason } }}</p>
             }
             <app-button variant="primary" icon="pi pi-pencil" [routerLink]="'/profile/edit'">{{ 'onboarding.completeProfile.action' | translate }}</app-button>
+            }
             }
             @default {
             <h2 class="onboarding-overlay__title">{{ 'onboarding.underReview.title' | translate }}</h2>

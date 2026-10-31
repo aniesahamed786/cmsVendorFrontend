@@ -82,6 +82,19 @@ export const vendorAdminGuard: CanActivateFn = () => {
   return router.createUrlTree(['/access-denied'], { queryParams: { reason: 'locations' } });
 };
 
+/** Do not open the new PROFILE form while an editable/in-flight profile request exists. */
+export const noActiveProfileRequestGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (!authService.hasActiveProfileRequest()) return true;
+
+  const requestId = authService.onboarding()?.profileRequestId;
+  return requestId
+    ? router.createUrlTree(['/request-center', requestId])
+    : router.createUrlTree(['/request-center']);
+};
+
 /** A vendor still on its handed-out password replaces it before the app shell opens. */
 export const passwordChangedGuard: CanActivateFn = () => {
   const authService = inject(AuthService);

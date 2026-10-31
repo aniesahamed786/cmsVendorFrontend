@@ -2034,6 +2034,11 @@
       "action": "Complete Profile",
       "formNote": "Step 2 of 2 to activate your vendor account. Complete your business profile and submit it for review. Once it is approved, you get full access to the portal and your business goes live in the Offer app."
     },
+    "profileDraft": {
+      "title": "Your profile request is saved as a draft",
+      "message": "Continue the existing request and submit it for review. You cannot create another profile request while this draft exists.",
+      "action": "View Draft Request"
+    },
     "underReview": {
       "title": "Your profile is under review",
       "message": "We've received your profile. Offers, branches and redemptions unlock as soon as it is approved.",

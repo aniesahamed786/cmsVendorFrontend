@@ -232,16 +232,22 @@ export class EditVendorProfilePage {
       .create(requestPayload)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
-        next: () => {
+        next: (request) => {
           this.showUpdateConfirm.set(false);
           this.pendingUpdate = null;
-          if (actionType === 'SUBMIT') this.auth.refreshOnboarding();
-          this.toast(
-            'success',
-            actionType === 'SUBMIT' ? 'profile.toast.requestSubmittedSummary' : 'profile.toast.requestDraftedSummary',
-            actionType === 'SUBMIT' ? 'profile.toast.requestSubmittedDetail' : 'profile.toast.requestDraftedDetail',
-          );
-          this.router.navigate(['/request-center']);
+
+          // Replace the stale REJECTED onboarding state before navigation. Then wait for the
+          // authoritative server refresh; otherwise MainLayout sees REJECTED during the route
+          // change and immediately redirects back to this form.
+          this.auth.recordProfileRequest(request.requestId, request.status);
+          this.auth.refreshOnboarding().subscribe(() => {
+            this.toast(
+              'success',
+              actionType === 'SUBMIT' ? 'profile.toast.requestSubmittedSummary' : 'profile.toast.requestDraftedSummary',
+              actionType === 'SUBMIT' ? 'profile.toast.requestSubmittedDetail' : 'profile.toast.requestDraftedDetail',
+            );
+            this.router.navigate(['/request-center']);
+          });
         },
         error: (err: HttpErrorResponse) => {
           console.error('Failed to raise profile update request', err);

@@ -12,7 +12,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { InputOtpModule } from 'primeng/inputotp';
-import { AuthService, LoginResponse, VendorOnboardingStage } from '../../../core/services/auth.service';
+import {
+  AuthService,
+  LoginResponse,
+  VendorOnboardingStage,
+  VendorOnboardingState,
+} from '../../../core/services/auth.service';
 import { Button } from '../../../shared/Components/button/button';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { TranslatePipe } from '../../../shared/i18n/translate.pipe';
@@ -38,6 +43,18 @@ const ONBOARDING_START: Partial<Record<VendorOnboardingStage, string>> = {
   CHANGE_PASSWORD: '/first-login',
   COMPLETE_PROFILE: '/profile/edit',
 };
+
+/** A returned request is resumed from Request Center, not restarted as a new profile. */
+export function onboardingStartRoute(onboarding: VendorOnboardingState | undefined): string {
+  const status = onboarding?.profileRequestStatus?.toUpperCase();
+  if (status === 'DRAFT') {
+    return onboarding?.profileRequestId
+      ? `/request-center/${onboarding.profileRequestId}`
+      : '/request-center';
+  }
+  if (status === 'RETURNED') return '/request-center';
+  return ONBOARDING_START[onboarding?.stage ?? 'COMPLETED'] ?? '/dashboard';
+}
 
 @Component({
   selector: 'app-login',
@@ -244,8 +261,12 @@ export class LoginComponent {
       await this.i18n.setLang(savedLanguage);
     }
 
-    // A vendor still onboarding starts on the step it has to do next.
-    void this.router.navigate([ONBOARDING_START[this.authService.onboardingStage()] ?? '/dashboard']);
+    // A returned PROFILE request is an existing request: resume it from Request Center.
+    // Fall back to the service stage for older login responses that omit onboarding.
+    const target = response.onboarding
+      ? onboardingStartRoute(response.onboarding)
+      : ONBOARDING_START[this.authService.onboardingStage()] ?? '/dashboard';
+    void this.router.navigate([target]);
   }
 
 }

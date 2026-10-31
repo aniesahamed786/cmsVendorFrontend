@@ -82,7 +82,7 @@
 
   <!-- Empty state: mirrors the branches onboarding overlay, but remains out of the way
        for load failures and search results so those states can be handled in the table. -->
-  @if (!loading() && !loadFailed() && !searchQuery().trim() && rows().length === 0) {
+  @if (!auth.isOnboarding() && !loading() && !loadFailed() && !searchQuery().trim() && rows().length === 0) {
   <div class="account-management__empty-overlay">
     <div class="account-management__empty-overlay-action">
       <div class="account-management__empty-overlay-badge" aria-hidden="true">

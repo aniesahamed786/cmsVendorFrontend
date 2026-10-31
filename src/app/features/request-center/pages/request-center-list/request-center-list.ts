@@ -25,6 +25,7 @@ import {
 import { ApiRequestStatus } from '../../models/request-api.model';
 import { toRequestRow } from '../../models/request.mapper';
 import { createCountUp } from '../../../../shared/animation/count-up';
+import { AuthService } from '../../../../core/services/auth.service';
 
 type TabKey = 'all' | 'completed' | 'incomplete';
 
@@ -40,6 +41,7 @@ export class RequestCenterList {
   private readonly i18n = inject(I18nService);
   private readonly requestCenterService = inject(RequestCenterService);
   private readonly api = inject(RequestCenterApiService);
+  private readonly auth = inject(AuthService);
 
   showMobileFilters = signal(false);
 
@@ -397,12 +399,24 @@ export class RequestCenterList {
   onDiscardConfirmed(): void {
     const row = this.discardTarget();
     if (!row) return;
+    const wasOnboardingProfileDraft =
+      row.type === 'Profile' && this.auth.isOnboarding();
     this.actionLoading.set(true);
     this.api
       .discardDraft(row.id)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterMutation(),
+        next: () => {
+          if (wasOnboardingProfileDraft) {
+            this.discardTarget.set(null);
+            this.requestCenterService.remove(row.rowKey);
+            this.auth.clearProfileRequest();
+            this.router.navigate(['/profile/edit']);
+            this.auth.refreshOnboarding();
+            return;
+          }
+          this.afterMutation();
+        },
         error: (err) => {
           console.error('Discard draft request failed', err);
           this.afterMutation();

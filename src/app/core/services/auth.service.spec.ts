@@ -130,6 +130,138 @@ describe('AuthService', () => {
     );
   });
 
+  it('uses the normal shell when an existing profile request is returned', () => {
+    service.setSession(createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 }), {
+      id: 'acc-1',
+      vendorId: 'v-1',
+      roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_profile:manage', 'cms_request_center:read'],
+      name: 'Vendor Owner',
+      email: 'vendor@example.com',
+      accountStatus: 'ACTIVE',
+      onboarding: {
+        isNewVendor: true,
+        stage: 'COMPLETE_PROFILE',
+        passwordChangeRequired: false,
+        profileApprovalRequired: true,
+        profileRequestId: 'request-1',
+        profileRequestStatus: 'RETURNED',
+        profileReviewReason: 'Update the registration document',
+      },
+    });
+
+    expect(service.isProfileRequestReturned()).toBe(true);
+    expect(service.isOnboardingSetup()).toBe(false);
+  });
+
+  it('treats a rejected profile request as a fresh profile setup', () => {
+    service.setSession(createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 }), {
+      id: 'acc-1',
+      vendorId: 'v-1',
+      roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_profile:manage', 'cms_request_center:read'],
+      name: 'Vendor Owner',
+      email: 'vendor@example.com',
+      accountStatus: 'ACTIVE',
+      onboarding: {
+        isNewVendor: true,
+        stage: 'COMPLETE_PROFILE',
+        passwordChangeRequired: false,
+        profileApprovalRequired: true,
+        profileRequestId: 'rejected-request-1',
+        profileRequestStatus: 'REJECTED',
+        profileReviewReason: 'The registration document is invalid',
+      },
+    });
+
+    expect(service.isProfileRequestRejected()).toBe(true);
+    expect(service.isOnboardingSetup()).toBe(true);
+  });
+
+  it('replaces a stale rejected state as soon as a new profile request is created', () => {
+    service.setSession(createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 }), {
+      id: 'acc-1',
+      vendorId: 'v-1',
+      roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_profile:manage', 'cms_request_center:read'],
+      name: 'Vendor Owner',
+      email: 'vendor@example.com',
+      accountStatus: 'ACTIVE',
+      onboarding: {
+        isNewVendor: true,
+        stage: 'COMPLETE_PROFILE',
+        passwordChangeRequired: false,
+        profileApprovalRequired: true,
+        profileRequestId: 'rejected-request-1',
+        profileRequestStatus: 'REJECTED',
+        profileReviewReason: 'The registration document is invalid',
+      },
+    });
+
+    service.recordProfileRequest('new-request-1', 'SUBMITTED');
+
+    expect(service.isProfileRequestRejected()).toBe(false);
+    expect(service.hasActiveProfileRequest()).toBe(true);
+    expect(service.onboarding()).toEqual(expect.objectContaining({
+      stage: 'PROFILE_UNDER_REVIEW',
+      profileRequestId: 'new-request-1',
+      profileRequestStatus: 'SUBMITTED',
+      profileReviewReason: null,
+    }));
+
+  });
+
+  it('clears an onboarding profile draft immediately after it is discarded', () => {
+    service.setSession(createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 }), {
+      id: 'acc-1',
+      vendorId: 'v-1',
+      roleId: 'role-1',
+      roleName: 'VENDOR_ADMIN',
+      permissions: ['cms_profile:manage', 'cms_request_center:manage'],
+      name: 'Vendor Owner',
+      email: 'vendor@example.com',
+      accountStatus: 'ACTIVE',
+      onboarding: {
+        isNewVendor: true,
+        stage: 'COMPLETE_PROFILE',
+        passwordChangeRequired: false,
+        profileApprovalRequired: true,
+        profileRequestId: 'draft-request-1',
+        profileRequestStatus: 'DRAFT',
+        profileReviewReason: null,
+      },
+    });
+
+    expect(service.hasActiveProfileRequest()).toBe(true);
+    service.clearProfileRequest();
+
+    expect(service.hasActiveProfileRequest()).toBe(false);
+    expect(service.onboarding()).toEqual(expect.objectContaining({
+      stage: 'COMPLETE_PROFILE',
+      profileRequestId: null,
+      profileRequestStatus: null,
+    }));
+
+    service.refreshOnboarding().subscribe();
+    httpMock.expectOne((request) => request.url.endsWith('/onboarding')).flush({
+      isNewVendor: true,
+      stage: 'COMPLETE_PROFILE',
+      passwordChangeRequired: false,
+      profileApprovalRequired: true,
+      profileRequestId: 'draft-request-1',
+      profileRequestStatus: 'DRAFT',
+      profileReviewReason: null,
+    });
+
+    // The backend can be eventually consistent immediately after DELETE. Do not resurrect
+    // the discarded draft and send the route guard back to a request that no longer exists.
+    expect(service.hasActiveProfileRequest()).toBe(false);
+    expect(service.onboarding()?.profileRequestId).toBeNull();
+  });
+
   it('should remove session and navigate to /login on logout', () => {
     localStorage.setItem('accessToken', 'mock-token');
     localStorage.setItem('vendorAccount', JSON.stringify({ name: 'Vendor' }));

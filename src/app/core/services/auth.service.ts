@@ -125,6 +125,8 @@ export class AuthService {
   private readonly i18n = inject(I18nService);
 
   private expirationTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Ignore an eventually-consistent /onboarding snapshot that still names a deleted draft. */
+  private discardedProfileRequestId: string | null = null;
 
   /**
    * The password typed at sign-in, kept only while the account must replace it: the change
@@ -160,11 +162,30 @@ export class AuthService {
   });
   readonly onboarding = computed(() => this.sessionState()?.onboarding ?? null);
   readonly onboardingStage = computed<VendorOnboardingStage>(() => this.onboarding()?.stage ?? 'COMPLETED');
+  /** A submitted profile already exists and was sent back for changes. */
+  readonly isProfileRequestReturned = computed(
+    () => this.onboarding()?.profileRequestStatus?.toUpperCase() === 'RETURNED',
+  );
+  /** The previous profile request is terminal, so onboarding must start a new one. */
+  readonly isProfileRequestRejected = computed(
+    () => this.onboarding()?.profileRequestStatus?.toUpperCase() === 'REJECTED',
+  );
+  readonly isProfileRequestDraft = computed(
+    () => this.onboarding()?.profileRequestStatus?.toUpperCase() === 'DRAFT',
+  );
+  /** An existing request must be continued, never replaced with a second PROFILE request. */
+  readonly hasActiveProfileRequest = computed(() =>
+    ['DRAFT', 'SUBMITTED', 'RETURNED'].includes(
+      this.onboarding()?.profileRequestStatus?.toUpperCase() ?? '',
+    ),
+  );
   /** Not onboarded yet — the main layout covers most pages until it is. */
   readonly isOnboarding = computed(() => this.onboardingStage() !== 'COMPLETED');
-  /** The first two steps run as a focused flow: no sidenav, one task on screen. */
+  /** First-time setup is focused; a returned request uses the normal shell and Request Center. */
   readonly isOnboardingSetup = computed(
-    () => this.onboardingStage() === 'CHANGE_PASSWORD' || this.onboardingStage() === 'COMPLETE_PROFILE',
+    () =>
+      this.onboardingStage() === 'CHANGE_PASSWORD' ||
+      (this.onboardingStage() === 'COMPLETE_PROFILE' && !this.isProfileRequestReturned()),
   );
 
   constructor() {
@@ -180,6 +201,7 @@ export class AuthService {
   }
 
   setSession(accessToken: string, vendorAccount: VendorAccountSession): void {
+    this.discardedProfileRequestId = null;
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('vendorAccount', JSON.stringify(vendorAccount));
@@ -324,6 +346,7 @@ export class AuthService {
   logout(queryParams?: Record<string, string>): void {
     this.clearTimer();
     this.loginPassword = null;
+    this.discardedProfileRequestId = null;
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('vendorAccount');
@@ -393,12 +416,69 @@ export class AuthService {
     const request = this.http
       .get<VendorOnboardingState>(`${environment.backendUrl}${environment.apiBaseUrl}/onboarding`)
       .pipe(
-        tap((onboarding) => this.patchSession({ onboarding })),
+        tap((onboarding) => {
+          const responseRequestId = onboarding.profileRequestId;
+          const responseStatus = onboarding.profileRequestStatus?.toUpperCase();
+          if (
+            this.discardedProfileRequestId &&
+            responseRequestId === this.discardedProfileRequestId &&
+            responseStatus === 'DRAFT'
+          ) {
+            return;
+          }
+
+          this.discardedProfileRequestId = null;
+          this.patchSession({ onboarding });
+        }),
         catchError(() => of(null)),
         shareReplay(1),
       );
     request.subscribe();
     return request;
+  }
+
+  /**
+   * Apply the request returned by PROFILE creation immediately, before the follow-up
+   * /onboarding read completes. This prevents a stale RETURNED/REJECTED state from redirecting
+   * the navigation that follows a successful save back to the edit form.
+   */
+  recordProfileRequest(requestId: string, status: string): void {
+    const onboarding = this.onboarding();
+    if (!onboarding) return;
+
+    const normalizedStatus = status.toUpperCase();
+    this.discardedProfileRequestId = null;
+    this.patchSession({
+      onboarding: {
+        ...onboarding,
+        stage: normalizedStatus === 'SUBMITTED' ? 'PROFILE_UNDER_REVIEW' : 'COMPLETE_PROFILE',
+        profileApprovalRequired: true,
+        profileRequestId: requestId,
+        profileRequestStatus: normalizedStatus,
+        profileReviewReason: null,
+      },
+    });
+  }
+
+  /**
+   * Clear an onboarding PROFILE draft immediately after it is discarded. The server refresh
+   * follows, but route guards must stop pointing at the deleted request before navigation.
+   */
+  clearProfileRequest(): void {
+    const onboarding = this.onboarding();
+    if (!onboarding || !this.isOnboarding()) return;
+
+    this.discardedProfileRequestId = onboarding.profileRequestId;
+    this.patchSession({
+      onboarding: {
+        ...onboarding,
+        stage: 'COMPLETE_PROFILE',
+        profileApprovalRequired: true,
+        profileRequestId: null,
+        profileRequestStatus: null,
+        profileReviewReason: null,
+      },
+    });
   }
 
   holdLoginPassword(password: string | null): void {
