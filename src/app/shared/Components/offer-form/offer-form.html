@@ -139,7 +139,7 @@
 
         <div class="offer-form__col-2 offer-form__field-group">
           <app-category-dropdown [label]="'offerForm.label.category' | translate" [placeholder]="'offerForm.placeholder.category' | translate" [multiple]="true"
-            [required]="true" [control]="category"
+            [required]="true" [control]="category" [categories]="categories()"
             [tooltip]="'offerForm.tooltip.category' | translate">
           </app-category-dropdown>
         </div>

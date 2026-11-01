@@ -52,8 +52,8 @@ import { MessageService } from "primeng/api";
 import { PrimeUIModules } from "../../../core/prime.import";
 import {
   Category,
-  GetCategoriesService,
 } from "../../services/get-categories.service";
+import { VendorProfileService } from "../../../features/Profile/pages/vendor-profile.service";
 import {
   OfferRoomDraft,
   RoomCreationOffer,
@@ -238,7 +238,7 @@ export class OfferForm {
     private router: Router,
     private vendorlist: GetVendorList,
     private vendorById: GetVendorById,
-    private categoriesService: GetCategoriesService,
+    private vendorProfileService: VendorProfileService,
   ) {
     this.destroyRef.onDestroy(() => {
       this.revokePreviewObjectUrl(this.previewUrl());
@@ -916,12 +916,26 @@ export class OfferForm {
 
   getCategories() {
     this.categoriesLoading.set(true);
-    this.categoriesService.getAllCategories().subscribe({
+    this.vendorProfileService
+      .getClassifications()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (res) => {
-        const activeCategories = (res || []).filter(
-          (cat) => cat.isActive !== false,
-        );
-        this.categories.set(activeCategories);
+        const scopedCategories: Category[] = (res?.classifications ?? [])
+          .map((classification) => ({
+            _id: classification._id,
+            id: classification._id,
+            name: classification.name,
+            name_ar: classification.name_ar,
+            icon: classification.icon,
+            order: classification.order,
+            isActive: true,
+          }))
+          .filter(
+            (category) =>
+              typeof category.id === "string" && category.id.trim() !== "",
+          );
+        this.categories.set(scopedCategories);
         this.updateHotelDetailsValidators();
         this.categoriesLoading.set(false);
       },
@@ -930,7 +944,7 @@ export class OfferForm {
         this.categories.set([]);
         this.categoriesLoading.set(false);
       },
-    });
+      });
   }
 
   showHotelDetails() {

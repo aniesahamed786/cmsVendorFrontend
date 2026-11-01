@@ -56,6 +56,15 @@ import { RequestBranchDetail } from '../../components/request-branch-detail/requ
 import { HotelRoomsListComponent } from '../../../Offers/Components/hotel-room-card/hotel-room-card';
 import { AccessDenied } from '../../../../shared/Components/access-denied/access-denied';
 
+/** Admin queue routing is not part of the vendor-visible request lifecycle. */
+const VENDOR_HIDDEN_HISTORY_ACTIONS = new Set(['ASSIGNED', 'UNASSIGNED']);
+
+function vendorVisibleHistory(entries: RequestHistoryResponse[]): RequestHistoryResponse[] {
+  return entries.filter(
+    (entry) => !VENDOR_HIDDEN_HISTORY_ACTIONS.has(String(entry.action ?? '').toUpperCase()),
+  );
+}
+
 /**
  * Location ids as stored on an offer, which vary by source: plain strings in a request
  * payload, `{ $oid }` wrappers straight off a Mongo document.
@@ -666,7 +675,11 @@ export class RequestDetail {
       )
       .subscribe({
         next: (entries) => {
-          if (this.rowKey() === requestId) this.history.set(entries ?? []);
+          if (this.rowKey() === requestId) {
+            // The API filters these too. Keep this boundary defensive for older deployments and
+            // cached responses so internal assignment events never reach the table or timeline.
+            this.history.set(vendorVisibleHistory(entries ?? []));
+          }
         },
         error: (err) => {
           if (this.rowKey() !== requestId) return;

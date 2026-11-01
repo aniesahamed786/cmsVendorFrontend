@@ -136,7 +136,7 @@ export interface RequestDetailsResponse extends RequestEntityResponse {
 export interface RequestHistoryResponse {
   _id: string;
   requestId: string;
-  /** SUBMITTED | APPROVED | REJECTED | RETURNED | RECALLED | CANCELLED. */
+  /** Vendor-visible lifecycle action. ASSIGNED/UNASSIGNED are intentionally omitted by the API. */
   action: string;
   performedBy: string | null;
   performedRole: string | null;

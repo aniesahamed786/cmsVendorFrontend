@@ -10,7 +10,7 @@
   </label>
   @if (multiple) {
     <p-multiSelect
-      [options]="categories()"
+      [options]="categories"
       [formControl]="control"
       optionLabel="name"
       optionValue="id"
@@ -23,7 +23,7 @@
     </p-multiSelect>
   } @else {
     <p-select
-      [options]="categories()"
+      [options]="categories"
       [formControl]="control"
       optionLabel="name"
       optionValue="id"
