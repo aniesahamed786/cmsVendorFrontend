@@ -16,6 +16,16 @@ function isMissingVendorError(error: HttpErrorResponse): boolean {
   return typeof message === 'string' && /^Vendor with ID .+ not found$/i.test(message.trim());
 }
 
+function isDisabledVendorError(error: HttpErrorResponse): boolean {
+  if (!error.error || typeof error.error !== 'object') return false;
+  return (error.error as { code?: unknown }).code === 'VENDOR_DISABLED';
+}
+
+function isInactiveAccountError(error: HttpErrorResponse): boolean {
+  if (!error.error || typeof error.error !== 'object') return false;
+  return (error.error as { code?: unknown }).code === 'ACCOUNT_INACTIVE';
+}
+
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -77,6 +87,16 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   return next(outgoing).pipe(
     catchError((error: HttpErrorResponse) => {
       notifyNetworkFailure(error);
+
+      if (isDisabledVendorError(error)) {
+        authService.logout({ account: 'vendor-disabled' });
+        return throwError(() => error);
+      }
+
+      if (isInactiveAccountError(error)) {
+        authService.logout({ account: 'inactive' });
+        return throwError(() => error);
+      }
 
       // This endpoint also uses 401 when currentPassword is wrong; that is field
       // validation, not an expired authenticated session.

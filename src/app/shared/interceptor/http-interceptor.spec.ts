@@ -185,4 +185,48 @@ describe('httpInterceptor', () => {
     expect(localStorage.getItem('accessToken')).toBe(validToken);
     expect(routerSpy.navigate).not.toHaveBeenCalled();
   });
+
+  it('should logout with a dedicated notice when the vendor is disabled', () => {
+    const validToken = createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 });
+    localStorage.setItem('accessToken', validToken);
+
+    httpClient.get('/cmsVendor/dashboard').subscribe({ error: () => {} });
+
+    httpMock.expectOne('/cmsVendor/dashboard').flush(
+      {
+        statusCode: 403,
+        error: 'Forbidden',
+        code: 'VENDOR_DISABLED',
+        message: 'Vendor access is disabled. Please contact the platform administrator.',
+      },
+      { status: 403, statusText: 'Forbidden' },
+    );
+
+    expect(localStorage.getItem('accessToken')).toBeNull();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login'], {
+      queryParams: { account: 'vendor-disabled' },
+    });
+  });
+
+  it('should show the inactive-account notice when an open account is suspended', () => {
+    const validToken = createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 });
+    localStorage.setItem('accessToken', validToken);
+
+    httpClient.get('/cmsVendor/dashboard').subscribe({ error: () => {} });
+
+    httpMock.expectOne('/cmsVendor/dashboard').flush(
+      {
+        statusCode: 401,
+        error: 'Unauthorized',
+        code: 'ACCOUNT_INACTIVE',
+        message: 'Vendor account is suspended',
+      },
+      { status: 401, statusText: 'Unauthorized' },
+    );
+
+    expect(localStorage.getItem('accessToken')).toBeNull();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login'], {
+      queryParams: { account: 'inactive' },
+    });
+  });
 });

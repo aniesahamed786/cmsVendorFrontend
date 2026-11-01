@@ -110,6 +110,15 @@ describe('LoginComponent', () => {
     expect(component.noticeParams()).toEqual({ minutes: 15 });
   });
 
+  it('shows the platform administrator notice when the vendor is disabled', () => {
+    failSignIn(403, {
+      code: 'VENDOR_DISABLED',
+      message: 'Vendor access is disabled. Please contact the platform administrator.',
+    });
+
+    expect(component.notice()).toBe('login.vendorDisabled');
+  });
+
   it('rejects a wrong OTP', () => {
     signIn();
     component.otpForm.setValue({ code: '123456' });

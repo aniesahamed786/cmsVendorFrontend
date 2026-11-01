@@ -92,6 +92,7 @@ export class LoginComponent {
     if (this.loginNotice()) return this.loginNotice();
     if (this.pendingLogin()) return '';
     const params = this.queryParams();
+    if (params?.get('account') === 'vendor-disabled') return 'login.vendorDisabled';
     if (params?.get('account') === 'inactive') return 'login.accountInactive';
     if (params?.get('session') === 'expired') return 'login.sessionExpired';
     if (params?.get('password') === 'required') return 'login.setPasswordAgain';
@@ -200,7 +201,9 @@ export class LoginComponent {
 
       // 403: right password, but the account is suspended.
       if (error.status === 403) {
-        this.loginNotice.set('login.accountInactive');
+        this.loginNotice.set(
+          body.code === 'VENDOR_DISABLED' ? 'login.vendorDisabled' : 'login.accountInactive',
+        );
         return;
       }
 
