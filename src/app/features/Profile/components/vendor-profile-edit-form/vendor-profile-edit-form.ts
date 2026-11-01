@@ -182,7 +182,7 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   profileForm = this.fb.group({
     nameEn: ['', Validators.required],
     nameAr: ['', Validators.required],
-    crNumber: ['', Validators.required],
+    crNumber: [''],
     descriptionEn: ['', Validators.required],
     descriptionAr: ['', Validators.required],
     businessPhone: ['', Validators.required],

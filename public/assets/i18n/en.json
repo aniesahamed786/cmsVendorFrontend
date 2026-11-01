@@ -202,7 +202,6 @@
       "nameEn": "Vendor Name (English)",
       "nameAr": "Vendor Name (Arabic)",
       "crNumber": "Commercial Registration Number",
-      "crNumberHint": "Required if your business is based in Saudi Arabia.",
       "descriptionEn": "Description (English)",
       "descriptionAr": "Description (Arabic)",
       "businessPhone": "Business Phone Number",
