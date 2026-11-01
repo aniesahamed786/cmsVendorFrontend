@@ -72,6 +72,15 @@ export function toEditableOfferData(api: OfferDetailApi): Record<string, unknown
 /** availability (multi-value) -> offerMode (single string), same rule the offer details view uses. */
 function toSingleOfferMode(availability: string[] | undefined): 'in store' | 'online' | 'both' {
   if (!availability || availability.length === 0) return 'in store';
-  if (availability.length > 1) return 'both';
-  return availability[0] === 'online' ? 'online' : 'in store';
+
+  const normalized = availability.map((value) => String(value).trim().toLowerCase());
+  const hasDigital = normalized.some((value) => value === 'digital' || value === 'online');
+  const hasInStore = normalized.some(
+    (value) => value === 'in-store' || value === 'in store' || value === 'instore',
+  );
+  const isHybrid = normalized.some((value) => value === 'both' || value === 'hybrid');
+
+  if (isHybrid || (hasDigital && hasInStore)) return 'both';
+  if (hasDigital) return 'online';
+  return 'in store';
 }
