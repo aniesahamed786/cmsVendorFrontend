@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { extractApiErrorMessage } from '../../../../shared/utils/api-error-message';
 import { MessagingCenterCreateTicket } from '../../componentes/messaging-center-create-ticket/messaging-center-create-ticket';
 import {
-  LINKED_ITEM_OPTIONS,
   PARTICIPANT_TYPE_OPTIONS,
   TICKET_CATEGORY_OPTIONS,
   VENDOR_OPTIONS,
@@ -68,15 +67,8 @@ export class CreateTicketPage implements OnInit {
     }));
   });
 
-  // Vendor names and linked-item references are data, not chrome — no catalog.
+  // Vendor names are data, not chrome, so they are not translated through the catalog.
   readonly vendorOptions = VENDOR_OPTIONS;
-  // "Raise ticket" on an offer's details page passes the offer in the query string.
-  private readonly query = inject(ActivatedRoute).snapshot.queryParamMap;
-  readonly linkedOfferId = this.query.get('offerId');
-  readonly linkedItemOptions = this.linkedOfferId
-    ? [{ label: `Offer · ${this.query.get('offerTitle') ?? this.linkedOfferId}`, value: this.linkedOfferId }, ...LINKED_ITEM_OPTIONS]
-    : LINKED_ITEM_OPTIONS;
-
   constructor(private readonly router: Router) {}
 
   ngOnInit(): void {

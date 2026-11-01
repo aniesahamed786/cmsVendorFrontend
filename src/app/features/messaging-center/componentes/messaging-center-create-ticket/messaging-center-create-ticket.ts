@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, linkedSignal, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import {
@@ -26,9 +26,6 @@ export class MessagingCenterCreateTicket {
   readonly ticketTypeOptions = input<SelectOption[]>([]);
   readonly categoryOptions = input<SelectOption[]>([]);
   readonly categoriesLoading = input<boolean>(false);
-  readonly linkedItemOptions = input<SelectOption[]>([]);
-  /** Pre-selected linked item, e.g. the offer the ticket was raised from. */
-  readonly initialLinkedItem = input<string | null>(null);
   readonly saving = input<boolean>(false);
 
   readonly submitTicket = output<CreateTicketForm>();
@@ -40,7 +37,6 @@ export class MessagingCenterCreateTicket {
   readonly title = signal<string>('');
   readonly ticketType = signal<TicketCategory | null>(null);
   readonly categoryId = signal<string | null>(null);
-  readonly linkedItem = linkedSignal<string | null>(() => this.initialLinkedItem());
   readonly description = signal<string>('');
 
   readonly attachments = signal<File[]>([]);
@@ -74,7 +70,6 @@ export class MessagingCenterCreateTicket {
     title: this.title(),
     ticketType: this.ticketType(),
     categoryId: this.showCategory() ? this.categoryId() : null,
-    linkedItem: this.linkedItem(),
     description: this.description(),
     attachments: this.attachments(),
   }));

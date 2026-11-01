@@ -158,13 +158,9 @@ export class OfferDetailsPage {
     });
   }
 
-  /** Open the create-ticket form with this offer pre-selected as the linked item. */
+  /** Open the create-ticket form. */
   raiseTicket() {
-    const offer = this.OfferBasicData();
-    const title = this.i18n.lang() === 'ar' ? offer?.title_ar || offer?.title : offer?.title;
-    this.router.navigate(['/messaging-center/create'], {
-      queryParams: { offerId: this.offerId(), offerTitle: title || this.offerId() },
-    });
+    this.router.navigate(['/messaging-center/create']);
   }
 
   /** Vendor identity for the hero banner — the offer detail response carries it inline. */

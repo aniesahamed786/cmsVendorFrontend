@@ -52,12 +52,6 @@ export const TICKET_CATEGORY_OPTIONS: SelectOption[] = [
   { label: 'VendorIssue', value: 'VendorIssue' },
 ];
 
-export const LINKED_ITEM_OPTIONS: SelectOption[] = [
-  { label: 'Offer · 1782034855813', value: 'offer-1' },
-  { label: 'Vendor · Lumee Street', value: 'vendor-1' },
-  { label: 'App Section · Home', value: 'section-1' },
-];
-
 export const MOCK_TICKETS: Ticket[] = [
   {
     id: 'tk-0010',

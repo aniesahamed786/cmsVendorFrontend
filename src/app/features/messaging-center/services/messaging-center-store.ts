@@ -14,6 +14,7 @@ import { environment } from '../../../../environments/environment';
 import { I18nService } from '../../../shared/i18n/i18n.service';
 import { MessagingSocketService } from '../services/messaging-socket.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { mediaFilename, toVendorMediaUrl } from '../../../shared/utils/media-url';
 
 export interface NextPageToken {
   updatedAt?: string;
@@ -279,6 +280,7 @@ export class MessagingCenterStore {
     formData.append('description', form.description);
     const ticketType = form.ticketType ?? 'Technical';
     formData.append('ticketType', ticketType);
+    formData.append('userType', 'vendor');
     formData.append('status', 'new');
 
     if (ticketType === 'Suggestion' && form.categoryId) {
@@ -593,9 +595,8 @@ export class MessagingCenterStore {
       isInternalNote: message.isInternalNote,
       isForwarded: message.isForwarded,
       attachments: message.fileUrls?.map((url: string) => ({
-        name: url.split('/').pop() ?? '',
-        // fileUrls already carry the API path; only the host is missing.
-        url: /^https?:/i.test(url) ? url : `${environment.backendUrl}${url}`,
+        name: mediaFilename(url),
+        url: toVendorMediaUrl(url),
       })),
     };
   }

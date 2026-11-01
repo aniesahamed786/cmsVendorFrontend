@@ -44,16 +44,6 @@
             </div>
             }
 
-            <div class="create-ticket__field">
-                <label class="create-ticket__label">
-                    {{ 'messaging.create.linkedItem' | translate }}
-                </label>
-                <p-select class="create-ticket__control" [options]="linkedItemOptions()" optionLabel="label"
-                    optionValue="value" [(ngModel)]="linkedItem"
-                    [placeholder]="'messaging.create.placeholder.linkedItem' | translate"
-                    panelStyleClass="create-ticket__panel"></p-select>
-            </div>
-
             <!-- Row 4 -->
             <div class="create-ticket__field create-ticket__field--full">
                 <label class="create-ticket__label">{{ 'messaging.create.description' | translate }}<span
