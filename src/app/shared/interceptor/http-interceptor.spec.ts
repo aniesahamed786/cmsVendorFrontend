@@ -151,4 +151,38 @@ describe('httpInterceptor', () => {
     expect(localStorage.getItem('accessToken')).toBe(validToken);
     expect(routerSpy.navigate).not.toHaveBeenCalled();
   });
+
+  it('should logout when the authenticated vendor no longer exists', () => {
+    const validToken = createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 });
+    localStorage.setItem('accessToken', validToken);
+
+    httpClient.get('/cmsVendor/vendorProfile').subscribe({ error: () => {} });
+
+    httpMock.expectOne('/cmsVendor/vendorProfile').flush(
+      {
+        message: 'Vendor with ID 6ae6ebadc9bf3e7199e8ed43 not found',
+        error: 'Not Found',
+        statusCode: 404,
+      },
+      { status: 404, statusText: 'Not Found' },
+    );
+
+    expect(localStorage.getItem('accessToken')).toBeNull();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+  });
+
+  it('should leave unrelated 404 responses to the caller', () => {
+    const validToken = createMockJwt({ sub: '123', exp: Math.floor(Date.now() / 1000) + 3600 });
+    localStorage.setItem('accessToken', validToken);
+
+    httpClient.get('/cmsVendor/offers/missing').subscribe({ error: () => {} });
+
+    httpMock.expectOne('/cmsVendor/offers/missing').flush(
+      { message: 'Offer not found', error: 'Not Found', statusCode: 404 },
+      { status: 404, statusText: 'Not Found' },
+    );
+
+    expect(localStorage.getItem('accessToken')).toBe(validToken);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
 });

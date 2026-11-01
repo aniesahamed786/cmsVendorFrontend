@@ -9,6 +9,13 @@ import { I18nService } from '../i18n/i18n.service';
 const NETWORK_TOAST_COOLDOWN_MS = 5000;
 let lastNetworkToastAt = 0;
 
+function isMissingVendorError(error: HttpErrorResponse): boolean {
+  if (error.status !== 404 || !error.error || typeof error.error !== 'object') return false;
+
+  const message = (error.error as { message?: unknown }).message;
+  return typeof message === 'string' && /^Vendor with ID .+ not found$/i.test(message.trim());
+}
+
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -76,6 +83,14 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401 && !isPasswordChangeRequest) {
         console.warn('HTTP 401 Unauthorized received. Logging out automatically.');
         authService.logout({ session: 'expired' });
+      }
+
+      // The token can remain valid after its vendor has been deleted. Such a session can no
+      // longer use any vendor-owned page, so clear it immediately instead of leaving the user
+      // in a shell where every request fails. Other 404s remain caller-level errors.
+      if (isMissingVendorError(error)) {
+        console.warn('Authenticated vendor no longer exists. Logging out automatically.');
+        authService.logout();
       }
 
       // A 403 is refused *data*, not a refused page: pages you are allowed to open still call
