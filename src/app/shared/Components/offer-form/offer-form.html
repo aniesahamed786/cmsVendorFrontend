@@ -113,7 +113,7 @@
             {{ 'offerForm.label.startDate' | translate }}
             <span class="offer-form__required">*</span>
           </label>
-          <p-datepicker formControlName="startdate" iconDisplay="input" [minDate]="minDate" showIcon="true"
+          <p-datepicker formControlName="startdate" iconDisplay="input" showIcon="true"
             inputId="discountStartDate" styleClass="offer-form__datepicker offer-form__input"
             panelStyleClass="offer-form__overlay-panel offer-form__datepicker-panel" [placeholder]="'offerForm.placeholder.date' | translate" />
           @if (hasRequiredError('startdate')) {

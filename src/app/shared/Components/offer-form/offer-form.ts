@@ -179,12 +179,7 @@ export class OfferForm {
    */
   secondaryAction = input<"draft" | "cancel" | "both">("draft");
   cancelEvent = output<void>();
-  minDate = (() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  })();
-  minExpiryDate = signal<Date>(new Date());
+  minExpiryDate = signal<Date | null>(null);
   offerForm!: FormGroup;
   private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
@@ -637,7 +632,7 @@ export class OfferForm {
           d.setDate(d.getDate() + 2);
           this.minExpiryDate.set(d);
         } else {
-          this.minExpiryDate.set(this.minDate);
+          this.minExpiryDate.set(null);
         }
         this.offerForm.get("expiry")?.updateValueAndValidity();
       });
