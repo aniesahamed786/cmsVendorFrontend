@@ -185,12 +185,12 @@
     }
 
     &--draft {
-      background: var(--app-status-draft, var(--app-status-inactive, #f97316));
+      background: var(--app-status-draft, #7c3aed);
       color: #ffffff;
     }
 
     &--returned {
-      background: var(--app-status-returned, var(--app-status-default, #6b7280));
+      background: var(--app-status-returned, var(--app-status-inactive, #f97316));
       color: #ffffff;
     }
 

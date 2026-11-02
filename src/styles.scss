@@ -125,9 +125,9 @@ html[lang="ar"] {
   --app-status-active: #16a34a;    /* Green  - Active / Live / Sent */
   --app-status-scheduled: #0ea5e9; /* Sky Blue - Scheduled / Idle / Upcoming */
   --app-status-expired: #dc2626;   /* Red    - Expired */
-  --app-status-inactive: #f97316;  /* Orange - Inactive / Disabled / Draft */
-  --app-status-draft: var(--app-status-inactive, #f97316); /* Orange - Draft */
-  --app-status-returned: #6b7280;  /* Gray   - Returned */
+  --app-status-inactive: #f97316;  /* Orange - Inactive / Disabled */
+  --app-status-draft: #7c3aed; /* Purple - Draft */
+  --app-status-returned: var(--app-status-inactive, #f97316); /* Orange - Returned / Needs attention */
   --app-status-default: #6b7280;   /* Gray   - Unknown / Default */
   --app-status-new: #0033A0;       /* Blue   - New / Primary */
 
