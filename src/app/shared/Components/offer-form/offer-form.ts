@@ -38,6 +38,7 @@ import {
   isVendorInactive,
 } from "../../../features/vendors/models/vendordetails";
 import { InfoTip } from "../info-tip/info-tip";
+import { environment } from "../../../../environments/environment";
 import { CategoryDropdownComponent } from "../category-dropdown/category-dropdown";
 import { PreviewOfferDetails } from "../../../features/Offers/Components/preview-offer-details/preview-offer-details";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -2912,7 +2913,7 @@ export class OfferForm {
       return source;
     }
     if (source.includes("storage.googleapis.com")) {
-      return `http://localhost:3000/api/v1/image-proxy?url=${encodeURIComponent(source)}`;
+      return `${environment.backendUrl}/api/v1/image-proxy?url=${encodeURIComponent(source)}`;
     }
     return source;
   }
