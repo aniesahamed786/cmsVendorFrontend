@@ -1,0 +1,19 @@
+# Render variant of nginx.conf (used by Dockerfile.render). The nginx image renders this
+# template at start-up, filling in ${PORT}, which Render sets. No /api/ proxy: the app calls
+# the Render backend directly (src/environments/environment.render.ts).
+server {
+    listen ${PORT};
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location /assets/ {
+        try_files $uri =404;
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
