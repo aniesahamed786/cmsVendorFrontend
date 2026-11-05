@@ -116,8 +116,6 @@
           <label class="redemption-form__label">{{ 'redemption.label.offer' | translate }}
             @if (!isCollectiveTransaction) {
             <span class="redemption-form__required">*</span>
-            } @else {
-            <span>{{ 'redemption.label.optionalForCollective' | translate }}</span>
             }
           </label>
           <p-select formControlName="offer" [options]="offerOptions()" optionLabel="label" optionValue="value"

@@ -1276,7 +1276,6 @@
       "transactionType": "Transaction Type",
       "transactionDate": "Transaction Date",
       "offer": "Offer",
-      "optionalForCollective": "(optional for collective)",
       "branch": "Branch",
       "totalInvoiceAmount": "Total Invoice Amount (Including VAT)",
       "totalAmountPaid": "Total Amount Paid",
