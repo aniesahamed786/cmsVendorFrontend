@@ -24,6 +24,7 @@ export class RequestProfileDetail {
   /** Same media-path rewrite the vendor profile page uses. */
   imageUrl(path?: string): string {
     if (!path) return '';
+    if (/^https?:\/\//i.test(path)) return path;
     return environment.backendUrl + path.replace('/api/v1/media/', '/api/v1/cmsVendor/media/');
   }
 
