@@ -334,6 +334,7 @@ export class Redemption {
       transactionDate: collective ? [] : [Validators.required, notFutureDateValidator],
       startDate: collective ? [Validators.required, notFutureDateValidator] : [],
       endDate: collective ? [Validators.required, notFutureDateValidator] : [],
+      offer: collective ? [] : [Validators.required],
     };
 
     for (const [field, validators] of Object.entries(rules)) {
@@ -534,14 +535,12 @@ export class Redemption {
     const membershipRaw = String(v.membershipId ?? '').trim();
 
     const common = {
-      offerId: v.offer,
       totalAmountIncVat: this.toNumber(v.totalInvoiceAmount),
       totalAmountPaid: this.toNumber(v.totalAmountPaid),
       currency: String(v.currency ?? '')
         .trim()
         .toUpperCase(),
       discountAmount: this.discountFor(v.totalInvoiceAmount, v.totalAmountPaid),
-      ...(mobileNumber ? { mobileNumber } : {}),
       ...(branchId ? { branchId } : {}),
     };
 
@@ -549,15 +548,17 @@ export class Redemption {
       ? {
           ...common,
           transactionType: 'COLLECTIVE',
+          ...(v.offer ? { offerId: String(v.offer) } : {}),
           startDate: this.toIsoDate(v.startDate),
           endDate: this.toIsoDate(v.endDate, true),
-          ...(membershipRaw ? { membershipId: Number(membershipRaw) } : {}),
         }
       : {
           ...common,
           transactionType: 'SINGLE',
+          offerId: String(v.offer),
           membershipId: Number(membershipRaw),
           transactionDate: this.toIsoDate(v.transactionDate),
+          ...(mobileNumber ? { mobileNumber } : {}),
           ...(badgeNumber ? { badgeNumber } : {}),
         };
 

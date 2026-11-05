@@ -31,7 +31,6 @@ export interface BulkUploadResponse {
 
 export type RedemptionTransactionType = 'SINGLE' | 'COLLECTIVE';
 interface RedemptionPayloadBase {
-  offerId: string;
   totalAmountIncVat: number;
   totalAmountPaid: number;
   currency: string;
@@ -41,6 +40,7 @@ interface RedemptionPayloadBase {
 }
 export interface SingleRedemptionPayload extends RedemptionPayloadBase {
   transactionType: 'SINGLE';
+  offerId: string;
   membershipId: number;
   transactionDate: string;
   badgeNumber?: string;
@@ -48,6 +48,7 @@ export interface SingleRedemptionPayload extends RedemptionPayloadBase {
 
 export interface CollectiveRedemptionPayload extends RedemptionPayloadBase {
   transactionType: 'COLLECTIVE';
+  offerId?: string;
   membershipId?: number;
   startDate: string;
   endDate: string;

@@ -113,10 +113,16 @@
         }
 
         <div class="redemption-form__field-wrapper" (click)="warnOfferNeedsDate()" (keydown)="warnOfferNeedsDate()">
-          <label class="redemption-form__label">{{ 'redemption.label.offer' | translate }} <span
-              class="redemption-form__required">*</span></label>
+          <label class="redemption-form__label">{{ 'redemption.label.offer' | translate }}
+            @if (!isCollectiveTransaction) {
+            <span class="redemption-form__required">*</span>
+            } @else {
+            <span>{{ 'redemption.label.optionalForCollective' | translate }}</span>
+            }
+          </label>
           <p-select formControlName="offer" [options]="offerOptions()" optionLabel="label" optionValue="value"
-            [loading]="offersLoading()" [filter]="true" filterBy="label" [readonly]="isOfferLocked" [placeholder]="(!isOfferLocked
+            [loading]="offersLoading()" [filter]="true" filterBy="label" [showClear]="isCollectiveTransaction"
+            [readonly]="isOfferLocked" [placeholder]="(!isOfferLocked
                 ? 'redemption.placeholder.offer'
                 : isCollectiveTransaction
                   ? 'redemption.placeholder.offerNeedsRange'

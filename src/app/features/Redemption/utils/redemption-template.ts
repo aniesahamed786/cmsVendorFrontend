@@ -173,7 +173,7 @@ function highlightByTransactionType(sheet: import('exceljs').Worksheet, last: nu
   required(`B2:B${last}`, single); // membership ID
   required(`G2:G${last}`, single); // transaction date
   required(`H2:I${last}`, collective); // start + end date
-  required(`E2:E${last}`, anyType); // offer
+  required(`E2:E${last}`, single); // offer; optional for COLLECTIVE
   required(`J2:L${last}`, anyType); // amounts + currency; M is calculated
 
   // Paid more than the invoice: the calculated discount went negative.

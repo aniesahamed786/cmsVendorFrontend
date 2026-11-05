@@ -155,9 +155,11 @@ export function validateDraft(
   }
 
   if (!draft.offerId) {
-    errors.offerId = draft.offerText.trim()
-      ? fill(messages.unknownOffer, { value: draft.offerText.trim() })
-      : fill(messages.required, { field: labels.offer });
+    if (draft.offerText.trim()) {
+      errors.offerId = fill(messages.unknownOffer, { value: draft.offerText.trim() });
+    } else if (!collective) {
+      errors.offerId = fill(messages.required, { field: labels.offer });
+    }
   } else if (!catalogue.offers.some((o) => o.offerId === draft.offerId)) {
     errors.offerId = fill(messages.unknownOffer, {
       value: draft.offerText.trim() || draft.offerId,
@@ -275,7 +277,6 @@ export function draftToPayload(draft: RedemptionDraftRow): RecordRedemptionPaylo
   const membershipRaw = draft.membershipId.trim().replace(/\.0+$/, '');
 
   const common = {
-    offerId: draft.offerId!,
     totalAmountIncVat: parseAmount(draft.totalAmountIncVat)!,
     totalAmountPaid: parseAmount(draft.totalAmountPaid)!,
     currency: draft.currency.trim().toUpperCase(),
@@ -289,6 +290,7 @@ export function draftToPayload(draft: RedemptionDraftRow): RecordRedemptionPaylo
     return {
       ...common,
       transactionType: 'COLLECTIVE',
+      ...(draft.offerId ? { offerId: draft.offerId } : {}),
       startDate: toIsoDay(draft.startDate!),
       endDate: toIsoDay(draft.endDate!, true),
     };
@@ -296,6 +298,7 @@ export function draftToPayload(draft: RedemptionDraftRow): RecordRedemptionPaylo
 
   return {
     ...common,
+    offerId: draft.offerId!,
     ...(mobileNumber ? { mobileNumber } : {}),
     ...(badgeNumber ? { badgeNumber } : {}),
     transactionType: 'SINGLE',

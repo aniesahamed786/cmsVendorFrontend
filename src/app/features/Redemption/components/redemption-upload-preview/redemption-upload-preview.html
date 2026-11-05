@@ -129,7 +129,8 @@
 
           <td>
             <p-select [options]="offerOptions()" optionLabel="label" optionValue="value" [filter]="true"
-              filterBy="label" [ngModel]="draft.offerId" (ngModelChange)="onEdit(draft, 'offerId', $event)"
+              filterBy="label" [showClear]="draft.transactionType === 'COLLECTIVE'"
+              [ngModel]="draft.offerId" (ngModelChange)="onEdit(draft, 'offerId', $event)"
               [placeholder]="draft.offerText || ('redemption.placeholder.offer' | translate)"
               [emptyMessage]="'redemption.emptyOffers' | translate" appendTo="body"
               styleClass="upload-preview__control"
