@@ -20,10 +20,10 @@
         (languageFocus)="onLanguageFocus($event)" />
 
       <div class="edit-profile-form-actions">
-        <app-button variant="outline" [disabled]="!canSave()" (click)="triggerSaveDraft()">
+        <app-button variant="outline" [disabled]="busy()" (click)="triggerSaveDraft()">
           {{ 'profile.saveAsDraft' | translate }}
         </app-button>
-        <app-button variant="primary" [disabled]="!canSave()" (click)="triggerUpdateChanges()" icon="pi pi-refresh">{{ 'profile.updateChanges' | translate }}</app-button>
+        <app-button variant="primary" [disabled]="busy()" (click)="triggerUpdateChanges()" icon="pi pi-refresh">{{ 'profile.updateChanges' | translate }}</app-button>
       </div>
     </div>
 

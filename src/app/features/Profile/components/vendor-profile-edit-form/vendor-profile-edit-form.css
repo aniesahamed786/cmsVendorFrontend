@@ -301,6 +301,12 @@ label {
   background: var(--app-primary-soft);
 }
 
+/* The global .app-dropzone--invalid loses to the scoped rules above. */
+.profile-cover-zone.app-dropzone--invalid {
+  border-color: var(--field-invalid);
+  background: var(--field-bg-invalid);
+}
+
 .profile-cover-grid {
   margin-top: 2rem;
   width: 100%;

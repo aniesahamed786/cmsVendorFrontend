@@ -249,6 +249,7 @@
       <label>{{ 'profile.form.vendorLogo' | translate }} <span class="required">*</span></label>
       <div class="profile-cover-zone" [class.profile-cover-zone--dragging]="isLogoDragging()"
         [class.profile-cover-zone--empty]="!logoPreview()"
+        [class.app-dropzone--invalid]="showErrors() && !logoPreview()"
         (dragover)="onLogoDragOver($event)" (dragleave)="onLogoDragLeave($event)" (drop)="onLogoDrop($event)"
         (click)="logoInput.click()">
         @if (logoPreview(); as logo) {
@@ -286,6 +287,7 @@
       <label>{{ 'profile.form.coverImages' | translate }} <span class="required">*</span></label>
       <div class="profile-cover-zone" [class.profile-cover-zone--dragging]="isCoverDragging()"
         [class.profile-cover-zone--empty]="!(coverMobilePreview() || coverDesktopPreview())"
+        [class.app-dropzone--invalid]="showErrors() && !(coverMobilePreview() && coverDesktopPreview())"
         (dragover)="onCoverDragOver($event)" (dragleave)="onCoverDragLeave($event)" (drop)="onCoverDrop($event)"
         (click)="coverInput.click()">
         <div class="profile-dropzone__body">

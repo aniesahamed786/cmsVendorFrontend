@@ -86,9 +86,8 @@ export class EditVendorProfilePage {
   readonly showUpdateConfirm = signal(false);
   private pendingUpdate: VendorProfileEditData | null = null;
 
-  /** Nothing to save until the form reports a real difference from the loaded profile. */
-  readonly hasChanges = computed(() => this.editForm()?.hasChanges() ?? false);
-  readonly canSave = computed(() => !this.loadingProfile() && !this.isLoading() && this.hasChanges());
+  /** Buttons stay clickable otherwise: missing fields are highlighted on click, and "no changes" gets a toast. */
+  readonly busy = computed(() => this.loadingProfile() || this.isLoading());
 
   constructor() {
     this.loadProfile();

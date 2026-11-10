@@ -2,6 +2,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   DestroyRef,
+  ElementRef,
   OnDestroy,
   OnInit,
   computed,
@@ -12,7 +13,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { PrimeUIModules } from '../../../../core/prime.import';
 import { MessageService } from 'primeng/api';
@@ -75,6 +76,10 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly messageService = inject(MessageService);
   private readonly i18n = inject(I18nService);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  /** Set on the first save attempt so the image dropzones show their missing state. */
+  readonly showErrors = signal(false);
 
   initialData = input<VendorProfileEditData>(MOCK_VENDOR_PROFILE_EDIT);
   isLoading = input(false);
@@ -191,7 +196,8 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
     repFullName: ['', Validators.required],
     repPhone: ['', Validators.required],
     repEmail: ['', [Validators.required, Validators.email]],
-    classification: [''],
+    // Required only when the vendor has categories to pick from; with none there is nothing to choose.
+    classification: ['', (c: AbstractControl) => (this.classificationOptions().length && !c.value ? { required: true } : null)],
     accountNameInput: [''],
     linkinput: ['', Validators.pattern(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})[\/\w \.@?&=%_+!~*\'()#,:;-]*\/?$/)],
     socialLinks: this.fb.array<FormControl<VendorSocialLink | null>>([]),
@@ -686,11 +692,34 @@ export class VendorProfileEditForm implements OnInit, OnDestroy {
   }
 
   onSaveDraft(): void {
-    this.saveDraft.emit(this.buildPayload());
+    if (this.hasRequiredFields()) this.saveDraft.emit(this.buildPayload());
   }
 
   onUpdateChanges(): void {
-    this.updateChanges.emit(this.buildPayload());
+    if (this.hasRequiredFields()) this.updateChanges.emit(this.buildPayload());
+  }
+
+  /** Highlights every missing required field; nothing is sent until they are all filled. */
+  private hasRequiredFields(): boolean {
+    // linkinput is the social-link adder's scratch field — it never rides the request.
+    const { linkinput, ...controls } = this.profileForm.controls;
+    controls.classification.updateValueAndValidity({ emitEvent: false });
+    Object.values(controls).forEach((control) => control.markAsTouched());
+    this.showErrors.set(true);
+    if (Object.values(controls).every((control) => control.valid)) return true;
+
+    this.messageService.add({
+      severity: 'warn',
+      summary: this.i18n.t('offerForm.toast.missingFieldsSummary'),
+      detail: this.i18n.t('offerForm.toast.missingFieldsDetail'),
+    });
+    // Next tick so the dropzones have picked up their invalid class.
+    setTimeout(() =>
+      this.host.nativeElement
+        .querySelector('[formControlName].ng-invalid:not([formControlName="linkinput"]), .app-dropzone--invalid')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+    );
+    return false;
   }
 
   onFocusLanguage(lang: 'en' | 'ar'): void {
