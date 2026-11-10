@@ -418,12 +418,9 @@ export class AuthService {
       .pipe(
         tap((onboarding) => {
           const responseRequestId = onboarding.profileRequestId;
-          const responseStatus = onboarding.profileRequestStatus?.toUpperCase();
-          if (
-            this.discardedProfileRequestId &&
-            responseRequestId === this.discardedProfileRequestId &&
-            responseStatus === 'DRAFT'
-          ) {
+          // The server never names a discarded or recalled request again, so any snapshot that
+          // still does is stale (DRAFT for a discard, SUBMITTED for a recall).
+          if (this.discardedProfileRequestId && responseRequestId === this.discardedProfileRequestId) {
             return;
           }
 
@@ -479,6 +476,16 @@ export class AuthService {
         profileReviewReason: null,
       },
     });
+  }
+
+  /**
+   * The onboarding PROFILE request was withdrawn (draft discarded or request recalled): forget it
+   * before routing — or the profile guard bounces back to it — and reopen the form for a fresh one.
+   */
+  reopenOnboardingProfile(): void {
+    this.clearProfileRequest();
+    void this.router.navigate(['/profile/edit']);
+    this.refreshOnboarding();
   }
 
   holdLoginPassword(password: string | null): void {

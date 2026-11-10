@@ -361,12 +361,20 @@ export class RequestCenterList {
   onRecallConfirmed(): void {
     const row = this.recallTarget();
     if (!row) return;
+    const wasOnboardingProfile = row.type === 'Profile' && this.auth.isOnboarding();
     this.actionLoading.set(true);
     this.api
       .recall(row.id)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
-        next: () => this.afterMutation(),
+        next: () => {
+          if (wasOnboardingProfile) {
+            this.recallTarget.set(null);
+            this.auth.reopenOnboardingProfile();
+            return;
+          }
+          this.afterMutation();
+        },
         error: (err) => {
           console.error('Recall request failed', err);
           this.afterMutation();
@@ -410,9 +418,7 @@ export class RequestCenterList {
           if (wasOnboardingProfileDraft) {
             this.discardTarget.set(null);
             this.requestCenterService.remove(row.rowKey);
-            this.auth.clearProfileRequest();
-            this.router.navigate(['/profile/edit']);
-            this.auth.refreshOnboarding();
+            this.auth.reopenOnboardingProfile();
             return;
           }
           this.afterMutation();

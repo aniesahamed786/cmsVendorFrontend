@@ -1228,6 +1228,7 @@ export class RequestDetail {
     this.requestCenterService.recall(this.rowKey());
     this.details.update((details) => (details ? { ...details, status: 'RECALLED' } : details));
     this.showRecallConfirm = false;
+    if (this.entityType() === 'PROFILE' && this.auth.isOnboarding()) this.auth.reopenOnboardingProfile();
   }
 
   // ---- Discard Draft confirmation (DELETE /cmsVendor/requests/{id}/draft) ----
@@ -1282,9 +1283,7 @@ export class RequestDetail {
     // background. Waiting for the refresh leaves the user stranded if that read is delayed.
     // Without this, the profile route guard keeps redirecting to the draft that was just deleted.
     if (wasOnboardingProfileDraft) {
-      this.auth.clearProfileRequest();
-      this.router.navigate(['/profile/edit']);
-      this.auth.refreshOnboarding();
+      this.auth.reopenOnboardingProfile();
       return;
     }
 
