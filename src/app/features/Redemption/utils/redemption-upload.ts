@@ -202,7 +202,7 @@ export async function parseRedemptionUpload(
   loadFallbackOffers: () => Promise<TemplateOffer[]>,
   messages: FileMessages,
 ): Promise<RedemptionUploadResult> {
-  const ExcelJS = await import('exceljs');
+  const { default: ExcelJS } = await import('exceljs');
   const workbook = new ExcelJS.Workbook();
 
   const buffer = file instanceof ArrayBuffer ? file : await file.arrayBuffer();

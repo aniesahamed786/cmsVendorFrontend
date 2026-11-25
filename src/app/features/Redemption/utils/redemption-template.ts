@@ -226,7 +226,7 @@ export async function buildRedemptionTemplate(
   offers: TemplateOffer[],
   labels: TemplateLabels,
 ): Promise<Blob> {
-  const ExcelJS = await import('exceljs');
+  const { default: ExcelJS } = await import('exceljs');
   const workbook = new ExcelJS.Workbook();
   workbook.created = new Date();
   // The _dates helpers ship without cached results; make Excel compute them on open.
